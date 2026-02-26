@@ -33,18 +33,27 @@ a {
   overflow: hidden;
   white-space: nowrap;
   width: 100%;
+  padding: 1rem 0;
 }
 
 .marquee-track {
   display: inline-block;
-  animation: marquee 60s linear infinite;
+  animation: marquee 75s linear infinite;
   will-change: transform;
 }
 
 .marquee-text {
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   font-weight: 700;
   color: #3b82f6;
   white-space: nowrap;
-  transform: scaleY(5);
+  transform: scaleY(1.5);
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  .marquee-text {
+    font-size: 3.5rem;
+    transform: scaleY(2.5);
+  }
 }

@@ -7,16 +7,15 @@ export default function Home() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        gap: "2rem",
-        padding: "1rem",
+        justifyContent: "space-between",
+        minHeight: "100dvh",
+        padding: "0",
       }}
     >
       <div className="marquee-container">
         <div className="marquee-track">
           <span className="marquee-text">
-            {marqueeContent} - {marqueeContent}
+            {marqueeContent}{marqueeContent}
           </span>
         </div>
       </div>
@@ -30,6 +29,13 @@ export default function Home() {
           borderRadius: "0.5rem",
         }}
       />
+      <div className="marquee-container">
+        <div className="marquee-track" style={{ animationDirection: "reverse" }}>
+          <span className="marquee-text">
+            {marqueeContent}{marqueeContent}
+          </span>
+        </div>
+      </div>
     </main>
   );
 }
