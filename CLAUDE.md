@@ -8,7 +8,8 @@ This is a personal website/landing page built with modern web technologies.
 - **UI**: React 19
 - **Language**: TypeScript
 - **Linting**: ESLint 10 with Next.js config
-- **Styling**: Tailwind CSS (to be installed)
+- **Styling**: Plain CSS (no framework currently)
+- **Font**: Hubot Sans via @fontsource/hubot-sans
 
 ## Project Structure
 
@@ -31,10 +32,10 @@ public/                     # Static assets (empty)
 ```
 
 ## Current State
-- Fresh Next.js project from `create-next-app`
-- Boilerplate structure in place
-- No content or styling implemented yet
-- Ready for development
+- **Landing Page**: "Under Construction" page with centered image and text
+- **Typography**: Hubot Sans font configured (weights 400 and 700)
+- **Theme**: Light mode with off-white background (`#fafafa`) and blue accents (`#3b82f6`)
+- **Assets**: `smoking_elizabeth.jpg` in public folder
 
 ## Personal Details
 *To be filled in by owner*
@@ -60,8 +61,9 @@ public/                     # Static assets (empty)
 - Both modes designed for comfortable long-form reading
 
 ### Typography
-- **Primary Font**: Hubot Sans (GitHub's open-source geometric font) - used uniformly for all text
-- **Font Import**: Will need to add Hubot Sans via CDN or local font files
+- **Primary Font**: Hubot Sans (GitHub's open-source geometric font)
+- **Font Import**: Installed via `@fontsource/hubot-sans` package (weights 400 and 700)
+- **Font Usage**: Applied globally in `src/app/globals.css`
 
 ### Layout Style
 - Minimal and clean
@@ -69,8 +71,8 @@ public/                     # Static assets (empty)
 - Simple sections with clear visual hierarchy
 
 ### CSS Framework
-- **Tailwind CSS**: Utility-first framework for rapid development
-- Will need to install and configure Tailwind in the Next.js project
+- **Current**: Plain CSS with inline styles
+- **Tailwind CSS**: Not currently installed (can be added later if needed)
 
 ### Component Library
 - To be determined based on needs (shadcn/ui, Radix UI, or custom components)
