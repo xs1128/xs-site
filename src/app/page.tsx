@@ -1,3 +1,5 @@
+const marqueeContent = `UNDER CONSTRUCTION\u00A0\u00A0\u00A0\u00A0-\u00A0\u00A0\u00A0\u00A0`.repeat(12).trim();
+
 export default function Home() {
   return (
     <main
@@ -11,16 +13,13 @@ export default function Home() {
         padding: "1rem",
       }}
     >
-      <h1
-        style={{
-          fontSize: "2rem",
-          fontWeight: 300,
-          color: "#3b82f6",
-          textAlign: "center",
-        }}
-      >
-        Under Construction
-      </h1>
+      <div className="marquee-container">
+        <div className="marquee-track">
+          <span className="marquee-text">
+            {marqueeContent} - {marqueeContent}
+          </span>
+        </div>
+      </div>
       <img
         src="/smoking_elizabeth.jpg"
         alt="Under Construction"

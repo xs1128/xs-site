@@ -18,3 +18,33 @@ body {
 a {
   color: #3b82f6;
 }
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.marquee-track {
+  display: inline-block;
+  animation: marquee 60s linear infinite;
+  will-change: transform;
+}
+
+.marquee-text {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #3b82f6;
+  white-space: nowrap;
+  transform: scaleY(5);
+}
