@@ -1,84 +1,58 @@
 # Personal Website - Landing Page
 
 ## Overview
-This is a personal website/landing page built with modern web technologies.
+Minimalist personal landing page with a centered name display and navigation buttons.
 
 ## Tech Stack
 - **Framework**: Next.js 16 (App Router)
 - **UI**: React 19
 - **Language**: TypeScript
-- **Linting**: ESLint 10 with Next.js config
-- **Styling**: Plain CSS (no framework currently)
-- **Font**: Hubot Sans via @fontsource/hubot-sans
+- **Styling**: Plain CSS with inline styles
+- **Font**: Roboto Mono via @fontsource/roboto-mono
 
-## Project Structure
+## Color Scheme (Vintage Poster Palette - Warm Vermillion Edition)
+- Background: `#F2E9D8` (warm aged paper)
+- Text: `#2A2F35` (dark charcoal)
+- Accent: `#E5532C` (warm vermilion)
+- Cards: `#E4D9C2` (light cream)
+- Borders: `#D6CBB3` (muted tan)
 
+## Features
+
+### Name Display
+- Centered "Xinsheng Ooi" on desktop, "xs" on small screens (< 300px)
+- Click to toggle between full name and initials with fade animation (0.4s)
+- Unselectable text with `user-select: none`
+- Responsive sizing: `clamp(65px, 10vw, 180px)` desktop, `clamp(48px, 15vw, 120px)` mobile
+- Font weight: 570, letter spacing: -0.06em, line height: 0.95
+
+### Navigation
+- **Desktop**: ABOUT (bottom left) and CONTACT (bottom right) buttons
+- **Small screens**: Hamburger menu with dropdown (top right)
+- Animated underline on hover (left-to-right for ABOUT, right-to-left for CONTACT)
+- Underline: 2px height, vermilion color, 0.3s ease transition
+
+### AnimatedButton Component
+Reusable button with hover underline effect:
+- `isMenuButton`: Menu toggle (rounded, with shadow)
+- `isDropdownItem`: Dropdown menu items (no border radius)
+- `reverse`: Animates underline from right instead of left
+
+### Responsive Behavior
+- Breakpoint: 300px (for ultra-small screens)
+- Adjusts padding and font size based on viewport
+- Hides bottom buttons on small screens, shows hamburger menu instead
+
+## File Structure
 ```
-src/
-├── app/                    # App Router pages and layouts
-│   ├── layout.tsx         # Root layout with metadata
-│   ├── page.tsx           # Home page (currently empty)
-│   ├── error.tsx          # Error boundary
-│   ├── api/               # API routes (empty)
-│   └── (routes)/          # Route groups (empty)
-├── components/
-│   ├── ui/                # Reusable UI components (empty)
-│   ├── features/          # Feature-specific components (empty)
-│   └── layout/            # Layout components (empty)
-├── lib/                   # Utility functions (empty)
-├── hooks/                 # Custom React hooks (empty)
-└── types/                 # TypeScript definitions (empty)
-public/                     # Static assets (empty)
+src/app/
+├── layout.tsx         # Root layout with font imports
+├── page.tsx           # Main landing page component
+└── globals.css        # Global styles and font imports
 ```
-
-## Current State
-- **Landing Page**: "Under Construction" page with centered image and text
-- **Typography**: Hubot Sans font configured (weights 400 and 700)
-- **Theme**: Light mode with off-white background (`#fafafa`) and blue accents (`#3b82f6`)
-- **Assets**: `smoking_elizabeth.jpg` in public folder
-
-## Personal Details
-*To be filled in by owner*
-- Name:
-- Role/Title:
-- Location:
-- Contact:
-
-## Planned Features
-*To be defined - examples below*
-- [ ] Hero/intro section
-- [ ] About me
-- [ ] Portfolio/projects showcase
-- [ ] Blog/writing section
-- [ ] Contact form
-- [ ] Social links
-
-## Design Preferences
-
-### Color Scheme
-- **Dark Mode**: Black background with warm orange/vermilion accents (muted, not neon - comfortable for reading)
-- **Light Mode**: Off-white background with blue accents (bright but not harsh/spiky)
-- Both modes designed for comfortable long-form reading
-
-### Typography
-- **Primary Font**: Hubot Sans (GitHub's open-source geometric font)
-- **Font Import**: Installed via `@fontsource/hubot-sans` package (weights 400 and 700)
-- **Font Usage**: Applied globally in `src/app/globals.css`
-
-### Layout Style
-- Minimal and clean
-- Ample whitespace
-- Simple sections with clear visual hierarchy
-
-### CSS Framework
-- **Current**: Plain CSS with inline styles
-- **Tailwind CSS**: Not currently installed (can be added later if needed)
-
-### Component Library
-- To be determined based on needs (shadcn/ui, Radix UI, or custom components)
 
 ## Development Notes
-- Path alias configured: `@/*` maps to `./src/*`
-- TypeScript strict mode enabled
-- ESLint extends Next.js core web vitals rules
-- Node version requirement: check `package.json` engines field
+- Client component with "use client" directive
+- `suppressHydrationWarning` on body to prevent browser extension warnings
+- All styling uses inline styles (no CSS framework)
+- Font weights 400 and 500 imported

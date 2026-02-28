@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import "@fontsource/hubot-sans/400.css";
-import "@fontsource/hubot-sans/700.css";
+import "@fontsource/roboto-mono/400.css";
+import "@fontsource/roboto-mono/500.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
