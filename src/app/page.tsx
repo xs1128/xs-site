@@ -43,11 +43,38 @@ function useMarqueeAnimation() {
         animation: marquee 30s linear infinite;
         width: max-content;
       }
-      .marquee-container:hover .marquee-content {
-        animation-play-state: paused;
+      @media (hover: hover) {
+        .marquee-container:hover .marquee-content {
+          animation-play-state: paused;
+        }
       }
       .marquee-item {
         flex-shrink: 0;
+      }
+      @media (hover: hover) {
+        .animated-button:hover .animated-button-underline {
+          width: 100%;
+        }
+      }
+      .animated-button-underline {
+        position: absolute;
+        bottom: 4px;
+        height: 2px;
+        background-color: #E5532C;
+        width: 0%;
+        transition: width 0.3s ease;
+      }
+      @media (hover: hover) {
+        .dropdown-item:hover {
+          background-color: #F0C4B4;
+        }
+      }
+      .name-container {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+      }
+      button, .animated-button {
+        -webkit-tap-highlight-color: transparent;
       }
     `;
     document.head.appendChild(style);
@@ -108,8 +135,6 @@ function AnimatedButton({
   isDropdownItem = false,
   reverse = false,
 }: AnimatedButtonProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   const baseButtonStyle: React.CSSProperties = {
     padding: isMenuButton ? "8px 16px" : isDropdownItem ? "12px 20px" : "12px 24px",
     borderRadius: isMenuButton || isDropdownItem ? (isDropdownItem ? "0" : "24px") : "0",
@@ -133,20 +158,16 @@ function AnimatedButton({
     left: reverse ? "auto" : "0",
     right: reverse ? "0" : "auto",
     height: "2px",
-    backgroundColor: "#E5532C",
-    width: isHovered ? "100%" : "0%",
-    transition: "width 0.3s ease",
   };
 
   return (
     <button
+      className={!isMenuButton && !isDropdownItem ? "animated-button" : undefined}
       style={baseButtonStyle}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
     >
       {children}
-      {!isMenuButton && !isDropdownItem && <span style={underlineStyle} />}
+      {!isMenuButton && !isDropdownItem && <span className="animated-button-underline" style={underlineStyle} />}
     </button>
   );
 }
@@ -211,6 +232,7 @@ export default function Home() {
                 }}
               >
                 <button
+                  className="dropdown-item"
                   style={{
                     width: "100%",
                     padding: "12px 20px",
@@ -221,14 +243,14 @@ export default function Home() {
                     fontFamily: "Roboto Mono, monospace",
                     fontSize: "16px",
                     color: "#2A2F35",
+                    transition: "background-color 0.2s ease",
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#F0C4B4"}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   ABOUT
                 </button>
                 <button
+                  className="dropdown-item"
                   style={{
                     width: "100%",
                     padding: "12px 20px",
@@ -240,9 +262,8 @@ export default function Home() {
                     fontFamily: "Roboto Mono, monospace",
                     fontSize: "16px",
                     color: "#2A2F35",
+                    transition: "background-color 0.2s ease",
                   }}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#F0C4B4"}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "transparent"}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   CONTACT
@@ -254,6 +275,7 @@ export default function Home() {
 
         {/* Name */}
         <div
+          className="name-container"
           style={{
             textAlign: "left",
             fontFamily: "Roboto Mono, monospace",
