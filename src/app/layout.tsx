@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "@fontsource/roboto-mono/400.css";
 import "@fontsource/roboto-mono/500.css";
+import "@fontsource/hubot-sans/400.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
