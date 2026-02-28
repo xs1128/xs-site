@@ -87,3 +87,21 @@ src/app/
 - Marquee uses dynamic DOM measurement to calculate required items
 - Animation CSS injected via `useEffect` for marquee keyframes
 
+## Development Workflow
+
+### Before Pushing
+**ALWAYS** run the following commands before pushing any changes:
+```bash
+npm install
+npm run build
+```
+
+### After Writing Code
+After making code changes, run `npm run build` and **resolve any issues** that arise:
+- Fix TypeScript errors
+- Resolve build warnings
+- Ensure no failing builds
+- Verify the production build succeeds completely
+
+This ensures the codebase is always in a working state before deployment.
+
