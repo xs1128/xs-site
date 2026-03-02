@@ -279,6 +279,16 @@ export default function EditPost({ params }: { params: Promise<{ id: string }> }
 
       <form style={formStyle} onSubmit={handleSubmit}>
         <div style={formGroupStyle}>
+          <label style={labelStyle}>Series</label>
+          <SeriesMultiSelect
+            availableSeries={availableSeries}
+            selectedSeriesIds={selectedSeriesIds}
+            onChange={setSelectedSeriesIds}
+            disabled={saving}
+          />
+        </div>
+
+        <div style={formGroupStyle}>
           <label style={labelStyle}>Title *</label>
           <input
             type="text"
@@ -333,16 +343,6 @@ export default function EditPost({ params }: { params: Promise<{ id: string }> }
             />
             Published (uncheck to make draft)
           </label>
-        </div>
-
-        <div style={formGroupStyle}>
-          <label style={labelStyle}>Series</label>
-          <SeriesMultiSelect
-            availableSeries={availableSeries}
-            selectedSeriesIds={selectedSeriesIds}
-            onChange={setSelectedSeriesIds}
-            disabled={saving}
-          />
         </div>
 
         <div>

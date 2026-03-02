@@ -7,6 +7,7 @@ import RecentLogs from "@/components/blog/RecentLogs";
 import FeaturedSeriesWrapper from "@/components/blog/FeaturedSeriesWrapper";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { colors } from "@/styles/colors";
+import { getHeroImageUrl } from "@/lib/supabase/settings";
 
 // Custom hook for navigation animations
 function useNavAnimations() {
@@ -357,6 +358,7 @@ export default function Home() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [navDroppedIn, setNavDroppedIn] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [heroImageUrl, setHeroImageUrl] = useState('/IMG_1953.jpeg'); // Default fallback
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -366,6 +368,15 @@ export default function Home() {
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  // Fetch hero image URL from database
+  useEffect(() => {
+    async function fetchHeroImage() {
+      const url = await getHeroImageUrl();
+      setHeroImageUrl(url);
+    }
+    fetchHeroImage();
   }, []);
 
   const triggerCardSwap = () => {
@@ -590,7 +601,7 @@ export default function Home() {
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundImage: "url(/IMG_1953.jpeg)",
+    backgroundImage: `url(${heroImageUrl})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
     filter: "grayscale(100%) brightness(0.7) contrast(1.2)",

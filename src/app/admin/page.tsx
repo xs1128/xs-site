@@ -183,6 +183,20 @@ export default function AdminDashboard() {
           >
             Upload Picture
           </Link>
+          <Link
+            href="/admin/hero"
+            style={linkStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#E5532C'
+              e.currentTarget.style.color = '#FFFFFF'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent'
+              e.currentTarget.style.color = '#E5532C'
+            }}
+          >
+            Update Hero
+          </Link>
         </div>
       </div>
     </div>
