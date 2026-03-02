@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import FunnyMarquee from "@/components/blog/FunnyMarquee";
+import FunnyMarqueeWrapper from "@/components/blog/FunnyMarqueeWrapper";
 import RecentLogs from "@/components/blog/RecentLogs";
-import FeaturedSeries from "@/components/blog/FeaturedSeries";
+import FeaturedSeriesWrapper from "@/components/blog/FeaturedSeriesWrapper";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { colors } from "@/styles/colors";
 
@@ -672,7 +672,7 @@ export default function Home() {
             {/* Content Card (Back) */}
             <div style={contentCardStyle}>
               {/* Left Marquee */}
-              <FunnyMarquee />
+              <FunnyMarqueeWrapper />
 
               {/* Right Content */}
               <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: "1px solid rgba(255, 255, 255, 0.2)", position: "relative" }}>
@@ -680,7 +680,7 @@ export default function Home() {
                 <RecentLogs />
 
                 {/* FEATURED SERIES Section */}
-                <FeaturedSeries />
+                <FeaturedSeriesWrapper />
               </div>
             </div>
           </div>

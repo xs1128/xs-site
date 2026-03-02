@@ -1,5 +1,5 @@
 export interface Post {
-  id: string;
+  id: number;
   title: string;
   date: string;
   summary: string;
@@ -7,7 +7,7 @@ export interface Post {
 }
 
 export interface Series {
-  id: string;
+  id: number;
   slug: string;
   title: string;
   description: string;
@@ -15,7 +15,7 @@ export interface Series {
 }
 
 export interface FunnyPicture {
-  id: string;
+  id: number;
   image: string;
   title: string;
   location: string;

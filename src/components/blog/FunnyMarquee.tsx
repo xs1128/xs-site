@@ -1,21 +1,25 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { funnyPictures } from "@/lib/mockPictures";
+import type { FunnyPicture } from "@/types/post";
 import { TRANSITIONS } from "@/styles/animations";
 import { FONTS, clamp, spacing } from "@/styles/typography";
 
 // Constants
 const SCROLL_SPEED = 40; // Pixels per second (2.6x faster than before)
 
-export default function FunnyMarquee() {
+interface FunnyMarqueeProps {
+  pictures: FunnyPicture[]
+}
+
+export default function FunnyMarquee({ pictures }: FunnyMarqueeProps) {
   // Clean state - no refs mixed with state
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [oneSetHeight, setOneSetHeight] = useState(0);
-  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
-  const [imageDimensions, setImageDimensions] = useState<Map<string, { width: number; height: number }>>(new Map());
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+  const [imageDimensions, setImageDimensions] = useState<Map<number, { width: number; height: number }>>(new Map());
 
   // Only refs for direct DOM access
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,7 +28,7 @@ export default function FunnyMarquee() {
   const lastTimeRef = useRef<number>(0);
 
   // 3x duplication ensures seamless infinite loop with no visible gaps
-  const visiblePictures = [...funnyPictures, ...funnyPictures, ...funnyPictures];
+  const visiblePictures = [...pictures, ...pictures, ...pictures];
 
   // Detect mobile device
   const isMobileDevice = useCallback(() => {
@@ -60,7 +64,7 @@ export default function FunnyMarquee() {
   }, [expandedIndex, isMobileDevice]);
 
   // Capture image natural dimensions for aspect ratio calculation
-  const handleImageLoad = useCallback((pictureId: string, imgElement: HTMLImageElement) => {
+  const handleImageLoad = useCallback((pictureId: number, imgElement: HTMLImageElement) => {
     setImageDimensions(prev => {
       const newMap = new Map(prev);
       newMap.set(pictureId, {
@@ -108,7 +112,7 @@ export default function FunnyMarquee() {
 
     const observer = new ResizeObserver(([entry]) => {
       const totalHeight = entry.contentRect.height;
-      const sets = visiblePictures.length / funnyPictures.length;
+      const sets = visiblePictures.length / pictures.length;
       const oneSet = totalHeight / sets;
       setOneSetHeight(oneSet);
     });

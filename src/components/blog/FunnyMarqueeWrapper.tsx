@@ -1,0 +1,45 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import FunnyMarquee from "./FunnyMarquee";
+import type { FunnyPicture } from "@/types/post";
+
+export default function FunnyMarqueeWrapper() {
+  const [pictures, setPictures] = useState<FunnyPicture[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPictures() {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('pictures')
+        .select('*')
+        .order('order_column', { ascending: true, nullsFirst: false });
+
+      if (data) {
+        const transformedPictures: FunnyPicture[] = data.map(picture => ({
+          id: picture.id,
+          image: picture.url,
+          title: picture.caption || '',
+          location: picture.location || '',
+          date: picture.date_taken ? new Date(picture.date_taken).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          }) : ''
+        }));
+        setPictures(transformedPictures);
+      }
+      setLoading(false);
+    }
+
+    fetchPictures();
+  }, []);
+
+  if (loading) {
+    return <div style={{ color: '#666666' }}>Loading pictures...</div>;
+  }
+
+  return <FunnyMarquee pictures={pictures} />;
+}

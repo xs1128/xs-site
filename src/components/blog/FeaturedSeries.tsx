@@ -1,9 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { featuredSeries } from "@/lib/mockSeries";
+import type { Series } from "@/types/post";
 
-export default function FeaturedSeries() {
+interface FeaturedSeriesProps {
+  series: Series[]
+}
+
+export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -217,7 +221,7 @@ export default function FeaturedSeries() {
           className="cards-scroll"
           onScroll={handleScroll}
         >
-          {featuredSeries.map((series) => (
+          {series.map((series) => (
             <div
               key={series.id}
               style={cardStyle}
