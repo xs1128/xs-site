@@ -14,7 +14,9 @@
       "Bash(lsof:*)",
       "Bash(xargs kill:*)",
       "Bash(ffprobe:*)",
-      "Bash(mdls:*)"
+      "Bash(mdls:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)"
     ]
   }
 }
