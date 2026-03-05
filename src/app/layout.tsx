@@ -5,6 +5,8 @@ import "@fontsource/roboto-mono/400.css";
 import "@fontsource/roboto-mono/500.css";
 import "@fontsource/roboto-mono/700.css";
 import "./globals.css";
+import "@/styles/blog.css";
+import "@/styles/admin.css";
 import Footer from "@/components/ui/Footer";
 
 export const metadata: Metadata = {

@@ -1,8 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { FONTS, clamp, spacing } from '@/styles/typography'
-import { colors } from '@/styles/colors'
+import { useIsMobile } from '@/hooks/useBreakpoint'
 import AnimatedButton from '@/components/ui/AnimatedButton'
 
 interface BlogPageHeaderProps {
@@ -10,19 +8,10 @@ interface BlogPageHeaderProps {
 }
 
 export default function BlogPageHeader({ onMenuClick }: BlogPageHeaderProps) {
-  const [isSmallScreen, setIsSmallScreen] = useState(false)
+  const isMobile = useIsMobile()
 
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 768)
-    }
-
-    checkScreenSize()
-    window.addEventListener('resize', checkScreenSize)
-    return () => window.removeEventListener('resize', checkScreenSize)
-  }, [])
   const headerStyle: React.CSSProperties = {
-    position: 'sticky' as const,
+    position: 'sticky',
     top: 0,
     left: 0,
     right: 0,
@@ -30,15 +19,15 @@ export default function BlogPageHeader({ onMenuClick }: BlogPageHeaderProps) {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: `${spacing.md} ${spacing.lg}`,
-    backgroundColor: colors.darkText,
+    padding: 'clamp(12px, 2vh, 24px) clamp(20px, 3vh, 40px)',
+    backgroundColor: 'var(--color-dark-text)',
   }
 
   const logoStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
-    fontSize: clamp.xl,
+    fontFamily: 'var(--font-primary)',
+    fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
-    color: colors.darkBackground,
+    color: 'var(--color-dark-background)',
     textDecoration: 'none',
     letterSpacing: '0.05em',
     cursor: 'pointer',
@@ -46,10 +35,10 @@ export default function BlogPageHeader({ onMenuClick }: BlogPageHeaderProps) {
   }
 
   const menuButtonStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
-    fontSize: clamp.xl,
+    fontFamily: 'var(--font-primary)',
+    fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
-    color: colors.darkBackground,
+    color: 'var(--color-dark-background)',
     textDecoration: 'none',
     cursor: 'pointer',
     display: 'flex',
@@ -68,7 +57,7 @@ export default function BlogPageHeader({ onMenuClick }: BlogPageHeaderProps) {
         style={menuButtonStyle}
       >
         <span style={{ fontSize: "clamp(20px, 3vw, 28px)", transform: "translateY(-4px)", display: "inline-block" }}>☰</span>
-        {!isSmallScreen && <span>MENU</span>}
+        {!isMobile && <span>MENU</span>}
       </AnimatedButton>
     </header>
   )

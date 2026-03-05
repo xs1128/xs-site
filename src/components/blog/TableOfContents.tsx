@@ -1,7 +1,8 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import type { Heading } from '@/types/post'
-import { FONTS, clamp, spacing } from '@/styles/typography'
+import { spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS, TIMING } from '@/styles/animations'
 
@@ -10,6 +11,32 @@ interface TableOfContentsProps {
 }
 
 export default function TableOfContents({ headings }: TableOfContentsProps) {
+  const [activeId, setActiveId] = useState<string>('')
+
+  useEffect(() => {
+    if (headings.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id)
+          }
+        })
+      },
+      {
+        rootMargin: '-100px 0px -66%',
+        threshold: 0,
+      }
+    )
+
+    headings.forEach((heading) => {
+      const element = document.getElementById(heading.id)
+      if (element) observer.observe(element)
+    })
+
+    return () => observer.disconnect()
+  }, [headings])
 
   function scrollToHeading(headingId: string) {
     const element = document.getElementById(headingId)
@@ -43,10 +70,10 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
   }
 
   const titleStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
-    fontSize: clamp.base,
+    fontFamily: 'var(--font-primary)',
+    fontSize: 'clamp(12px, 1.8vw, 18px)',
     fontWeight: 700,
-    color: colors.darkText,
+    color: 'var(--color-text)',
     marginBottom: spacing.sm,
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
@@ -58,11 +85,11 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
     margin: 0,
   }
 
-  const getHeadingStyle = (level: number): React.CSSProperties => ({
-    fontFamily: FONTS.primary,
-    fontSize: clamp.sm,
-    fontWeight: 400,
-    color: '#999999',
+  const getHeadingStyle = (level: number, isActive: boolean): React.CSSProperties => ({
+    fontFamily: 'var(--font-primary)',
+    fontSize: 'clamp(11px, 1.5vw, 14px)',
+    fontWeight: isActive ? 600 : 400,
+    color: isActive ? 'var(--color-accent)' : '#999999',
     cursor: 'pointer',
     padding: `${spacing.xs} 0`,
     paddingLeft: getIndentPadding(level),
@@ -80,16 +107,8 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
         {headings.map((heading) => (
           <li
             key={heading.id}
-            style={getHeadingStyle(heading.level)}
+            style={getHeadingStyle(heading.level, activeId === heading.id)}
             onClick={() => scrollToHeading(heading.id)}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = colors.accent
-              e.currentTarget.style.transform = 'translateX(4px)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = '#999999'
-              e.currentTarget.style.transform = 'translateX(0)'
-            }}
           >
             {heading.text}
           </li>

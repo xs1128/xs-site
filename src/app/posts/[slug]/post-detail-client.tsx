@@ -12,6 +12,8 @@ import OtherPosts from '@/components/blog/OtherPosts'
 import SeriesBanner from '@/components/blog/SeriesBanner'
 import PostNavigation from '@/components/blog/PostNavigation'
 import FullScreenNav from '@/components/ui/FullScreenNav'
+import { useIsMobile } from '@/hooks/useBreakpoint'
+import { useScrollProgress, useFooterVisibility } from '@/hooks/useScrollDetection'
 import { spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS } from '@/styles/animations'
@@ -36,59 +38,10 @@ export default function PostDetailClient({
 
   const [seriesWithPosts, setSeriesWithPosts] = useState<SeriesDetail[]>([])
   const [isNavOpen, setIsNavOpen] = useState(false)
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const [isSmallScreen, setIsSmallScreen] = useState(false)
-  const [footerVisible, setFooterVisible] = useState(false)
+  const scrollProgress = useScrollProgress()
+  const isMobile = useIsMobile()
+  const footerVisible = useFooterVisibility()
   const contentContainerRef = useRef<HTMLDivElement>(null)
-
-  // Detect small screens
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsSmallScreen(window.innerWidth < 768)
-    }
-
-    checkScreenSize()
-    window.addEventListener('resize', checkScreenSize)
-    return () => window.removeEventListener('resize', checkScreenSize)
-  }, [])
-
-  // Calculate reading progress
-  useEffect(() => {
-    function updateProgress() {
-      const windowHeight = window.innerHeight
-      const documentHeight = document.documentElement.scrollHeight - windowHeight
-      const scrolled = window.scrollY
-      const progress = (scrolled / documentHeight) * 100
-      setScrollProgress(Math.min(100, Math.max(0, progress)))
-    }
-
-    window.addEventListener('scroll', updateProgress)
-    updateProgress()
-
-    return () => window.removeEventListener('scroll', updateProgress)
-  }, [])
-
-  // Detect when footer is visible to adjust progress bar positioning
-  useEffect(() => {
-    const handleScroll = () => {
-      const footer = document.querySelector('footer')
-      if (!footer) return
-
-      const footerRect = footer.getBoundingClientRect()
-
-      // Check if footer has entered the viewport
-      if (footerRect.top < window.innerHeight) {
-        setFooterVisible(true)
-      } else {
-        setFooterVisible(false)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Initial check
-
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   useEffect(() => {
     // For now, we'll just set prev/next to null since we need to fetch
@@ -101,12 +54,12 @@ export default function PostDetailClient({
 
   const pageContainerStyle: React.CSSProperties = {
     display: 'flex',
-    flexDirection: 'column' as const,
+    flexDirection: 'column',
     minHeight: '100vh',
     backgroundColor: colors.darkBackground,
     overflowX: 'auto',
     width: '100%',
-    position: 'relative' as const,
+    position: 'relative',
   }
 
   const contentContainerStyle: React.CSSProperties = {
@@ -121,16 +74,16 @@ export default function PostDetailClient({
   }
 
   const sidebarStyle: React.CSSProperties = {
-    width: isSmallScreen ? '0%' : '18%',
+    width: isMobile ? '0%' : '18%',
     flexShrink: 0,
     display: 'block',
-    opacity: isSmallScreen ? 0 : 1,
+    opacity: isMobile ? 0 : 1,
     transition: 'opacity 0.3s ease',
   }
 
   const contentStyle: React.CSSProperties = {
     flex: 1,
-    maxWidth: isSmallScreen ? '100%' : '78%',
+    maxWidth: isMobile ? '100%' : '78%',
   }
 
   const mainContentStyle: React.CSSProperties = {
@@ -142,7 +95,7 @@ export default function PostDetailClient({
       <div style={pageContainerStyle}>
         {/* Reading Progress Bar - Fixed at bottom of screen, sticks at content bottom when footer visible */}
         <div style={{
-          position: footerVisible ? ('absolute' as const) : ('fixed' as const),
+          position: footerVisible ? 'absolute' : 'fixed',
           bottom: 0,
           left: 0,
           width: '100%',
