@@ -203,7 +203,7 @@
   justify-content: center;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: clamp(24px, 4vw, 48px);
+  gap: clamp(32px, 5vw, 64px);
   padding: 0;
 }
 
@@ -301,14 +301,14 @@
 
 .footer-name {
   font-family: var(--font-primary);
-  font-size: clamp(14px, 2vw, 18px);
+  font-size: clamp(16px, 2.5vw, 20px);
   font-weight: 700;
   color: var(--color-text);
 }
 
 .footer-bio {
   font-family: var(--font-primary);
-  font-size: clamp(11px, 1.5vw, 14px);
+  font-size: clamp(13px, 1.8vw, 16px);
   font-weight: 400;
   color: #666;
   line-height: 1.5;
@@ -316,12 +316,12 @@
 
 .footer-heading {
   font-family: var(--font-primary);
-  font-size: clamp(12px, 1.8vw, 14px);
+  font-size: clamp(14px, 2vw, 16px);
   font-weight: 600;
   color: var(--color-text);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: clamp(4px, 0.5vh, 8px);
 }
 
 .footer-links {
@@ -338,7 +338,7 @@
   text-decoration: none;
   color: var(--color-text);
   font-family: var(--font-primary);
-  font-size: clamp(11px, 1.5vw, 14px);
+  font-size: clamp(13px, 1.8vw, 16px);
   transition: all 0.3s ease;
 }
 
@@ -370,7 +370,7 @@
 
 .footer-email {
   font-family: var(--font-mono);
-  font-size: clamp(11px, 1.5vw, 14px);
+  font-size: clamp(13px, 1.8vw, 16px);
   color: var(--color-text);
   margin-bottom: var(--spacing-sm);
 }
@@ -390,11 +390,12 @@
 .footer-social-links {
   display: flex;
   gap: var(--spacing-sm);
+  flex-wrap: wrap;
 }
 
 .footer-social-button {
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: #E4D9C2;
   color: #2A2F35;
@@ -406,8 +407,8 @@
 }
 
 .footer-social-button svg {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   transition: fill 0.2s ease;
 }
 

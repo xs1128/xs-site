@@ -12,7 +12,7 @@ A blog with Supabase backend integration, featuring an admin panel for CRUD oper
 - **UI**: React 19
 - **Language**: TypeScript
 - **Backend**: Supabase (PostgreSQL, Auth, Storage)
-- **Styling**: Plain CSS with inline styles, shared constants in `src/styles/`
+- **Styling**: Global CSS with utility classes, modular CSS files, shared constants in `src/styles/`
 - **Fonts**: Hubot Sans (primary), Roboto Mono (code)
 
 ## Development Commands
@@ -115,9 +115,16 @@ src/
 │   ├── mockSeries.ts               # Mock data (legacy)
 │   └── mockPictures.ts             # Mock data (legacy)
 ├── styles/
+│   ├── breakpoints.ts              # Standardized breakpoint definitions
 │   ├── colors.ts                   # Color constants
 │   ├── animations.ts               # Animation timing & transitions
-│   └── typography.ts               # Font & spacing constants
+│   ├── typography.ts               # Font & spacing constants
+│   ├── blog.css                    # Blog component styles
+│   └── admin.css                   # Admin panel styles
+├── hooks/
+│   ├── useBreakpoint.ts            # Custom breakpoint detection hook
+│   ├── useScrollDetection.ts       # Scroll progress & footer visibility hooks
+│   └── useActiveHeading.ts         # Active heading tracking for TOC
 ├── types/
 │   ├── database.ts                 # Supabase generated types
 │   └── post.ts                     # Post & Series interfaces
@@ -1139,6 +1146,277 @@ const cardContainerStyle = {
 - Card width uses `90vw` for better responsiveness
 - Content flows naturally based on viewport width
 
+## CSS Architecture & Refactoring (Latest Update)
+
+### Overview
+
+The codebase has been refactored from inline styles to modular CSS with global utility classes. This improves maintainability, reduces bundle size, and provides consistent styling across components.
+
+### CSS File Structure
+
+**`src/styles/breakpoints.ts`** - Standardized breakpoints
+```typescript
+export const breakpoints = {
+  sm: '640px',
+  md: '768px',
+  lg: '1024px',
+  xl: '1280px',
+} as const
+
+export const media = {
+  sm: `@media (min-width: ${breakpoints.sm})`,
+  maxSm: `@media (max-width: ${breakpoints.sm})`,
+  // ... etc
+}
+```
+
+**`src/styles/blog.css`** - Blog component styles
+- Post content typography (headings, paragraphs, lists, code blocks)
+- Table of contents styling
+- Footer responsive layout
+- Reading progress bar
+- Featured series cards
+
+**`src/styles/admin.css`** - Admin panel styles
+- Form inputs, textareas, selects
+- Button variants (primary, secondary, danger)
+- Error message styling
+- Card layouts
+- Admin header/navigation
+
+**`src/app/globals.css`** - Global styles & utilities
+- CSS custom properties (colors, fonts, spacing)
+- Utility classes (flex, spacing, typography)
+- Responsive utility classes
+- Animation keyframes
+- Hover effect utilities
+
+### Custom Hooks
+
+**`src/hooks/useBreakpoint.ts`** - Responsive detection
+```typescript
+// Check if screen matches breakpoint
+const isTablet = useBreakpoint('md')
+
+// Convenience hook for mobile detection
+const isMobile = useIsMobile() // < 768px
+```
+
+Replaces all `window.innerWidth` checks with performant `matchMedia()` API.
+
+**`src/hooks/useScrollDetection.ts`** - Scroll tracking
+```typescript
+const scrollProgress = useScrollProgress() // 0-100
+const footerVisible = useFooterVisibility() // boolean
+```
+
+**`src/hooks/useActiveHeading.ts`** - TOC active state
+```typescript
+const activeId = useActiveHeading(headings)
+```
+
+### Component Refactoring
+
+**Footer** (`src/components/ui/Footer.tsx`)
+- **Before**: 421 lines with inline styles and state
+- **After**: 193 lines (54% reduction)
+- Removed `isWrapped` and `isVerticalStack` state
+- Uses `useIsMobile()` hook for responsive behavior
+- All inline styles moved to `blog.css` classes
+
+**Footer CSS Classes**:
+```css
+.footer-top-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: clamp(32px, 5vw, 64px);
+}
+
+.footer-section {
+  width: 18%;
+  min-width: 160px;
+}
+
+.footer-section-links {
+  width: 14%;
+  min-width: 120px;
+}
+
+.footer-social-button {
+  width: 32px;
+  height: 32px;
+  background-color: #E4D9C2;
+  color: #2A2F35;
+}
+
+.footer-social-button:hover {
+  transform: scale(1.1);
+  background-color: #2A2F35;
+  color: #E4D9C2;
+}
+```
+
+**Footer Features**:
+- Responsive 3-column layout (author, links, social)
+- Mobile: Vertical stacking with left-aligned links
+- Social buttons with scale/color-inversion hover effect (matches main blog)
+- Email as mailto link (email address only, not "email: " prefix)
+- Horizontal divider between top section and copyright
+- Links hover: text + arrow move together
+- Copyright uses Hubot Sans font
+- No gap between copyright text lines
+
+**BlogPageHeader** (`src/components/blog/BlogPageHeader.tsx`)
+- Replaced `isSmallScreen` state with `useIsMobile()` hook
+- Removed resize event listener
+
+**PostDetailClient** (`src/app/posts/[slug]/post-detail-client.tsx`)
+- **Before**: 220 lines
+- **After**: 173 lines (21% reduction)
+- Uses `useScrollProgress()` and `useFooterVisibility()` hooks
+- Uses `useIsMobile()` for responsive sidebar
+- Scroll progress bar sticks above footer when visible
+
+**TableOfContents** (`src/components/blog/TableOfContents.tsx`)
+- Integrated `useActiveHeading()` hook for scroll tracking
+- Active heading highlighted with accent color
+- Smooth scroll to section on click
+
+### Responsive Design Standards
+
+**Standard Breakpoints**:
+- `sm`: 640px (small tablets)
+- `md`: 768px (tablets)
+- `lg`: 1024px (desktops)
+- `xl`: 1280px (large desktops)
+
+**Mobile Detection**: Uses `< 768px` (md breakpoint)
+
+**Pattern**: Always use `useIsMobile()` or `useBreakpoint()` instead of `window.innerWidth` checks.
+
+### CSS Best Practices
+
+**Use CSS Classes**:
+```tsx
+// Good
+<footer className="footer">
+  <div className="footer-top-section">
+    <div className="footer-section">...</div>
+  </div>
+</footer>
+
+// Bad (inline styles)
+<footer style={{ backgroundColor: '#F2E9D8' }}>
+  <div style={{ display: 'flex', gap: '24px' }}>
+    <div>...</div>
+  </div>
+</footer>
+```
+
+**Responsive Utilities**:
+```css
+/* Mobile-first approach */
+.component {
+  padding: 16px;
+}
+
+@media (min-width: 768px) {
+  .component {
+    padding: 32px;
+  }
+}
+
+/* Or use hover detection */
+@media (hover: hover) {
+  .button:hover {
+    transform: scale(1.1);
+  }
+}
+```
+
+**clamp() for Responsive Sizing**:
+```css
+font-size: clamp(12px, 1.8vw, 18px);
+padding: clamp(16px, 3vh, 32px);
+gap: clamp(24px, 4vw, 48px);
+```
+
+### Home Page Updates
+
+**Hero Card** (`src/app/home-client.tsx`)
+- Removed box-shadow from `contentBlockStyle` (was causing weird shadow effect)
+- Expanded view: Removed padding from content div beside marquee
+- Padding now conditional: `isExpanded ? "0" : "clamp(16px, 3vh, 32px)"`
+
+### Migration Examples
+
+**Before: Footer with inline styles**
+```typescript
+const [isVerticalStack, setIsVerticalStack] = useState(false)
+
+useEffect(() => {
+  const checkVerticalStack = () => {
+    setIsVerticalStack(window.innerWidth < 550)
+  }
+  checkVerticalStack()
+  window.addEventListener('resize', checkVerticalStack)
+  return () => window.removeEventListener('resize', checkVerticalStack)
+}, [])
+
+const topSectionStyle: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: isVerticalStack ? 'column' : 'row',
+  gap: '24px',
+}
+```
+
+**After: Footer with CSS classes**
+```typescript
+import { useIsMobile } from '@/hooks/useBreakpoint'
+
+export default function Footer() {
+  const isMobile = useIsMobile()
+
+  return (
+    <footer className="footer">
+      <div className="footer-top-section">
+        <div className="footer-section">...</div>
+      </div>
+    </footer>
+  )
+}
+```
+
+```css
+.footer-top-section {
+  display: flex;
+  flex-direction: row;
+  gap: clamp(32px, 5vw, 64px);
+}
+
+@media (max-width: 767px) {
+  .footer-top-section {
+    flex-direction: column;
+  }
+}
+```
+
+### Benefits
+
+1. **Reduced Bundle Size**: CSS classes are shared, inline styles repeated
+2. **Better Performance**: `matchMedia()` more efficient than resize listeners
+3. **Easier Maintenance**: Styles in CSS files, not scattered in components
+4. **Consistent Responsive Behavior**: Standard breakpoints across all components
+5. **Cleaner Components**: 40-54% reduction in component file sizes
+6. **Better DX**: Easier to theme and update styles globally
+
+### Links Updated
+
+- Projects link now points to GitHub (https://github.com/xs1128)
+- Email is a mailto link (just "hi@xsooi.com", not "email: ")
+
 ## Current Limitations / Future Work
 
 ### Not Yet Implemented
@@ -1149,10 +1427,11 @@ const cardContainerStyle = {
 - Image optimization with Next.js Image component for blog images
 
 ### Technical Debt
-- Large component files (admin pages at 300+ lines)
-- Inline styles could be further extracted to constants
-- No custom hooks for complex logic
+- ~~Large component files (admin pages at 300+ lines)~~ - Partially addressed (Footer 54% reduction)
+- ~~Inline styles could be further extracted to constants~~ - Addressed with blog.css, admin.css
+- ~~No custom hooks for complex logic~~ - Created useBreakpoint, useScrollDetection, useActiveHeading
 - No comprehensive error boundary handling
+- Admin pages still use inline styles (future: migrate to admin.css classes)
 
 ## Deployment Considerations
 

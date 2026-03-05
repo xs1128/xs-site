@@ -687,7 +687,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
               {!isSmallScreen && <FunnyMarqueeWrapper />}
 
               {/* Right Content */}
-              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: "clamp(16px, 3vh, 32px)" }}>
+              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: isExpanded ? "0" : "clamp(16px, 3vh, 32px)" }}>
                 {/* RECENT Section */}
                 <RecentLogs />
 
