@@ -49,6 +49,8 @@ src/
 │   │   │   ├── layout.tsx          # Login page layout (no auth check)
 │   │   │   └── page.tsx           # Login form
 │   │   ├── page.tsx                # Admin dashboard
+│   │   ├── avatar/
+│   │   │   └── page.tsx           # Avatar management page
 │   │   ├── hero/
 │   │   │   └── page.tsx           # Hero image settings
 │   │   ├── posts/
@@ -63,24 +65,42 @@ src/
 │   │       ├── page.tsx            # Pictures list
 │   │       ├── new/page.tsx        # Upload picture
 │   │       └── [id]/edit/page.tsx  # Edit picture
+│   ├── posts/
+│   │   └── [slug]/
+│   │       ├── page.tsx            # Blog post server component
+│   │       ├── post-detail-client.tsx # Blog post client component
+│   │       └── not-found.tsx       # Blog post 404 page
 │   ├── test-supabase/
 │   │   └── page.tsx                # Test Supabase connection
 │   ├── layout.tsx                  # Root layout
 │   ├── page.tsx                    # Landing page with dynamic hero image
+│   ├── home-client.tsx             # Landing page client component
 │   └── globals.css                 # Global styles
 ├── components/
 │   ├── admin/
 │   │   ├── AdminHeader.tsx         # Admin navigation header with user info & logout
 │   │   └── SeriesMultiSelect.tsx   # Multi-select dropdown for series
 │   ├── blog/
-│   │   ├── LeftSidebar.tsx
+│   │   ├── BlogPageHeader.tsx      # Blog page header with navigation
+│   │   ├── PostHeader.tsx          # Post title and metadata display
+│   │   ├── PostHero.tsx            # Featured image component
+│   │   ├── PostContent.tsx         # Markdown content with syntax highlighting
+│   │   ├── CodeBlock.tsx           # Syntax highlighted code blocks
+│   │   ├── TableOfContents.tsx     # Sidebar TOC with scroll tracking
+│   │   ├── TagList.tsx             # Post tags display
+│   │   ├── SeriesBanner.tsx        # Series navigation banner
+│   │   ├── PostNavigation.tsx      # Previous/next post navigation
+│   │   ├── OtherPosts.tsx          # Related posts sidebar
+│   │   ├── LeftSidebar.tsx         # Left sidebar wrapper
 │   │   ├── FunnyMarquee.tsx        # Infinite-scroll marquee
 │   │   ├── FunnyMarqueeWrapper.tsx # Client wrapper for marquee data
-│   │   ├── RecentLogs.tsx
-│   │   ├── FeaturedSeries.tsx
+│   │   ├── RecentLogs.tsx          # Recent posts list
+│   │   ├── FeaturedSeries.tsx      # Featured series display
 │   │   └── FeaturedSeriesWrapper.tsx # Client wrapper for series data
 │   └── ui/
-│       └── AnimatedButton.tsx
+│       ├── Footer.tsx              # Responsive footer with profile, links, social
+│       ├── FullScreenNav.tsx       # Full-screen navigation overlay
+│       └── AnimatedButton.tsx     # Animated button component
 ├── lib/
 │   ├── supabase/
 │   │   ├── client.ts               # Browser client with validation
@@ -88,7 +108,9 @@ src/
 │   │   ├── mutations.ts            # CRUD operations
 │   │   ├── queries.ts              # Data fetching queries
 │   │   ├── storage.ts              # File upload utilities
-│   │   └── settings.ts            # Site settings management (hero image, etc.)
+│   │   └── settings.ts            # Site settings management (hero, avatar, etc.)
+│   ├── utils/
+│   │   └── post.ts                 # Post utility functions (slug, date formatting)
 │   ├── mockPosts.ts                # Mock data (legacy)
 │   ├── mockSeries.ts               # Mock data (legacy)
 │   └── mockPictures.ts             # Mock data (legacy)
@@ -945,20 +967,186 @@ Before pushing changes:
 4. Use `src/app/test-supabase/page.tsx` to test connection
 5. Check Supabase logs in dashboard
 
+## Blog Post Pages
+
+### Overview
+
+Individual blog post pages are fully implemented at `/posts/[slug]` with markdown rendering, syntax highlighting, and series navigation.
+
+### Key Components
+
+**`src/app/posts/[slug]/page.tsx`** - Server component that fetches post data
+```typescript
+// Fetches post with series, headings, and related posts
+const post = await getPostBySlug(params.slug)
+const seriesData = await getSeriesForPost(post.id)
+const headings = extractHeadings(post.content)
+const relatedPosts = await getRelatedPosts(post.id)
+```
+
+**`src/app/posts/[slug]/post-detail-client.tsx`** - Client component with interactivity
+- Reading progress bar (bottom of screen)
+- Scroll-based footer detection
+- Series navigation (previous/next)
+- Table of contents highlighting
+
+**`src/components/blog/PostContent.tsx`** - Markdown renderer with features:
+- `react-markdown` with `remark-gfm`
+- Syntax highlighting via custom `CodeBlock` component
+- Automatic heading ID generation
+- Responsive styling with clamp()
+
+### Blog Post Features
+
+**Table of Contents** (`src/components/blog/TableOfContents.tsx`):
+- Auto-generated from markdown headings
+- Scroll-based active state tracking
+- Smooth scroll to section on click
+- Hidden on small screens (< 768px)
+
+**Series Navigation** (`src/components/blog/SeriesBanner.tsx`):
+- Shows series name and description
+- Lists all posts in series with current post highlighted
+- Click to navigate to other posts in series
+
+**Post Navigation** (`src/components/blog/PostNavigation.tsx`):
+- Previous/next post links
+- Series-aware navigation
+- Automatic calculation based on series posts
+
+**Syntax Highlighting** (`src/components/blog/CodeBlock.tsx`):
+- Uses custom tokenizer for code detection
+- Responsive font sizing
+- Copy button functionality
+- Language detection from markdown
+
+### Reading Progress
+
+Located in `post-detail-client.tsx`:
+```typescript
+// Calculate reading progress
+const [scrollProgress, setScrollProgress] = useState(0)
+
+useEffect(() => {
+  function updateProgress() {
+    const windowHeight = window.innerHeight
+    const documentHeight = document.documentElement.scrollHeight - windowHeight
+    const scrolled = window.scrollY
+    const progress = (scrolled / documentHeight) * 100
+    setScrollProgress(Math.min(100, Math.max(0, progress)))
+  }
+  // ... update on scroll
+}, [])
+```
+
+Displays as orange progress bar at bottom of screen, sticks above footer when visible.
+
+## Footer Component
+
+### Overview
+
+Responsive footer with profile section, navigation links, and social media icons. Stacks vertically on screens < 550px.
+
+**Location**: `src/components/ui/Footer.tsx`
+
+### Features
+
+**Responsive Behavior**:
+- Desktop (≥550px): Horizontal layout with 3 sections
+- Mobile (<550px): Vertical stacking with centered sections
+- Divider only shows on desktop
+
+**Sections**:
+1. **Profile** (27% width on desktop):
+   - Avatar image (loaded from Supabase or fallback)
+   - Name: "xs"
+   - Tagline: "Building things for the web"
+
+2. **Links** (23% width on desktop):
+   - Main Site (me.xsooi.com)
+   - Projects (projects.xsooi.com)
+   - Contact me link
+   - Diagonal arrow icons on hover
+
+3. **Social** (27% width on desktop):
+   - Email display: "hi@xsooi.com"
+   - Social buttons: GitHub, LinkedIn, Facebook, Instagram
+   - Circular buttons with hover effects
+
+### Implementation Details
+
+```typescript
+// Vertical stacking detection
+const [isVerticalStack, setIsVerticalStack] = useState(false)
+
+useEffect(() => {
+  const checkVerticalStack = () => {
+    setIsVerticalStack(window.innerWidth < 550)
+  }
+  checkVerticalStack()
+  window.addEventListener('resize', checkVerticalStack)
+  return () => window.removeEventListener('resize', checkVerticalStack)
+}, [])
+
+// Avatar management
+const [avatarUrl, setAvatarUrl] = useState<string>('')
+useEffect(() => {
+  async function loadAvatar() {
+    const url = await getAvatarUrl()
+    setAvatarUrl(url || 'https://...default-avatar.jpeg')
+  }
+  loadAvatar()
+}, [])
+```
+
+### Avatar Management
+
+Admin can upload avatar at `/admin/avatar`:
+- Image uploaded to Supabase Storage (`blog-images` bucket)
+- URL saved to `site_settings` table (key: `avatar_url`)
+- Fallback to default if not set
+
+## Home Page Layout
+
+### Centering Approach
+
+The home page uses flexbox centering (matching main site approach):
+```typescript
+const containerStyle = {
+  display: "flex",
+  flexDirection: "column",
+  width: "100%",
+  alignItems: "center", // Centers content horizontally
+}
+
+const mainStyle = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center", // Centers content vertically
+  alignItems: "center", // Centers content horizontally
+  width: "100%",
+}
+
+const cardContainerStyle = {
+  width: isExpanded ? "100vw" : "clamp(300px, 90vw, 1100px)",
+  // Positioned absolutely with left: 50% and transform: translateX(-50%)
+}
+```
+
+**Key Changes**:
+- Removed `minWidth: "1000px"` constraint that caused cutoff
+- Added `alignItems: "center"` to container for proper flexbox centering
+- Card width uses `90vw` for better responsiveness
+- Content flows naturally based on viewport width
+
 ## Current Limitations / Future Work
 
 ### Not Yet Implemented
-- Individual blog post pages (`/posts/[slug]`)
-- Markdown/MDX processing
-- Syntax highlighting for code blocks
-- Reading progress tracker
-- Sidebar with table of contents
-- Full-screen navigation menu
 - Search functionality
 - RSS feed
 - Comment system
 - Post ordering within series (UI)
-- Image optimization with Next.js Image component
+- Image optimization with Next.js Image component for blog images
 
 ### Technical Debt
 - Large component files (admin pages at 300+ lines)
