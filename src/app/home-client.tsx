@@ -519,7 +519,6 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
 
   const contentBlockStyle: React.CSSProperties = {
     backgroundColor: "#FFFFFF",
-    boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
     borderRadius: "12px",
     padding: "0",
     width: "clamp(300px, 80vw, 1100px)",
