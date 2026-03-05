@@ -1,7 +1,3 @@
-// Database types for Supabase
-// You can regenerate these types by running:
-// npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/types/database.ts
-
 export type Json =
   | string
   | number
@@ -10,111 +6,51 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       posts: {
         Row: {
           id: number
-          slug: string
           title: string
+          slug: string
           content: string | null
           excerpt: string | null
           published_at: string | null
           created_at: string
           updated_at: string
+          featured_image: string | null
+          tags: string[] | null
+          read_time: number | null
+          author_name: string | null
         }
         Insert: {
-          id?: number
-          slug: string
-          title: string
-          content?: string | null
-          excerpt?: string | null
-          published_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: number
-          slug?: string
-          title?: string
-          content?: string | null
-          excerpt?: string | null
-          published_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      series: {
-        Row: {
           id: number
-          slug: string
           title: string
-          description: string | null
+          slug: string
+          content: string | null
+          excerpt: string | null
+          published_at: string | null
           created_at: string
+          updated_at: string
+          featured_image: string | null
+          tags: string[] | null
+          read_time: number | null
+          author_name: string | null
         }
-        Insert: {
-          id?: number
-          slug: string
+        Update: {
+          id: number
           title: string
-          description?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: number
-          slug?: string
-          title?: string
-          description?: string | null
-          created_at?: string
-        }
-      }
-      pictures: {
-        Row: {
-          id: number
-          url: string
-          caption: string | null
-          location: string | null
-          date_taken: string | null
-          order_column: number | null
+          slug: string
+          content: string | null
+          excerpt: string | null
+          published_at: string | null
           created_at: string
-        }
-        Insert: {
-          id?: number
-          url: string
-          caption?: string | null
-          location?: string | null
-          date_taken?: string | null
-          order_column?: number | null
-          created_at?: string
-        }
-        Update: {
-          id?: number
-          url?: string
-          caption?: string | null
-          location?: string | null
-          date_taken?: string | null
-          order_column?: number | null
-          created_at?: string
-        }
-      }
-      series_posts: {
-        Row: {
-          id: number
-          series_id: number
-          post_id: number
-          order_column: number | null
-        }
-        Insert: {
-          id?: number
-          series_id: number
-          post_id: number
-          order_column?: number | null
-        }
-        Update: {
-          id?: number
-          series_id?: number
-          post_id?: number
-          order_column?: number | null
+          updated_at: string
+          featured_image: string | null
+          tags: string[] | null
+          read_time: number | null
+          author_name: string | null
         }
       }
     }

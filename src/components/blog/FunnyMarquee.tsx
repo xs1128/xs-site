@@ -149,10 +149,10 @@ export default function FunnyMarquee({ pictures }: FunnyMarqueeProps) {
 
   const headerStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
-    fontSize: clamp.base,
+    fontSize: "clamp(20px, 3vw, 28px)",
     fontWeight: 700,
     color: "#FFFFFF",
-    padding: spacing.sm,
+    padding: "clamp(6px, 1vh, 12px)",
     margin: "0",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
@@ -181,7 +181,7 @@ export default function FunnyMarquee({ pictures }: FunnyMarqueeProps) {
 
   return (
     <div style={containerStyle}>
-      <h2 style={headerStyle}>Random Moments</h2>
+      <h2 style={headerStyle}>RANDOM MOMENT</h2>
       <div style={marqueeWrapperStyle}>
         <div
           ref={contentRef}

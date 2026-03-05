@@ -356,15 +356,25 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
   const [isAnimating, setIsAnimating] = useState(false);
   const [navDroppedIn, setNavDroppedIn] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
 
   useEffect(() => {
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth < 480);
     };
 
+    const checkScroll = () => {
+      setIsAtTop(window.scrollY === 0);
+    };
+
     checkScreenSize();
+    checkScroll();
     window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
+    window.addEventListener("scroll", checkScroll, { passive: true });
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+      window.removeEventListener("scroll", checkScroll);
+    };
   }, []);
 
   const triggerCardSwap = () => {
@@ -393,11 +403,13 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
+    width: "100%",
+    alignItems: "center",
   };
 
   const cardContainerStyle: React.CSSProperties = {
     position: "relative",
-    width: isExpanded ? "100vw" : "clamp(300px, 80vw, 1100px)",
+    width: isExpanded ? "100vw" : "clamp(300px, 90vw, 1100px)",
     height: isExpanded
       ? "100vh"
       : "clamp(400px, 80vh, 750px)",
@@ -434,7 +446,8 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     transition: isExpanded
       ? "background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"
       : "background-color 0.8s ease, padding 0.8s ease, opacity 0.2s ease",
-    opacity: navDroppedIn ? 1 : isSwapped ? 0 : 1,
+    opacity: navDroppedIn ? 1 : isSwapped ? 0 : (isAtTop ? 1 : 0),
+    pointerEvents: navDroppedIn ? "auto" : isSwapped ? "none" : (isAtTop ? "auto" : "none"),
     transform: "translateY(0)",
     transformOrigin: "top",
     willChange: isAnimating ? "padding, background-color, transform, opacity" : "auto",
@@ -471,7 +484,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     letterSpacing: "0.05em",
     opacity: !isSwapped || navDroppedIn ? 1 : 0,
     transition: "opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s",
-    pointerEvents: navDroppedIn ? "auto" : (isSwapped ? "none" : "auto"),
+    pointerEvents: navDroppedIn ? "auto" : (isSwapped ? "none" : (isAtTop ? "auto" : "none")),
     transform: navDroppedIn ? "translateY(0)" : (isSwapped ? "translateY(0)" : "translateY(10px)"),
     transformOrigin: "top",
   };
@@ -485,7 +498,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     cursor: "pointer",
     transition: "color 0.3s ease, opacity 0.2s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s",
     opacity: !isSwapped || navDroppedIn ? 1 : 0,
-    pointerEvents: navDroppedIn ? "auto" : (isSwapped ? "none" : "auto"),
+    pointerEvents: navDroppedIn ? "auto" : (isSwapped ? "none" : (isAtTop ? "auto" : "none")),
     transform: navDroppedIn ? "translateY(0)" : (isSwapped ? "translateY(0)" : "translateY(10px)"),
     transformOrigin: "top",
     display: "flex",
@@ -499,8 +512,9 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     justifyContent: isExpanded ? "flex-start" : "center",
     alignItems: "center",
     flex: 1,
-    padding: isExpanded ? "0" : "0 20px",
+    padding: isExpanded ? "0" : "0",
     transition: "padding 0.3s ease",
+    width: "100%",
   };
 
   const contentBlockStyle: React.CSSProperties = {
@@ -534,7 +548,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     ...cardBaseStyle,
     backgroundColor: "#2A2F35",
     display: "grid",
-    gridTemplateColumns: "30% 70%",
+    gridTemplateColumns: isSmallScreen ? "100%" : "30% 70%",
     overflow: "hidden",
     zIndex: 1,
     paddingTop: isExpanded ? "clamp(40px, 7vh, 64px)" : "0",
@@ -671,10 +685,10 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
             {/* Content Card (Back) */}
             <div style={contentCardStyle}>
               {/* Left Marquee */}
-              <FunnyMarqueeWrapper />
+              {!isSmallScreen && <FunnyMarqueeWrapper />}
 
               {/* Right Content */}
-              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: "1px solid rgba(255, 255, 255, 0.2)", position: "relative" }}>
+              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: "clamp(16px, 3vh, 32px)" }}>
                 {/* RECENT Section */}
                 <RecentLogs />
 

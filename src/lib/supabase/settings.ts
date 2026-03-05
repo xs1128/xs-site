@@ -62,3 +62,18 @@ export async function updateHeroImageUrl(imageUrl: string) {
     'URL of the hero image displayed on the landing page'
   )
 }
+
+// Get avatar URL
+export async function getAvatarUrl(): Promise<string> {
+  const url = await getSiteSetting('avatar_url')
+  return url || null
+}
+
+// Update avatar URL
+export async function updateAvatarUrl(imageUrl: string) {
+  return updateSiteSetting(
+    'avatar_url',
+    imageUrl,
+    'URL of the avatar/profile picture displayed in the footer'
+  )
+}

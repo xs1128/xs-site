@@ -1,4 +1,8 @@
 import { createClient } from './server'
+import type { Post } from '@/types/post'
+import type { Database } from '@/types/database'
+
+type PostRow = Database['public']['Tables']['posts']['Row']
 
 export async function getRecentPosts(limit = 5) {
   const supabase = await createClient()
@@ -40,6 +44,114 @@ export async function getPictures() {
 
   if (error) {
     console.error('Error fetching pictures:', error)
+    return []
+  }
+
+  return data
+}
+
+/**
+ * Get published post by slug with series relationships
+ */
+export async function getPostBySlug(slug: string) {
+  const supabase = await createClient()
+
+  // First get the post
+  const { data: post, error: postError } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('slug', slug)
+    .not('published_at', 'is', null)
+    .single<PostRow>()
+
+  if (postError || !post) {
+    console.error('Error fetching post by slug:', {
+      message: postError?.message,
+      details: postError?.details,
+      hint: postError?.hint,
+      code: postError?.code,
+      fullError: postError
+    })
+    return null
+  }
+
+  // Then get series relationships through series_posts
+  const { data: seriesData, error: seriesError } = await supabase
+    .from('series_posts')
+    .select(`
+      series_id,
+      series (
+        id,
+        title,
+        slug,
+        description
+      )
+    `)
+    .eq('post_id', post.id)
+
+  if (seriesError) {
+    console.error('Error fetching series:', seriesError)
+  }
+
+  // Combine post with series data
+  const series = seriesData?.map((sp: any) => sp.series).filter(Boolean) || []
+
+  return {
+    ...post,
+    series,
+  }
+}
+
+/**
+ * Get related posts based on tags
+ */
+export async function getRelatedPosts(
+  currentSlug: string,
+  tags: string[],
+  limit = 5
+): Promise<Post[]> {
+  if (!tags || tags.length === 0) return []
+
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .neq('slug', currentSlug) // Exclude current post
+    .not('published_at', 'is', null) // Only published
+    .contains('tags', `{${tags[0]}}`) // Posts that have at least one matching tag
+    .order('published_at', { ascending: false })
+    .limit(limit)
+
+  if (error) {
+    console.error('Error fetching related posts:', {
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+      code: error.code,
+      fullError: error
+    })
+    return []
+  }
+
+  return data || []
+}
+
+/**
+ * Get posts in the same series (for navigation)
+ */
+export async function getSeriesPosts(seriesId: number) {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('series_posts')
+    .select(`
+      order_column,
+      posts (*)
+    `)
+    .eq('series_id', seriesId)
+    .order('order_column', { ascending: true })
+
+  if (error) {
+    console.error('Error fetching series posts:', error)
     return []
   }
 

@@ -5,6 +5,7 @@ import "@fontsource/roboto-mono/400.css";
 import "@fontsource/roboto-mono/500.css";
 import "@fontsource/roboto-mono/700.css";
 import "./globals.css";
+import Footer from "@/components/ui/Footer";
 
 export const metadata: Metadata = {
   title: "Blog",
@@ -18,7 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }

@@ -48,10 +48,13 @@ export default function RecentLogs() {
 
   const headerStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(12px, 1.8vw, 18px)",
+    fontSize: "clamp(20px, 3vw, 28px)",
     fontWeight: 700,
     color: "#FFFFFF",
-    padding: "clamp(8px, 1.5vh, 16px)",
+    paddingLeft: "clamp(16px, 3vw, 24px)",
+    paddingRight: "clamp(6px, 1vh, 12px)",
+    paddingTop: "clamp(6px, 1vh, 12px)",
+    paddingBottom: "clamp(6px, 1vh, 12px)",
     margin: "0",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
@@ -105,7 +108,7 @@ export default function RecentLogs() {
   if (loading) {
     return (
       <div style={containerStyle}>
-        <h2 style={headerStyle}>Recent</h2>
+        <h2 style={headerStyle}>Recent Blogs</h2>
         <div style={listContainerStyle}>
           <p style={emptyStyle}>Loading...</p>
         </div>
@@ -115,7 +118,7 @@ export default function RecentLogs() {
 
   return (
     <div style={containerStyle}>
-      <h2 style={headerStyle}>Recent</h2>
+      <h2 style={headerStyle}>Recent Blogs</h2>
       <div style={listContainerStyle}>
         {posts.length === 0 ? (
           <p style={emptyStyle}>No recent posts yet</p>

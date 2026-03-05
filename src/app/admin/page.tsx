@@ -197,6 +197,20 @@ export default function AdminDashboard() {
           >
             Update Hero
           </Link>
+          <Link
+            href="/admin/avatar"
+            style={linkStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#E5532C'
+              e.currentTarget.style.color = '#FFFFFF'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent'
+              e.currentTarget.style.color = '#E5532C'
+            }}
+          >
+            Update Avatar
+          </Link>
         </div>
       </div>
     </div>

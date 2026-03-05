@@ -7,6 +7,10 @@ export interface PostInput {
   content: string | null
   excerpt: string | null
   published_at: string | null
+  featured_image?: string | null
+  tags?: string[] | null
+  read_time?: number | null
+  author_name?: string | null
 }
 
 export interface SeriesInput {

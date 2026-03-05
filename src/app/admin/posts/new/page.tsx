@@ -12,6 +12,10 @@ export default function NewPost() {
   const [slug, setSlug] = useState('')
   const [excerpt, setExcerpt] = useState('')
   const [content, setContent] = useState('')
+  const [featuredImage, setFeaturedImage] = useState('')
+  const [tags, setTags] = useState('')
+  const [readTime, setReadTime] = useState('')
+  const [authorName, setAuthorName] = useState('')
   const [publish, setPublish] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -71,12 +75,25 @@ export default function NewPost() {
       return
     }
 
+    // Parse tags from comma-separated string
+    const tagsArray = tags
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0)
+
+    // Parse read time
+    const readTimeNum = readTime ? parseInt(readTime, 10) : null
+
     // Create post first
     const { data: postData, error: postError } = await createPost({
       title,
       slug,
       excerpt: excerpt || null,
       content: content || null,
+      featured_image: featuredImage || null,
+      tags: tagsArray.length > 0 ? tagsArray : null,
+      read_time: readTimeNum,
+      author_name: authorName || null,
       published_at: publish ? new Date().toISOString() : null,
     })
 
@@ -245,6 +262,51 @@ export default function NewPost() {
             onChange={(e) => setContent(e.target.value)}
             style={textareaStyle}
             placeholder="Write your post content in Markdown..."
+          />
+        </div>
+
+        <div style={formGroupStyle}>
+          <label style={labelStyle}>Featured Image URL</label>
+          <input
+            type="text"
+            value={featuredImage}
+            onChange={(e) => setFeaturedImage(e.target.value)}
+            style={inputStyle}
+            placeholder="https://example.com/image.jpg"
+          />
+        </div>
+
+        <div style={formGroupStyle}>
+          <label style={labelStyle}>Tags (comma-separated)</label>
+          <input
+            type="text"
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            style={inputStyle}
+            placeholder="react, nextjs, webdev"
+          />
+        </div>
+
+        <div style={formGroupStyle}>
+          <label style={labelStyle}>Read Time (minutes, optional)</label>
+          <input
+            type="number"
+            value={readTime}
+            onChange={(e) => setReadTime(e.target.value)}
+            style={inputStyle}
+            placeholder="5"
+            min="1"
+          />
+        </div>
+
+        <div style={formGroupStyle}>
+          <label style={labelStyle}>Author Name (optional)</label>
+          <input
+            type="text"
+            value={authorName}
+            onChange={(e) => setAuthorName(e.target.value)}
+            style={inputStyle}
+            placeholder="John Doe"
           />
         </div>
 

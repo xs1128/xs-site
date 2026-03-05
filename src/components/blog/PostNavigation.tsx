@@ -1,0 +1,108 @@
+'use client'
+
+import Link from 'next/link'
+import { FONTS, clamp, spacing } from '@/styles/typography'
+import { colors } from '@/styles/colors'
+import { TRANSITIONS } from '@/styles/animations'
+
+interface PostNavigationProps {
+  prevPost: { title: string; slug: string } | null
+  nextPost: { title: string; slug: string } | null
+  seriesTitle?: string
+}
+
+export default function PostNavigation({
+  prevPost,
+  nextPost,
+  seriesTitle
+}: PostNavigationProps) {
+  if (!prevPost && !nextPost) return null
+
+  const containerStyle: React.CSSProperties = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: spacing.md,
+    marginTop: spacing.lg,
+    paddingTop: spacing.lg,
+    borderTop: `1px solid ${colors.border}`,
+  }
+
+  const navItemStyle: React.CSSProperties = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: spacing.xs,
+  }
+
+  const labelStyle: React.CSSProperties = {
+    fontFamily: FONTS.primary,
+    fontSize: clamp.xs,
+    color: '#666666',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+  }
+
+  const linkStyle: React.CSSProperties = {
+    fontFamily: FONTS.primary,
+    fontSize: clamp.base,
+    fontWeight: 600,
+    color: colors.accent,
+    textDecoration: 'none',
+    transition: TRANSITIONS.fast('color'),
+  }
+
+  const leftStyle: React.CSSProperties = {
+    ...navItemStyle,
+    alignItems: 'flex-start',
+  }
+
+  const rightStyle: React.CSSProperties = {
+    ...navItemStyle,
+    alignItems: 'flex-end',
+    textAlign: 'right' as const,
+  }
+
+  return (
+    <div style={containerStyle}>
+      {prevPost && (
+        <div style={leftStyle}>
+          <span style={labelStyle}>
+            {seriesTitle ? 'Previous in Series' : 'Previous Post'}
+          </span>
+          <Link
+            href={`/posts/${prevPost.slug}`}
+            style={linkStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#CC4420'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = colors.accent
+            }}
+          >
+            ← {prevPost.title}
+          </Link>
+        </div>
+      )}
+
+      {nextPost && (
+        <div style={rightStyle}>
+          <span style={labelStyle}>
+            {seriesTitle ? 'Next in Series' : 'Next Post'}
+          </span>
+          <Link
+            href={`/posts/${nextPost.slug}`}
+            style={linkStyle}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = '#CC4420'
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = colors.accent
+            }}
+          >
+            {nextPost.title} →
+          </Link>
+        </div>
+      )}
+    </div>
+  )
+}

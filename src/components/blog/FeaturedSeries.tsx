@@ -56,10 +56,13 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
 
   const headerStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(12px, 1.8vw, 18px)",
+    fontSize: "clamp(20px, 3vw, 28px)",
     fontWeight: 700,
     color: "#FFFFFF",
-    padding: "clamp(8px, 1.5vh, 16px)",
+    paddingLeft: "clamp(16px, 3vw, 24px)",
+    paddingRight: "clamp(6px, 1vh, 12px)",
+    paddingTop: "clamp(6px, 1vh, 12px)",
+    paddingBottom: "clamp(6px, 1vh, 12px)",
     margin: "0",
     textTransform: "uppercase",
     letterSpacing: "0.05em",

@@ -64,6 +64,8 @@ export default function AdminHeader({ user }: { user: User }) {
           <Link href="/admin/posts" style={linkStyle}>Posts</Link>
           <Link href="/admin/series" style={linkStyle}>Series</Link>
           <Link href="/admin/pictures" style={linkStyle}>Pictures</Link>
+          <Link href="/admin/avatar" style={linkStyle}>Avatar</Link>
+          <Link href="/admin/hero" style={linkStyle}>Hero</Link>
           <a href="/" style={linkStyle}>View Site →</a>
         </nav>
         <div style={{
