@@ -1,55 +1,111 @@
-# Blog Features
+# Blog Post Pages
 
-## Home Page Layout
+## Overview
 
-The home page (`src/app/home-client.tsx`) features a modern carousel-based blog layout.
+Individual blog post pages are fully implemented at `/posts/[slug]` with markdown rendering, syntax highlighting, and series navigation.
 
-### Components
+## Key Components
 
-**RecentBlogsGrid** (`src/components/blog/RecentBlogsGrid.tsx`)
-- Horizontal carousel of blog post cards
-- Arrow navigation (‹ ›) that appears based on scroll position
-- Fetches 12 most recent posts with featured images
-- Date format: YYYY-MM-DD
-- Smooth scrolling with hidden scrollbar
+### `src/app/posts/[slug]/page.tsx` - Server Component
 
-**BlogCard** (`src/components/blog/BlogCard.tsx`)
-- Fixed dimensions: 200px × 260px (desktop), 160px × 200px (mobile)
-- 70% height for featured image, 30% for title bar
-- Left-aligned text with smart word breaking
-- Hover: lifts 4px with orange border (#E5532C)
+Fetches post data:
 
-**BlogExpandedContent** (`src/components/blog/BlogExpandedContent.tsx`)
-- Container for Categories and 3D Animation sections
-- Side-by-side flex layout (50/50 split on desktop)
+```typescript
+// Fetches post with series, headings, and related posts
+const post = await getPostBySlug(params.slug)
+const seriesData = await getSeriesForPost(post.id)
+const headings = extractHeadings(post.content)
+const relatedPosts = await getRelatedPosts(post.id)
+```
 
-**SeriesGrid** (`src/components/blog/SeriesGrid.tsx`)
-- 4×3 grid of category buttons (12 per page)
-- Up/down arrow pagination
-- Fetches from Supabase `series` table
+### `src/app/posts/[slug]/post-detail-client.tsx` - Client Component
 
-**ThreeDAssetPlaceholder** (`src/components/blog/ThreeDAssetPlaceholder.tsx`)
-- Empty placeholder for future 3D assets
+Handles interactivity:
+- Reading progress bar (bottom of screen)
+- Scroll-based footer detection
+- Series navigation (previous/next)
+- Table of contents highlighting
 
-## Specifications
+### `src/components/blog/PostContent.tsx` - Markdown Renderer
 
-**Card Dimensions:**
-- Desktop: 200px width × 260px height
-- Mobile: 160px width × 200px height
+Features:
+- `react-markdown` with `remark-gfm`
+- Syntax highlighting via custom `CodeBlock` component
+- Automatic heading ID generation
+- Responsive styling with clamp()
 
-**Typography:**
-- Title: `clamp(10px, 1.4vw, 14px)`, weight 700
-- Metadata: `clamp(8px, 1.1vw, 11px)`, weight 400
+## Blog Post Features
 
-**Colors:**
-- Card background: `#363D44`
-- Title bar: `#1A1D21`
-- Accent: `#E5532C`
+### Table of Contents
 
-**Responsive:**
-| Feature | Desktop | Mobile |
-|---------|---------|--------|
-| Card Size | 200×260px | 160×200px |
-| Categories | 3×4 grid | 2×N grid |
-| Items per page | 12 | 8 |
-| Layout | Side-by-side | Stacked |
+**Location**: `src/components/blog/TableOfContents.tsx`
+
+Features:
+- Auto-generated from markdown headings
+- Scroll-based active state tracking
+- Smooth scroll to section on click
+- Hidden on small screens (< 768px)
+
+### Series Navigation
+
+**Location**: `src/components/blog/SeriesBanner.tsx`
+
+Features:
+- Shows series name and description
+- Lists all posts in series with current post highlighted
+- Click to navigate to other posts in series
+
+### Post Navigation
+
+**Location**: `src/components/blog/PostNavigation.tsx`
+
+Features:
+- Previous/next post links
+- Series-aware navigation
+- Automatic calculation based on series posts
+
+### Syntax Highlighting
+
+**Location**: `src/components/blog/CodeBlock.tsx`
+
+Features:
+- Uses custom tokenizer for code detection
+- Responsive font sizing
+- Copy button functionality
+- Language detection from markdown
+
+## Reading Progress
+
+Located in `post-detail-client.tsx`:
+
+```typescript
+// Calculate reading progress
+const [scrollProgress, setScrollProgress] = useState(0)
+
+useEffect(() => {
+  function updateProgress() {
+    const windowHeight = window.innerHeight
+    const documentHeight = document.documentElement.scrollHeight - windowHeight
+    const scrolled = window.scrollY
+    const progress = (scrolled / documentHeight) * 100
+    setScrollProgress(Math.min(100, Math.max(0, progress)))
+  }
+  // ... update on scroll
+}, [])
+```
+
+Displays as orange progress bar at bottom of screen, sticks above footer when visible.
+
+## Other Blog Components
+
+- **BlogPageHeader** - Blog page header with navigation
+- **PostHeader** - Post title and metadata display
+- **PostHero** - Featured image component
+- **TagList** - Post tags display
+- **OtherPosts** - Related posts sidebar
+- **LeftSidebar** - Left sidebar wrapper
+- **FunnyMarquee** - Infinite-scroll marquee
+- **FunnyMarqueeWrapper** - Client wrapper for marquee data
+- **RecentLogs** - Recent posts list
+- **FeaturedSeries** - Featured series display
+- **FeaturedSeriesWrapper** - Client wrapper for series data
