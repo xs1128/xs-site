@@ -9,10 +9,58 @@ import { FONTS, clamp, spacing } from "@/styles/typography";
 const SCROLL_SPEED = 40; // Pixels per second (2.6x faster than before)
 
 interface FunnyMarqueeProps {
-  pictures: FunnyPicture[]
+  pictures: FunnyPicture[];
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
-export default function FunnyMarquee({ pictures }: FunnyMarqueeProps) {
+// Collapse handle component
+function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onToggle: () => void }) {
+  const handleStyle: React.CSSProperties = {
+    position: "absolute",
+    right: 0,
+    top: "50%",
+    transform: "translateY(-50%)",
+    width: "44px",
+    height: "80px",
+    backgroundColor: "#2A2F35",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    borderRight: "none",
+    borderRadius: "8px 0 0 8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    zIndex: 300,
+    transition: "background-color 0.2s ease, transform 0.2s ease",
+  };
+
+  const iconStyle: React.CSSProperties = {
+    fontSize: "24px",
+    color: "#E5532C",
+    fontWeight: 700,
+    transition: "transform 0.3s ease",
+    transform: isCollapsed ? "rotate(180deg)" : "rotate(0deg)",
+    fontFamily: "monospace",
+  };
+
+  return (
+    <div
+      style={handleStyle}
+      onClick={onToggle}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = "#363D44";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = "#2A2F35";
+      }}
+    >
+      <span style={iconStyle}>◀</span>
+    </div>
+  );
+}
+
+export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCollapse }: FunnyMarqueeProps) {
   // Clean state - no refs mixed with state
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -147,6 +195,18 @@ export default function FunnyMarquee({ pictures }: FunnyMarqueeProps) {
     flexDirection: "column",
   };
 
+  // Content wrapper style - handles collapse animation
+  const contentWrapperStyle: React.CSSProperties = {
+    position: "relative",
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    opacity: isCollapsed ? 0 : 1,
+    pointerEvents: isCollapsed ? "none" : "auto",
+    transition: "opacity 0.3s ease",
+  };
+
   const headerStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
     fontSize: "clamp(20px, 3vw, 28px)",
@@ -181,8 +241,18 @@ export default function FunnyMarquee({ pictures }: FunnyMarqueeProps) {
 
   return (
     <div style={containerStyle}>
-      <h2 style={headerStyle}>RANDOM MOMENT</h2>
-      <div style={marqueeWrapperStyle}>
+      {/* Collapse Handle */}
+      {onToggleCollapse && (
+        <CollapseHandle
+          isCollapsed={isCollapsed}
+          onToggle={onToggleCollapse}
+        />
+      )}
+
+      {/* Content wrapper - fades out when collapsed */}
+      <div style={contentWrapperStyle}>
+        <h2 style={headerStyle}>RANDOM MOMENT</h2>
+        <div style={marqueeWrapperStyle}>
         <div
           ref={contentRef}
           style={marqueeContentStyle}
@@ -353,6 +423,7 @@ export default function FunnyMarquee({ pictures }: FunnyMarqueeProps) {
             );
           })}
         </div>
+      </div>
       </div>
     </div>
   );

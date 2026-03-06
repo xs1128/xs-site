@@ -5,7 +5,12 @@ import { createClient } from "@/lib/supabase/client";
 import FunnyMarquee from "./FunnyMarquee";
 import type { FunnyPicture } from "@/types/post";
 
-export default function FunnyMarqueeWrapper() {
+interface FunnyMarqueeWrapperProps {
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
+}
+
+export default function FunnyMarqueeWrapper({ isCollapsed = false, onToggleCollapse }: FunnyMarqueeWrapperProps) {
   const [pictures, setPictures] = useState<FunnyPicture[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,5 +46,5 @@ export default function FunnyMarqueeWrapper() {
     return <div style={{ color: '#666666' }}>Loading pictures...</div>;
   }
 
-  return <FunnyMarquee pictures={pictures} />;
+  return <FunnyMarquee pictures={pictures} isCollapsed={isCollapsed} onToggleCollapse={onToggleCollapse} />;
 }

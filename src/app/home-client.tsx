@@ -357,6 +357,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
   const [navDroppedIn, setNavDroppedIn] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [isMarqueeCollapsed, setIsMarqueeCollapsed] = useState(false);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -547,13 +548,13 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     ...cardBaseStyle,
     backgroundColor: "#2A2F35",
     display: "grid",
-    gridTemplateColumns: isSmallScreen ? "100%" : "30% 70%",
+    gridTemplateColumns: isSmallScreen ? "100%" : (isMarqueeCollapsed ? "40px 1fr" : "30% 70%"),
     overflow: "hidden",
     zIndex: 1,
     paddingTop: isExpanded ? "clamp(40px, 7vh, 64px)" : "0",
     transform: isSwapped ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(100%)",
-    transition: "transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), padding-top 0.8s ease",
-    willChange: isAnimating ? "transform, padding-top" : "auto",
+    transition: "transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), padding-top 0.8s ease, grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
+    willChange: isAnimating ? "transform, padding-top, grid-template-columns" : "auto",
   };
 
   const tapAreaStyle: React.CSSProperties = {
@@ -684,7 +685,12 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
             {/* Content Card (Back) */}
             <div style={contentCardStyle}>
               {/* Left Marquee */}
-              {!isSmallScreen && <FunnyMarqueeWrapper />}
+              {!isSmallScreen && (
+                <FunnyMarqueeWrapper
+                  isCollapsed={isMarqueeCollapsed}
+                  onToggleCollapse={() => setIsMarqueeCollapsed(!isMarqueeCollapsed)}
+                />
+              )}
 
               {/* Right Content */}
               <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: isExpanded ? "0" : "clamp(16px, 3vh, 32px)", gap: isExpanded ? "0" : "clamp(16px, 3vh, 32px)" }}>
