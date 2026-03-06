@@ -26,6 +26,8 @@ export interface AnnouncementMarqueeProps extends ThemeProps {}
 export interface FullScreenNavProps {
   isOpen: boolean;
   onClose: () => void;
+  isSmallScreen: boolean;
+  setIsDarkTheme: (value: boolean) => void;
   onNavigateToSection?: (sectionId: string) => void;
 }
 
@@ -72,9 +74,8 @@ export interface AboutSectionProps extends ResponsiveProps {
 }
 
 export interface AboutHeaderProps {
-  onScrollToAbout: () => void;
-  onOpenNav: () => void;
   isSmallScreen: boolean;
+  setIsDarkTheme: (value: boolean) => void;
 }
 
 export interface AboutContentProps {
