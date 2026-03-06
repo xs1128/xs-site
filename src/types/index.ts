@@ -95,8 +95,6 @@ export interface ContactSectionProps extends ResponsiveProps {
 }
 
 export interface ContactHeaderProps {
-  onScrollToContact: () => void;
-  onOpenNav: () => void;
   isSmallScreen: boolean;
 }
 

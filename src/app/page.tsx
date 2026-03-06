@@ -8,6 +8,7 @@ import { SocialIconLink } from "../components/contact/SocialIconLink";
 import { ExpertiseCard } from "../components/about/ExpertiseCard";
 import { AboutHeader } from "../components/about/AboutHeader";
 import { AboutContent } from "../components/about/AboutContent";
+import { ContactHeader } from "../components/contact/ContactHeader";
 import { SpinningCircularText } from "../components/contact/SpinningCircularText";
 import { AnnouncementMarquee } from "../components/marquee/AnnouncementMarquee";
 
@@ -233,62 +234,6 @@ const FacebookIcon = () => (
     <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/>
   </svg>
 );
-
-// Contact Header Component
-function ContactHeader({
-  isSmallScreen,
-}: {
-  isSmallScreen: boolean;
-}) {
-  const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: isSmallScreen ? "5%" : "6%",
-        left: isSmallScreen ? "4vw" : "5vw",
-        padding: isSmallScreen ? "1.5vh 3vw" : "2vh 3vw",
-        display: "flex",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        color: "#2A2F35",
-        fontFamily: "Roboto Mono, monospace",
-        zIndex: 10,
-      }}
-    >
-      {/* Left: CONTACT with underline */}
-      <button
-        onClick={handleScrollToTop}
-        style={{
-          position: "relative",
-          fontSize: isSmallScreen ? "24px" : "32px",
-          fontWeight: 500,
-          backgroundColor: "transparent",
-          border: "none",
-          color: "inherit",
-          cursor: "pointer",
-          fontFamily: "inherit",
-          padding: 0,
-        }}
-      >
-        CONTACT
-        <span
-          style={{
-            position: "absolute",
-            bottom: "-4px",
-            left: 0,
-            width: "100%",
-            height: "1px",
-            backgroundColor: "#2A2F35",
-          }}
-        />
-      </button>
-    </div>
-  );
-}
 
 // Social Icon Link Component
 // Custom hook for contact section animations
