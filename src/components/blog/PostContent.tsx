@@ -53,6 +53,8 @@ export default function PostContent({ content, headings }: PostContentProps) {
     color: '#F5F5F5',
     lineHeight: 1.8,
     textAlign: 'justify',
+    overflowWrap: 'break-word',
+    wordBreak: 'break-word',
   }
 
   const headingStyles = {
@@ -123,6 +125,7 @@ export default function PostContent({ content, headings }: PostContentProps) {
     textDecoration: 'none',
     transition: TRANSITIONS.fast('color'),
     cursor: 'pointer',
+    overflowWrap: 'break-word',
   }
 
   const blockquoteStyle: React.CSSProperties = {
@@ -254,6 +257,8 @@ export default function PostContent({ content, headings }: PostContentProps) {
                   padding: '2px 6px',
                   borderRadius: '4px',
                   color: colors.accent,
+                  wordBreak: 'break-all',
+                  overflowWrap: 'break-word',
                 }}
               >
                 {children}

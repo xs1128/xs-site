@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import type { Heading } from '@/types/post'
-import { spacing } from '@/styles/typography'
+import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS, TIMING } from '@/styles/animations'
 
@@ -12,6 +12,7 @@ interface TableOfContentsProps {
 
 export default function TableOfContents({ headings }: TableOfContentsProps) {
   const [activeId, setActiveId] = useState<string>('')
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   useEffect(() => {
     if (headings.length === 0) return
@@ -61,19 +62,17 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
   }
 
   const containerStyle: React.CSSProperties = {
-    position: 'sticky',
-    top: '120px',
     width: '100%',
-    paddingTop: spacing.sm,
     marginBottom: spacing.md,
     paddingLeft: spacing.lg,
   }
 
   const titleStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
-    fontSize: 'clamp(12px, 1.8vw, 18px)',
+    fontFamily: FONTS.primary,
+    fontSize: clamp.base,
     fontWeight: 700,
-    color: 'var(--color-text)',
+    color: colors.darkText,
+    marginTop: spacing.lg,
     marginBottom: spacing.sm,
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
@@ -85,15 +84,16 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
     margin: 0,
   }
 
-  const getHeadingStyle = (level: number, isActive: boolean): React.CSSProperties => ({
-    fontFamily: 'var(--font-primary)',
-    fontSize: 'clamp(11px, 1.5vw, 14px)',
+  const getHeadingStyle = (level: number, isActive: boolean, isHovered: boolean): React.CSSProperties => ({
+    fontFamily: FONTS.primary,
+    fontSize: clamp.sm,
     fontWeight: isActive ? 600 : 400,
-    color: isActive ? 'var(--color-accent)' : '#999999',
+    color: isActive ? colors.accent : (isHovered ? colors.darkText : '#999999'),
     cursor: 'pointer',
     padding: `${spacing.xs} 0`,
     paddingLeft: getIndentPadding(level),
-    transition: `color ${TIMING.slower} ${TIMING.smooth}, font-weight ${TIMING.medium} ${TIMING.smooth}, transform ${TIMING.fast} ${TIMING.smooth}`,
+    transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
+    transition: `color ${TIMING.slower} ${TIMING.smooth}, transform ${TIMING.fast} ${TIMING.smooth}`,
     borderLeft: level > 1 ? `1px solid ${colors.border}` : 'none',
   })
 
@@ -107,8 +107,10 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
         {headings.map((heading) => (
           <li
             key={heading.id}
-            style={getHeadingStyle(heading.level, activeId === heading.id)}
+            style={getHeadingStyle(heading.level, activeId === heading.id, hoveredId === heading.id)}
             onClick={() => scrollToHeading(heading.id)}
+            onMouseEnter={() => setHoveredId(heading.id)}
+            onMouseLeave={() => setHoveredId(null)}
           >
             {heading.text}
           </li>

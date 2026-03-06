@@ -64,13 +64,14 @@ export default function PostDetailClient({
 
   const contentContainerStyle: React.CSSProperties = {
     display: 'flex',
-    gap: spacing.lg,
+    gap: isMobile ? '0' : spacing.md,
     maxWidth: '1400px',
     margin: '0 auto',
     padding: spacing.lg,
     flex: 1,
     position: 'relative',
-    minWidth: '300px',
+    width: '100%',
+    overflowX: 'hidden',
   }
 
   const sidebarStyle: React.CSSProperties = {
@@ -83,7 +84,8 @@ export default function PostDetailClient({
 
   const contentStyle: React.CSSProperties = {
     flex: 1,
-    maxWidth: isMobile ? '100%' : '78%',
+    maxWidth: '100%',
+    width: '100%',
   }
 
   const mainContentStyle: React.CSSProperties = {
