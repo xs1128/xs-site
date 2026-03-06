@@ -20,7 +20,6 @@ export default function Home() {
   const [isFading, setIsFading] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [isPastLanding, setIsPastLanding] = useState(false);
-  const [isIconFading, setIsIconFading] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -78,15 +77,7 @@ export default function Home() {
   };
 
   const handleMenuToggle = () => {
-    if (!isAboutMenuOpen) {
-      setIsIconFading(true);
-      setTimeout(() => {
-        setIsIconFading(false);
-        setIsAboutMenuOpen(true);
-      }, 100);
-    } else {
-      setIsAboutMenuOpen(false);
-    }
+    setIsAboutMenuOpen(!isAboutMenuOpen);
   };
 
   return (
