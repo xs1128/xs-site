@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import FunnyMarqueeWrapper from "@/components/blog/FunnyMarqueeWrapper";
-import RecentLogs from "@/components/blog/RecentLogs";
-import FeaturedSeriesWrapper from "@/components/blog/FeaturedSeriesWrapper";
+import RecentBlogsGrid from "@/components/blog/RecentBlogsGrid";
+import BlogExpandedContent from "@/components/blog/BlogExpandedContent";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { colors } from "@/styles/colors";
 
@@ -442,7 +442,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
       ? "clamp(10px, 1.5vh, 20px) clamp(30px, 5vw, 60px)"
       : "clamp(20px, 3vh, 40px) clamp(30px, 5vw, 60px)",
     zIndex: 9999,
-    backgroundColor: isExpanded ? "#F2E9D8" : "transparent",
+    backgroundColor: isExpanded ? colors.background : "transparent", // Use vintage yellow from color scheme
     transition: isExpanded
       ? "background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"
       : "background-color 0.8s ease, padding 0.8s ease, opacity 0.2s ease",
@@ -687,12 +687,12 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
               {!isSmallScreen && <FunnyMarqueeWrapper />}
 
               {/* Right Content */}
-              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: isExpanded ? "0" : "clamp(16px, 3vh, 32px)" }}>
-                {/* RECENT Section */}
-                <RecentLogs />
+              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: isExpanded ? "0" : "clamp(16px, 3vh, 32px)", gap: isExpanded ? "0" : "clamp(16px, 3vh, 32px)" }}>
+                {/* RECENT BLOGS Section */}
+                <RecentBlogsGrid isExpanded={isExpanded} isSmallScreen={isSmallScreen} />
 
-                {/* FEATURED SERIES Section */}
-                <FeaturedSeriesWrapper />
+                {/* FEATURED SERIES & 3D ANIMATION Sections */}
+                <BlogExpandedContent isSmallScreen={isSmallScreen} />
               </div>
             </div>
           </div>
