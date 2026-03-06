@@ -2,31 +2,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import { StaticIcon } from "../components/icons/StaticIcon";
+import { AnimatedButton } from "../components/navigation/AnimatedButton";
+import { SocialIconLink } from "../components/contact/SocialIconLink";
+import { ExpertiseCard } from "../components/about/ExpertiseCard";
+import { SpinningCircularText } from "../components/contact/SpinningCircularText";
+import { AnnouncementMarquee } from "../components/marquee/AnnouncementMarquee";
 
 const BREAKPOINT = 625;
-
-// Custom hook for marquee functionality
-function useMarquee(text: string, gap: number = 120) {
-  const [items, setItems] = useState<number[]>([]);
-
-  useEffect(() => {
-    const tempSpan = document.createElement("span");
-    tempSpan.style.font = "14px Hubot Sans, sans-serif";
-    tempSpan.style.whiteSpace = "nowrap";
-    tempSpan.textContent = text;
-    document.body.appendChild(tempSpan);
-    const textWidth = tempSpan.offsetWidth;
-    document.body.removeChild(tempSpan);
-
-    const itemWidth = textWidth + gap;
-    const screenWidth = window.innerWidth;
-    const itemsNeeded = Math.ceil(screenWidth / itemWidth) * 2 + 4;
-
-    setItems(Array.from({ length: itemsNeeded }, (_, i) => i));
-  }, [text, gap]);
-
-  return items;
-}
 
 // Custom hook for marquee animation CSS
 function useMarqueeAnimation() {
@@ -217,52 +199,6 @@ function useNavAnimations() {
 }
 
 // Announcement Marquee Component
-function AnnouncementMarquee({ isDarkTheme }: { isDarkTheme: boolean }) {
-  const items = useMarquee("Site Under Construction");
-
-  // Dynamic theme based on section
-  const theme = isDarkTheme
-    ? {
-        // Light theme (vintage yellow/cream)
-        backgroundColor: "#F2E9D8",
-        color: "#2A2F35",
-      }
-    : {
-        // Dark theme (default)
-        backgroundColor: "#2A2F35",
-        color: "#F2E9D8",
-      };
-
-  return (
-    <div
-      className="marquee-container"
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: theme.backgroundColor,
-        color: theme.color,
-        fontSize: "14px",
-        fontWeight: 400,
-        fontFamily: "Hubot Sans, sans-serif",
-        zIndex: 1000,
-        overflow: "hidden",
-        padding: "12px 0",
-        transition: "background-color 0.3s ease, color 0.3s ease",
-      }}
-    >
-      <div className="marquee-content">
-        {items.map((item) => (
-          <span key={item} className="marquee-item">
-            Site Under Construction
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // About Header Component
 function AboutHeader({
   isSmallScreen,
@@ -625,77 +561,6 @@ const FacebookIcon = () => (
 );
 
 // Expertise Card Component
-function ExpertiseCard({
-  icon,
-  title,
-  description,
-  isSmallScreen,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  isSmallScreen: boolean;
-}) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleClick = () => {
-    setIsHovered(!isHovered);
-  };
-
-  return (
-    <div
-      onClick={handleClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{
-        backgroundColor: "#E4D9C2",
-        border: "1px solid #D6CBB3",
-        borderRadius: "12px",
-        padding: isSmallScreen ? "24px" : "32px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-        gap: "16px",
-        flex: 1,
-        minWidth: isSmallScreen ? "100%" : "0",
-        position: "relative",
-        zIndex: isHovered ? 10 : 1,
-        transform: isHovered ? "translateY(-8px)" : "translateY(0)",
-        transition: "transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-      }}
-    >
-      <div style={{ color: "#2A2F35", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {icon}
-      </div>
-      <h3
-        style={{
-          margin: 0,
-          fontSize: "clamp(18px, 2.5vw, 24px)",
-          fontWeight: 700,
-          color: "#2A2F35",
-          fontFamily: "Hubot Sans, sans-serif",
-          minHeight: "2.6em",
-          lineHeight: 1.3,
-        }}
-      >
-        {title}
-      </h3>
-      <p
-        style={{
-          margin: 0,
-          fontSize: "clamp(14px, 1.8vw, 18px)",
-          color: "#2A2F35",
-          fontFamily: "Hubot Sans, sans-serif",
-          lineHeight: 1.5,
-        }}
-      >
-        {description}
-      </p>
-    </div>
-  );
-}
-
 // About Content Component
 function AboutContent({ isSmallScreen }: { isSmallScreen: boolean }) {
   const handleScrollToContact = () => {
@@ -770,19 +635,16 @@ function AboutContent({ isSmallScreen }: { isSmallScreen: boolean }) {
           icon={<StaticIcon src="/icons/terminal.svg" alt="Scripting & Automation" />}
           title="Scripting & Automation"
           description="Streamlining operations through Python, Bash, and Linux/UNIX scripting for custom automation and system management."
-          isSmallScreen={isSmallScreen}
         />
         <ExpertiseCard
           icon={<StaticIcon src="/icons/server.svg" alt="Homelab Infrastructure" />}
           title="Homelab Infrastructure"
           description="Managing self-hosted servers with Docker, Docker Compose, and Cloudflare for containerization and domain routing."
-          isSmallScreen={isSmallScreen}
         />
         <ExpertiseCard
           icon={<StaticIcon src="/icons/globe.svg" alt="Infrastructure" />}
           title="Infrastructure"
           description="Handling domains and deployments via Cloudflare DNS and SSH for reliable hosting."
-          isSmallScreen={isSmallScreen}
         />
       </div>
 
@@ -893,49 +755,6 @@ function ContactHeader({
 }
 
 // Social Icon Link Component
-function SocialIconLink({
-  icon,
-  href,
-  label,
-}: {
-  icon: React.ReactNode;
-  href: string;
-  label: string;
-}) {
-  return (
-    <a
-      href={href}
-      target={href.startsWith("http") ? "_blank" : undefined}
-      rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-      aria-label={label}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "48px",
-        height: "48px",
-        borderRadius: "50%",
-        backgroundColor: "#E4D9C2",
-        color: "#2A2F35",
-        textDecoration: "none",
-        transition: "transform 0.2s ease, background-color 0.2s ease",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "scale(1.1)";
-        e.currentTarget.style.backgroundColor = "#E5532C";
-        e.currentTarget.style.color = "#FFFFFF";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "scale(1)";
-        e.currentTarget.style.backgroundColor = "#E4D9C2";
-        e.currentTarget.style.color = "#2A2F35";
-      }}
-    >
-      {icon}
-    </a>
-  );
-}
-
 // Custom hook for contact section animations
 function useContactAnimations() {
   useEffect(() => {
@@ -982,84 +801,6 @@ function useContactAnimations() {
 }
 
 // Spinning Circular Text Component
-function SpinningCircularText({
-  text,
-  diameter,
-  onClick,
-  isSmallScreen,
-  isExpanded,
-}: {
-  text: string;
-  diameter: number;
-  onClick: () => void;
-  isSmallScreen: boolean;
-  isExpanded: boolean;
-}) {
-  const radius = diameter / 2;
-  const charAngle = 360 / text.length;
-
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        position: "relative",
-        width: `${diameter}px`,
-        height: `${diameter}px`,
-        borderRadius: "50%",
-        cursor: "pointer",
-        transition: "width 0.8s cubic-bezier(0.16, 1, 0.3, 1), height 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-        animation: "contactSpin 20s linear infinite",
-      }}
-    >
-      {text.split("").map((char, i) => (
-        <span
-          key={i}
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transformOrigin: "0 0",
-            transform: `rotate(${i * charAngle}deg) translate(${radius}px) rotate(90deg)`,
-            fontSize: isSmallScreen ? "20px" : "26px",
-            fontFamily: "Roboto Mono, monospace",
-            color: "#2A2F35",
-            fontWeight: 500,
-            pointerEvents: "none",
-            transition: "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), font-size 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
-          }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </span>
-      ))}
-
-      {/* Center tap indicator - just text */}
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          color: "#2A2F35",
-          fontSize: isSmallScreen ? "32px" : "40px",
-          fontFamily: "Roboto Mono, monospace",
-          fontWeight: 700,
-          cursor: "pointer",
-          userSelect: "none",
-          transition: "transform 0.2s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "translate(-50%, -50%) scale(1.1)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = "translate(-50%, -50%) scale(1)";
-        }}
-      >
-        {isExpanded ? "-" : "+"}
-      </div>
-    </div>
-  );
-}
-
 // Contact Popup Component
 function ContactPopup({
   isOpen,
@@ -1460,7 +1201,6 @@ function ContactSection({
               text="Xinsheng Ooi • Xinsheng Ooi • Xinsheng Ooi • "
               diameter={isSmallScreen ? (isPopupOpen ? 180 : 200) : (isPopupOpen ? 240 : 280)}
               onClick={handleCircleClick}
-              isSmallScreen={isSmallScreen}
               isExpanded={isPopupOpen}
             />
           </div>
@@ -1537,25 +1277,29 @@ function ContactSection({
             }}
           >
             <SocialIconLink
-              icon={<GitHubIcon />}
               href="https://github.com/xs1128"
-              label="GitHub"
-            />
+              aria-label="GitHub"
+            >
+              <GitHubIcon />
+            </SocialIconLink>
             <SocialIconLink
-              icon={<InstagramIcon />}
               href="https://www.instagram.com/xs_ooi1128"
-              label="Instagram"
-            />
+              aria-label="Instagram"
+            >
+              <InstagramIcon />
+            </SocialIconLink>
             <SocialIconLink
-              icon={<FacebookIcon />}
               href="https://www.facebook.com/ooi.xinsheng/"
-              label="Facebook"
-            />
+              aria-label="Facebook"
+            >
+              <FacebookIcon />
+            </SocialIconLink>
             <SocialIconLink
-              icon={<LinkedInIcon />}
               href="https://www.linkedin.com/in/xinsheng-ooi-6738083b4"
-              label="LinkedIn"
-            />
+              aria-label="LinkedIn"
+            >
+              <LinkedInIcon />
+            </SocialIconLink>
           </div>
         </div>
       </div>
@@ -1606,51 +1350,6 @@ interface AnimatedButtonProps {
   isMenuButton?: boolean;
   isDropdownItem?: boolean;
   reverse?: boolean;
-}
-
-function AnimatedButton({
-  children,
-  onClick,
-  style,
-  isMenuButton = false,
-  isDropdownItem = false,
-  reverse = false,
-}: AnimatedButtonProps) {
-  const baseButtonStyle: React.CSSProperties = {
-    padding: isMenuButton ? "8px 16px" : isDropdownItem ? "12px 20px" : "12px 24px",
-    borderRadius: isMenuButton || isDropdownItem ? (isDropdownItem ? "0" : "24px") : "0",
-    backgroundColor: isMenuButton || isDropdownItem ? "#E4D9C2" : "transparent",
-    color: "#2A2F35",
-    fontSize: isMenuButton ? "14px" : "20px",
-    fontWeight: 400,
-    fontFamily: "Roboto Mono, monospace",
-    border: "none",
-    cursor: "pointer",
-    boxShadow: isMenuButton ? "4px 4px 12px rgba(0,0,0,0.3)" : "none",
-    position: "relative",
-    overflow: "hidden",
-    transition: "background-color 0.2s ease",
-    ...style,
-  };
-
-  const underlineStyle: React.CSSProperties = {
-    position: "absolute",
-    bottom: isDropdownItem ? "8px" : "4px",
-    left: reverse ? "auto" : "0",
-    right: reverse ? "0" : "auto",
-    height: "2px",
-  };
-
-  return (
-    <button
-      className={!isMenuButton && !isDropdownItem ? "animated-button" : undefined}
-      style={baseButtonStyle}
-      onClick={onClick}
-    >
-      {children}
-      {!isMenuButton && !isDropdownItem && <span className="animated-button-underline" style={underlineStyle} />}
-    </button>
-  );
 }
 
 // Reusable function to scroll to about section and update theme
