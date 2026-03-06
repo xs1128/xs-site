@@ -1,13 +1,13 @@
 # Personal Website - Landing Page
 
 ## Overview
-Minimalist personal landing page with a scrolling announcement bar, centered name display, navigation buttons, and a full-screen navigation overlay.
+Minimalist personal landing page with a scrolling announcement bar, centered name display, navigation buttons, and a full-screen navigation overlay. Built with a modular component architecture using plain CSS with CSS custom properties and @media queries for responsive design.
 
 ## Tech Stack
 - **Framework**: Next.js 16 (App Router) with Turbopack
 - **UI**: React 19
 - **Language**: TypeScript
-- **Styling**: Plain CSS with inline styles and CSS-in-JS via useEffect
+- **Styling**: Plain CSS with CSS custom properties and @media queries
 - **Fonts**: Roboto Mono (primary), Hubot Sans (announcements)
 - **Email Service**: Resend (contact form submissions)
 
@@ -22,11 +22,14 @@ Minimalist personal landing page with a scrolling announcement bar, centered nam
 - Cards: `#E4D9C2` (light cream)
 - Borders: `#D6CBB3` (muted tan)
 
+All colors are defined as CSS custom properties in `globals.css` under `:root`.
+
 ## Features
 
-### Two-Section Layout
+### Three-Section Layout with Scroll Snap
 1. **Landing Section** (100dvh): Warm aged paper background with centered name
-2. **About Section** (100dvh): Dark charcoal background with header navigation
+2. **About Section** (100dvh): Dark charcoal background with expertise cards
+3. **Contact Section** (100dvh): Light background with spinning circular text and contact form
 
 ### Announcement Marquee (Top Bar)
 - Fixed position at top of screen with `z-index: 1000`
@@ -42,34 +45,14 @@ Minimalist personal landing page with a scrolling announcement bar, centered nam
 - Font: Hubot Sans, 14px, 12px vertical padding
 - Text: "Site Under Construction"
 
-#### Marquee Implementation Details
-```tsx
-// Dynamic item calculation based on screen width
-const text = "Site Under Construction";
-const textWidth = measureText(text);
-const gap = 120;
-const itemWidth = textWidth + gap;
-const itemsNeeded = Math.ceil(screenWidth / itemWidth) * 2 + 4;
-
-// Theme switching based on scroll position
-const checkScrollPosition = () => {
-  const scrollY = window.scrollY;
-  const viewportHeight = window.innerHeight;
-  if (scrollY >= viewportHeight * 0.9) {
-    setIsDarkTheme(true); // Light marquee on about section
-  } else {
-    setIsDarkTheme(false); // Dark marquee on landing
-  }
-};
-```
-
 ### Name Display
-- Centered "Xinsheng Ooi" on desktop, "xs" on small screens (< 300px)
+- Centered "Xinsheng Ooi" on desktop, "xs" on small screens (< 625px)
 - Click to toggle between full name and initials with fade animation (0.4s)
 - Unselectable text with `user-select: none`
 - Prevents clicks during fade transition
 - Responsive sizing: `clamp(65px, 10vw, 180px)` desktop, `clamp(48px, 15vw, 120px)` mobile
 - Font: Roboto Mono, weight 570, letter spacing -0.06em, line height 0.95
+- **Component**: `NameDisplay` in `src/components/landing/NameDisplay.tsx`
 
 ### Full-Screen Navigation Overlay
 - Triggered by hamburger menu on small screens and ABOUT button in about section
@@ -82,48 +65,41 @@ const checkScrollPosition = () => {
 - **Text color fill effect** on hover:
   - Left-to-right vermilion color fill with acceleration
   - Uses `::before` pseudo-element with `clip-path` animation
-  - Duration: 0.7s with cubic-bezier(0.6, 0, 0.4, 1) for subtle acceleration
+  - Duration: 0.7s with cubic-bezier(0.6, 0, 0.4, 1)
   - Arrows transition to vermilion after text completes (0.7s delay)
 - **Buttons**: ABOUT, CONTACT, PROJECTS, BLOG with SVG arrow indicators
 - All ABOUT buttons navigate to about section with smooth scroll
 - Close button (✕) with hover color change to vermilion
 - Disables page scroll when open
-
-#### Text Fill Animation CSS
-```css
-.nav-item::before {
-  content: attr(data-text);
-  position: absolute;
-  color: #E5532C;
-  clip-path: inset(0 100% 0 0); /* Hidden initially */
-  transition: clip-path 0.7s cubic-bezier(0.6, 0, 0.4, 1);
-  width: fit-content; /* Only cover text, not arrow */
-}
-
-.nav-item:hover::before {
-  clip-path: inset(0 0 0 0); /* Fully revealed */
-}
-```
+- **Component**: `FullScreenNav` in `src/components/navigation/FullScreenNav.tsx`
 
 ### About Section
 - Dark charcoal background (`#2A2F35`)
 - Header with ABOUT button (scrolls to top) and hamburger menu
-- Positioned at 100dvh from top (full viewport height below landing)
+- Main content includes:
+  - Headline: "I turn real problems into automated solutions."
+  - Intro paragraph with bio
+  - Three expertise cards with hover lift effect
+  - CTA section to scroll to contact
+- **Components**:
+  - `AboutSection` in `src/components/about/AboutSection.tsx`
+  - `AboutHeader` in `src/components/about/AboutHeader.tsx`
+  - `AboutContent` in `src/components/about/AboutContent.tsx`
+  - `ExpertiseCard` in `src/components/about/ExpertiseCard.tsx`
 
 ### Contact Section
-- Located below the about section
-- Features a spinning circular text with "Xinsheng Ooi" that expands on click
-- Clicking the circle opens a contact form with smooth animations
+- Light cream background (`#F2E9D8`)
+- Header with CONTACT button (scrolls to top)
+- Spinning circular text with "Xinsheng Ooi" that expands on click
+- Clicking opens contact form with smooth animations
 - **Form submissions are automatically sent via email using Resend API**
-- Form includes: Name, Email, and Message fields
-- **Large screens (>625px)**:
-  - Circle moves left when form opens
-  - Vertical divider appears between circle and form
-  - Form slides in from right
-- **Small screens (≤625px)**:
-  - Circle fades and swipes up when form opens
-  - Form swipes up from bottom
-  - Horizontal layout for header (title left, close button right)
+- Social media links at bottom (GitHub, Instagram, Facebook, LinkedIn)
+- **Components**:
+  - `ContactSection` in `src/components/contact/ContactSection.tsx`
+  - `ContactHeader` in `src/components/contact/ContactHeader.tsx`
+  - `SpinningCircularText` in `src/components/contact/SpinningCircularText.tsx`
+  - `ContactPopup` in `src/components/contact/ContactPopup.tsx`
+  - `SocialIconLink` in `src/components/contact/SocialIconLink.tsx`
 
 #### Contact Form Email Implementation
 - **Backend**: Serverless Next.js API route at `/api/contact`
@@ -136,11 +112,11 @@ const checkScrollPosition = () => {
   - For production: Verify your domain and update `from` address
 
 #### Form Animation Details
-- **Large screens**: Independent circle and form animations
+- **Large screens (>625px)**: Independent circle and form animations
   - Circle: `translateX(-100%)` to move left, 0.8s cubic-bezier
   - Form: `translateX(100% → 0)` to slide in, 0.8s cubic-bezier with 0.4s delay
   - Divider: Fades in at 0.4s, opacity transition
-- **Small screens**: Simplified fade and swipe animations
+- **Small screens (≤625px)**: Simplified fade and swipe animations
   - Circle: `translateY(-150%)` to swipe up, 0.3s ease
   - Form: `translateY(100% → 0)` to swipe up, 0.5s cubic-bezier with 0.3s delay
 - **States**: `isPopupOpen`, `isPopupClosing`, `isAnimating` for smooth transitions
@@ -148,52 +124,97 @@ const checkScrollPosition = () => {
 
 ### Navigation
 - **Desktop (landing page)**: ABOUT (bottom left) and CONTACT (bottom right) buttons
-- **Small screens**: Hamburger menu with dropdown (top right, positioned below marquee)
+- **Small screens (≤625px)**: Hamburger menu with dropdown (top right, positioned below marquee)
 - **About section header**: ABOUT button (left) and hamburger menu (right)
 - **Full-screen nav**: Grid layout with MENU label, close button, and nav items
-- All ABOUT buttons navigate to about section with:
-  - Smooth scroll behavior
-  - Theme update after scroll completes (1s delay)
-  - Marquee theme switching to light
-
-### AnimatedButton Component
-Reusable button with hover underline effect:
-- `isMenuButton`: Menu toggle (rounded, with shadow, cream background)
-- `isDropdownItem`: Dropdown menu items (no border radius)
-- `reverse`: Animates underline from right instead of left
-- Underline: 2px height, vermilion color, 0.3s ease transition
+- All ABOUT buttons navigate to about section with smooth scroll and theme update
+- **Components**:
+  - `HamburgerButton` in `src/components/navigation/HamburgerButton.tsx`
+  - `MobileDropdown` in `src/components/navigation/MobileDropdown.tsx`
+  - `LandingButtons` in `src/components/landing/LandingButtons.tsx`
+  - `AnimatedButton` in `src/components/navigation/AnimatedButton.tsx` (reusable button with underline animation)
 
 ### Responsive Behavior
-- Breakpoint: 300px (for ultra-small screens)
-- Adjusts padding and font size based on viewport
-- Hamburger menu positioned at 56px from top (accounts for marquee height)
-- Hides bottom buttons on small screens, shows hamburger menu instead
+- **Breakpoint**: 625px (small screens)
+- All responsive styling handled by CSS @media queries
+- JavaScript only handles conditional rendering and state-based behavior
+- Scroll snap behavior: `y mandatory` for smooth section-by-section scrolling
+- Hamburger menu positioned at 60px (56px on mobile) from top
 
 ## File Structure
-```
-src/app/
-├── layout.tsx         # Root layout with font imports (Roboto Mono, Hubot Sans)
-├── page.tsx           # Main landing page with marquee, full-screen nav, about section, contact form
-├── globals.css        # Global styles and font imports
-└── api/
-    └── contact/
-        └── route.ts   # API route for handling contact form submissions via Resend
 
-.env.local             # Environment variables (RESEND_API_KEY)
-package.json           # Dependencies including Resend SDK
+```
+src/
+├── app/
+│   ├── layout.tsx              # Root layout with font imports (Roboto Mono, Hubot Sans)
+│   ├── page.tsx                # Main page (130 lines) - orchestrates sections and state
+│   ├── globals.css             # All styles, animations, and responsive CSS (1,348 lines)
+│   └── api/
+│       └── contact/
+│           └── route.ts        # API route for contact form submissions via Resend
+│
+├── components/
+│   ├── about/
+│   │   ├── AboutSection.tsx    # About section wrapper
+│   │   ├── AboutHeader.tsx     # Header with ABOUT button
+│   │   ├── AboutContent.tsx    # Main content with headline, intro, cards, CTA
+│   │   └── ExpertiseCard.tsx   # Individual expertise card with hover effect
+│   │
+│   ├── contact/
+│   │   ├── ContactSection.tsx  # Contact section wrapper with form animations
+│   │   ├── ContactHeader.tsx   # Header with CONTACT button
+│   │   ├── SpinningCircularText.tsx  # Spinning circle component
+│   │   ├── ContactPopup.tsx    # Contact form with validation and submission
+│   │   └── SocialIconLink.tsx  # Social media icon link component
+│   │
+│   ├── landing/
+│   │   ├── LandingSection.tsx  # Landing section wrapper
+│   │   ├── NameDisplay.tsx     # Centered name with click-to-toggle
+│   │   └── LandingButtons.tsx  # Desktop ABOUT/CONTACT buttons
+│   │
+│   ├── layout/
+│   │   └── ScrollContainer.tsx # Main scroll wrapper with snap behavior
+│   │
+│   ├── marquee/
+│   │   └── AnnouncementMarquee.tsx  # Top scrolling announcement bar
+│   │
+│   ├── navigation/
+│   │   ├── FullScreenNav.tsx   # Full-screen overlay navigation
+│   │   ├── HamburgerButton.tsx # Fixed hamburger button
+│   │   ├── MobileDropdown.tsx  # Mobile dropdown menu
+│   │   └── AnimatedButton.tsx  # Reusable button with underline animation
+│   │
+│   └── icons/
+│       ├── StaticIcon.tsx      # Static icon component
+│       └── SocialIcons.tsx      # Social media icon SVGs (GitHub, LinkedIn, etc.)
+│
+├── hooks/
+│   ├── useResponsive.ts        # Reusable screen size detection
+│   ├── useMarquee.ts           # Dynamic marquee item calculation
+│   └── useScrollDetection.ts   # Scroll position detection
+│
+├── types/
+│   └── index.ts                # TypeScript interfaces for all components
+│
+└── lib/
+    └── utils.ts                # Utility functions (scrollToAbout, scrollToContact)
+
+.env.local                     # Environment variables (RESEND_API_KEY)
+package.json                   # Dependencies including Resend SDK
 ```
 
 ## Development Notes
 - Client component with "use client" directive
 - `suppressHydrationWarning` on body to prevent browser extension warnings
-- All styling uses inline styles (no CSS framework)
-- Animation CSS injected via `useEffect` hooks
+- **All styling uses CSS classes** (no inline styles except for dynamic state values)
+- **All animations in static CSS** (no runtime CSS injection)
+- **All responsive behavior via CSS @media queries** (not JavaScript ternaries)
 - Custom hooks:
-  - `useMarquee`: Dynamic marquee item calculation
-  - `useMarqueeAnimation`: Injects marquee keyframes and hover styles
-  - `useNavAnimations`: Injects navigation animation keyframes and styles
+  - `useMarquee`: Dynamic marquee item calculation based on screen width
+  - `useResponsive`: Screen size detection with configurable breakpoint
+  - `useScrollDetection`: Scroll position tracking for theme switching
 - Font weights: Roboto Mono (400, 500, 570, 700), Hubot Sans (400)
-- State management with React hooks (useState, useEffect)
+- State management with React hooks (useState, useEffect, useRef)
 - Scroll detection for theme switching with initial check on mount
 - **Contact form**: Async handleSubmit with loading states and error handling
 - **Email API**: Serverless Next.js API route with Resend SDK integration
@@ -245,19 +266,35 @@ This ensures the codebase is always in a working state before deployment.
 
 ## Key Implementation Details
 
+### CSS Architecture
+- **CSS Custom Properties**: All colors, fonts, spacing, and transitions defined in `:root`
+- **BEM-like Naming**: Component classes use double underscore notation (e.g., `.contact-popup__header`)
+- **Modifier Classes**: State variations use double dash notation (e.g., `.nav-item--active`)
+- **@media Queries**: All responsive styling at 625px breakpoint
+- **Zero Runtime CSS**: No CSS-in-JS or style injection - all static CSS in globals.css
+
+### Component Architecture
+- **Props Interfaces**: All component props defined in `src/types/index.ts`
+- **Composition**: Complex sections built from smaller, reusable components
+- **State Management**: Global state in page.tsx, local state in components
+- **Forward Refs**: ScrollContainer uses forwardRef to expose ref to parent
+- **Utility Functions**: Shared logic in `src/lib/utils.ts`
+
 ### Marquee Theme Switching
 The marquee uses `isDarkTheme` state to control styling:
 - `false` (default): Dark background, light text - for landing section
-- `true`: Light background, dark text - for about section
+- `true` (Light background, dark text - for about section
 - Scroll event listener updates state at 90% viewport scroll
 - Initial check on mount handles direct navigation to about section
 - All ABOUT buttons trigger manual theme update after scroll (1s delay)
+- **Component**: `AnnouncementMarquee` in `src/components/marquee/AnnouncementMarquee.tsx`
 
 ### Full-Screen Nav Architecture
 - Conditional rendering based on `isOpen` and `isClosing` states
 - `isClosing` state prevents interaction during exit animation (800ms)
 - Body scroll locked when nav is open (`overflow: hidden`)
 - Cleanup of scroll lock on unmount
+- CSS classes handle all animations and hover states
 
 ### Text Fill Animation
 - Uses `data-text` attribute on buttons for duplication
@@ -272,6 +309,7 @@ The marquee uses `isDarkTheme` state to control styling:
 2. About section: Click hamburger to open full-screen nav
 3. Full-screen nav: Click any nav item to close and optionally navigate
 4. Smooth scroll behavior with theme state updates
+5. **Utility functions**: `scrollToAbout()` and `scrollToContact()` in `src/lib/utils.ts`
 
 ### Contact Form Implementation
 
@@ -282,18 +320,18 @@ The marquee uses `isDarkTheme` state to control styling:
 - Returns success/error responses with appropriate status codes
 - Gracefully handles missing API key (returns 503)
 
-**Frontend Form (`ContactPopup` component in `page.tsx`):**
+**Frontend Form (`ContactPopup` component):**
 - State management: `formData`, `isSubmitting`, `submitStatus`, `errorMessage`
 - Async `handleSubmit` function that calls `/api/contact` endpoint
 - Shows "Sending..." on button during submission (button disabled)
-- Displays success message (dark green) for 1.5s before closing form
-- Displays error message (red) with details if API call fails
+- Displays success message for 1.5s before closing form
+- Displays error message with details if API call fails
 - Form resets after successful submission
 
 **Animation States:**
 - `isPopupOpen`: Controls form visibility
 - `isPopupClosing`: Triggers close animation
-- `isAnimating`: Blocks quick taps during transitions (1.2s total)
+- `isAnimating`: Blocks quick taps during transitions
 - Responsive timing: Large screens (0.8s), Small screens (0.3-0.5s)
 
 **Email Format:**
@@ -311,3 +349,28 @@ Email: [email]
 Message:
 [message content]
 ```
+
+## Refactoring Summary (2024)
+
+**Completed**: Full codebase refactoring from monolithic to modular architecture
+
+**Before**:
+- 1,974-line page.tsx with all components inline
+- 195+ inline style objects
+- 219 lines of CSS injected via useEffect hooks
+- 250+ ternary patterns for responsive logic
+
+**After**:
+- 130-line page.tsx (93.4% reduction)
+- 20 organized component files
+- 1,348 lines of static CSS in globals.css
+- All responsive behavior via CSS @media queries
+- Zero CSS injection hooks
+
+**Benefits**:
+- Improved maintainability and code organization
+- Better separation of concerns
+- Easier to debug and modify
+- Consistent styling with CSS custom properties
+- Reusable components across the application
+- Type-safe with comprehensive TypeScript interfaces
