@@ -20,7 +20,9 @@ export interface SectionWrapperProps extends ResponsiveProps {
 }
 
 // Marquee Component
-export interface AnnouncementMarqueeProps extends ThemeProps {}
+export interface AnnouncementMarqueeProps {
+  isDarkTheme: boolean;
+}
 
 // Navigation Components
 export interface FullScreenNavProps {
@@ -51,6 +53,7 @@ export interface AnimatedButtonProps {
   isMenuButton?: boolean;
   isDropdownItem?: boolean;
   style?: React.CSSProperties;
+  className?: string;
 }
 
 // Landing Components
@@ -68,9 +71,7 @@ export interface LandingButtonsProps {
 
 // About Components
 export interface AboutSectionProps extends ResponsiveProps {
-  onScrollToContact: () => void;
-  onOpenNav: () => void;
-  isDarkTheme: boolean;
+  setIsDarkTheme: (value: boolean) => void;
 }
 
 export interface AboutHeaderProps {
@@ -107,6 +108,7 @@ export interface SpinningCircularTextProps {
 
 export interface ContactPopupProps {
   isOpen: boolean;
+  isClosing: boolean;
   onClose: () => void;
   isSmallScreen: boolean;
 }

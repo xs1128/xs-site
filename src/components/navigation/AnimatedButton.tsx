@@ -12,11 +12,13 @@ export function AnimatedButton({
   isMenuButton = false,
   isDropdownItem = false,
   reverse = false,
+  className = '',
 }: AnimatedButtonProps) {
   const baseClasses = [
     'animated-button',
     isMenuButton && 'animated-button--menu',
     isDropdownItem && 'animated-button--dropdown',
+    className,
   ]
     .filter(Boolean)
     .join(' ');
