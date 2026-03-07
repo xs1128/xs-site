@@ -16,8 +16,6 @@ export default function Home() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showXs, setShowXs] = useState(false);
-  const [isFading, setIsFading] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [isPastLanding, setIsPastLanding] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -67,15 +65,6 @@ export default function Home() {
     }
   }, []);
 
-  const handleNameClick = () => {
-    if (isFading) return;
-    setIsFading(true);
-    setTimeout(() => {
-      setShowXs(!showXs);
-      setTimeout(() => setIsFading(false), 400);
-    }, 400);
-  };
-
   const handleMenuToggle = () => {
     setIsAboutMenuOpen(!isAboutMenuOpen);
   };
@@ -103,9 +92,6 @@ export default function Home() {
       <ScrollContainer>
         {/* First Section - Landing */}
         <LandingSection
-          showXs={showXs}
-          isFading={isFading}
-          onNameClick={handleNameClick}
           isSmallScreen={isSmallScreen}
           isMenuOpen={isMenuOpen}
           setIsMenuOpen={setIsMenuOpen}

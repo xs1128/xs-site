@@ -5,21 +5,15 @@ import { LandingButtons } from './LandingButtons';
 
 /**
  * Landing section component with centered name and navigation
- * Contains name display, mobile dropdown, and desktop buttons
+ * Contains name display and desktop buttons
  */
 export function LandingSection({
-  showXs,
-  isFading,
-  onNameClick,
   isSmallScreen,
   isMenuOpen,
   setIsMenuOpen,
   onScrollToAbout,
   onScrollToContact,
 }: {
-  showXs: boolean;
-  isFading: boolean;
-  onNameClick: () => void;
   isSmallScreen: boolean;
   isMenuOpen: boolean;
   setIsMenuOpen: (value: boolean) => void;
@@ -36,9 +30,10 @@ export function LandingSection({
     <main className="landing-section">
       {/* Name */}
       <NameDisplay
-        onToggle={onNameClick}
-        showInitials={showXs}
-        isFading={isFading}
+        onToggle={() => {}}
+        showInitials={false}
+        isFading={false}
+        isSmallScreen={isSmallScreen}
       />
 
       {/* Desktop Buttons */}

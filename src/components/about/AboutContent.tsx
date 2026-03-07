@@ -36,16 +36,19 @@ export function AboutContent({ onScrollToContact, isSmallScreen }: AboutContentP
           icon={<StaticIcon src="/icons/terminal.svg" alt="Scripting & Automation" />}
           title="Scripting & Automation"
           description="Streamlining operations through Python, Bash, and Linux/UNIX scripting for custom automation and system management."
+          isSmallScreen={isSmallScreen}
         />
         <ExpertiseCard
           icon={<StaticIcon src="/icons/server.svg" alt="Homelab Infrastructure" />}
           title="Homelab Infrastructure"
           description="Managing self-hosted servers with Docker, Docker Compose, and Cloudflare for containerization and domain routing."
+          isSmallScreen={isSmallScreen}
         />
         <ExpertiseCard
           icon={<StaticIcon src="/icons/globe.svg" alt="Infrastructure" />}
           title="Infrastructure"
           description="Handling domains and deployments via Cloudflare DNS and SSH for reliable hosting."
+          isSmallScreen={isSmallScreen}
         />
       </div>
 

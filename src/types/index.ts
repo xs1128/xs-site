@@ -57,7 +57,7 @@ export interface AnimatedButtonProps {
 }
 
 // Landing Components
-export interface NameDisplayProps {
+export interface NameDisplayProps extends ResponsiveProps {
   onToggle: () => void;
   showInitials: boolean;
   isFading: boolean;
@@ -84,7 +84,7 @@ export interface AboutContentProps {
   isSmallScreen: boolean;
 }
 
-export interface ExpertiseCardProps {
+export interface ExpertiseCardProps extends ResponsiveProps {
   icon: React.ReactNode;
   title: string;
   description: string;
@@ -144,4 +144,19 @@ export interface FormState {
   isSubmitting: boolean;
   submitStatus: 'idle' | 'success' | 'error';
   errorMessage: string;
+}
+
+// 3D Components
+export interface ThreeCanvasProps {
+  children: React.ReactNode;
+  isSmallScreen?: boolean;
+}
+
+export interface NameSceneProps {
+  showInitials: boolean;
+}
+
+export interface CardSceneProps {
+  children: React.ReactNode;
+  index: number;
 }
