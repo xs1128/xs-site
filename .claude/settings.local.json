@@ -16,7 +16,10 @@
       "Bash(ffprobe:*)",
       "Bash(mdls:*)",
       "Bash(curl:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(rm:*)"
     ]
   }
 }

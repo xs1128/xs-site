@@ -35,7 +35,9 @@ export interface FullScreenNavProps {
 
 export interface HamburgerButtonProps {
   onClick: () => void;
-  isSmallScreen: boolean;
+  isPastLanding: boolean;
+  isDarkTheme: boolean;
+  isNavOpen: boolean;
 }
 
 export interface MobileDropdownProps {

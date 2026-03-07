@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { AnnouncementMarquee } from "../components/marquee/AnnouncementMarquee";
 import { FullScreenNav } from "../components/navigation/FullScreenNav";
 import { HamburgerButton } from "../components/navigation/HamburgerButton";
 import { AboutSection } from "../components/about/AboutSection";
@@ -16,9 +15,86 @@ export default function Home() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [isPastLanding, setIsPastLanding] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Callback ref to detect when container is mounted
+  const setScrollContainerRef = (node: HTMLDivElement | null) => {
+    if (node) {
+      console.log('🎯 ScrollContainer ref CALLBACK FIRED, node:', node);
+      scrollContainerRef.current = node;
+      setupScrollListener(node);
+    }
+  };
+
+  const setupScrollListener = (container: HTMLDivElement) => {
+    console.log('🔧 Setting up scroll listener...');
+
+    const checkScrollPosition = () => {
+      const scrollY = container.scrollTop;
+      const viewportHeight = window.innerHeight;
+
+      const threshold = viewportHeight * 0.9;
+
+      // Landing section (0 - 1 viewport): light theme
+      // About section (1 - 2 viewports): dark theme
+      // Contact section (2+ viewports): light theme
+      if (scrollY < threshold) {
+        // LANDING SECTION
+        setIsDarkTheme(false);
+        setIsPastLanding(false);
+        console.log('📍 Landing Section', {
+          scrollY,
+          viewportHeight,
+          threshold,
+          isPastLanding: false,
+          hamburger: 'HIDDEN (component not mounted)'
+        });
+      } else if (scrollY >= threshold && scrollY < viewportHeight * 1.9) {
+        // ABOUT SECTION
+        setIsDarkTheme(true);
+        setIsPastLanding(true);
+        console.log('📍 About Section', {
+          scrollY,
+          viewportHeight,
+          threshold,
+          isPastLanding: true,
+          hamburger: 'VISIBLE (should be vintage yellow #F2E9D8)',
+          hamburgerColor: '#F2E9D8'
+        });
+      } else {
+        // CONTACT SECTION
+        setIsDarkTheme(false);
+        setIsPastLanding(true);
+        console.log('📍 Contact Section', {
+          scrollY,
+          viewportHeight,
+          threshold,
+          isPastLanding: true,
+          hamburger: 'VISIBLE (should be vintage yellow #F2E9D8)',
+          hamburgerColor: '#F2E9D8'
+        });
+      }
+    };
+
+    // Check initial scroll position
+    console.log('🚀 Initial mount - checking scroll position...');
+    checkScrollPosition();
+
+    const handleScroll = () => {
+      console.log('📜 SCROLL EVENT FIRED!');
+      checkScrollPosition();
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    console.log('✅ Scroll listener attached');
+
+    return () => {
+      console.log('🧹 Cleaning up scroll listener');
+      container.removeEventListener("scroll", handleScroll);
+    };
+  };
 
   useEffect(() => {
     const checkScreenSize = () => setIsSmallScreen(window.innerWidth < BREAKPOINT);
@@ -27,52 +103,12 @@ export default function Home() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  // Scroll detection for marquee theme change
-  useEffect(() => {
-    const checkScrollPosition = () => {
-      const container = scrollContainerRef.current;
-      if (!container) return;
-
-      const scrollY = container.scrollTop;
-      const viewportHeight = window.innerHeight;
-
-      // Landing section (0 - 1 viewport): dark marquee
-      // About section (1 - 2 viewports): light marquee
-      // Contact section (2+ viewports): dark marquee
-      if (scrollY < viewportHeight * 0.9) {
-        setIsDarkTheme(false); // Landing - dark marquee
-        setIsPastLanding(false);
-      } else if (scrollY >= viewportHeight * 0.9 && scrollY < viewportHeight * 1.9) {
-        setIsDarkTheme(true); // About - light marquee
-        setIsPastLanding(true);
-      } else {
-        setIsDarkTheme(false); // Contact - dark marquee
-        setIsPastLanding(true);
-      }
-    };
-
-    // Check initial scroll position on mount
-    checkScrollPosition();
-
-    const handleScroll = () => {
-      checkScrollPosition();
-    };
-
-    const container = scrollContainerRef.current;
-    if (container) {
-      container.addEventListener("scroll", handleScroll);
-      return () => container.removeEventListener("scroll", handleScroll);
-    }
-  }, []);
-
   const handleMenuToggle = () => {
     setIsAboutMenuOpen(!isAboutMenuOpen);
   };
 
   return (
     <>
-      {/* <AnnouncementMarquee isDarkTheme={isDarkTheme} /> */}
-
       {/* Full-screen overlay navigation */}
       <FullScreenNav
         isOpen={isAboutMenuOpen}
@@ -81,15 +117,17 @@ export default function Home() {
         setIsDarkTheme={setIsDarkTheme}
       />
 
-      {/* Fixed hamburger button for about/contact sections */}
+      {/* Fixed hamburger button - hidden on landing page */}
       {isPastLanding && (
         <HamburgerButton
           onClick={handleMenuToggle}
-          isSmallScreen={isSmallScreen}
+          isPastLanding={isPastLanding}
+          isDarkTheme={isDarkTheme}
+          isNavOpen={isAboutMenuOpen}
         />
       )}
 
-      <ScrollContainer>
+      <ScrollContainer ref={setScrollContainerRef}>
         {/* First Section - Landing */}
         <LandingSection
           isSmallScreen={isSmallScreen}
