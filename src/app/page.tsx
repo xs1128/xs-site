@@ -10,7 +10,7 @@ import { LandingSection } from "../components/landing/LandingSection";
 import { ScrollContainer } from "../components/layout/ScrollContainer";
 import { scrollToAbout, scrollToContact } from "@/lib/utils";
 
-const BREAKPOINT = 625;
+const BREAKPOINT = 640;
 
 export default function Home() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
@@ -82,7 +82,7 @@ export default function Home() {
 
   return (
     <>
-      <AnnouncementMarquee isDarkTheme={isDarkTheme} />
+      {/* <AnnouncementMarquee isDarkTheme={isDarkTheme} /> */}
 
       {/* Full-screen overlay navigation */}
       <FullScreenNav

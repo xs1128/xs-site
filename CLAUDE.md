@@ -90,9 +90,10 @@ All colors are defined as CSS custom properties in `globals.css` under `:root`.
 ### Contact Section
 - Light cream background (`#F2E9D8`)
 - Header with CONTACT button (scrolls to top)
-- Spinning circular text with "Xinsheng Ooi" that expands on click
-- Clicking opens contact form with smooth animations
+- Spinning circular text with "Xinsheng Ooi" featuring animated +/- symbol in center
+- Clicking circle opens contact form with smooth sequential animations
 - **Form submissions are automatically sent via email using Resend API**
+- Email address at bottom: "email: hi@xsooi.com" with clickable mailto link (vermilion on hover)
 - Social media links at bottom (GitHub, Instagram, Facebook, LinkedIn)
 - **Components**:
   - `ContactSection` in `src/components/contact/ContactSection.tsx`
@@ -111,20 +112,83 @@ All colors are defined as CSS custom properties in `globals.css` under `:root`.
   - Note: Free domain can only send to the email used for Resend signup
   - For production: Verify your domain and update `from` address
 
-#### Form Animation Details
-- **Large screens (>625px)**: Independent circle and form animations
-  - Circle: `translateX(-100%)` to move left, 0.8s cubic-bezier
-  - Form: `translateX(100% → 0)` to slide in, 0.8s cubic-bezier with 0.4s delay
-  - Divider: Fades in at 0.4s, opacity transition
-- **Small screens (≤625px)**: Simplified fade and swipe animations
-  - Circle: `translateY(-150%)` to swipe up, 0.3s ease
-  - Form: `translateY(100% → 0)` to swipe up, 0.5s cubic-bezier with 0.3s delay
-- **States**: `isPopupOpen`, `isPopupClosing`, `isAnimating` for smooth transitions
-- **Quick-tap protection**: `isAnimating` blocks interaction during transitions
+#### Contact Form Design & Animation Details
+
+**Desktop View (>640px):**
+- **Circle (Normal State)**:
+  - Diameter: 320px
+  - Character font: 32px, font-weight: 500 (medium)
+  - Center +/- symbol: 48px, font-weight: 700 (bold)
+  - Positioned at center of screen
+
+- **Circle (Expanded State)**:
+  - Diameter: 280px (reduced from 320px)
+  - Scale transform: 0.85 (15% smaller)
+  - Character font: 24px, font-weight: 700 (bold)
+  - Center +/- symbol: 36px, font-weight: 700 (bold)
+  - Moves to left: 15% position (purely horizontal movement)
+  - All transitions: 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+
+- **Divider**:
+  - Position: 33% from left
+  - Height: 90% of viewport
+  - Fade-in delay: 0.8s (after circle animation completes)
+  - Color: `#D6CBB3` (muted tan)
+
+- **Form**:
+  - Initial position: At center divider (left: 33%)
+  - Final position: 60px right of divider
+  - Width: calc(57% - 60px)
+  - Animation delay: 0.8s (sequential, after circle)
+  - Title "Get in Touch": 32px, charcoal color
+  - Labels: 18px, charcoal color
+  - Inputs/textarea: 18px font, 14px 18px padding, charcoal color
+  - Submit button: 18px font, 16px 32px padding, charcoal background
+  - Button hover: Lighter charcoal (#3A3F45)
+  - Extra gap after message field: 8px
+  - Overall form gap: 20px
+
+**Mobile View (≤640px):**
+- **Circle**:
+  - Diameter: 240px (consistent, no size change)
+  - Character font: 24px
+  - Center +/- symbol: 38px
+  - Stays at center, only fades out (0.3s)
+  - No position change, no scale transform
+
+- **Form**:
+  - Fades in with scale effect (scale 0.95 → 1.0)
+  - No top padding (compact design)
+  - Title: 20px
+  - Labels: 14px
+  - Inputs/textarea: 14px font, 10px 14px padding
+  - Submit button: 14px font, 12px 24px padding
+  - Form gap: 12px
+  - Extra gap after message: 0px (removed for mobile)
+
+**Email & Social Links:**
+- Email text: 24px desktop, 20px mobile
+- Email link: Vermilion color on hover with smooth transition
+- Social icons: 48px × 48px desktop, 40px × 40px mobile
+- Social icon SVG: 22px desktop, 18px mobile
+
+**Color Scheme (Form):**
+- Title, labels, inputs: Charcoal (`#2A2F35`)
+- Submit button background: Charcoal (`#2A2F35`)
+- Submit button hover: Lighter charcoal (`#3A3F45`)
+- Close button: Charcoal color
+- Error messages: Charcoal background with light text
+- Success messages: Charcoal background with light text
+
+**Animation Sequences:**
+- Desktop: Circle moves (0-0.8s) → Divider fades in + Form slides (0.8-1.4s)
+- Mobile: Circle fades out (0-0.3s) → Form fades in (0.3-0.7s)
+- All transitions use cubic-bezier(0.16, 1, 0.3, 1) for smooth feel
+- Quick-tap protection: `isAnimating` state blocks interaction during transitions
 
 ### Navigation
 - **Desktop (landing page)**: ABOUT (bottom left) and CONTACT (bottom right) buttons
-- **Small screens (≤625px)**: Hamburger menu with dropdown (top right, positioned below marquee)
+- **Small screens (≤640px)**: Hamburger menu with dropdown (top right, positioned below marquee)
 - **About section header**: ABOUT button (left) and hamburger menu (right)
 - **Full-screen nav**: Grid layout with MENU label, close button, and nav items
 - All ABOUT buttons navigate to about section with smooth scroll and theme update
@@ -135,7 +199,7 @@ All colors are defined as CSS custom properties in `globals.css` under `:root`.
   - `AnimatedButton` in `src/components/navigation/AnimatedButton.tsx` (reusable button with underline animation)
 
 ### Responsive Behavior
-- **Breakpoint**: 625px (small screens)
+- **Breakpoint**: 640px (standard Tailwind/bootstrap breakpoint)
 - All responsive styling handled by CSS @media queries
 - JavaScript only handles conditional rendering and state-based behavior
 - Scroll snap behavior: `y mandatory` for smooth section-by-section scrolling
@@ -270,7 +334,7 @@ This ensures the codebase is always in a working state before deployment.
 - **CSS Custom Properties**: All colors, fonts, spacing, and transitions defined in `:root`
 - **BEM-like Naming**: Component classes use double underscore notation (e.g., `.contact-popup__header`)
 - **Modifier Classes**: State variations use double dash notation (e.g., `.nav-item--active`)
-- **@media Queries**: All responsive styling at 625px breakpoint
+- **@media Queries**: All responsive styling at 640px breakpoint (industry standard)
 - **Zero Runtime CSS**: No CSS-in-JS or style injection - all static CSS in globals.css
 
 ### Component Architecture

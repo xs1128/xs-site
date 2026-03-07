@@ -58,17 +58,16 @@ export function ContactSection({ isSmallScreen }: ContactSectionProps) {
         {/* Main content area with spinning text and form */}
         <div className="contact-section__content">
           {/* Circle - different animation for small vs large screens */}
-          <div className={`contact-section__circle-wrapper ${isSmallScreen ? 'contact-section__circle-wrapper--small' : ''}`}>
+          <div className={`contact-section__circle-wrapper ${isSmallScreen ? 'contact-section__circle-wrapper--small' : ''} ${isPopupOpen ? 'contact-section__circle-wrapper--expanded' : ''}`}>
             <div
-              className={`contact-section__circle ${isPopupOpen ? 'contact-section__circle--expanded' : ''} ${isPopupClosing ? 'contact-section__circle--closing' : ''}`}
+              className={`contact-section__circle ${isPopupOpen ? 'contact-section__circle--expanded' : ''}`}
               style={{
                 pointerEvents: isAnimating ? 'none' : 'auto',
-                opacity: isSmallScreen ? (isPopupOpen ? 0 : 1) : 1,
               }}
             >
               <SpinningCircularText
                 text="Xinsheng Ooi • Xinsheng Ooi • Xinsheng Ooi • "
-                diameter={isSmallScreen ? (isPopupOpen ? 180 : 200) : (isPopupOpen ? 240 : 280)}
+                diameter={isSmallScreen ? 240 : (isPopupOpen ? 280 : 320)}
                 onClick={handleCircleClick}
                 isExpanded={isPopupOpen}
               />
@@ -77,7 +76,7 @@ export function ContactSection({ isSmallScreen }: ContactSectionProps) {
 
           {/* Divider - only for large screens */}
           {!isSmallScreen && (isPopupOpen || isPopupClosing) && (
-            <div className={`contact-section__divider ${isPopupClosing ? 'contact-section__divider--fading' : ''}`} />
+            <div className={`contact-section__divider ${isPopupClosing ? 'contact-section__divider--fading' : 'contact-section__divider--visible'}`} />
           )}
 
           {/* Form container - different animation for small vs large screens */}
@@ -99,7 +98,7 @@ export function ContactSection({ isSmallScreen }: ContactSectionProps) {
         {/* Email and social icons at the bottom */}
         <div className="contact-section__footer">
           <div className="contact-section__email">
-            email: hi@xsooi.com
+            email: <a href="mailto:hi@xsooi.com" className="contact-section__email-link">hi@xsooi.com</a>
           </div>
 
           <div className="contact-section__social-links">
