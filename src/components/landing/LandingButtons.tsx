@@ -3,12 +3,11 @@ import type { LandingButtonsProps } from '@/types';
 import { AnimatedButton } from '@/components/navigation/AnimatedButton';
 
 /**
- * Desktop navigation buttons at bottom of landing section
+ * Navigation buttons at bottom of landing section
  * ABOUT button (bottom left) and CONTACT button (bottom right)
+ * Visible on both desktop and mobile
  */
 export function LandingButtons({ onScrollToAbout, onScrollToContact, isSmallScreen }: LandingButtonsProps) {
-  if (isSmallScreen) return null;
-
   return (
     <>
       <AnimatedButton

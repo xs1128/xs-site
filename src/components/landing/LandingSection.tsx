@@ -2,7 +2,6 @@ import React from 'react';
 import type { LandingButtonsProps } from '@/types';
 import { NameDisplay } from './NameDisplay';
 import { LandingButtons } from './LandingButtons';
-import { MobileDropdown } from '@/components/navigation/MobileDropdown';
 
 /**
  * Landing section component with centered name and navigation
@@ -35,26 +34,10 @@ export function LandingSection({
 
   return (
     <main className="landing-section">
-      {/* Mobile Dropdown Menu */}
-      {isSmallScreen && (
-        <MobileDropdown
-          isOpen={isMenuOpen}
-          onClose={() => setIsMenuOpen(false)}
-          onNavigateToSection={(sectionId) => {
-            if (sectionId === 'about') {
-              onScrollToAbout();
-            } else if (sectionId === 'contact') {
-              onScrollToContact();
-            }
-          }}
-          setIsDarkTheme={() => {}}
-        />
-      )}
-
       {/* Name */}
       <NameDisplay
         onToggle={onNameClick}
-        showInitials={showXs || isSmallScreen}
+        showInitials={showXs}
         isFading={isFading}
       />
 
