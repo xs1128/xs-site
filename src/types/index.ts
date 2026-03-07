@@ -162,3 +162,25 @@ export interface CardSceneProps {
   children: React.ReactNode;
   index: number;
 }
+
+// Animation Components
+export interface AnimatedHeadlineProps {
+  text: string;
+  isVisible: boolean;
+}
+
+export interface MagneticCTAProps {
+  onClick: () => void;
+  isSmallScreen: boolean;
+  isVisible: boolean;
+}
+
+// Intersection Animation Hook
+export interface AnimationTriggerOptions {
+  threshold?: number;
+  rootMargin?: string;
+}
+
+export interface AnimationState {
+  isVisible: boolean;
+}

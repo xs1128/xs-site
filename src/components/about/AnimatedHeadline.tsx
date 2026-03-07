@@ -1,0 +1,48 @@
+import React from 'react';
+
+/**
+ * Props for AnimatedHeadline component
+ */
+export interface AnimatedHeadlineProps {
+  /** The headline text to animate word by word */
+  text: string;
+  /** Whether the element is visible */
+  isVisible: boolean;
+}
+
+/**
+ * Animated headline with word-by-word reveal effect
+ * Each word animates in with staggered delay and highlights on hover
+ * Automatically reverses when scrolling away
+ *
+ * @param props - Component props
+ * @returns JSX element with animated words
+ *
+ * @example
+ * ```tsx
+ * <AnimatedHeadline
+ *   text="I turn real problems into automated solutions."
+ *   isVisible={isVisible}
+ * />
+ * ```
+ */
+export function AnimatedHeadline({ text, isVisible }: AnimatedHeadlineProps) {
+  const words = text.split(' ');
+
+  return (
+    <h2 className={`about-content__headline ${isVisible ? 'about-content__headline--visible' : ''}`}>
+      {words.map((word, index) => (
+        <span
+          key={index}
+          className="about-content__word"
+          style={{
+            transitionDelay: isVisible ? `${index * 0.05}s` : '0s',
+            marginRight: '0.25em'
+          }}
+        >
+          {word}
+        </span>
+      ))}
+    </h2>
+  );
+}

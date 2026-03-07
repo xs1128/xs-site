@@ -1,13 +1,21 @@
 import React from 'react';
 import type { AboutContentProps } from '@/types';
 import { ExpertiseCard } from './ExpertiseCard';
+import { AnimatedHeadline } from './AnimatedHeadline';
+import { MagneticCTA } from './MagneticCTA';
 import { StaticIcon } from '../icons/StaticIcon';
+import { useIntersectionAnimation } from '@/hooks/useIntersectionAnimation';
 
 /**
- * About section content with headline, introduction, and expertise cards
- * Displays the main content of the about section
+ * About section content with animated headline, introduction, and expertise cards
+ * Features scroll-triggered entrance animations and micro-interactions
  */
 export function AboutContent({ onScrollToContact, isSmallScreen }: AboutContentProps) {
+  const { isVisible } = useIntersectionAnimation({
+    threshold: 0.15,
+    rootMargin: '-50px'
+  });
+
   const handleScrollToContact = () => {
     const contactSection = document.getElementById("contact");
     if (contactSection) {
@@ -18,20 +26,21 @@ export function AboutContent({ onScrollToContact, isSmallScreen }: AboutContentP
 
   return (
     <div className="about-content">
-      {/* Hero Headline */}
-      <h2 className="about-content__headline">
-        I turn real problems into automated solutions.
-      </h2>
+      {/* Hero Headline with animated reveal */}
+      <AnimatedHeadline
+        text="I turn real problems into automated solutions."
+        isVisible={isVisible}
+      />
 
-      {/* Introduction */}
-      <div className="about-content__intro">
+      {/* Introduction with fade-in animation */}
+      <div className={`about-content__intro ${isVisible ? 'about-content__intro--visible' : ''}`}>
         <p className="about-content__intro-text">
           I'm Xinsheng. From deployment pipelines to system monitoring, I build automation that keeps things running smoothly.
         </p>
       </div>
 
-      {/* Expertise Cards */}
-      <div className="about-content__cards">
+      {/* Expertise Cards with staggered entrance animations */}
+      <div className={`about-content__cards ${isVisible ? 'about-content__cards--visible' : ''}`}>
         <ExpertiseCard
           icon={<StaticIcon src="/icons/terminal.svg" alt="Scripting & Automation" />}
           title="Scripting & Automation"
@@ -52,12 +61,12 @@ export function AboutContent({ onScrollToContact, isSmallScreen }: AboutContentP
         />
       </div>
 
-      {/* Call to Action */}
-      <div className="about-content__cta" onClick={handleScrollToContact}>
-        <div className="about-content__cta-arrow">↓</div>
-        <p className="about-content__cta-text">Have a problem that needs solving?</p>
-        <p className="about-content__cta-subtext">Let's chat - I'd love to hear about it</p>
-      </div>
+      {/* Call to Action with magnetic effect */}
+      <MagneticCTA
+        onClick={handleScrollToContact}
+        isSmallScreen={isSmallScreen}
+        isVisible={isVisible}
+      />
     </div>
   );
 }

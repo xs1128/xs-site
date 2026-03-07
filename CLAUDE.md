@@ -76,16 +76,44 @@ All colors are defined as CSS custom properties in `globals.css` under `:root`.
 ### About Section
 - Dark charcoal background (`#2A2F35`)
 - Header with ABOUT button (scrolls to top) and hamburger menu
+- **Scroll-triggered reversible animations**: Elements animate in when scrolling down, smoothly reverse when scrolling up
 - Main content includes:
-  - Headline: "I turn real problems into automated solutions."
+  - **Animated headline**: "I turn real problems into automated solutions." with word-by-word reveal effect
+    - Each word fades in with staggered delay (50ms)
+    - Hover highlights word in vermilion
+    - Automatically reverses on scroll away
   - Intro paragraph with bio
-  - Three expertise cards with hover lift effect
-  - CTA section to scroll to contact
+  - **Three expertise cards** with enhanced interactions:
+    - 3D tilt effect on desktop (follows cursor movement)
+    - Icon bounce animation on hover
+    - Icon glow effect with vermilion shadow
+    - Parallax depth (title and description float at different Z-levels)
+    - Mobile: Simple hover state
+  - **Magnetic CTA button**: Subtly follows cursor on desktop (max 8px movement at 15% intensity)
+    - Smooth spring-back animation when mouse leaves
+    - Scale effect (1.02x) on hover
+    - Arrow moves up 8px on hover
+- **Micro-interactions**:
+  - Word-by-word headline reveal
+  - Icon bounce with vermilion glow
+  - 3D parallax depth on cards
+  - Magnetic button movement
+- **Animation system**:
+  - Single `isVisible` state controls all animations
+  - CSS transitions (inherently reversible)
+  - Staggered timing: Headline (0.1s) → Intro (0.3s) → Cards (0.5-0.9s) → CTA (1.1s)
+  - Respects `prefers-reduced-motion` preference
+- **Mobile optimizations**:
+  - Increased side padding: 48px for cards container and individual cards
+  - CTA top margin removed for compact layout
 - **Components**:
   - `AboutSection` in `src/components/about/AboutSection.tsx`
   - `AboutHeader` in `src/components/about/AboutHeader.tsx`
   - `AboutContent` in `src/components/about/AboutContent.tsx`
   - `ExpertiseCard` in `src/components/about/ExpertiseCard.tsx`
+  - `AnimatedHeadline` in `src/components/about/AnimatedHeadline.tsx`
+  - `MagneticCTA` in `src/components/about/MagneticCTA.tsx`
+  - `useIntersectionAnimation` hook in `src/hooks/useIntersectionAnimation.ts`
 
 ### Contact Section
 - Light cream background (`#F2E9D8`)
