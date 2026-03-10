@@ -34,7 +34,7 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
     fontSize: clamp.lg,
     fontWeight: 700,
     color: colors.darkText,
-    marginBottom: spacing.sm,
+    marginBottom: 'clamp(12px, 2vh, 16px)',
   }
 
   const metaStyle: React.CSSProperties = {
@@ -44,7 +44,7 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
     fontFamily: FONTS.primary,
     fontSize: clamp.sm,
     color: '#CCCCCC',
-    marginBottom: spacing.sm,
+    marginBottom: 'clamp(12px, 2vh, 16px)',
   }
 
   const excerptStyle: React.CSSProperties = {
