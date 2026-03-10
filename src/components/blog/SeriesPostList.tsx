@@ -10,7 +10,7 @@ export default function SeriesPostList({ posts }: SeriesPostListProps) {
   const containerStyle: React.CSSProperties = {
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: `0 clamp(24px, 4vh, 48px) clamp(40px, 6vh, 80px)`,
+    padding: `0 clamp(32px, 5vh, 60px) clamp(40px, 6vh, 80px)`,
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
