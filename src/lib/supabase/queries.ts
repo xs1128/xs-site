@@ -157,3 +157,44 @@ export async function getSeriesPosts(seriesId: number) {
 
   return data
 }
+
+/**
+ * Get series by slug with all posts ordered
+ */
+export async function getSeriesBySlug(slug: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('series')
+    .select(`
+      *,
+      series_posts (
+        order_column,
+        posts (*)
+      )
+    `)
+    .eq('slug', slug)
+    .single()
+
+  if (error) {
+    console.error('Error fetching series by slug:', error)
+    return null
+  }
+
+  // Transform to match SeriesDetail interface
+  return {
+    id: data.id,
+    title: data.title,
+    slug: data.slug,
+    description: data.description,
+    posts: (data.series_posts || [])
+      .filter((sp: any) => sp.posts?.published_at) // Only published posts
+      .sort((a: any, b: any) => a.order_column - b.order_column)
+      .map((sp: any) => ({
+        ...sp.posts,
+        order_in_series: sp.order_column,
+        date: sp.posts.published_at || sp.posts.created_at,
+        summary: sp.posts.excerpt || '',
+      }))
+  }
+}
