@@ -45,29 +45,25 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
       const currentX = meshRef.current.rotation.x;
       const currentY = meshRef.current.rotation.y;
 
-      // Find the current "block" of 90 degrees
-      const currentBlockY = Math.round(currentY / (Math.PI / 2));
-      const currentBlockX = Math.round(currentX / (Math.PI / 2));
-
       switch (direction) {
         case "left":
-          // Rotate counterclockwise to next 90-degree mark (Y-axis)
-          targetRotationYRef.current = (currentBlockY + 1) * (Math.PI / 2);
+          // Rotate to nearest 90-degree mark to the left (counterclockwise, Y-axis)
+          targetRotationYRef.current = Math.ceil(currentY / (Math.PI / 2)) * (Math.PI / 2);
           targetRotationXRef.current = currentX;
           break;
         case "right":
-          // Rotate clockwise to next 90-degree mark (Y-axis)
-          targetRotationYRef.current = (currentBlockY - 1) * (Math.PI / 2);
+          // Rotate to nearest 90-degree mark to the right (clockwise, Y-axis)
+          targetRotationYRef.current = Math.floor(currentY / (Math.PI / 2)) * (Math.PI / 2);
           targetRotationXRef.current = currentX;
           break;
         case "up":
-          // Rotate upward to next 90-degree mark (X-axis)
-          targetRotationXRef.current = (currentBlockX - 1) * (Math.PI / 2);
+          // Rotate to nearest 90-degree mark upward (X-axis)
+          targetRotationXRef.current = Math.floor(currentX / (Math.PI / 2)) * (Math.PI / 2);
           targetRotationYRef.current = currentY;
           break;
         case "down":
-          // Rotate downward to next 90-degree mark (X-axis)
-          targetRotationXRef.current = (currentBlockX + 1) * (Math.PI / 2);
+          // Rotate to nearest 90-degree mark downward (X-axis)
+          targetRotationXRef.current = Math.ceil(currentX / (Math.PI / 2)) * (Math.PI / 2);
           targetRotationYRef.current = currentY;
           break;
         case "center":
