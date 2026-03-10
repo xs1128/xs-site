@@ -40,27 +40,42 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
   // Expose rotateCube method to parent
   useImperativeHandle(ref, () => ({
     rotateCube: (direction: string) => {
-      if (isAnimatingRef.current) return;
+      if (isAnimatingRef.current || !meshRef.current) return;
 
-      isAnimatingRef.current = true;
+      const currentX = meshRef.current.rotation.x;
+      const currentY = meshRef.current.rotation.y;
+
+      // Find the current "block" of 90 degrees
+      const currentBlockY = Math.round(currentY / (Math.PI / 2));
+      const currentBlockX = Math.round(currentX / (Math.PI / 2));
 
       switch (direction) {
         case "left":
-          targetRotationYRef.current += Math.PI / 2;
+          // Rotate counterclockwise to next 90-degree mark (Y-axis)
+          targetRotationYRef.current = (currentBlockY + 1) * (Math.PI / 2);
+          targetRotationXRef.current = currentX;
           break;
         case "right":
-          targetRotationYRef.current -= Math.PI / 2;
+          // Rotate clockwise to next 90-degree mark (Y-axis)
+          targetRotationYRef.current = (currentBlockY - 1) * (Math.PI / 2);
+          targetRotationXRef.current = currentX;
           break;
         case "up":
-          targetRotationXRef.current -= Math.PI / 2;
+          // Rotate upward to next 90-degree mark (X-axis)
+          targetRotationXRef.current = (currentBlockX - 1) * (Math.PI / 2);
+          targetRotationYRef.current = currentY;
           break;
         case "down":
-          targetRotationXRef.current += Math.PI / 2;
+          // Rotate downward to next 90-degree mark (X-axis)
+          targetRotationXRef.current = (currentBlockX + 1) * (Math.PI / 2);
+          targetRotationYRef.current = currentY;
           break;
         case "center":
           centerCube();
           break;
       }
+
+      isAnimatingRef.current = true;
     },
   }));
 
@@ -152,11 +167,7 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
         ref={meshRef}
         position={[0, 0, 0]}
         onClick={(e) => {
-          e.stopPropagation();
           centerCube();
-        }}
-        onPointerDown={(e) => {
-          e.stopPropagation();
         }}
       >
         <boxGeometry args={[2, 2, 2]} />

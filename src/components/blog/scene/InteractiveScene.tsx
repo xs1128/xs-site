@@ -138,11 +138,12 @@ const InteractiveScene = forwardRef<InteractiveSceneRef, InteractiveSceneProps>(
         enableZoom={false}
         enablePan={false}
         autoRotate={false}
-        enableDamping={false}
+        enableDamping={true}
+        dampingFactor={0.05}
         minDistance={3}
         maxDistance={10}
         rotateSpeed={0.5}
-        enabled={false}
+        enabled={true}
       />
     </>
   );
