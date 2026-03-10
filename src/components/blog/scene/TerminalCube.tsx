@@ -17,13 +17,13 @@ export interface TerminalCubeRef {
 
 const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, ref) => {
   const meshRef = useRef<Mesh>(null);
-  const [targetRotationX, setTargetRotationX] = useState(0);
-  const [targetRotationY, setTargetRotationY] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const targetRotationXRef = useRef(0);
+  const targetRotationYRef = useRef(0);
+  const isAnimatingRef = useRef(false);
 
   // Function to center the cube
   const centerCube = () => {
-    if (isAnimating || !meshRef.current) return;
+    if (isAnimatingRef.current || !meshRef.current) return;
 
     const currentX = meshRef.current.rotation.x;
     const currentY = meshRef.current.rotation.y;
@@ -32,30 +32,30 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
     const snapX = Math.round(currentX / (Math.PI / 2)) * (Math.PI / 2);
     const snapY = Math.round(currentY / (Math.PI / 2)) * (Math.PI / 2);
 
-    setTargetRotationX(snapX);
-    setTargetRotationY(snapY);
-    setIsAnimating(true);
+    targetRotationXRef.current = snapX;
+    targetRotationYRef.current = snapY;
+    isAnimatingRef.current = true;
   };
 
   // Expose rotateCube method to parent
   useImperativeHandle(ref, () => ({
     rotateCube: (direction: string) => {
-      if (isAnimating) return;
+      if (isAnimatingRef.current) return;
 
-      setIsAnimating(true);
+      isAnimatingRef.current = true;
 
       switch (direction) {
         case "left":
-          setTargetRotationY(targetRotationY + Math.PI / 2);
+          targetRotationYRef.current += Math.PI / 2;
           break;
         case "right":
-          setTargetRotationY(targetRotationY - Math.PI / 2);
+          targetRotationYRef.current -= Math.PI / 2;
           break;
         case "up":
-          setTargetRotationX(targetRotationX - Math.PI / 2);
+          targetRotationXRef.current -= Math.PI / 2;
           break;
         case "down":
-          setTargetRotationX(targetRotationX + Math.PI / 2);
+          targetRotationXRef.current += Math.PI / 2;
           break;
         case "center":
           centerCube();
@@ -130,15 +130,15 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
   useFrame(() => {
     if (!meshRef.current) return;
 
-    if (isAnimating) {
+    if (isAnimatingRef.current) {
       const rotationSpeed = 0.1;
-      const diffX = targetRotationX - meshRef.current.rotation.x;
-      const diffY = targetRotationY - meshRef.current.rotation.y;
+      const diffX = targetRotationXRef.current - meshRef.current.rotation.x;
+      const diffY = targetRotationYRef.current - meshRef.current.rotation.y;
 
       if (Math.abs(diffX) < 0.01 && Math.abs(diffY) < 0.01) {
-        meshRef.current.rotation.x = targetRotationX;
-        meshRef.current.rotation.y = targetRotationY;
-        setIsAnimating(false);
+        meshRef.current.rotation.x = targetRotationXRef.current;
+        meshRef.current.rotation.y = targetRotationYRef.current;
+        isAnimatingRef.current = false;
       } else {
         meshRef.current.rotation.x += diffX * rotationSpeed;
         meshRef.current.rotation.y += diffY * rotationSpeed;
