@@ -23,7 +23,7 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
     backgroundColor: '#3E454C',
     border: '1px solid rgba(255, 255, 255, 0.05)',
     borderRadius: '8px',
-    padding: spacing.md,
+    padding: 'clamp(20px, 4vh, 28px)',
     textDecoration: 'none',
     transition: TRANSITIONS.fast('all'),
     display: 'block',
