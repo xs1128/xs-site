@@ -21,6 +21,22 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
   const [targetRotationY, setTargetRotationY] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Function to center the cube
+  const centerCube = () => {
+    if (isAnimating || !meshRef.current) return;
+
+    const currentX = meshRef.current.rotation.x;
+    const currentY = meshRef.current.rotation.y;
+
+    // Round to nearest 90 degrees (PI/2)
+    const snapX = Math.round(currentX / (Math.PI / 2)) * (Math.PI / 2);
+    const snapY = Math.round(currentY / (Math.PI / 2)) * (Math.PI / 2);
+
+    setTargetRotationX(snapX);
+    setTargetRotationY(snapY);
+    setIsAnimating(true);
+  };
+
   // Expose rotateCube method to parent
   useImperativeHandle(ref, () => ({
     rotateCube: (direction: string) => {
@@ -40,6 +56,9 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
           break;
         case "down":
           setTargetRotationX(targetRotationX + Math.PI / 2);
+          break;
+        case "center":
+          centerCube();
           break;
       }
     },
@@ -132,6 +151,10 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
       <mesh
         ref={meshRef}
         position={[0, 0, 0]}
+        onClick={(e) => {
+          e.stopPropagation();
+          centerCube();
+        }}
       >
         <boxGeometry args={[2, 2, 2]} />
         {materials.map((mat, index) => (
