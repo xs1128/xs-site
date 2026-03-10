@@ -12,7 +12,7 @@ interface TerminalCubeProps {
 }
 
 export interface TerminalCubeRef {
-  rotateCube: (direction: string) => void;
+  snapToNearestFace: () => void;
 }
 
 const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, ref) => {
@@ -21,7 +21,7 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
   const targetRotationYRef = useRef(0);
   const isAnimatingRef = useRef(false);
 
-  // Function to center the cube
+  // Function to center the cube (snap to nearest 90-degree position)
   const centerCube = () => {
     if (isAnimatingRef.current || !meshRef.current) return;
 
@@ -37,42 +37,9 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
     isAnimatingRef.current = true;
   };
 
-  // Expose rotateCube method to parent
+  // Expose snapToNearestFace method to parent
   useImperativeHandle(ref, () => ({
-    rotateCube: (direction: string) => {
-      if (isAnimatingRef.current || !meshRef.current) return;
-
-      const currentX = meshRef.current.rotation.x;
-      const currentY = meshRef.current.rotation.y;
-
-      switch (direction) {
-        case "left":
-          // Rotate to nearest 90-degree mark to the left (counterclockwise, Y-axis)
-          targetRotationYRef.current = Math.ceil(currentY / (Math.PI / 2)) * (Math.PI / 2);
-          targetRotationXRef.current = currentX;
-          break;
-        case "right":
-          // Rotate to nearest 90-degree mark to the right (clockwise, Y-axis)
-          targetRotationYRef.current = Math.floor(currentY / (Math.PI / 2)) * (Math.PI / 2);
-          targetRotationXRef.current = currentX;
-          break;
-        case "up":
-          // Rotate to nearest 90-degree mark upward (X-axis)
-          targetRotationXRef.current = Math.floor(currentX / (Math.PI / 2)) * (Math.PI / 2);
-          targetRotationYRef.current = currentY;
-          break;
-        case "down":
-          // Rotate to nearest 90-degree mark downward (X-axis)
-          targetRotationXRef.current = Math.ceil(currentX / (Math.PI / 2)) * (Math.PI / 2);
-          targetRotationYRef.current = currentY;
-          break;
-        case "center":
-          centerCube();
-          break;
-      }
-
-      isAnimatingRef.current = true;
-    },
+    snapToNearestFace: centerCube,
   }));
 
   // Create textures for all 6 faces

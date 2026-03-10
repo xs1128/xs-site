@@ -14,7 +14,7 @@ interface InteractiveSceneProps {
 }
 
 export interface InteractiveSceneRef {
-  rotateCube: (direction: string) => void;
+  snapToNearestFace: () => void;
 }
 
 function BackgroundParticles() {
@@ -88,9 +88,9 @@ const InteractiveScene = forwardRef<InteractiveSceneRef, InteractiveSceneProps>(
   const stats = useTerminalStats();
 
   useImperativeHandle(ref, () => ({
-    rotateCube: (direction: string) => {
+    snapToNearestFace: () => {
       if (cubeRef.current) {
-        cubeRef.current.rotateCube(direction);
+        cubeRef.current.snapToNearestFace();
       }
     },
   }));
@@ -144,6 +144,11 @@ const InteractiveScene = forwardRef<InteractiveSceneRef, InteractiveSceneProps>(
         maxDistance={10}
         rotateSpeed={0.5}
         enabled={true}
+        onEnd={() => {
+          if (cubeRef.current) {
+            cubeRef.current.snapToNearestFace();
+          }
+        }}
       />
     </>
   );
