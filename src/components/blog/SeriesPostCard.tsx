@@ -20,23 +20,13 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
   }
 
   const cardStyle: React.CSSProperties = {
-    backgroundColor: '#E4D9C2',
-    border: '1px solid #D6CBB3',
+    backgroundColor: '#3E454C',
+    border: '1px solid rgba(255, 255, 255, 0.05)',
     borderRadius: '8px',
     padding: spacing.md,
     textDecoration: 'none',
     transition: TRANSITIONS.fast('all'),
     display: 'block',
-  }
-
-  const orderStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
-    fontSize: clamp.xs,
-    fontWeight: 700,
-    color: colors.accent,
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em',
-    marginBottom: spacing.xs,
   }
 
   const titleStyle: React.CSSProperties = {
@@ -53,14 +43,14 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
     alignItems: 'center',
     fontFamily: FONTS.primary,
     fontSize: clamp.sm,
-    color: '#666666',
+    color: '#CCCCCC',
     marginBottom: spacing.sm,
   }
 
   const excerptStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
     fontSize: clamp.sm,
-    color: '#666666',
+    color: '#CCCCCC',
     lineHeight: 1.6,
   }
 
@@ -77,9 +67,6 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
         e.currentTarget.style.borderColor = '#D6CBB3'
       }}
     >
-      <div style={orderStyle}>
-        Part {post.order_in_series}
-      </div>
       <h2 style={titleStyle}>{post.title}</h2>
       <div style={metaStyle}>
         <span>{formatDate(post.date)}</span>
