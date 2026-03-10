@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Mesh } from "three";
+import { Mesh, Vector3 } from "three";
 import { createFaceTexture, disposeTextures, type FaceTextConfig } from "./createFaceTexture";
 import type { TerminalStats } from "./useTerminalStats";
+import * as THREE from "three";
 
 interface TerminalCubeProps {
   stats: TerminalStats;
@@ -12,6 +13,9 @@ interface TerminalCubeProps {
 
 export default function TerminalCube({ stats }: TerminalCubeProps) {
   const meshRef = useRef<Mesh>(null);
+  const [currentFace, setCurrentFace] = useState(0); // 0-3 for the 4 main faces
+  const [targetRotation, setTargetRotation] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   // Create textures for all 6 faces
   const materials = useMemo(() => {
@@ -75,17 +79,42 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
     };
   }, [materials]);
 
-  // Gentle auto-rotation
-  useFrame((state, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.003;
+  // Handle click to rotate to next face
+  const handleClick = (event: any) => {
+    event.stopPropagation();
+    if (isAnimating) return;
+
+    const nextFace = (currentFace + 1) % 4;
+    setCurrentFace(nextFace);
+    setTargetRotation(targetRotation + Math.PI / 2); // Rotate 90 degrees
+    setIsAnimating(true);
+  };
+
+  // Smooth rotation animation
+  useFrame(() => {
+    if (!meshRef.current) return;
+
+    if (isAnimating) {
+      const rotationSpeed = 0.1;
+      const diff = targetRotation - meshRef.current.rotation.y;
+
+      if (Math.abs(diff) < 0.01) {
+        meshRef.current.rotation.y = targetRotation;
+        setIsAnimating(false);
+      } else {
+        meshRef.current.rotation.y += diff * rotationSpeed;
+      }
     }
   });
 
   return (
     <>
-      <mesh ref={meshRef} position={[0, 0, 0]}>
-        <boxGeometry args={[2, 2, 2]} />
+      <mesh
+        ref={meshRef}
+        position={[0, 0, 0]}
+        onClick={handleClick}
+      >
+        <boxGeometry args={[2.5, 2.5, 2.5]} />
         {materials.map((mat, index) => (
           <meshStandardMaterial key={index} attach={`material-${index}`} {...mat} />
         ))}

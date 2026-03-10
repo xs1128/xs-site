@@ -27,7 +27,7 @@ export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProp
     position: "relative",
   };
 
-  const cameraPosition = isMobile ? [0, 0, 5] : [0, 0, 4];
+  const cameraPosition = isMobile ? [0, 0, 4] : [0, 0, 3.5];
 
   return (
     <div style={containerStyle}>

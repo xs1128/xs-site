@@ -117,11 +117,13 @@ export default function InteractiveScene() {
 
       {/* Camera controls for user interaction */}
       <OrbitControls
-        enableZoom={true}
+        enableZoom={false}
         enablePan={false}
         autoRotate={false}
+        enableDamping={false}
         minDistance={3}
         maxDistance={10}
+        rotateSpeed={0.5}
       />
     </>
   );
