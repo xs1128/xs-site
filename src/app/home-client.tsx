@@ -359,6 +359,21 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMarqueeCollapsed, setIsMarqueeCollapsed] = useState(false);
 
+  // Check for expanded=true URL parameter on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('expanded') === 'true') {
+      // Trigger the expanded state animation
+      setIsAnimating(true);
+      setIsSwapped(true);
+      setIsExpanded(true);
+      setTimeout(() => {
+        setNavDroppedIn(true);
+        setTimeout(() => setIsAnimating(false), 400);
+      }, 800);
+    }
+  }, []);
+
   useEffect(() => {
     const checkScreenSize = () => {
       setIsSmallScreen(window.innerWidth < 480);

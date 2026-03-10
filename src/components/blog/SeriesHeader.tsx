@@ -48,7 +48,7 @@ export default function SeriesHeader({ series }: SeriesHeaderProps) {
   return (
     <header style={headerStyle}>
       <Link
-        href="/"
+        href="/?expanded=true"
         style={backButtonStyle}
         onMouseEnter={(e) => {
           e.currentTarget.style.color = '#CC4420'
