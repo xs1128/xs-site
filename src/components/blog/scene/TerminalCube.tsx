@@ -1,46 +1,17 @@
 "use client";
 
-import { useRef, useMemo, useEffect, useState, forwardRef, useImperativeHandle } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Mesh, Vector3 } from "three";
+import { Mesh } from "three";
 import { createFaceTexture, disposeTextures, type FaceTextConfig } from "./createFaceTexture";
 import type { TerminalStats } from "./useTerminalStats";
-import * as THREE from "three";
 
 interface TerminalCubeProps {
   stats: TerminalStats;
 }
 
-export interface TerminalCubeRef {
-  snapToNearestFace: () => void;
-}
-
-const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, ref) => {
+export default function TerminalCube({ stats }: TerminalCubeProps) {
   const meshRef = useRef<Mesh>(null);
-  const targetRotationXRef = useRef(0);
-  const targetRotationYRef = useRef(0);
-  const isAnimatingRef = useRef(false);
-
-  // Function to center the cube (snap to nearest 90-degree position)
-  const centerCube = () => {
-    if (isAnimatingRef.current || !meshRef.current) return;
-
-    const currentX = meshRef.current.rotation.x;
-    const currentY = meshRef.current.rotation.y;
-
-    // Round to nearest 90 degrees (PI/2)
-    const snapX = Math.round(currentX / (Math.PI / 2)) * (Math.PI / 2);
-    const snapY = Math.round(currentY / (Math.PI / 2)) * (Math.PI / 2);
-
-    targetRotationXRef.current = snapX;
-    targetRotationYRef.current = snapY;
-    isAnimatingRef.current = true;
-  };
-
-  // Expose snapToNearestFace method to parent
-  useImperativeHandle(ref, () => ({
-    snapToNearestFace: centerCube,
-  }));
 
   // Create textures for all 6 faces
   const materials = useMemo(() => {
@@ -104,35 +75,16 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
     };
   }, [materials]);
 
-  // Smooth rotation animation
-  useFrame(() => {
-    if (!meshRef.current) return;
-
-    if (isAnimatingRef.current) {
-      const rotationSpeed = 0.1;
-      const diffX = targetRotationXRef.current - meshRef.current.rotation.x;
-      const diffY = targetRotationYRef.current - meshRef.current.rotation.y;
-
-      if (Math.abs(diffX) < 0.01 && Math.abs(diffY) < 0.01) {
-        meshRef.current.rotation.x = targetRotationXRef.current;
-        meshRef.current.rotation.y = targetRotationYRef.current;
-        isAnimatingRef.current = false;
-      } else {
-        meshRef.current.rotation.x += diffX * rotationSpeed;
-        meshRef.current.rotation.y += diffY * rotationSpeed;
-      }
+  // Gentle auto-rotation
+  useFrame((state, delta) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y += 0.003;
     }
   });
 
   return (
     <>
-      <mesh
-        ref={meshRef}
-        position={[0, 0, 0]}
-        onClick={(e) => {
-          centerCube();
-        }}
-      >
+      <mesh ref={meshRef} position={[0, 0, 0]}>
         <boxGeometry args={[2, 2, 2]} />
         {materials.map((mat, index) => (
           <meshStandardMaterial key={index} attach={`material-${index}`} {...mat} />
@@ -140,8 +92,4 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
       </mesh>
     </>
   );
-});
-
-TerminalCube.displayName = "TerminalCube";
-
-export default TerminalCube;
+}

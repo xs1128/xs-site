@@ -5,17 +5,8 @@ import { useFrame } from "@react-three/fiber";
 import { Mesh, InstancedMesh, Object3D } from "three";
 import { OrbitControls } from "@react-three/drei";
 import { colors } from "@/styles/colors";
-import TerminalCube, { TerminalCubeRef } from "./TerminalCube";
+import TerminalCube from "./TerminalCube";
 import { useTerminalStats } from "./useTerminalStats";
-import { forwardRef, useImperativeHandle } from "react";
-
-interface InteractiveSceneProps {
-  // No props needed
-}
-
-export interface InteractiveSceneRef {
-  snapToNearestFace: () => void;
-}
 
 function BackgroundParticles() {
   const particlesRef = useRef<InstancedMesh>(null);
@@ -83,17 +74,8 @@ function BackgroundParticles() {
   );
 }
 
-const InteractiveScene = forwardRef<InteractiveSceneRef, InteractiveSceneProps>((props, ref) => {
-  const cubeRef = useRef<TerminalCubeRef>(null);
+export default function InteractiveScene() {
   const stats = useTerminalStats();
-
-  useImperativeHandle(ref, () => ({
-    snapToNearestFace: () => {
-      if (cubeRef.current) {
-        cubeRef.current.snapToNearestFace();
-      }
-    },
-  }));
 
   return (
     <>
@@ -131,29 +113,16 @@ const InteractiveScene = forwardRef<InteractiveSceneRef, InteractiveSceneProps>(
       <hemisphereLight args={['#FFFFFF', '#D4CFC5', 0.4]} />
 
       {/* Terminal Cube - displays blog stats */}
-      <TerminalCube ref={cubeRef} stats={stats} />
+      <TerminalCube stats={stats} />
 
       {/* Camera controls for user interaction */}
       <OrbitControls
-        enableZoom={false}
+        enableZoom={true}
         enablePan={false}
         autoRotate={false}
-        enableDamping={true}
-        dampingFactor={0.05}
         minDistance={3}
         maxDistance={10}
-        rotateSpeed={0.5}
-        enabled={true}
-        onEnd={() => {
-          if (cubeRef.current) {
-            cubeRef.current.snapToNearestFace();
-          }
-        }}
       />
     </>
   );
-});
-
-InteractiveScene.displayName = "InteractiveScene";
-
-export default InteractiveScene;
+}

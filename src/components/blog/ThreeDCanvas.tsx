@@ -4,7 +4,6 @@ import { Canvas } from "@react-three/fiber";
 import { useIsMobile } from "@/hooks/useBreakpoint";
 import { colors } from "@/styles/colors";
 import InteractiveScene from "./scene/InteractiveScene";
-import { useRef } from "react";
 
 interface ThreeDCanvasProps {
   isSmallScreen?: boolean;
@@ -12,7 +11,6 @@ interface ThreeDCanvasProps {
 
 export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProps) {
   const isMobile = useIsMobile();
-  const sceneRef = useRef<{ snapToNearestFace: () => void } | null>(null);
 
   const containerStyle: React.CSSProperties = {
     flex: 1,
@@ -29,16 +27,16 @@ export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProp
     position: "relative",
   };
 
-  const cameraPosition = isMobile ? [0, 0, 4] : [0, 0, 3.5];
+  const cameraPosition = isMobile ? [0, 0, 5] : [0, 0, 4];
 
   return (
     <div style={containerStyle}>
       <Canvas
         camera={{ position: cameraPosition as [number, number, number], fov: 50 }}
         style={{ width: "100%", height: "100%", display: "block" }}
-        dpr={[1, 2]}
+        dpr={[1, 2]} // Optimize for high DPI displays
       >
-        <InteractiveScene ref={sceneRef} />
+        <InteractiveScene />
       </Canvas>
     </div>
   );
