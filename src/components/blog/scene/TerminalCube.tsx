@@ -133,7 +133,7 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
         ref={meshRef}
         position={[0, 0, 0]}
       >
-        <boxGeometry args={[2.5, 2.5, 2.5]} />
+        <boxGeometry args={[2, 2, 2]} />
         {materials.map((mat, index) => (
           <meshStandardMaterial key={index} attach={`material-${index}`} {...mat} />
         ))}

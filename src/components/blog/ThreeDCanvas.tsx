@@ -37,13 +37,12 @@ export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProp
     left: position.left || "auto",
     right: position.right || "auto",
     transform: position.transform || "none",
-    width: isMobile ? "40px" : "48px",
-    height: isMobile ? "40px" : "48px",
-    backgroundColor: "rgba(42, 47, 53, 0.8)",
-    border: "2px solid #E5532C",
-    borderRadius: "50%",
+    width: isMobile ? "32px" : "40px",
+    height: isMobile ? "32px" : "40px",
+    backgroundColor: "transparent",
+    border: "none",
     color: "#E5532C",
-    fontSize: isMobile ? "20px" : "24px",
+    fontSize: isMobile ? "24px" : "28px",
     fontWeight: 700,
     cursor: "pointer",
     display: "flex",
@@ -52,6 +51,7 @@ export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProp
     transition: "all 0.2s ease",
     zIndex: 10,
     userSelect: "none",
+    padding: 0,
   });
 
   const handleArrowClick = (direction: string) => {
@@ -77,12 +77,12 @@ export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProp
         style={arrowButtonStyle({ top: isMobile ? "10px" : "20px", left: "50%", transform: "translateX(-50%)" })}
         onClick={() => handleArrowClick("up")}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#E5532C";
-          e.currentTarget.style.color = "#FFFFFF";
+          e.currentTarget.style.color = "#CC4420";
+          e.currentTarget.style.transform = (e.currentTarget.style.transform || "") + " scale(1.2)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "rgba(42, 47, 53, 0.8)";
           e.currentTarget.style.color = "#E5532C";
+          e.currentTarget.style.transform = (e.currentTarget.style.transform || "").replace(" scale(1.2)", "");
         }}
       >
         ↑
@@ -92,12 +92,12 @@ export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProp
         style={arrowButtonStyle({ bottom: isMobile ? "10px" : "20px", left: "50%", transform: "translateX(-50%)" })}
         onClick={() => handleArrowClick("down")}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#E5532C";
-          e.currentTarget.style.color = "#FFFFFF";
+          e.currentTarget.style.color = "#CC4420";
+          e.currentTarget.style.transform = (e.currentTarget.style.transform || "") + " scale(1.2)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "rgba(42, 47, 53, 0.8)";
           e.currentTarget.style.color = "#E5532C";
+          e.currentTarget.style.transform = (e.currentTarget.style.transform || "").replace(" scale(1.2)", "");
         }}
       >
         ↓
@@ -107,12 +107,12 @@ export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProp
         style={arrowButtonStyle({ left: isMobile ? "10px" : "20px", top: "50%", transform: "translateY(-50%)" })}
         onClick={() => handleArrowClick("left")}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#E5532C";
-          e.currentTarget.style.color = "#FFFFFF";
+          e.currentTarget.style.color = "#CC4420";
+          e.currentTarget.style.transform = (e.currentTarget.style.transform || "") + " scale(1.2)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "rgba(42, 47, 53, 0.8)";
           e.currentTarget.style.color = "#E5532C";
+          e.currentTarget.style.transform = (e.currentTarget.style.transform || "").replace(" scale(1.2)", "");
         }}
       >
         ←
@@ -122,12 +122,12 @@ export default function ThreeDCanvas({ isSmallScreen = false }: ThreeDCanvasProp
         style={arrowButtonStyle({ right: isMobile ? "10px" : "20px", top: "50%", transform: "translateY(-50%)" })}
         onClick={() => handleArrowClick("right")}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#E5532C";
-          e.currentTarget.style.color = "#FFFFFF";
+          e.currentTarget.style.color = "#CC4420";
+          e.currentTarget.style.transform = (e.currentTarget.style.transform || "") + " scale(1.2)";
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "rgba(42, 47, 53, 0.8)";
           e.currentTarget.style.color = "#E5532C";
+          e.currentTarget.style.transform = (e.currentTarget.style.transform || "").replace(" scale(1.2)", "");
         }}
       >
         →
