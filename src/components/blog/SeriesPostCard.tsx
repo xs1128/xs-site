@@ -64,7 +64,7 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.borderColor = '#D6CBB3'
+        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)'
       }}
     >
       <h2 style={titleStyle}>{post.title}</h2>
