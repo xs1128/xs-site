@@ -5,8 +5,17 @@ import { useFrame } from "@react-three/fiber";
 import { Mesh, InstancedMesh, Object3D } from "three";
 import { OrbitControls } from "@react-three/drei";
 import { colors } from "@/styles/colors";
-import TerminalCube from "./TerminalCube";
+import TerminalCube, { TerminalCubeRef } from "./TerminalCube";
 import { useTerminalStats } from "./useTerminalStats";
+import { forwardRef, useImperativeHandle } from "react";
+
+interface InteractiveSceneProps {
+  // No props needed
+}
+
+export interface InteractiveSceneRef {
+  rotateCube: (direction: string) => void;
+}
 
 function BackgroundParticles() {
   const particlesRef = useRef<InstancedMesh>(null);
@@ -74,8 +83,17 @@ function BackgroundParticles() {
   );
 }
 
-export default function InteractiveScene() {
+const InteractiveScene = forwardRef<InteractiveSceneRef, InteractiveSceneProps>((props, ref) => {
+  const cubeRef = useRef<TerminalCubeRef>(null);
   const stats = useTerminalStats();
+
+  useImperativeHandle(ref, () => ({
+    rotateCube: (direction: string) => {
+      if (cubeRef.current) {
+        cubeRef.current.rotateCube(direction);
+      }
+    },
+  }));
 
   return (
     <>
@@ -113,7 +131,7 @@ export default function InteractiveScene() {
       <hemisphereLight args={['#FFFFFF', '#D4CFC5', 0.4]} />
 
       {/* Terminal Cube - displays blog stats */}
-      <TerminalCube stats={stats} />
+      <TerminalCube ref={cubeRef} stats={stats} />
 
       {/* Camera controls for user interaction */}
       <OrbitControls
@@ -127,4 +145,8 @@ export default function InteractiveScene() {
       />
     </>
   );
-}
+});
+
+InteractiveScene.displayName = "InteractiveScene";
+
+export default InteractiveScene;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo, useEffect, useState, forwardRef, useImperativeHandle } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Mesh, Vector3 } from "three";
 import { createFaceTexture, disposeTextures, type FaceTextConfig } from "./createFaceTexture";
@@ -11,11 +11,39 @@ interface TerminalCubeProps {
   stats: TerminalStats;
 }
 
-export default function TerminalCube({ stats }: TerminalCubeProps) {
+export interface TerminalCubeRef {
+  rotateCube: (direction: string) => void;
+}
+
+const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, ref) => {
   const meshRef = useRef<Mesh>(null);
-  const [currentFace, setCurrentFace] = useState(0); // 0-3 for the 4 main faces
-  const [targetRotation, setTargetRotation] = useState(0);
+  const [targetRotationX, setTargetRotationX] = useState(0);
+  const [targetRotationY, setTargetRotationY] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // Expose rotateCube method to parent
+  useImperativeHandle(ref, () => ({
+    rotateCube: (direction: string) => {
+      if (isAnimating) return;
+
+      setIsAnimating(true);
+
+      switch (direction) {
+        case "left":
+          setTargetRotationY(targetRotationY + Math.PI / 2);
+          break;
+        case "right":
+          setTargetRotationY(targetRotationY - Math.PI / 2);
+          break;
+        case "up":
+          setTargetRotationX(targetRotationX - Math.PI / 2);
+          break;
+        case "down":
+          setTargetRotationX(targetRotationX + Math.PI / 2);
+          break;
+      }
+    },
+  }));
 
   // Create textures for all 6 faces
   const materials = useMemo(() => {
@@ -79,30 +107,22 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
     };
   }, [materials]);
 
-  // Handle click to rotate to next face
-  const handleClick = (event: any) => {
-    event.stopPropagation();
-    if (isAnimating) return;
-
-    const nextFace = (currentFace + 1) % 4;
-    setCurrentFace(nextFace);
-    setTargetRotation(targetRotation + Math.PI / 2); // Rotate 90 degrees
-    setIsAnimating(true);
-  };
-
   // Smooth rotation animation
   useFrame(() => {
     if (!meshRef.current) return;
 
     if (isAnimating) {
       const rotationSpeed = 0.1;
-      const diff = targetRotation - meshRef.current.rotation.y;
+      const diffX = targetRotationX - meshRef.current.rotation.x;
+      const diffY = targetRotationY - meshRef.current.rotation.y;
 
-      if (Math.abs(diff) < 0.01) {
-        meshRef.current.rotation.y = targetRotation;
+      if (Math.abs(diffX) < 0.01 && Math.abs(diffY) < 0.01) {
+        meshRef.current.rotation.x = targetRotationX;
+        meshRef.current.rotation.y = targetRotationY;
         setIsAnimating(false);
       } else {
-        meshRef.current.rotation.y += diff * rotationSpeed;
+        meshRef.current.rotation.x += diffX * rotationSpeed;
+        meshRef.current.rotation.y += diffY * rotationSpeed;
       }
     }
   });
@@ -112,7 +132,6 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
       <mesh
         ref={meshRef}
         position={[0, 0, 0]}
-        onClick={handleClick}
       >
         <boxGeometry args={[2.5, 2.5, 2.5]} />
         {materials.map((mat, index) => (
@@ -121,4 +140,8 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
       </mesh>
     </>
   );
-}
+});
+
+TerminalCube.displayName = "TerminalCube";
+
+export default TerminalCube;
