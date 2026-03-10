@@ -192,7 +192,7 @@ export async function getSeriesBySlug(slug: string) {
       .sort((a: any, b: any) => a.order_column - b.order_column)
       .map((sp: any) => ({
         ...sp.posts,
-        order_in_series: sp.order_column,
+        order_in_series: sp.order_column + 1, // Add 1 to make it 1-based (Part 1, Part 2, etc.)
         date: sp.posts.published_at || sp.posts.created_at,
         summary: sp.posts.excerpt || '',
       }))
