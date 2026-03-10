@@ -24,10 +24,10 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
         mainText: "POSTS",
         valueText: stats.isLoading ? "..." : stats.postCount.toString(),
       },
-      // Face 2 (left): CATEGORIES
+      // Face 2 (left): SERIES
       {
-        mainText: "CATEGORIES",
-        valueText: stats.isLoading ? "..." : stats.categoryCount.toString(),
+        mainText: "SERIES",
+        valueText: stats.isLoading ? "..." : stats.seriesCount.toString(),
       },
       // Face 3 (top): LAST UPDATE
       {

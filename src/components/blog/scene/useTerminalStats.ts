@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 
 export interface TerminalStats {
   postCount: number;
-  categoryCount: number;
+  seriesCount: number;
   lastUpdate: string;
   pictureCount: number;
   totalViews: number; // If you track views
@@ -15,7 +15,7 @@ export interface TerminalStats {
 export function useTerminalStats() {
   const [stats, setStats] = useState<TerminalStats>({
     postCount: 0,
-    categoryCount: 0,
+    seriesCount: 0,
     lastUpdate: "LOADING...",
     pictureCount: 0,
     totalViews: 0,
@@ -32,8 +32,8 @@ export function useTerminalStats() {
           .from('posts')
           .select('*', { count: 'exact', head: true });
 
-        // Fetch category (series) count
-        const { count: categoryCount } = await supabase
+        // Fetch series count
+        const { count: seriesCount } = await supabase
           .from('series')
           .select('*', { count: 'exact', head: true });
 
@@ -63,7 +63,7 @@ export function useTerminalStats() {
 
         setStats({
           postCount: postCount || 0,
-          categoryCount: categoryCount || 0,
+          seriesCount: seriesCount || 0,
           lastUpdate: lastUpdateText,
           pictureCount: pictureCount || 0,
           totalViews: 0, // Add view tracking if you have it

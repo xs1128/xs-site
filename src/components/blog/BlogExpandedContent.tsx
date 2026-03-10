@@ -56,12 +56,12 @@ export default function BlogExpandedContent({ isSmallScreen = false }: BlogExpan
 
   return (
     <div style={containerStyle}>
-      {/* Mobile: 3D Animation Section first, Desktop: Categories first */}
+      {/* Mobile: 3D Animation Section first, Desktop: Series first */}
       {isSmallScreen && <ThreeDCanvas isSmallScreen={isSmallScreen} />}
 
       {/* Featured Series Section */}
       <div style={sectionStyle}>
-        <h2 style={headerStyle}>Categories</h2>
+        <h2 style={headerStyle}>Series</h2>
         <div style={contentStyle}>
           <SeriesGrid isSmallScreen={isSmallScreen} />
         </div>
