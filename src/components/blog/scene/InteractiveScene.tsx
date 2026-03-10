@@ -142,6 +142,7 @@ const InteractiveScene = forwardRef<InteractiveSceneRef, InteractiveSceneProps>(
         minDistance={3}
         maxDistance={10}
         rotateSpeed={0.5}
+        enabled={false}
       />
     </>
   );

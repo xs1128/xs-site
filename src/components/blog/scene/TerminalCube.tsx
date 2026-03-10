@@ -155,6 +155,9 @@ const TerminalCube = forwardRef<TerminalCubeRef, TerminalCubeProps>(({ stats }, 
           e.stopPropagation();
           centerCube();
         }}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+        }}
       >
         <boxGeometry args={[2, 2, 2]} />
         {materials.map((mat, index) => (
