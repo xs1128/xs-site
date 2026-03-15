@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This project is a blog built with Next.js, TypeScript, and Supabase. Key features include admin authentication, blog post management, interactive 3D animations, and responsive design.
+This project is the public-facing blog frontend built with Next.js, TypeScript, and Supabase. It displays blog posts, series, and features an interactive 3D terminal cube. This repository only contains read-only functionality for displaying content from Supabase.
+
+## Note
+
+The admin panel for managing blog content has been separated into a separate repository at `../blog-admin`. This repository only contains the public blog frontend.
 
 ## Documentation
 
@@ -12,12 +16,10 @@ All detailed documentation is located in the `./docs` directory. When working on
 
 ### Setup & Configuration
 - **[Project Structure](./docs/project-structure.md)** - File/directory layout
-- **[Supabase Setup](./docs/supabase-setup.md)** - Database, storage, and auth setup
-- **[Supabase Usage](./docs/supabase-usage.md)** - Client patterns and CRUD operations
+- **[Supabase Setup](./docs/supabase-setup.md)** - Database setup (for reference only)
+- **[Supabase Usage](./docs/supabase-usage.md)** - Client patterns for read operations
 
 ### Features & Components
-- **[Authentication](./docs/authentication.md)** - Admin authentication system
-- **[Admin Panel](./docs/admin-panel.md)** - Admin components and patterns
 - **[Blog Features](./docs/blog-features.md)** - Blog post pages and features
 - **[UI Components](./docs/ui-components.md)** - Footer, home page, and UI elements
 - **[3D Animation](./docs/3d-animation.md)** - Interactive terminal cube with React Three Fiber
