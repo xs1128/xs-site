@@ -1,7 +1,8 @@
+import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
 import HomePageClient from "./home-client";
 
-export default async function Home() {
+async function HeroImageFetcher() {
   const supabase = await createClient();
   const { data } = await supabase
     .from('site_settings')
@@ -11,4 +12,12 @@ export default async function Home() {
 
   const heroImageUrl = data?.value || '';
   return <HomePageClient heroImageUrl={heroImageUrl} />;
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<HomePageClient heroImageUrl="" />}>
+      <HeroImageFetcher />
+    </Suspense>
+  );
 }

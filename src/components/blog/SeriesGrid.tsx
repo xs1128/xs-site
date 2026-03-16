@@ -86,12 +86,12 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
     fontWeight: 700,
     color: "#FFFFFF",
     textTransform: "uppercase",
-    textAlign: "left",
+    textAlign: "center",
     cursor: "pointer",
     transition: "color 0.2s ease",
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     minHeight: isSmallScreen ? "auto" : "clamp(60px, 10vh, 80px)",
   };
 

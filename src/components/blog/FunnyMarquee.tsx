@@ -16,23 +16,58 @@ interface FunnyMarqueeProps {
 
 // Collapse handle component
 function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onToggle: () => void }) {
-  const handleStyle: React.CSSProperties = {
+  const handleContainerStyle: React.CSSProperties = {
     position: "absolute",
     right: 0,
-    top: "50%",
-    transform: "translateY(-50%)",
+    top: 0,
+    bottom: 0,
     width: "44px",
-    height: "80px",
-    backgroundColor: "#2A2F35",
-    border: "1px solid rgba(255, 255, 255, 0.2)",
+    display: "flex",
+    flexDirection: isCollapsed ? "column" : "row",
+    alignItems: "center",
+    justifyContent: isCollapsed ? "center" : "center",
+    backgroundColor: isCollapsed ? "#2A2F35" : "transparent",
+    borderTop: isCollapsed ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
+    borderBottom: isCollapsed ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
+    borderLeft: isCollapsed ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
     borderRight: "none",
     borderRadius: "8px 0 0 8px",
+    zIndex: 300,
+  };
+
+  const textStyle: React.CSSProperties = {
+    fontFamily: FONTS.primary,
+    fontSize: "clamp(14px, 2.5vw, 22px)",
+    fontWeight: 700,
+    color: "#F2E9D8",
+    textTransform: "uppercase",
+    letterSpacing: "0.1em",
+    writingMode: "vertical-rl",
+    textOrientation: "mixed",
+    transform: "rotate(180deg)",
+    whiteSpace: "nowrap",
+    flex: 1,
+    display: isCollapsed ? "flex" : "none",
+    alignItems: "center",
+    justifyContent: "center",
+    pointerEvents: "none",
+  };
+
+  const handleStyle: React.CSSProperties = {
+    width: "44px",
+    height: "80px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
-    zIndex: 300,
     transition: "background-color 0.2s ease, transform 0.2s ease",
+    flexShrink: 0,
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    borderRadius: isCollapsed ? "0 8px 8px 0" : "8px 0 0 8px",
+    backgroundColor: "#2A2F35",
+    position: "absolute",
+    top: "50%",
+    transform: "translateY(-50%)",
   };
 
   const iconStyle: React.CSSProperties = {
@@ -45,17 +80,26 @@ function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onTog
   };
 
   return (
-    <div
-      style={handleStyle}
-      onClick={onToggle}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = "#363D44";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = "#2A2F35";
-      }}
-    >
-      <span style={iconStyle}>◀</span>
+    <div style={handleContainerStyle}>
+      {/* Top div - RANDOM MOMENTS (only when collapsed) */}
+      {isCollapsed && <div style={textStyle}>RANDOM MOMENTS</div>}
+
+      {/* Handle */}
+      <div
+        style={handleStyle}
+        onClick={onToggle}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.backgroundColor = "#363D44";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.backgroundColor = "#2A2F35";
+        }}
+      >
+        <span style={iconStyle}>◀</span>
+      </div>
+
+      {/* Bottom div - RANDOM MOMENTS (only when collapsed) */}
+      {isCollapsed && <div style={textStyle}>RANDOM MOMENTS</div>}
     </div>
   );
 }

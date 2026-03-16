@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
 import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/queries'
 import { extractHeadings, calculateReadTime } from '@/lib/utils/post'
@@ -13,8 +14,7 @@ interface PageProps {
   }>
 }
 
-export default async function PostPage({ params }: PageProps) {
-  const { slug } = await params
+async function PostDataFetcher({ slug }: { slug: string }) {
   const supabase = await createClient()
 
   // Fetch post with series data
@@ -61,6 +61,29 @@ export default async function PostPage({ params }: PageProps) {
       headings={headings}
       relatedPosts={relatedPosts}
     />
+  )
+}
+
+export default async function PostPage({ params }: PageProps) {
+  const { slug } = await params
+
+  const emptyPost: Post = {
+    id: 0,
+    title: '',
+    slug: '',
+    content: '',
+    author_name: '',
+    tags: [],
+    read_time: undefined,
+    featured_image: undefined,
+    summary: '',
+    date: '',
+  }
+
+  return (
+    <Suspense fallback={<PostDetailClient post={emptyPost} seriesData={[]} headings={[]} relatedPosts={[]} />}>
+      <PostDataFetcher slug={slug} />
+    </Suspense>
   )
 }
 

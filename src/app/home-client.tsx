@@ -357,7 +357,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
   const [navDroppedIn, setNavDroppedIn] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
-  const [isMarqueeCollapsed, setIsMarqueeCollapsed] = useState(false);
+  const [isMarqueeCollapsed, setIsMarqueeCollapsed] = useState(true);
 
   // Check for expanded=true URL parameter on mount
   useEffect(() => {

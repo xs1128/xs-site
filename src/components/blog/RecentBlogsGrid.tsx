@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Post } from "@/types/post";
 import BlogCard from "./BlogCard";
+import { SkeletonCard } from "@/components/skeleton";
 
 interface RecentBlogsGridProps {
   isExpanded?: boolean;
@@ -180,7 +181,9 @@ export default function RecentBlogsGrid({
         <h2 style={headerStyle}>Recent Blogs</h2>
         <div style={carouselWrapperStyle}>
           <div style={carouselStyle}>
-            <p style={emptyStyle}>Loading...</p>
+            {[...Array(4)].map((_, i) => (
+              <SkeletonCard key={i} variant="blog" isSmallScreen={isSmallScreen} />
+            ))}
           </div>
         </div>
       </div>

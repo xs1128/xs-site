@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import FunnyMarquee from "./FunnyMarquee";
 import type { FunnyPicture } from "@/types/post";
+import { SkeletonText } from "@/components/skeleton";
 
 interface FunnyMarqueeWrapperProps {
   isCollapsed?: boolean;
@@ -43,7 +44,12 @@ export default function FunnyMarqueeWrapper({ isCollapsed = false, onToggleColla
   }, []);
 
   if (loading) {
-    return <div style={{ color: '#666666' }}>Loading pictures...</div>;
+    return (
+      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <SkeletonText lines={2} width="100%" />
+        <SkeletonText lines={1} width="60%" />
+      </div>
+    );
   }
 
   return <FunnyMarquee pictures={pictures} isCollapsed={isCollapsed} onToggleCollapse={onToggleCollapse} />;

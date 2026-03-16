@@ -308,3 +308,21 @@ button, .animated-button {
 .transition-slow {
   transition: all var(--transition-slow);
 }
+
+/* ========================================
+   SKELETON SHIMMER ANIMATION
+   ======================================== */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}

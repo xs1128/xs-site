@@ -121,6 +121,8 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
     display: "-webkit-box",
     WebkitLineClamp: 2,
     WebkitBoxOrient: "vertical",
+    textAlign: "center",
+    width: "100%",
   };
 
   const cardDescriptionStyle: React.CSSProperties = {
@@ -135,6 +137,8 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
     display: "-webkit-box",
     WebkitLineClamp: 2,
     WebkitBoxOrient: "vertical",
+    textAlign: "center",
+    width: "100%",
   };
 
   const postsContainerStyle: React.CSSProperties = {
@@ -142,12 +146,15 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
     flexDirection: "column",
     gap: "clamp(4px, 0.8vh, 8px)",
     marginTop: "clamp(4px, 0.8vh, 8px)",
+    width: "100%",
   };
 
   const postPreviewStyle: React.CSSProperties = {
     display: "flex",
     flexDirection: "column",
     gap: "1px",
+    alignItems: "center",
+    width: "100%",
   };
 
   const postTitleStyle: React.CSSProperties = {
@@ -159,6 +166,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
     overflow: "hidden",
     textOverflow: "ellipsis",
     whiteSpace: "nowrap",
+    textAlign: "center",
   };
 
   const postDateStyle: React.CSSProperties = {
@@ -167,6 +175,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
     fontWeight: 400,
     color: "#666666",
     margin: "0",
+    textAlign: "center",
   };
 
   const viewAllStyle: React.CSSProperties = {
@@ -175,9 +184,13 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
     fontWeight: 700,
     color: "#E5532C",
     margin: "0",
-    display: "inline-flex",
+    marginTop: "clamp(4px, 0.8vh, 8px)",
+    display: "flex",
     alignItems: "center",
+    justifyContent: "center",
     gap: "clamp(2px, 0.5vw, 4px)",
+    width: "100%",
+    boxSizing: "border-box",
   };
 
   const arrowStyle: React.CSSProperties = {
@@ -247,9 +260,9 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
                   </div>
                 ))}
               </div>
-              <span style={viewAllStyle}>
+              <div style={viewAllStyle}>
                 View all →
-              </span>
+              </div>
             </div>
           ))}
         </div>

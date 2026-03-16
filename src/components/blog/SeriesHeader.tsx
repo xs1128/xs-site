@@ -3,12 +3,14 @@ import type { SeriesDetail } from '@/types/post'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS } from '@/styles/animations'
+import { SkeletonText } from '@/components/skeleton'
 
 interface SeriesHeaderProps {
   series: SeriesDetail
+  loading?: boolean
 }
 
-export default function SeriesHeader({ series }: SeriesHeaderProps) {
+export default function SeriesHeader({ series, loading = false }: SeriesHeaderProps) {
   const headerStyle: React.CSSProperties = {
     padding: 'clamp(40px, 6vh, 80px) clamp(20px, 3vh, 40px)',
     maxWidth: '1200px',
@@ -59,9 +61,18 @@ export default function SeriesHeader({ series }: SeriesHeaderProps) {
       >
         ← Back to Home
       </Link>
-      <h1 style={titleStyle}>{series.title}</h1>
-      {series.description && (
-        <p style={descriptionStyle}>{series.description}</p>
+      {loading ? (
+        <>
+          <SkeletonText lines={2} width={['70%', '50%']} height="2em" />
+          <SkeletonText lines={3} width="100%" height="1.2em" />
+        </>
+      ) : (
+        <>
+          <h1 style={titleStyle}>{series.title}</h1>
+          {series.description && (
+            <p style={descriptionStyle}>{series.description}</p>
+          )}
+        </>
       )}
     </header>
   )

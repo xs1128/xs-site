@@ -2,13 +2,15 @@ import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import type { Post, SeriesDetail } from '@/types/post'
 import { formatDate, formatReadTime } from '@/lib/utils/post'
+import { SkeletonText } from '@/components/skeleton'
 
 interface PostHeaderProps {
   post: Post
   series?: SeriesDetail[]
+  loading?: boolean
 }
 
-export default function PostHeader({ post }: PostHeaderProps) {
+export default function PostHeader({ post, loading = false }: PostHeaderProps) {
   const containerStyle: React.CSSProperties = {
     marginBottom: spacing.lg,
   }
@@ -62,28 +64,34 @@ export default function PostHeader({ post }: PostHeaderProps) {
 
   return (
     <div style={containerStyle}>
-      <h1 style={titleStyle}>{post.title}</h1>
+      {loading ? (
+        <SkeletonText lines={3} width={['80%', '60%', '40%']} height="1.5em" />
+      ) : (
+        <>
+          <h1 style={titleStyle}>{post.title}</h1>
 
-      <div style={metaContainerStyle}>
-        <div style={metaLeftStyle}>
-          {post.date && (
-            <div style={metaItemStyle}>
-              <span>{formatDate(post.date)}</span>
+          <div style={metaContainerStyle}>
+            <div style={metaLeftStyle}>
+              {post.date && (
+                <div style={metaItemStyle}>
+                  <span>{formatDate(post.date)}</span>
+                </div>
+              )}
+
+              {post.read_time && (
+                <div style={metaItemStyle}>
+                  <span>·</span>
+                  <span>{formatReadTime(post.read_time)}</span>
+                </div>
+              )}
             </div>
-          )}
 
-          {post.read_time && (
-            <div style={metaItemStyle}>
-              <span>·</span>
-              <span>{formatReadTime(post.read_time)}</span>
+            <div style={metaRightStyle}>
+              <span style={authorStyle}>{post.author_name || 'Author'}</span>
             </div>
-          )}
-        </div>
-
-        <div style={metaRightStyle}>
-          <span style={authorStyle}>{post.author_name || 'Author'}</span>
-        </div>
-      </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

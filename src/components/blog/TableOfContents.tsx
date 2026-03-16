@@ -5,6 +5,7 @@ import type { Heading } from '@/types/post'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS, TIMING } from '@/styles/animations'
+import { SkeletonList } from '@/components/skeleton'
 
 interface TableOfContentsProps {
   headings: Heading[]
@@ -97,7 +98,14 @@ export default function TableOfContents({ headings }: TableOfContentsProps) {
     borderLeft: level > 1 ? `1px solid ${colors.border}` : 'none',
   })
 
-  if (headings.length === 0) return null
+  if (headings.length === 0) {
+    return (
+      <div style={containerStyle}>
+        <h3 style={titleStyle}>Contents</h3>
+        <SkeletonList variant="heading" items={5} />
+      </div>
+    )
+  }
 
   return (
     <div style={containerStyle}>

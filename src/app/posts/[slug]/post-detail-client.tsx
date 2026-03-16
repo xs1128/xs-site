@@ -12,6 +12,7 @@ import OtherPosts from '@/components/blog/OtherPosts'
 import SeriesBanner from '@/components/blog/SeriesBanner'
 import PostNavigation from '@/components/blog/PostNavigation'
 import FullScreenNav from '@/components/ui/FullScreenNav'
+import { SkeletonHero, SkeletonText } from '@/components/skeleton'
 import { useIsMobile } from '@/hooks/useBreakpoint'
 import { useScrollProgress, useFooterVisibility } from '@/hooks/useScrollDetection'
 import { spacing } from '@/styles/typography'
@@ -31,6 +32,8 @@ export default function PostDetailClient({
   headings,
   relatedPosts,
 }: PostDetailClientProps) {
+  // Check if we're in a loading state (empty post object)
+  const isLoading = !post || !post.id
   const [prevNext, setPrevNext] = useState<{
     prev: { title: string; slug: string } | null
     next: { title: string; slug: string } | null
@@ -124,17 +127,19 @@ export default function PostDetailClient({
         {/* Left Sidebar */}
         <aside style={sidebarStyle}>
           <TableOfContents headings={headings} />
-          <OtherPosts posts={relatedPosts} />
+          <OtherPosts posts={relatedPosts} loading={isLoading} />
         </aside>
 
         {/* Main Content */}
         <main style={contentStyle}>
           <div style={mainContentStyle}>
-            <PostHeader post={post} series={seriesWithPosts} />
+            <PostHeader post={post} series={seriesWithPosts} loading={isLoading} />
 
-            {post.featured_image && (
+            {isLoading ? (
+              <SkeletonHero />
+            ) : post.featured_image ? (
               <PostHero imageUrl={post.featured_image} alt={post.title} />
-            )}
+            ) : null}
 
             {seriesWithPosts && seriesWithPosts.length > 0 && (
               <SeriesBanner
@@ -152,7 +157,7 @@ export default function PostDetailClient({
               margin: `${spacing.lg} 0`,
             }} />
 
-            <TagList tags={post.tags || []} />
+            <TagList tags={post.tags || []} loading={isLoading} />
 
             <PostNavigation
               prevPost={prevNext.prev}

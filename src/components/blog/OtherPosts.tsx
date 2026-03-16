@@ -5,14 +5,14 @@ import type { Post } from '@/types/post'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS } from '@/styles/animations'
+import { SkeletonList } from '@/components/skeleton'
 
 interface OtherPostsProps {
   posts: Post[]
+  loading?: boolean
 }
 
-export default function OtherPosts({ posts }: OtherPostsProps) {
-  if (!posts || posts.length === 0) return null
-
+export default function OtherPosts({ posts, loading = false }: OtherPostsProps) {
   const containerStyle: React.CSSProperties = {
     marginTop: spacing.lg,
   }
@@ -26,6 +26,17 @@ export default function OtherPosts({ posts }: OtherPostsProps) {
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
   }
+
+  if (loading) {
+    return (
+      <div style={containerStyle}>
+        <h3 style={titleStyle}>Other Posts</h3>
+        <SkeletonList variant="post" items={3} />
+      </div>
+    )
+  }
+
+  if (!posts || posts.length === 0) return null
 
   const listStyle: React.CSSProperties = {
     listStyle: 'none',

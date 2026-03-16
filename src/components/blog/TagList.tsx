@@ -2,20 +2,26 @@
 
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
+import { SkeletonList } from '@/components/skeleton'
 
 interface TagListProps {
   tags: string[]
+  loading?: boolean
 }
 
-export default function TagList({ tags }: TagListProps) {
-  if (!tags || tags.length === 0) return null
-
+export default function TagList({ tags, loading = false }: TagListProps) {
   const containerStyle: React.CSSProperties = {
     display: 'flex',
     flexWrap: 'wrap' as const,
     gap: spacing.sm,
     marginTop: spacing.lg,
   }
+
+  if (loading) {
+    return <SkeletonList variant="tag" items={4} />
+  }
+
+  if (!tags || tags.length === 0) return null
 
   const tagStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
