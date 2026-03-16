@@ -25,7 +25,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
 
   const imageAreaStyle: React.CSSProperties = {
     width: "100%",
-    height: "70%", // Image takes 70% of card height
+    height: "60%", // Image takes 60% of card height
     backgroundColor: "#FFFFFF",
     backgroundImage: post.featured_image
       ? `url(${post.featured_image})`
@@ -39,7 +39,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
     backgroundColor: "#1A1D21",
     padding: "clamp(12px, 2vh, 20px) clamp(12px, 2vh, 20px)", // Increased padding
     textAlign: "left", // Left align the text
-    flex: 1, // Title area takes remaining 30% of space
+    flex: 1, // Title area takes remaining 40% of space
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start", // Align to top
