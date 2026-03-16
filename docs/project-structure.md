@@ -56,7 +56,19 @@ src/
 │   │   ├── FunnyMarqueeWrapper.tsx # Client wrapper for marquee data
 │   │   ├── RecentLogs.tsx          # Recent posts list
 │   │   ├── FeaturedSeries.tsx      # Featured series display
-│   │   └── FeaturedSeriesWrapper.tsx # Client wrapper for series data
+│   │   ├── FeaturedSeriesWrapper.tsx # Client wrapper for series data
+│   │   ├── RecentBlogsGrid.tsx     # Recent blogs carousel
+│   │   ├── SeriesGrid.tsx          # Series grid (3x4 on desktop)
+│   │   ├── BlogExpandedContent.tsx # Expanded content wrapper (Series + 3D)
+│   │   ├── SeriesHeader.tsx        # Series page header
+│   │   └── ThreeDCanvas.tsx        # 3D terminal cube canvas
+│   ├── skeleton/
+│   │   ├── SkeletonElement.tsx     # Atomic building block for skeleton shapes
+│   │   ├── SkeletonText.tsx        # Text lines with varying widths
+│   │   ├── SkeletonHero.tsx        # Large featured image placeholders
+│   │   ├── SkeletonCard.tsx        # Blog/series card placeholders
+│   │   ├── SkeletonList.tsx        # TOC, related posts, tags placeholders
+│   │   └── index.ts                # Barrel export for skeleton components
 │   └── ui/
 │       ├── Footer.tsx              # Responsive footer with profile, links, social
 │       ├── FullScreenNav.tsx       # Full-screen navigation overlay

@@ -96,6 +96,151 @@ useEffect(() => {
 
 Displays as orange progress bar at bottom of screen, sticks above footer when visible.
 
+## Loading States & Skeleton Screens
+
+### Overview
+
+The blog implements comprehensive skeleton screens with shimmer loading animation to improve perceived performance during data fetching. React Suspense is used for streaming SSR, allowing pages to render instantly while data loads in the background.
+
+### Shimmer Animation
+
+**Location**: `src/app/globals.css`
+
+```css
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+```
+
+### Skeleton Components
+
+**Location**: `src/components/skeleton/`
+
+The skeleton system includes:
+
+1. **SkeletonElement** - Atomic building block for all skeleton shapes
+2. **SkeletonText** - Text lines with varying widths (titles, paragraphs)
+3. **SkeletonHero** - Large featured image placeholders
+4. **SkeletonCard** - Blog/series card placeholders
+5. **SkeletonList** - TOC, related posts, tag lists
+
+### React Suspense Integration
+
+**Post Detail Page**: `src/app/posts/[slug]/page.tsx`
+
+```typescript
+async function PostDataFetcher({ slug }: { slug: string }) {
+  const supabase = await createClient()
+  const post = await getPostBySlug(slug)
+  // ... fetch related data
+  return <PostDetailClient post={post} />
+}
+
+export default async function PostPage({ params }: PageProps) {
+  const { slug } = await params
+  const emptyPost: Post = { /* empty state */ }
+
+  return (
+    <Suspense fallback={<PostDetailClient post={emptyPost} />}>
+      <PostDataFetcher slug={slug} />
+    </Suspense>
+  )
+}
+```
+
+**Home Page**: `src/app/page.tsx`
+
+```typescript
+async function HeroImageFetcher() {
+  const supabase = await createClient()
+  const { data } = await supabase
+    .from('site_settings')
+    .select('value')
+    .eq('key', 'hero_image_url')
+    .single()
+
+  return <HomePageClient heroImageUrl={data?.value || ''} />
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<HomePageClient heroImageUrl="" />}>
+      <HeroImageFetcher />
+    </Suspense>
+  )
+}
+```
+
+### Component Loading States
+
+#### PostHero
+
+```typescript
+interface PostHeroProps {
+  imageUrl: string
+  alt?: string
+  loading?: boolean
+}
+
+export default function PostHero({ imageUrl, alt, loading = false }: PostHeroProps) {
+  return (
+    <div style={containerStyle}>
+      {loading ? <SkeletonHero /> : <img src={imageUrl} alt={alt} />}
+    </div>
+  )
+}
+```
+
+#### TableOfContents
+
+Shows skeleton when headings array is empty:
+
+```typescript
+if (headings.length === 0) {
+  return (
+    <div style={containerStyle}>
+      <h3 style={titleStyle}>Contents</h3>
+      <SkeletonList variant="heading" items={5} />
+    </div>
+  )
+}
+```
+
+#### RecentBlogsGrid & FeaturedSeries
+
+```typescript
+if (loading) {
+  return (
+    <div style={containerStyle}>
+      <h2 style={headerStyle}>Recent Blogs</h2>
+      <div style={carouselStyle}>
+        {[...Array(4)].map((_, i) => (
+          <SkeletonCard key={i} variant="blog" />
+        ))}
+      </div>
+    </div>
+  )
+}
+```
+
+### Design System
+
+**Colors** (matching dark theme):
+- Base skeleton: `#3E454C` (lighter than `#2A2F35` background)
+- Shimmer highlight: `#4A535C` (gradient wave peak)
+
+**Animation**:
+- Duration: 1.5s ease-in-out infinite
+- Gradient wave moves left to right
+- 60fps target for smooth performance
+
 ## Other Blog Components
 
 - **BlogPageHeader** - Blog page header with navigation

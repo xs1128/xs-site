@@ -98,3 +98,146 @@ Full-screen navigation overlay for mobile and desktop.
 **Location**: `src/components/ui/AnimatedButton.tsx`
 
 Animated button component with hover effects.
+
+## Skeleton Components
+
+**Location**: `src/components/skeleton/`
+
+A comprehensive system of skeleton loading components with shimmer animation for improved perceived performance.
+
+### SkeletonElement
+
+The atomic building block for all skeleton shapes.
+
+**Props**:
+```typescript
+interface SkeletonElementProps {
+  width?: string | number
+  height?: string | number
+  variant?: 'text' | 'circular' | 'rectangular'
+  className?: string
+  style?: React.CSSProperties
+}
+```
+
+**Usage**:
+```typescript
+<SkeletonElement width="100%" height={20} variant="text" />
+<SkeletonElement width={40} height={40} variant="circular" />
+```
+
+### SkeletonText
+
+Simulates text content with multiple lines of varying widths.
+
+**Props**:
+```typescript
+interface SkeletonTextProps {
+  lines?: number
+  width?: string | string[]  // Array for varying widths per line
+  height?: string
+  className?: string
+}
+```
+
+**Usage**:
+```typescript
+// Uniform width
+<SkeletonText lines={3} width="100%" />
+
+// Varying widths (e.g., title + metadata)
+<SkeletonText lines={3} width={['80%', '60%', '40%']} />
+```
+
+### SkeletonHero
+
+Large featured image placeholders.
+
+**Props**:
+```typescript
+interface SkeletonHeroProps {
+  width?: string | number
+  height?: string | number
+  className?: string
+}
+```
+
+**Usage**:
+```typescript
+<SkeletonHero width="100%" height={280} />
+```
+
+### SkeletonCard
+
+Blog/series card placeholders matching actual card dimensions.
+
+**Props**:
+```typescript
+interface SkeletonCardProps {
+  variant?: 'blog' | 'series' | 'post'
+  showImage?: boolean
+  className?: string
+}
+```
+
+**Variants**:
+- `blog`: Image area (60% height) + title bar (40%)
+- `series`: Title + description + post preview lines
+- `post`: Title + metadata + excerpt lines
+
+**Usage**:
+```typescript
+<SkeletonCard variant="blog" />
+<SkeletonCard variant="series" />
+```
+
+### SkeletonList
+
+List placeholders for TOC, related posts, tags.
+
+**Props**:
+```typescript
+interface SkeletonListProps {
+  items?: number
+  variant?: 'heading' | 'post' | 'tag'
+  className?: string
+}
+```
+
+**Variants**:
+- `heading`: Indented heading lines (TOC)
+- `post`: Title + metadata lines (related posts)
+- `tag`: Pill-shaped tag placeholders
+
+**Usage**:
+```typescript
+<SkeletonList variant="heading" items={5} />
+<SkeletonList variant="tag" items={6} />
+```
+
+### Design System
+
+**Colors**:
+- Base: `#3E454C`
+- Shimmer: `#4A535C`
+
+**Animation**: 1.5s shimmer (gradient wave left to right)
+
+### Integration Pattern
+
+```typescript
+// 1. Add loading prop to component
+interface ComponentProps {
+  loading?: boolean
+  // ... other props
+}
+
+// 2. Render skeleton when loading
+export default function MyComponent({ loading, data }: ComponentProps) {
+  if (loading) {
+    return <SkeletonText lines={3} />
+  }
+
+  return <div>{data}</div>
+}
+```
