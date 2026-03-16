@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 /**
- * Hook for tracking scroll progress
+ * Hook for tracking scroll progress (throttled)
  * Extracted from post-detail-client.tsx
  */
 export function useScrollProgress() {
   const [scrollProgress, setScrollProgress] = useState(0)
+  const tickingRef = useRef(false)
 
   useEffect(() => {
     function updateProgress() {
@@ -14,35 +15,53 @@ export function useScrollProgress() {
       const scrolled = window.scrollY
       const progress = (scrolled / documentHeight) * 100
       setScrollProgress(Math.min(100, Math.max(0, progress)))
+      tickingRef.current = false
     }
 
-    window.addEventListener('scroll', updateProgress)
+    function onScroll() {
+      if (!tickingRef.current) {
+        tickingRef.current = true
+        requestAnimationFrame(updateProgress)
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
     updateProgress()
 
-    return () => window.removeEventListener('scroll', updateProgress)
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   return scrollProgress
 }
 
 /**
- * Hook for detecting when footer is visible
+ * Hook for detecting when footer is visible (throttled)
  * Extracted from post-detail-client.tsx
  */
 export function useFooterVisibility() {
   const [footerVisible, setFooterVisible] = useState(false)
+  const tickingRef = useRef(false)
 
   useEffect(() => {
     const handleScroll = () => {
-      const footer = document.querySelector('footer')
-      if (!footer) return
+      if (!tickingRef.current) {
+        tickingRef.current = true
+        requestAnimationFrame(() => {
+          const footer = document.querySelector('footer')
+          if (!footer) {
+            tickingRef.current = false
+            return
+          }
 
-      const footerRect = footer.getBoundingClientRect()
+          const footerRect = footer.getBoundingClientRect()
 
-      if (footerRect.top < window.innerHeight) {
-        setFooterVisible(true)
-      } else {
-        setFooterVisible(false)
+          if (footerRect.top < window.innerHeight) {
+            setFooterVisible(true)
+          } else {
+            setFooterVisible(false)
+          }
+          tickingRef.current = false
+        })
       }
     }
 

@@ -27,7 +27,7 @@ export const TEXT_STYLES = {
 export const clamp = {
   xs: 'clamp(10px, 1.2vw, 12px)',
   sm: 'clamp(11px, 1.5vw, 14px)',
-  base: 'clamp(12px, 1.8vw, 18px)',
+  base: 'clamp(15px, 1.8vw, 18px)',
   lg: 'clamp(14px, 2vw, 20px)',
   xl: 'clamp(18px, 2.5vw, 24px)',
   '2xl': 'clamp(24px, 3vw, 32px)',

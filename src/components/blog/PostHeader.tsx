@@ -8,10 +8,7 @@ interface PostHeaderProps {
   series?: SeriesDetail[]
 }
 
-export default function PostHeader({ post, series }: PostHeaderProps) {
-  // Cap series at 3 and add "..." if more
-  const displaySeries = series && series.length > 0 ? series.slice(0, 3) : []
-  const hasMoreSeries = series && series.length > 3
+export default function PostHeader({ post }: PostHeaderProps) {
   const containerStyle: React.CSSProperties = {
     marginBottom: spacing.lg,
   }
@@ -20,7 +17,7 @@ export default function PostHeader({ post, series }: PostHeaderProps) {
     fontFamily: FONTS.primary,
     fontSize: clamp['3xl'],
     fontWeight: 700,
-    color: colors.darkText,
+    color: '#F5F5F5',
     marginBottom: spacing.lg,
     lineHeight: 1.2,
     textAlign: 'left' as const,
@@ -63,13 +60,6 @@ export default function PostHeader({ post, series }: PostHeaderProps) {
     fontWeight: 500,
   }
 
-  const seriesStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
-    fontSize: clamp.sm,
-    color: colors.accent,
-    fontWeight: 500,
-  }
-
   return (
     <div style={containerStyle}>
       <h1 style={titleStyle}>{post.title}</h1>
@@ -86,21 +76,6 @@ export default function PostHeader({ post, series }: PostHeaderProps) {
             <div style={metaItemStyle}>
               <span>·</span>
               <span>{formatReadTime(post.read_time)}</span>
-            </div>
-          )}
-
-          {displaySeries.length > 0 && (
-            <div style={metaItemStyle}>
-              <span>·</span>
-              {displaySeries.map((s, index) => (
-                <span key={s.id}>
-                  <span style={seriesStyle}>{s.title}</span>
-                  {index < displaySeries.length - 1 && ', '}
-                  {index === displaySeries.length - 1 && hasMoreSeries && (
-                    <span style={{ color: '#999999' }}>...</span>
-                  )}
-                </span>
-              ))}
             </div>
           )}
         </div>

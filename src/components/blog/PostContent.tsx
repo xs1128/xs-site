@@ -1,7 +1,9 @@
 'use client'
 
+import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 import CodeBlock from './CodeBlock'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
@@ -13,13 +15,28 @@ interface PostContentProps {
   headings: Heading[]
 }
 
+// Memoize image component to prevent re-renders
+const MemoizedImage = React.memo(({ src, alt, style }: { src: string | Blob | undefined; alt: string | undefined; style: React.CSSProperties }) => (
+  <img
+    src={typeof src === 'string' ? src : ''}
+    alt={alt || ''}
+    loading="eager"
+    fetchPriority="high"
+    style={style}
+  />
+))
+MemoizedImage.displayName = 'MemoizedImage'
+
 export default function PostContent({ content, headings }: PostContentProps) {
+  // Memoize the entire component to prevent re-renders when parent updates
+  const memoizedContent = React.useMemo(() => content, [content])
+  const memoizedHeadings = React.useMemo(() => headings, [headings])
   // Create a map of heading text to generated IDs from server
   const headingIdMap = new Map<string, string>()
   const headingCount: Record<string, number> = {}
 
   // First pass: build the map using the same logic as extractHeadings
-  for (const heading of headings) {
+  for (const heading of memoizedHeadings) {
     const key = `${heading.level}-${heading.text}`
 
     // Generate base ID
@@ -163,7 +180,7 @@ export default function PostContent({ content, headings }: PostContentProps) {
     display: 'block',
     marginLeft: 'auto',
     marginRight: 'auto',
-    maxWidth: '100%',
+    maxWidth: '70%',
     height: 'auto',
     borderRadius: '8px',
     margin: `${spacing.md} auto`,
@@ -173,6 +190,7 @@ export default function PostContent({ content, headings }: PostContentProps) {
     <div style={containerStyle}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
         components={{
           h1: ({ children, ...props }) => {
             const text = children?.toString() || ''
@@ -228,7 +246,29 @@ export default function PostContent({ content, headings }: PostContentProps) {
               </h6>
             )
           },
-          p: ({ children }) => <p style={paragraphStyle}>{children}</p>,
+          p: ({ children, node }) => {
+            // Check if paragraph only contains an image
+            const childArray = React.Children.toArray(children)
+            const firstChild = childArray[0] as React.ReactElement
+            const hasOnlyImage =
+              childArray.length === 1 &&
+              React.isValidElement(firstChild) &&
+              (firstChild.type === 'img' || firstChild.type === MemoizedImage)
+
+            // Add min-height for image paragraphs to prevent layout shift
+            const style = hasOnlyImage
+              ? {
+                  ...paragraphStyle,
+                  minHeight: '400px',
+                  backgroundColor: '#2a2a2a',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }
+              : paragraphStyle
+
+            return <p style={style}>{children}</p>
+          },
           a: ({ children, href }) => (
             <a
               href={href}
@@ -266,7 +306,12 @@ export default function PostContent({ content, headings }: PostContentProps) {
             )
           },
           img: ({ src, alt }) => (
-            <img src={src || ''} alt={alt || ''} style={imageStyle} />
+            <MemoizedImage
+              key={typeof src === 'string' ? src : 'image'}
+              src={src}
+              alt={alt}
+              style={imageStyle}
+            />
           ),
           table: ({ children }) => (
             <div style={{ overflowX: 'auto', margin: `${spacing.md} 0` }}>
@@ -284,7 +329,7 @@ export default function PostContent({ content, headings }: PostContentProps) {
           td: ({ children }) => <td style={tableCellStyle}>{children}</td>,
         }}
       >
-        {content}
+        {memoizedContent}
       </ReactMarkdown>
     </div>
   )
