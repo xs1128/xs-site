@@ -12,8 +12,6 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   width: 100%;
-  overscroll-behavior-x: none;
-  touch-action: pan-y pinch-zoom;
   position: relative;
 }
 
@@ -37,6 +35,15 @@ html {
 
 img, video, canvas, svg {
   max-width: 100vw;
+}
+
+/* Mobile-specific overscroll fixes */
+@media (max-width: 767px) {
+  html,
+  body {
+    overscroll-behavior-x: none;
+    touch-action: pan-y pinch-zoom;
+  }
 }
 
 .wrapgrid {
