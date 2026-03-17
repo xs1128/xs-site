@@ -64,6 +64,76 @@ Features:
 - Series-aware navigation
 - Automatic calculation based on series posts
 
+## Series Pages
+
+### Overview
+
+Series detail pages at `/series/[slug]` display all posts belonging to a series with hero images and skeleton loading.
+
+### Components
+
+**Location**: `src/app/series/[slug]/`
+
+**Server Component** (`page.tsx`):
+```typescript
+const seriesData = await getSeriesBySlug(slug)
+if (!seriesData) {
+  notFound()
+}
+return <SeriesDetailClient series={seriesData} />
+```
+
+**Client Component** (`series-detail-client.tsx`):
+- Displays series header (title, description, back button)
+- Renders post list with loading state
+- Full-screen navigation integration
+
+### SeriesPostCard
+
+**Location**: `src/components/blog/SeriesPostCard.tsx`
+
+Features:
+- Hero image display with `background-size: cover`
+- Responsive layout: image left (desktop) / image top (mobile)
+- Orange border on hover with lift animation
+- Gradient background (#3E454C to #3A4047)
+- Skeleton loading while image loads
+
+**Desktop Layout**:
+- Image on left (180-280px wide), stretches to full card height
+- Text content on right, vertically centered
+- Horizontal flex layout
+
+**Mobile Layout**:
+- Image on top, full width (160-220px high)
+- Text content below
+- Vertical flex layout
+
+### SeriesPostList
+
+**Location**: `src/components/blog/SeriesPostList.tsx`
+
+Features:
+- Preloads all featured images before displaying cards
+- Shows skeleton cards during loading (min 500ms)
+- Handles image load errors gracefully
+- Responsive gap between cards (24-40px)
+
+**Loading State**:
+```typescript
+const [allImagesLoaded, setAllImagesLoaded] = useState(false)
+
+useEffect(() => {
+  const postsWithImages = posts.filter(post => post.featured_image)
+  // Load all images, then show cards
+  postsWithImages.forEach(post => {
+    const img = new Image()
+    img.src = post.featured_image
+    img.onload = () => { /* track loaded count */ }
+  })
+}, [posts])
+```
+
 ### Syntax Highlighting
 
 **Location**: `src/components/blog/CodeBlock.tsx`
@@ -254,3 +324,7 @@ if (loading) {
 - **RecentLogs** - Recent posts list
 - **FeaturedSeries** - Featured series display
 - **FeaturedSeriesWrapper** - Client wrapper for series data
+- **SeriesHeader** - Series detail page header
+- **SeriesPostList** - Series posts list with skeleton loading
+- **SeriesPostCard** - Individual series post card with hero image
+- **SeriesPostCardSkeleton** - Loading state for series post cards
