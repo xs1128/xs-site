@@ -430,6 +430,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
       ? "100vh"
       : "clamp(400px, 80vh, 750px)",
     overflow: "hidden",
+    overflowX: "hidden",
     borderRadius: isExpanded ? "0" : "12px",
     transition: "width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)",
     willChange: isAnimating ? "width, height, border-radius" : "auto",
