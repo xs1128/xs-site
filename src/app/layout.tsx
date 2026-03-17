@@ -11,6 +11,7 @@ import Footer from "@/components/ui/Footer";
 export const metadata: Metadata = {
   title: "Blog",
   description: "Personal blog for downtime & inspiration",
+  viewport: "width=device-width, initial-scale=1.0",
 };
 
 export default function RootLayout({

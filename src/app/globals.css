@@ -26,6 +26,10 @@ html {
   background-color: #F2E9D8;
 }
 
+.wrapgrid {
+  overflow-x: hidden;
+}
+
 a {
   color: #E5532C;
   text-decoration: none;
