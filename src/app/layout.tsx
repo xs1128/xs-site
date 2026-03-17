@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@fontsource/hubot-sans/400.css";
 import "@fontsource/hubot-sans/700.css";
 import "@fontsource/roboto-mono/400.css";
@@ -11,7 +11,11 @@ import Footer from "@/components/ui/Footer";
 export const metadata: Metadata = {
   title: "Blog",
   description: "Personal blog for downtime & inspiration",
-  viewport: "width=device-width, initial-scale=1.0",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

@@ -421,11 +421,12 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     flexDirection: "column",
     width: "100%",
     alignItems: "center",
+    overflowX: "hidden",
   };
 
   const cardContainerStyle: React.CSSProperties = {
     position: "relative",
-    width: isExpanded ? "100vw" : "clamp(300px, 90vw, 1100px)",
+    width: isExpanded ? "100%" : "clamp(300px, 90vw, 1100px)",
     height: isExpanded
       ? "100vh"
       : "clamp(400px, 80vh, 750px)",
@@ -532,6 +533,7 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
     padding: isExpanded ? "0" : "0",
     transition: "padding 0.3s ease",
     width: "100%",
+    overflowX: "hidden",
   };
 
   const contentBlockStyle: React.CSSProperties = {
