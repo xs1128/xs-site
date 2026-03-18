@@ -48,8 +48,8 @@ export function AboutContent({ onScrollToContact, isSmallScreen }: AboutContentP
           isSmallScreen={isSmallScreen}
         />
         <ExpertiseCard
-          icon={<StaticIcon src="/icons/server.svg" alt="Homelab Infrastructure" />}
-          title="Homelab Infrastructure"
+          icon={<StaticIcon src="/icons/server.svg" alt="Server Infrastructure" />}
+          title="Server Infrastructure"
           description="Managing self-hosted servers with Docker, Docker Compose, and Cloudflare for containerization and domain routing."
           isSmallScreen={isSmallScreen}
         />
