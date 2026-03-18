@@ -9,7 +9,6 @@ import "../styles/navigation.css";
 import "../styles/about.css";
 import "../styles/contact.css";
 import "../styles/landing.css";
-import "../styles/overlay.css";
 
 export const metadata: Metadata = {
   title: "Site",

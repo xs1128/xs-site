@@ -181,6 +181,6 @@ export interface AnimationTriggerOptions {
   rootMargin?: string;
 }
 
-export interface AnimationState {
+export interface IntersectionAnimationState {
   isVisible: boolean;
 }

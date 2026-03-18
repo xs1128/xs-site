@@ -1,22 +1,5 @@
-import { useState, useEffect } from 'react';
-
-/**
- * Options for intersection animation trigger
- */
-export interface AnimationTriggerOptions {
-  /** Percentage of element visible before triggering (0-1) */
-  threshold?: number;
-  /** Margin around root element (CSS margin syntax) */
-  rootMargin?: string;
-}
-
-/**
- * Animation state returned by hook
- */
-export interface AnimationState {
-  /** Element is currently visible in viewport */
-  isVisible: boolean;
-}
+import { useState, useEffect, useRef } from 'react';
+import type { AnimationTriggerOptions, IntersectionAnimationState } from '@/types';
 
 /**
  * Hook for detecting when element enters viewport and triggering animations
@@ -35,13 +18,14 @@ export interface AnimationState {
  */
 export function useIntersectionAnimation(
   options: AnimationTriggerOptions = {}
-): AnimationState {
+): IntersectionAnimationState {
   const {
     threshold = 0.15,
     rootMargin = '-50px'
   } = options;
 
   const [isVisible, setIsVisible] = useState(false);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
     // Check if IntersectionObserver is available (browser support)
@@ -54,7 +38,11 @@ export function useIntersectionAnimation(
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setIsVisible(entry.isIntersecting);
+          // Only set to true once when entering viewport, never back to false
+          if (entry.isIntersecting && !hasAnimated.current) {
+            hasAnimated.current = true;
+            setIsVisible(true);
+          }
         });
       },
       {

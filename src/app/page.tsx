@@ -14,7 +14,6 @@ const BREAKPOINT = 640;
 export default function Home() {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPastLanding, setIsPastLanding] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -131,8 +130,6 @@ export default function Home() {
         {/* First Section - Landing */}
         <LandingSection
           isSmallScreen={isSmallScreen}
-          isMenuOpen={isMenuOpen}
-          setIsMenuOpen={setIsMenuOpen}
           onScrollToAbout={() => scrollToAbout(setIsDarkTheme)}
           onScrollToContact={() => scrollToContact(setIsDarkTheme)}
         />

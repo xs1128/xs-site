@@ -12,6 +12,8 @@
   background-color: var(--color-landing-bg);
   padding: var(--spacing-section-padding-desktop);
   position: relative;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   flex-shrink: 0;
 }
 

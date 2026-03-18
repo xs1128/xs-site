@@ -9,14 +9,10 @@ import { LandingButtons } from './LandingButtons';
  */
 export function LandingSection({
   isSmallScreen,
-  isMenuOpen,
-  setIsMenuOpen,
   onScrollToAbout,
   onScrollToContact,
 }: {
   isSmallScreen: boolean;
-  isMenuOpen: boolean;
-  setIsMenuOpen: (value: boolean) => void;
   onScrollToAbout: () => void;
   onScrollToContact: () => void;
 }) {
