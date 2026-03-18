@@ -76,19 +76,19 @@ All colors are defined as CSS custom properties in `globals.css` under `:root`.
 ### About Section
 - Dark charcoal background (`#2A2F35`)
 - Header with ABOUT button (scrolls to top) and hamburger menu
-- **Scroll-triggered reversible animations**: Elements animate in when scrolling down, smoothly reverse when scrolling up
+- **One-time scroll-triggered animations**: Elements animate in when scrolling from landing to about section (only plays once, does not replay when returning from contact)
 - Main content includes:
   - **Animated headline**: "I turn real problems into automated solutions." with word-by-word reveal effect
     - Each word fades in with staggered delay (50ms)
     - Hover highlights word in vermilion
-    - Automatically reverses on scroll away
   - Intro paragraph with bio
   - **Three expertise cards** with enhanced interactions:
     - 3D tilt effect on desktop (follows cursor movement)
-    - Icon bounce animation on hover
+    - Icon bounce animation on hover/tap
     - Icon glow effect with vermilion shadow
     - Parallax depth (title and description float at different Z-levels)
-    - Mobile: Simple hover state
+    - Mobile: Tap animations with `:active` pseudo-class (bounce + glow + 3D depth)
+    - Mobile: Equal heights, compact padding (20px/32px), no levitation
   - **Magnetic CTA button**: Subtly follows cursor on desktop (max 8px movement at 15% intensity)
     - Smooth spring-back animation when mouse leaves
     - Scale effect (1.02x) on hover
@@ -100,12 +100,22 @@ All colors are defined as CSS custom properties in `globals.css` under `:root`.
   - Magnetic button movement
 - **Animation system**:
   - Single `isVisible` state controls all animations
+  - Uses `useRef` to track if animation has already played (prevents replay)
   - CSS transitions (inherently reversible)
   - Staggered timing: Headline (0.1s) → Intro (0.3s) → Cards (0.5-0.9s) → CTA (1.1s)
   - Respects `prefers-reduced-motion` preference
 - **Mobile optimizations**:
-  - Increased side padding: 48px for cards container and individual cards
+  - Reduced card padding: 20px 32px (from 28px 48px)
+  - Equal card heights: `height: 100%`
+  - No card levitation: `transform: none !important` on hovered state
+  - Tap-triggered animations (icon bounce, glow, 3D depth)
   - CTA top margin removed for compact layout
+  - Section height: `auto` on mobile (allows scroll if needed)
+- **Desktop viewport optimization**:
+  - Fixed height: `height: 100dvh` (fits exactly one viewport)
+  - Content spacing: 36px gaps between elements
+  - Reduced top padding: 14vh
+  - Overflow: hidden (prevents internal scroll)
 - **Components**:
   - `AboutSection` in `src/components/about/AboutSection.tsx`
   - `AboutHeader` in `src/components/about/AboutHeader.tsx`
@@ -239,18 +249,26 @@ All colors are defined as CSS custom properties in `globals.css` under `:root`.
 src/
 ├── app/
 │   ├── layout.tsx              # Root layout with font imports (Roboto Mono, Hubot Sans)
-│   ├── page.tsx                # Main page (130 lines) - orchestrates sections and state
-│   ├── globals.css             # All styles, animations, and responsive CSS (1,348 lines)
+│   ├── page.tsx                # Main page - orchestrates sections and state
+│   ├── globals.css             # Base styles, custom properties, global reset (73 lines)
 │   └── api/
 │       └── contact/
 │           └── route.ts        # API route for contact form submissions via Resend
+│
+├── styles/
+│   ├── animations.css          # All @keyframe animations
+│   ├── marquee.css             # Marquee component styles
+│   ├── navigation.css          # Navigation and dropdown styles
+│   ├── about.css               # About section styles
+│   ├── contact.css             # Contact section styles
+│   └── landing.css             # Landing section styles
 │
 ├── components/
 │   ├── about/
 │   │   ├── AboutSection.tsx    # About section wrapper
 │   │   ├── AboutHeader.tsx     # Header with ABOUT button
 │   │   ├── AboutContent.tsx    # Main content with headline, intro, cards, CTA
-│   │   └── ExpertiseCard.tsx   # Individual expertise card with hover effect
+│   │   └── ExpertiseCard.tsx   # Individual expertise card with hover/tap effects
 │   │
 │   ├── contact/
 │   │   ├── ContactSection.tsx  # Contact section wrapper with form animations
@@ -283,7 +301,7 @@ src/
 ├── hooks/
 │   ├── useResponsive.ts        # Reusable screen size detection
 │   ├── useMarquee.ts           # Dynamic marquee item calculation
-│   └── useScrollDetection.ts   # Scroll position detection
+│   └── useIntersectionAnimation.ts  # Scroll-triggered animation detection
 │
 ├── types/
 │   └── index.ts                # TypeScript interfaces for all components
@@ -359,11 +377,19 @@ This ensures the codebase is always in a working state before deployment.
 ## Key Implementation Details
 
 ### CSS Architecture
-- **CSS Custom Properties**: All colors, fonts, spacing, and transitions defined in `:root`
+- **Modular CSS Files**: Split into organized modules under `src/styles/`
+  - `globals.css` (73 lines): Base styles, custom properties, global reset
+  - `animations.css`: All @keyframe animations
+  - `marquee.css`: Marquee component styles
+  - `navigation.css`: Navigation and dropdown styles
+  - `about.css`: About section styles
+  - `contact.css`: Contact section styles
+  - `landing.css`: Landing section styles
+- **CSS Custom Properties**: All colors, fonts, spacing, and transitions defined in `:root` of `globals.css`
 - **BEM-like Naming**: Component classes use double underscore notation (e.g., `.contact-popup__header`)
 - **Modifier Classes**: State variations use double dash notation (e.g., `.nav-item--active`)
 - **@media Queries**: All responsive styling at 640px breakpoint (industry standard)
-- **Zero Runtime CSS**: No CSS-in-JS or style injection - all static CSS in globals.css
+- **Zero Runtime CSS**: No CSS-in-JS or style injection - all static CSS in modular files
 
 ### Component Architecture
 - **Props Interfaces**: All component props defined in `src/types/index.ts`
@@ -466,3 +492,60 @@ Message:
 - Consistent styling with CSS custom properties
 - Reusable components across the application
 - Type-safe with comprehensive TypeScript interfaces
+
+## Code Cleanup & Optimization (2025)
+
+**Completed**: Removed redundant code and modularized CSS architecture
+
+**Removed**:
+- Duplicate `AnimationState` interface → Renamed to `IntersectionAnimationState`
+- Unused functions from `utils.ts`: `scrollToSection()`, `getThemeForScrollPosition()`
+- Unused state variable: `isMenuOpen` from `page.tsx` and `LandingSection.tsx`
+- Unused overlay components: `BlurOverlay.tsx`, `PrismOverlay.tsx`
+- Unused CSS file: `src/styles/overlay.css`
+
+**Modularized CSS**:
+- Split `globals.css` from 1,823 → 73 lines (96% reduction)
+- Created modular CSS files under `src/styles/`:
+  - `animations.css`
+  - `marquee.css`
+  - `navigation.css`
+  - `about.css`
+  - `contact.css`
+  - `landing.css`
+- All component-specific styles moved to respective modules
+- Base styles (custom properties, reset) remain in `globals.css`
+
+**Fixed Scroll Snap**:
+- Added `scroll-snap-align: start` to all section containers
+- Added `scroll-snap-stop: always` for consistent snapping behavior
+- Sections now properly snap on desktop and mobile
+
+**Animation Improvements**:
+- About section animation now plays only once (landing → about)
+- Uses `useRef` to track if animation has already played
+- Does not replay when returning from contact section
+- `IntersectionAnimationState` interface renamed for clarity
+
+**Mobile Card Enhancements**:
+- Added `:active` pseudo-class for tap animations
+- Icon bounce, glow, and 3D depth effects on tap
+- Reduced card padding: 28px/48px → 20px/32px
+- Equal card heights with `height: 100%`
+- Disabled card levitation on mobile (`transform: none`)
+- Cards stay in place, animations trigger without movement
+
+**Desktop Viewport Optimization**:
+- About section fixed at `height: 100dvh`
+- Content spacing increased to 36px gaps
+- Top padding reduced to 14vh
+- `overflow: hidden` prevents internal scroll
+- Section fits exactly one viewport height
+
+**Benefits**:
+- Cleaner codebase with no dead code
+- Better performance (no duplicate styles loaded)
+- Improved maintainability (modular CSS)
+- Enhanced mobile UX (tap animations)
+- Consistent desktop layout (single viewport)
+- Type-safe interfaces (no duplicates)
