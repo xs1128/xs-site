@@ -70,6 +70,7 @@
   align-items: flex-start;
   width: min-content;
   gap: 0.75rem;
+  will-change: transform;
 }
 
 /* 3D Name Scene */

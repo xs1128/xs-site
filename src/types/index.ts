@@ -63,12 +63,14 @@ export interface NameDisplayProps extends ResponsiveProps {
   onToggle: () => void;
   showInitials: boolean;
   isFading: boolean;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export interface LandingButtonsProps {
   onScrollToAbout: () => void;
   onScrollToContact: () => void;
   isSmallScreen: boolean;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 // About Components

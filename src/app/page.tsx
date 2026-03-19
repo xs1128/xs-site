@@ -132,6 +132,7 @@ export default function Home() {
           isSmallScreen={isSmallScreen}
           onScrollToAbout={() => scrollToAbout(setIsDarkTheme)}
           onScrollToContact={() => scrollToContact(setIsDarkTheme)}
+          containerRef={scrollContainerRef}
         />
 
         {/* Second Section - About */}

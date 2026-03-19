@@ -47,6 +47,15 @@ Minimalist personal landing page with a scrolling announcement bar, centered nam
 - Click to toggle between full name and initials with fade animation (0.4s)
 - Responsive sizing: `clamp(65px, 10vw, 180px)` desktop, `clamp(48px, 15vw, 120px)` mobile
 - Font: Roboto Mono, weight 570, letter spacing -0.06em
+- **3D tilt effect**: Name follows mouse movement with subtle rotation
+- **Scroll-based parallax**: Name slides up as you scroll toward about section (starts immediately, 40vh distance)
+
+### Navigation Buttons (ABOUT & CONTACT)
+
+- Positioned at bottom-left (ABOUT) and bottom-right (CONTACT) of landing section
+- **Scroll-based parallax**: Buttons slide up as you scroll toward about section (starts after 20vh delay, 40vh distance)
+- Creates cascading parallax effect with name display
+- Animated underline effect on hover
 
 ### Full-Screen Navigation Overlay
 
@@ -156,7 +165,8 @@ src/
 ├── hooks/
 │   ├── useResponsive.ts        # Screen size detection
 │   ├── useMarquee.ts           # Dynamic marquee item calculation
-│   └── useIntersectionAnimation.ts  # Scroll-triggered animation detection
+│   ├── useIntersectionAnimation.ts  # Scroll-triggered animation detection
+│   └── useScrollParallax.ts   # Scroll-based parallax effect for landing elements
 │
 ├── types/
 │   └── index.ts                # TypeScript interfaces
@@ -169,6 +179,14 @@ package.json                   # Dependencies
 ```
 
 ## Recent Changes (2025)
+
+### Parallax Animation System (March 2025)
+
+- **Added scroll-based parallax**: Name display and navigation buttons slide up when scrolling to about section
+- **Cascading effect**: Name starts immediately (0vh), buttons start after 20vh
+- **Reversible animations**: All parallax effects reverse when scrolling back up
+- **New hook**: `useScrollParallax` for continuous scroll tracking with requestAnimationFrame throttling
+- **Performance optimizations**: GPU-accelerated transforms with `will-change` hints
 
 ### Code Cleanup & Optimization
 

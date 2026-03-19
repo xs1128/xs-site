@@ -34,6 +34,17 @@ The project uses a modular CSS architecture with 7 separate CSS files:
 
 ### Key Implementation Details
 
+#### Landing Section Parallax Animation
+
+**IMPORTANT**: The landing section has reversible scroll-based parallax animations.
+
+- **Name Display**: Slides up 40vh starting immediately (0vh scroll)
+- **Navigation Buttons**: Slides up 40vh starting after 20vh scroll
+- Creates cascading parallax effect where name exits first, followed by buttons
+- Uses `useScrollParallax` hook with continuous scroll tracking (bidirectional)
+- Preserves existing 3D tilt effect alongside parallax translation
+- All animations are reversible when scrolling back up
+
 #### About Section Animation Behavior
 
 **IMPORTANT**: The about section animation plays **ONLY ONCE** when scrolling from landing → about.
@@ -148,7 +159,8 @@ src/
 ├── hooks/
 │   ├── useResponsive.ts
 │   ├── useMarquee.ts
-│   └── useIntersectionAnimation.ts
+│   ├── useIntersectionAnimation.ts
+│   └── useScrollParallax.ts
 │
 ├── types/index.ts
 └── lib/utils.ts

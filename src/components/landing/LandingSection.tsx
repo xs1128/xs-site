@@ -11,15 +11,18 @@ export function LandingSection({
   isSmallScreen,
   onScrollToAbout,
   onScrollToContact,
+  containerRef,
 }: {
   isSmallScreen: boolean;
   onScrollToAbout: () => void;
   onScrollToContact: () => void;
+  containerRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const landingButtonsProps: LandingButtonsProps = {
     onScrollToAbout,
     onScrollToContact,
     isSmallScreen,
+    containerRef,
   };
 
   return (
@@ -30,6 +33,7 @@ export function LandingSection({
         showInitials={false}
         isFading={false}
         isSmallScreen={isSmallScreen}
+        containerRef={containerRef}
       />
 
       {/* Desktop Buttons */}
