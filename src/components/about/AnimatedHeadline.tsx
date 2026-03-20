@@ -28,21 +28,29 @@ export interface AnimatedHeadlineProps {
  */
 export function AnimatedHeadline({ text, isVisible }: AnimatedHeadlineProps) {
   const words = text.split(' ');
+  const accentWords = ['automated', 'solutions'];
 
   return (
     <h2 className={`about-content__headline ${isVisible ? 'about-content__headline--visible' : ''}`}>
-      {words.map((word, index) => (
-        <span
-          key={index}
-          className="about-content__word"
-          style={{
-            transitionDelay: isVisible ? `${index * 0.05}s` : '0s',
-            marginRight: '0.25em'
-          }}
-        >
-          {word}
-        </span>
-      ))}
+      {words.map((word, index) => {
+        const isAccent = accentWords.includes(word.replace('.', '').toLowerCase());
+        const needsLineBreak = word.toLowerCase() === 'automated';
+
+        return (
+          <React.Fragment key={index}>
+            {needsLineBreak && <br />}
+            <span
+              className={`about-content__word ${isAccent ? 'about-content__word--accent' : ''}`}
+              style={{
+                transitionDelay: isVisible ? `${index * 0.05}s` : '0s',
+                marginRight: '0.25em'
+              }}
+            >
+              {word}
+            </span>
+          </React.Fragment>
+        );
+      })}
     </h2>
   );
 }

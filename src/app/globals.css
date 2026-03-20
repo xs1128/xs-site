@@ -1,16 +1,17 @@
 :root {
   /* Color Palette - Vintage Poster Warm Vermillion Edition */
-  --color-landing-bg: #F2E9D8;           /* Warm aged paper */
+  --color-landing-bg: #fbf9f4;           /* Cream sand */
   --color-about-bg: #2A2F35;             /* Dark charcoal */
   --color-nav-bg: #363D44;               /* Dark gray */
   --color-nav-panel: #444C55;            /* Medium gray */
-  --color-text-on-dark: #F2E9D8;         /* Warm aged paper */
+  --color-text-on-dark: #fbf9f4;         /* Cream sand */
   --color-text-on-light: #2A2F35;        /* Dark charcoal */
   --color-accent: #E5532C;               /* Warm vermilion */
   --color-accent-hover: #D64626;         /* Darker vermilion */
-  --color-card-bg: #E4D9C2;              /* Light cream */
-  --color-border: #D6CBB3;               /* Muted tan */
-  --color-dropdown-hover: #F0C4B4;       /* Light hover color */
+  --color-terracotta: #e87a4d;           /* Terracotta orange */
+  --color-card-bg: #f0ede5;              /* Slightly darker cream */
+  --color-border: #e5e0d5;               /* Muted sand */
+  --color-dropdown-hover: #ebe6dd;       /* Light hover color */
   --color-white: #FFFFFF;
 
   /* Typography */
