@@ -114,11 +114,35 @@
 }
 
 .name-scene-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
   font-size: clamp(65px, 10vw, 180px);
   font-weight: 570;
   line-height: 0.95;
   letter-spacing: -0.06em;
-  color: var(--color-text-on-light);
+}
+
+.name-scene-placeholder__bar {
+  height: 1em;
+  width: 8ch;
+  background: linear-gradient(90deg, #e5e0d5 0%, #f0ede5 50%, #e5e0d5 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.name-scene-placeholder__bar--short {
+  width: 4ch;
+  animation-delay: 0.2s;
+}
+
+@media (max-width: 640px) {
+  .name-scene-placeholder {
+    font-size: clamp(48px, 15vw, 120px);
+  }
 }
 
 .name-display {

@@ -6,7 +6,12 @@ import { useScrollParallax } from '@/hooks/useScrollParallax';
 // Lazy load 3D scene component
 const NameSceneContent = dynamic(() => import('@/components/3d/landing/NameScene').then(mod => ({ default: mod.NameScene })), {
   ssr: false,
-  loading: () => <div className="name-scene-placeholder" />,
+  loading: () => (
+    <div className="name-scene-placeholder">
+      <div className="name-scene-placeholder__bar" />
+      <div className="name-scene-placeholder__bar name-scene-placeholder__bar--short" />
+    </div>
+  ),
 });
 
 /**

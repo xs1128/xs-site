@@ -71,3 +71,13 @@ button,
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
 }
+
+/* Skeleton Shimmer Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
