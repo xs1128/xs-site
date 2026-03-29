@@ -19,7 +19,8 @@
       "Bash(pkill:*)",
       "Bash(find:*)",
       "Bash(cat:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }
