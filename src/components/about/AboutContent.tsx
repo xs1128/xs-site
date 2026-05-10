@@ -32,13 +32,6 @@ export function AboutContent({ onScrollToContact, isSmallScreen }: AboutContentP
         isVisible={isVisible}
       />
 
-      {/* Introduction with fade-in animation */}
-      <div className={`about-content__intro ${isVisible ? 'about-content__intro--visible' : ''}`}>
-        <p className="about-content__intro-text">
-          I'm Xinsheng. From deployment pipelines to system monitoring, I build automation that keeps things running smoothly.
-        </p>
-      </div>
-
       {/* Expertise Cards with staggered entrance animations */}
       <div className={`about-content__cards ${isVisible ? 'about-content__cards--visible' : ''}`}>
         <ExpertiseCard

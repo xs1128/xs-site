@@ -21,15 +21,12 @@ export default function Home() {
   // Callback ref to detect when container is mounted
   const setScrollContainerRef = (node: HTMLDivElement | null) => {
     if (node) {
-      console.log('🎯 ScrollContainer ref CALLBACK FIRED, node:', node);
       scrollContainerRef.current = node;
       setupScrollListener(node);
     }
   };
 
   const setupScrollListener = (container: HTMLDivElement) => {
-    console.log('🔧 Setting up scroll listener...');
-
     const checkScrollPosition = () => {
       const scrollY = container.scrollTop;
       const viewportHeight = window.innerHeight;
@@ -43,54 +40,27 @@ export default function Home() {
         // LANDING SECTION
         setIsDarkTheme(false);
         setIsPastLanding(false);
-        console.log('📍 Landing Section', {
-          scrollY,
-          viewportHeight,
-          threshold,
-          isPastLanding: false,
-          hamburger: 'HIDDEN (component not mounted)'
-        });
       } else if (scrollY >= threshold && scrollY < viewportHeight * 1.9) {
         // ABOUT SECTION
         setIsDarkTheme(true);
         setIsPastLanding(true);
-        console.log('📍 About Section', {
-          scrollY,
-          viewportHeight,
-          threshold,
-          isPastLanding: true,
-          hamburger: 'VISIBLE (should be vintage yellow #F2E9D8)',
-          hamburgerColor: '#F2E9D8'
-        });
       } else {
         // CONTACT SECTION
         setIsDarkTheme(false);
         setIsPastLanding(true);
-        console.log('📍 Contact Section', {
-          scrollY,
-          viewportHeight,
-          threshold,
-          isPastLanding: true,
-          hamburger: 'VISIBLE (should be vintage yellow #F2E9D8)',
-          hamburgerColor: '#F2E9D8'
-        });
       }
     };
 
     // Check initial scroll position
-    console.log('🚀 Initial mount - checking scroll position...');
     checkScrollPosition();
 
     const handleScroll = () => {
-      console.log('📜 SCROLL EVENT FIRED!');
       checkScrollPosition();
     };
 
     container.addEventListener("scroll", handleScroll);
-    console.log('✅ Scroll listener attached');
 
     return () => {
-      console.log('🧹 Cleaning up scroll listener');
       container.removeEventListener("scroll", handleScroll);
     };
   };

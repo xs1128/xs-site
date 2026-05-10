@@ -59,34 +59,6 @@ export function HamburgerButton({ onClick, isPastLanding, isDarkTheme, isNavOpen
   const isFaded = useFadeAnimation(isNavOpen);
   const iconColor = useIconColor(isDarkTheme);
 
-  // Mount/unmount logging
-  useEffect(() => {
-    console.log('🍔 HamburgerButton MOUNTED', {
-      isPastLanding,
-      isDarkTheme,
-      iconColor,
-      isNavOpen,
-      colorName: iconColor === '#F2E9D8' ? 'Vintage Yellow' : 'Dark Charcoal',
-      section: isDarkTheme ? 'About (dark)' : 'Contact (light)'
-    });
-
-    return () => {
-      console.log('🍔 HamburgerButton UNMOUNTED');
-    };
-  }, []);
-
-  // Props update logging
-  useEffect(() => {
-    console.log('🍔 HamburgerButton props updated:', {
-      isPastLanding,
-      isDarkTheme,
-      iconColor,
-      isNavOpen,
-      colorName: iconColor === '#F2E9D8' ? 'Vintage Yellow' : 'Dark Charcoal',
-      section: isDarkTheme ? 'About (dark)' : 'Contact (light)'
-    });
-  }, [isPastLanding, isDarkTheme, iconColor, isNavOpen]);
-
   const handleClick = () => {
     if (!isFaded) {
       onClick();

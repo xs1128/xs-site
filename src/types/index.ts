@@ -165,6 +165,15 @@ export interface CardSceneProps {
   index: number;
 }
 
+// Icon Components
+export interface StaticIconProps {
+  src: string;
+  alt: string;
+  style?: React.CSSProperties;
+  width?: number;
+  height?: number;
+}
+
 // Animation Components
 export interface AnimatedHeadlineProps {
   text: string;

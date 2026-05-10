@@ -16,7 +16,7 @@ export function LandingButtons({ onScrollToAbout, onScrollToContact, isSmallScre
   const triggerThreshold = typeof window !== 'undefined' ? window.innerHeight * 0.2 : 0;
   const parallaxOffset = useScrollParallax(containerRef, {
     maxScrollDistance,  // 40vh
-    triggerThreshold  // Start after 20vh (delayed)
+    triggerThreshold  // Start after 20vh
   });
 
   const buttonStyle = {

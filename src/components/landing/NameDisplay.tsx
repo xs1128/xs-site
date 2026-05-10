@@ -48,19 +48,35 @@ export function NameDisplay({ onToggle, showInitials, isFading, isSmallScreen, c
   };
 
   return (
-    <div className="name-display-wrapper" style={containerStyle}>
-      <div
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <NameSceneContent showInitials={false} />
+    <>
+      {/* Semantic content for SEO and screen readers */}
+      <div className="landing-section__semantic-content">
+        <h1 className="visually-hidden">
+          Xinsheng Ooi
+        </h1>
+        <p className="visually-hidden">
+          Expert in Python scripting, Docker containerization, Bash automation,
+          and deployment pipelines for robust infrastructure solutions.
+        </p>
       </div>
-      <h2 className="landing-section__headline">
-        I turn real problems into automated solutions.
-      </h2>
-    </div>
+
+      <div className="name-display-wrapper" style={containerStyle}>
+        <div
+          className="name-display__canvas-container"
+          role="img"
+          aria-label="3D animation: Xinsheng Ooi"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <NameSceneContent showInitials={false} />
+        </div>
+        <h2 className="landing-section__headline">
+          I turn real problems into automated solutions.
+        </h2>
+      </div>
+    </>
   );
 }

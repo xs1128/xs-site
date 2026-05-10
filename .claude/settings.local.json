@@ -20,7 +20,13 @@
       "Bash(find:*)",
       "Bash(cat:*)",
       "Bash(rm:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(npm list *)",
+      "Bash(npm start *)",
+      "Bash(git log *)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts|css\\)$\")",
+      "Bash(git branch *)",
+      "Bash(npm run *)"
     ]
   }
 }
