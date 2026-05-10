@@ -48,12 +48,21 @@ export const metadata: Metadata = {
     siteName: 'Xinsheng Ooi - DevOps Engineer',
     locale: 'en_US',
     type: 'website',
+    images: [
+      {
+        url: 'https://me.xsooi.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Xinsheng Ooi - DevOps Engineer',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: "Xinsheng Ooi",
     description: "DevOps engineer specializing in automation, scripting, and infrastructure management.",
     creator: '@xs1128',
+    images: ['https://me.xsooi.com/og-image.png'],
   },
   robots: {
     index: true,
