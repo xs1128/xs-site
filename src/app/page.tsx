@@ -1,6 +1,15 @@
 import { Suspense } from "react";
 import { createClient } from "@/lib/supabase/server";
+import { siteConfig } from "@/lib/seo";
 import HomePageClient from "./home-client";
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteConfig.name,
+  url: siteConfig.url,
+  description: siteConfig.description,
+};
 
 async function HeroImageFetcher() {
   const supabase = await createClient();
@@ -16,8 +25,14 @@ async function HeroImageFetcher() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<HomePageClient heroImageUrl="" />}>
-      <HeroImageFetcher />
-    </Suspense>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+      <Suspense fallback={<HomePageClient heroImageUrl="" />}>
+        <HeroImageFetcher />
+      </Suspense>
+    </>
   );
 }

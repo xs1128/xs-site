@@ -10,7 +10,6 @@
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
   width: 100%;
   position: relative;
 }
@@ -20,13 +19,11 @@ body {
   font-weight: 400;
   color: #2A2F35;
   background-color: #F2E9D8;
-  overflow-x: hidden;
 }
 
 html {
   scroll-behavior: smooth;
   background-color: #F2E9D8;
-  overflow-x: hidden;
 }
 
 * {
@@ -41,6 +38,7 @@ img, video, canvas, svg {
 @media (max-width: 767px) {
   html,
   body {
+    overflow-x: hidden;
     overscroll-behavior-x: none;
     touch-action: pan-y pinch-zoom;
   }

@@ -198,3 +198,35 @@ export async function getSeriesBySlug(slug: string) {
       }))
   }
 }
+
+/**
+ * Lightweight slug + lastmod lists for the sitemap.
+ */
+export async function getAllPostSlugs() {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('posts')
+    .select('slug, updated_at, published_at')
+    .not('published_at', 'is', null)
+    .order('published_at', { ascending: false, nullsFirst: false })
+
+  if (error) {
+    console.error('Error fetching post slugs:', error)
+    return []
+  }
+  return data
+}
+
+export async function getAllSeriesSlugs() {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from('series')
+    .select('slug, updated_at')
+    .order('updated_at', { ascending: false, nullsFirst: false })
+
+  if (error) {
+    console.error('Error fetching series slugs:', error)
+    return []
+  }
+  return data
+}
