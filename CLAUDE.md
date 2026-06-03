@@ -1,48 +1,48 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) in this repo.
 
 ## Overview
 
-This project is the public-facing blog frontend built with Next.js, TypeScript, and Supabase. It displays blog posts, series, and features an interactive 3D terminal cube. This repository only contains read-only functionality for displaying content from Supabase.
+Public blog frontend. Next.js + TypeScript + Supabase. Shows posts, series, interactive 3D terminal cube. Read-only — displays Supabase content.
 
 ## Note
 
-The admin panel for managing blog content has been separated into a separate repository at `../blog-admin`. This repository only contains the public blog frontend.
+Admin panel moved to separate repo `../blog-admin`. This repo = public frontend only.
 
 ## Documentation
 
-All detailed documentation is located in the `./docs` directory. When working on this codebase, always refer to these files:
+Detailed docs in `./docs`. Always refer to these:
 
 ### Setup & Configuration
 - **[Project Structure](./docs/project-structure.md)** - File/directory layout
-- **[Supabase Setup](./docs/supabase-setup.md)** - Database setup (for reference only)
-- **[Supabase Usage](./docs/supabase-usage.md)** - Client patterns for read operations
+- **[Supabase Setup](./docs/supabase-setup.md)** - Database setup (reference only)
+- **[Supabase Usage](./docs/supabase-usage.md)** - Client patterns for reads
 
 ### Features & Components
 - **[Blog Features](./docs/blog-features.md)** - Blog post pages and features
-- **[UI Components](./docs/ui-components.md)** - Footer, home page, and UI elements
-- **[3D Animation](./docs/3d-animation.md)** - Interactive terminal cube with React Three Fiber
+- **[UI Components](./docs/ui-components.md)** - Footer, home page, UI elements
+- **[3D Animation](./docs/3d-animation.md)** - Terminal cube with React Three Fiber
 
 ### Architecture & Standards
-- **[CSS Architecture](./docs/css-architecture.md)** - Styling system and best practices
-- **[Standards](./docs/standards.md)** - Code quality and testing guidelines
+- **[CSS Architecture](./docs/css-architecture.md)** - Styling system + best practices
+- **[Standards](./docs/standards.md)** - Code quality + testing
 
 ### Operations
-- **[Deployment](./docs/deployment.md)** - Deployment and debugging guide
+- **[Deployment](./docs/deployment.md)** - Deploy + debug guide
 
 ## 3D Animation Canvas
 
-The blog features an interactive 3D terminal cube built with React Three Fiber.
+Interactive 3D terminal cube, React Three Fiber.
 
-For detailed documentation, see **[3D Animation](./docs/3d-animation.md)**.
+Detail: **[3D Animation](./docs/3d-animation.md)**.
 
 **Quick Overview**:
-- Displays blog stats on 6 faces (posts, categories, pictures, last update, etc.)
-- Terminal-style black cube with glowing green text
-- Drag to rotate, scroll to zoom
-- Real-time data from Supabase
-- Vintage yellow background with floating particles
+- Blog stats on 6 faces (posts, categories, pictures, last update, etc.)
+- Terminal-style black cube, glowing green text
+- Drag rotate, scroll zoom
+- Real-time Supabase data
+- Vintage yellow background, floating particles
 
 **Key Files**:
 - `src/components/blog/ThreeDCanvas.tsx` - Canvas wrapper
@@ -53,7 +53,7 @@ For detailed documentation, see **[3D Animation](./docs/3d-animation.md)**.
 
 ## Usage
 
-When starting any task, always:
-1. Read the relevant documentation file in `./docs`
-2. Follow the patterns and conventions described in the documentation
-3. Keep the documentation updated as you make changes to the codebase
+Starting any task:
+1. Read relevant doc in `./docs`
+2. Follow patterns/conventions in the docs
+3. Keep docs updated as you change code
