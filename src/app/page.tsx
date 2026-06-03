@@ -1,7 +1,10 @@
 import { Suspense } from "react";
-import { createClient } from "@/lib/supabase/server";
+import { getHeroImageUrl } from "@/lib/supabase/queries";
 import { siteConfig } from "@/lib/seo";
 import HomePageClient from "./home-client";
+
+// ISR: rebuild the shell hourly so a changed hero image shows up.
+export const revalidate = 3600;
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
@@ -12,14 +15,7 @@ const websiteJsonLd = {
 };
 
 async function HeroImageFetcher() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('site_settings')
-    .select('value')
-    .eq('key', 'hero_image_url')
-    .single();
-
-  const heroImageUrl = data?.value || '';
+  const heroImageUrl = await getHeroImageUrl();
   return <HomePageClient heroImageUrl={heroImageUrl} />;
 }
 

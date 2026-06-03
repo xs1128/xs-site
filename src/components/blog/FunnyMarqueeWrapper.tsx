@@ -26,7 +26,7 @@ export default function FunnyMarqueeWrapper({ isCollapsed = false, onToggleColla
       if (data) {
         const transformedPictures: FunnyPicture[] = data.map(picture => ({
           id: picture.id,
-          image: picture.url,
+          image: picture.url || '',
           title: picture.caption || '',
           location: picture.location || '',
           date: picture.date_taken ? new Date(picture.date_taken).toLocaleDateString('en-US', {

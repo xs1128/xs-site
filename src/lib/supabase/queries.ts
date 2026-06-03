@@ -1,11 +1,12 @@
-import { createClient } from './server'
+import { cache } from 'react'
+import { getPublicClient } from './public'
 import type { Post } from '@/types/post'
 import type { Database } from '@/types/database'
 
 type PostRow = Database['public']['Tables']['posts']['Row']
 
 export async function getRecentPosts(limit = 5) {
-  const supabase = await createClient()
+  const supabase = getPublicClient()
   const { data, error } = await supabase
     .from('posts')
     .select('*')
@@ -21,7 +22,7 @@ export async function getRecentPosts(limit = 5) {
 }
 
 export async function getFeaturedSeries(limit = 3) {
-  const supabase = await createClient()
+  const supabase = getPublicClient()
   const { data, error } = await supabase
     .from('series')
     .select('*, posts(*)')
@@ -36,7 +37,7 @@ export async function getFeaturedSeries(limit = 3) {
 }
 
 export async function getPictures() {
-  const supabase = await createClient()
+  const supabase = getPublicClient()
   const { data, error } = await supabase
     .from('pictures')
     .select('*')
@@ -53,8 +54,8 @@ export async function getPictures() {
 /**
  * Get published post by slug with series relationships
  */
-export async function getPostBySlug(slug: string) {
-  const supabase = await createClient()
+export const getPostBySlug = cache(async (slug: string) => {
+  const supabase = getPublicClient()
 
   // First get the post
   const { data: post, error: postError } = await supabase
@@ -100,7 +101,7 @@ export async function getPostBySlug(slug: string) {
     ...post,
     series,
   }
-}
+})
 
 /**
  * Get related posts based on tags
@@ -112,7 +113,7 @@ export async function getRelatedPosts(
 ): Promise<Post[]> {
   if (!tags || tags.length === 0) return []
 
-  const supabase = await createClient()
+  const supabase = getPublicClient()
   const { data, error } = await supabase
     .from('posts')
     .select('*')
@@ -133,14 +134,20 @@ export async function getRelatedPosts(
     return []
   }
 
-  return data || []
+  // Map DB rows to the Post shape the UI expects (date/summary derived).
+  return (data || []).map((p) => ({
+    ...p,
+    tags: p.tags ?? undefined,
+    date: p.published_at || p.created_at,
+    summary: p.excerpt || '',
+  }))
 }
 
 /**
  * Get posts in the same series (for navigation)
  */
 export async function getSeriesPosts(seriesId: number) {
-  const supabase = await createClient()
+  const supabase = getPublicClient()
   const { data, error } = await supabase
     .from('series_posts')
     .select(`
@@ -161,8 +168,8 @@ export async function getSeriesPosts(seriesId: number) {
 /**
  * Get series by slug with all posts ordered
  */
-export async function getSeriesBySlug(slug: string) {
-  const supabase = await createClient()
+export const getSeriesBySlug = cache(async (slug: string) => {
+  const supabase = getPublicClient()
 
   const { data, error } = await supabase
     .from('series')
@@ -197,13 +204,13 @@ export async function getSeriesBySlug(slug: string) {
         summary: sp.posts.excerpt || '',
       }))
   }
-}
+})
 
 /**
  * Lightweight slug + lastmod lists for the sitemap.
  */
 export async function getAllPostSlugs() {
-  const supabase = await createClient()
+  const supabase = getPublicClient()
   const { data, error } = await supabase
     .from('posts')
     .select('slug, updated_at, published_at')
@@ -218,11 +225,11 @@ export async function getAllPostSlugs() {
 }
 
 export async function getAllSeriesSlugs() {
-  const supabase = await createClient()
+  const supabase = getPublicClient()
   const { data, error } = await supabase
     .from('series')
-    .select('slug, updated_at')
-    .order('updated_at', { ascending: false, nullsFirst: false })
+    .select('slug, created_at')
+    .order('created_at', { ascending: false, nullsFirst: false })
 
   if (error) {
     console.error('Error fetching series slugs:', error)
@@ -230,3 +237,21 @@ export async function getAllSeriesSlugs() {
   }
   return data
 }
+
+/**
+ * Read a single site setting (e.g. hero image URL) for server rendering.
+ */
+export const getHeroImageUrl = cache(async (): Promise<string> => {
+  const supabase = getPublicClient()
+  const { data, error } = await supabase
+    .from('site_settings')
+    .select('value')
+    .eq('key', 'hero_image_url')
+    .single()
+
+  if (error) {
+    console.error('Error fetching hero image url:', error)
+    return ''
+  }
+  return data?.value || ''
+})

@@ -22,58 +22,8 @@ export async function getHeroImageUrl(): Promise<string> {
   return url || '/IMG_1953.jpeg' // Fallback to default
 }
 
-// Update site setting (upsert)
-export async function updateSiteSetting(
-  key: string,
-  value: string,
-  description?: string
-) {
-  const supabase = createClient()
-
-  const { data, error } = await supabase
-    .from('site_settings')
-    .upsert(
-      {
-        key,
-        value,
-        description: description || null,
-        updated_at: new Date().toISOString(),
-      },
-      {
-        onConflict: 'key',
-      }
-    )
-    .select()
-    .single()
-
-  if (error) {
-    console.error(`Error updating site setting "${key}":`, error)
-    return { data: null, error }
-  }
-
-  return { data, error: null }
-}
-
-// Update hero image URL
-export async function updateHeroImageUrl(imageUrl: string) {
-  return updateSiteSetting(
-    'hero_image_url',
-    imageUrl,
-    'URL of the hero image displayed on the landing page'
-  )
-}
-
 // Get avatar URL
-export async function getAvatarUrl(): Promise<string> {
+export async function getAvatarUrl(): Promise<string | null> {
   const url = await getSiteSetting('avatar_url')
   return url || null
-}
-
-// Update avatar URL
-export async function updateAvatarUrl(imageUrl: string) {
-  return updateSiteSetting(
-    'avatar_url',
-    imageUrl,
-    'URL of the avatar/profile picture displayed in the footer'
-  )
 }

@@ -1,11 +1,19 @@
 import { notFound } from 'next/navigation'
-import { getSeriesBySlug } from '@/lib/supabase/queries'
+import { getSeriesBySlug, getAllSeriesSlugs } from '@/lib/supabase/queries'
 import SeriesDetailClient from './series-detail-client'
 import type { Metadata } from 'next'
 import { siteConfig, absoluteUrl } from '@/lib/seo'
 
+// ISR: series pages render statically and re-validate hourly.
+export const revalidate = 3600
+
 interface PageProps {
   params: Promise<{ slug: string }>
+}
+
+export async function generateStaticParams() {
+  const slugs = await getAllSeriesSlugs()
+  return (slugs ?? []).map((s) => ({ slug: s.slug }))
 }
 
 export default async function SeriesPage({ params }: PageProps) {

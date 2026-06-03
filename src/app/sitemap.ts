@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const seriesRoutes: MetadataRoute.Sitemap = (series ?? []).map((s) => ({
     url: absoluteUrl(`/series/${s.slug}`),
-    lastModified: new Date(s.updated_at || Date.now()),
+    lastModified: new Date(s.created_at || Date.now()),
     changeFrequency: 'weekly',
     priority: 0.6,
   }))

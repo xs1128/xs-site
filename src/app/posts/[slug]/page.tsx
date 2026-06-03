@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
-import { createClient } from '@/lib/supabase/server'
-import { getPostBySlug, getRelatedPosts } from '@/lib/supabase/queries'
+import { getPostBySlug, getRelatedPosts, getAllPostSlugs } from '@/lib/supabase/queries'
 import { extractHeadings, calculateReadTime } from '@/lib/utils/post'
 import type { Metadata } from 'next'
 import PostDetailClient from './post-detail-client'
@@ -9,15 +8,22 @@ import type { Heading } from '@/types/post'
 import type { Post, SeriesDetail } from '@/types/post'
 import { siteConfig, absoluteUrl } from '@/lib/seo'
 
+// ISR: posts render statically and re-validate hourly.
+export const revalidate = 3600
+
 interface PageProps {
   params: Promise<{
     slug: string
   }>
 }
 
-async function PostDataFetcher({ slug }: { slug: string }) {
-  const supabase = await createClient()
+// Pre-render known posts at build; unknown slugs render on-demand then cache.
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs()
+  return (slugs ?? []).map((p) => ({ slug: p.slug }))
+}
 
+async function PostDataFetcher({ slug }: { slug: string }) {
   // Fetch post with series data
   const postData = await getPostBySlug(slug)
 
@@ -111,13 +117,9 @@ export default async function PostPage({ params }: PageProps) {
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const supabase = await createClient()
 
-  const { data: post } = await supabase
-    .from('posts')
-    .select('title, excerpt, featured_image, author_name, tags, published_at, updated_at')
-    .eq('slug', slug)
-    .single()
+  // Reuses the cached query — no extra DB round-trip beyond the page render.
+  const post = await getPostBySlug(slug)
 
   if (!post) {
     return { title: 'Post not found' }

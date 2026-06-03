@@ -1,7 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import SeriesGrid from "./SeriesGrid";
-import ThreeDCanvas from "./ThreeDCanvas";
+import ThreeDAssetPlaceholder from "./ThreeDAssetPlaceholder";
+
+// Three.js (~hundreds of KB) is heavy and client-only. Code-split it so it
+// never ships in the initial bundle and only loads when this section mounts.
+const ThreeDCanvas = dynamic(() => import("./ThreeDCanvas"), {
+  ssr: false,
+  loading: () => <ThreeDAssetPlaceholder />,
+});
 
 interface BlogExpandedContentProps {
   isSmallScreen?: boolean;

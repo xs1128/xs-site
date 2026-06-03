@@ -48,7 +48,7 @@ export default function RecentBlogsGrid({
           summary: post.excerpt || '',
           slug: post.slug,
           featured_image: post.featured_image,
-          tags: post.tags,
+          tags: post.tags ?? undefined,
           read_time: post.read_time,
           author_name: post.author_name,
         }));
