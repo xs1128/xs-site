@@ -56,6 +56,20 @@ async function PostDataFetcher({ slug }: { slug: string }) {
     posts: [],
   })) || []
 
+  // Mirrors the visual breadcrumb trail for rich-result eligibility.
+  const parentSeries = seriesData[0]
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
+      parentSeries
+        ? { '@type': 'ListItem', position: 2, name: parentSeries.title, item: absoluteUrl(`/series/${parentSeries.slug}`) }
+        : { '@type': 'ListItem', position: 2, name: 'Blog', item: absoluteUrl('/?expanded=true') },
+      { '@type': 'ListItem', position: 3, name: post.title, item: absoluteUrl(`/posts/${slug}`) },
+    ],
+  }
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -75,6 +89,10 @@ async function PostDataFetcher({ slug }: { slug: string }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
       <PostDetailClient
         post={{

@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import type { Heading, Post, SeriesDetail } from '@/types/post'
 import BlogPageHeader from '@/components/blog/BlogPageHeader'
+import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs'
 import PostHeader from '@/components/blog/PostHeader'
 import PostHero from '@/components/blog/PostHero'
 import PostContent from '@/components/blog/PostContent'
@@ -85,6 +86,17 @@ export default function PostDetailClient({
     padding: spacing.lg,
   }
 
+  // Trail: Home › {parent series | Blog} › {post}. Series parent lets readers
+  // jump to sibling posts; falls back to the expanded blog listing.
+  const parentSeries = seriesData?.[0]
+  const breadcrumbs: Crumb[] = [
+    { label: 'Home', href: '/' },
+    parentSeries
+      ? { label: parentSeries.title, href: `/series/${parentSeries.slug}` }
+      : { label: 'Blog', href: '/?expanded=true' },
+    { label: post.title },
+  ]
+
   return (
     <>
       <div style={pageContainerStyle}>
@@ -123,6 +135,8 @@ export default function PostDetailClient({
         {/* Main Content */}
         <main style={contentStyle}>
           <div style={mainContentStyle}>
+            {!isLoading && <Breadcrumbs items={breadcrumbs} />}
+
             <PostHeader post={post} series={seriesData} loading={isLoading} />
 
             {isLoading ? (

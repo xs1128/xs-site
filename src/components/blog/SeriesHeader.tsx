@@ -1,8 +1,7 @@
-import Link from 'next/link'
 import type { SeriesDetail } from '@/types/post'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
-import { TRANSITIONS } from '@/styles/animations'
+import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs'
 import { SkeletonText } from '@/components/skeleton'
 
 interface SeriesHeaderProps {
@@ -18,17 +17,11 @@ export default function SeriesHeader({ series, loading = false }: SeriesHeaderPr
     width: '100%',
   }
 
-  const backButtonStyle: React.CSSProperties = {
-    display: 'inline-flex',
-    alignItems: 'center',
-    fontFamily: FONTS.primary,
-    fontSize: clamp.sm,
-    fontWeight: 600,
-    color: colors.accent,
-    textDecoration: 'none',
-    marginBottom: spacing.md,
-    transition: TRANSITIONS.fast('color'),
-  }
+  const breadcrumbs: Crumb[] = [
+    { label: 'Home', href: '/' },
+    { label: 'Blog', href: '/?expanded=true' },
+    { label: series.title },
+  ]
 
   const titleStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
@@ -49,18 +42,7 @@ export default function SeriesHeader({ series, loading = false }: SeriesHeaderPr
 
   return (
     <header style={headerStyle}>
-      <Link
-        href="/?expanded=true"
-        style={backButtonStyle}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.color = '#CC4420'
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.color = colors.accent
-        }}
-      >
-        ← Back to Home
-      </Link>
+      <Breadcrumbs items={breadcrumbs} />
       {loading ? (
         <>
           <SkeletonText lines={2} width={['70%', '50%']} height="2em" />
