@@ -22,7 +22,44 @@ export function calculateReadTime(content: string): number {
 }
 
 /**
- * Extract headings (h2, h3) from markdown content for TOC
+ * Strip inline markdown (code, bold, italic, strikethrough, links, images)
+ * down to its plain text. Used so a heading's TOC label and its DOM id are
+ * derived from the SAME text the renderer ends up showing.
+ *
+ * Without this, `## Why \`yt-dlp\`?` slugs from raw markdown ("why-yt-dlp")
+ * while the rendered <h2> slugs from "[object Object]" — the two never match,
+ * breaking both scroll-to-section and active highlighting.
+ */
+export function stripInlineMarkdown(text: string): string {
+  return text
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1') // image -> alt text
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')  // link -> link text
+    .replace(/`([^`]+)`/g, '$1')              // inline code
+    .replace(/\*\*([^*]+)\*\*/g, '$1')        // bold
+    .replace(/__([^_]+)__/g, '$1')            // bold
+    .replace(/\*([^*]+)\*/g, '$1')            // italic
+    .replace(/_([^_]+)_/g, '$1')              // italic
+    .replace(/~~([^~]+)~~/g, '$1')            // strikethrough
+    .trim()
+}
+
+/**
+ * Slugify already-plain heading text into a stable DOM id fragment.
+ * Shared by extractHeadings and PostContent so ids are identical on both sides.
+ */
+export function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+/**
+ * Extract headings (h1–h6) from markdown content for TOC.
+ * Stores plain (markdown-stripped) text and a slug id that matches the id the
+ * renderer assigns to each heading element.
  */
 export function extractHeadings(content: string): Heading[] {
   if (!content) return []
@@ -30,23 +67,26 @@ export function extractHeadings(content: string): Heading[] {
   const headings: Heading[] = []
   const lines = content.split('\n')
   const headingCount: Record<string, number> = {}
+  let inFence = false
 
   for (const line of lines) {
+    // Skip fenced code blocks so "# comment" inside code isn't treated as a heading.
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence
+      continue
+    }
+    if (inFence) continue
+
     // Match h1 (#) through h6 (######) headings
     const match = line.match(/^(#{1,6})\s+(.+)$/)
     if (match) {
       const level = match[1].length
-      const text = match[2].trim()
+      const text = stripInlineMarkdown(match[2].trim())
+      if (!text) continue
 
-      // Generate slug-friendly ID
-      const baseId = text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .trim()
+      const baseId = slugifyHeading(text)
 
-      // Handle duplicates
+      // Handle duplicates deterministically (same scheme as the renderer).
       if (!headingCount[baseId]) {
         headingCount[baseId] = 0
       }
