@@ -17,11 +17,6 @@ export async function getSiteSetting(key: string) {
   return data?.value || null
 }
 
-export async function getHeroImageUrl(): Promise<string> {
-  const url = await getSiteSetting('hero_image_url')
-  return url || '/IMG_1953.jpeg' // Fallback to default
-}
-
 // Get avatar URL
 export async function getAvatarUrl(): Promise<string | null> {
   const url = await getSiteSetting('avatar_url')
