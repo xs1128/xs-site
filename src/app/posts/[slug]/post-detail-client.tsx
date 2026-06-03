@@ -51,7 +51,9 @@ export default function PostDetailClient({
     flexDirection: 'column',
     minHeight: '100vh',
     backgroundColor: colors.darkBackground,
-    overflowX: 'auto',
+    // No overflow here: any non-visible overflow makes this a scroll container,
+    // which caps window scroll and breaks the sticky TOC + scroll tracking.
+    // Horizontal overflow is contained by children (code blocks, tables, wrap).
     width: '100%',
     position: 'relative',
   }
@@ -65,7 +67,9 @@ export default function PostDetailClient({
     flex: 1,
     position: 'relative',
     width: '100%',
-    overflowX: 'hidden',
+    // Intentionally no overflowX: keep the window as the single scroll root so
+    // position: sticky on the sidebar works. The main column uses minWidth: 0
+    // so wide children stay contained instead of forcing horizontal scroll.
   }
 
   const sidebarStyle: React.CSSProperties = {
@@ -74,12 +78,28 @@ export default function PostDetailClient({
     display: 'block',
     opacity: isMobile ? 0 : 1,
     transition: 'opacity 0.3s ease',
+    // Sticky so the TOC follows the page; align-self keeps the flex item from
+    // stretching to row height (which would defeat sticky). Caps at viewport
+    // height and stops at the content container's bottom — never over header
+    // or footer.
+    ...(isMobile
+      ? {}
+      : {
+          position: 'sticky' as const,
+          top: '88px',
+          alignSelf: 'flex-start' as const,
+          maxHeight: 'calc(100vh - 104px)',
+          overflowY: 'auto' as const,
+        }),
   }
 
   const contentStyle: React.CSSProperties = {
     flex: 1,
     maxWidth: '100%',
     width: '100%',
+    // Allow this flex item to shrink below its content width so wide code
+    // blocks/tables scroll internally instead of widening the page.
+    minWidth: 0,
   }
 
   const mainContentStyle: React.CSSProperties = {
@@ -128,7 +148,7 @@ export default function PostDetailClient({
       <div style={contentContainerStyle}>
         {/* Left Sidebar */}
         <aside style={sidebarStyle}>
-          <TableOfContents headings={headings} />
+          <TableOfContents headings={headings} loading={isLoading} />
           <OtherPosts posts={relatedPosts} loading={isLoading} />
         </aside>
 

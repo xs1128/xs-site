@@ -8,7 +8,21 @@ import CodeBlock from './CodeBlock'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS } from '@/styles/animations'
+import { slugifyHeading } from '@/lib/utils/post'
 import type { Heading } from '@/types/post'
+
+// Recursively flatten a rendered heading's children into plain text, so an
+// <h2>Why <code>yt-dlp</code>?</h2> yields "Why yt-dlp?" (not "[object Object]").
+// This must match the plain text extractHeadings derives from the markdown.
+function getNodeText(node: React.ReactNode): string {
+  if (node === null || node === undefined || typeof node === 'boolean') return ''
+  if (typeof node === 'string' || typeof node === 'number') return String(node)
+  if (Array.isArray(node)) return node.map(getNodeText).join('')
+  if (React.isValidElement(node)) {
+    return getNodeText((node.props as { children?: React.ReactNode }).children)
+  }
+  return ''
+}
 
 interface PostContentProps {
   content: string
@@ -163,22 +177,16 @@ const imageStyle: React.CSSProperties = {
 }
 
 const PostContentComponent = ({ content, headings }: PostContentProps) => {
-  // Memoize heading ID generation to prevent recalculating on every render
+  // Build a map from each heading (level + plain text) to its DOM id, using the
+  // exact same slug + dedup scheme as extractHeadings. heading.text is already
+  // plain (markdown stripped), so renderer ids and TOC ids stay in lockstep.
   const headingIdMap = React.useMemo(() => {
     const map = new Map<string, string>()
     const headingCount: Record<string, number> = {}
 
-    // First pass: build the map using the same logic as extractHeadings
     for (const heading of headings) {
       const key = `${heading.level}-${heading.text}`
-
-      // Generate base ID
-      const baseId = heading.text
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
-        .trim()
+      const baseId = slugifyHeading(heading.text)
 
       if (!headingCount[baseId]) {
         headingCount[baseId] = 0
@@ -187,8 +195,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
       const count = headingCount[baseId]
       headingCount[baseId]++
 
-      const generatedId = count === 0 ? baseId : `${baseId}-${count}`
-      map.set(key, generatedId)
+      map.set(key, count === 0 ? baseId : `${baseId}-${count}`)
     }
 
     return map
@@ -196,13 +203,13 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
 
   const getHeadingId = React.useCallback((level: number, text: string): string => {
     const key = `${level}-${text}`
-    return headingIdMap.get(key) || text.toLowerCase().replace(/\s+/g, '-')
+    return headingIdMap.get(key) || slugifyHeading(text)
   }, [headingIdMap])
 
   // Memoize the markdown components to prevent recreation
   const components = React.useMemo(() => ({
     h1: ({ children, ...props }: any) => {
-      const text = children?.toString() || ''
+      const text = getNodeText(children)
       const id = getHeadingId(1, text)
       return (
         <h1 id={id} style={headingStyles.h1} {...props}>
@@ -211,7 +218,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
       )
     },
     h2: ({ children, ...props }: any) => {
-      const text = children?.toString() || ''
+      const text = getNodeText(children)
       const id = getHeadingId(2, text)
       return (
         <h2 id={id} style={headingStyles.h2} {...props}>
@@ -220,7 +227,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
       )
     },
     h3: ({ children, ...props }: any) => {
-      const text = children?.toString() || ''
+      const text = getNodeText(children)
       const id = getHeadingId(3, text)
       return (
         <h3 id={id} style={headingStyles.h3} {...props}>
@@ -229,7 +236,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
       )
     },
     h4: ({ children, ...props }: any) => {
-      const text = children?.toString() || ''
+      const text = getNodeText(children)
       const id = getHeadingId(4, text)
       return (
         <h4 id={id} style={headingStyles.h4} {...props}>
@@ -238,7 +245,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
       )
     },
     h5: ({ children, ...props }: any) => {
-      const text = children?.toString() || ''
+      const text = getNodeText(children)
       const id = getHeadingId(5, text)
       return (
         <h5 id={id} style={headingStyles.h5} {...props}>
@@ -247,7 +254,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
       )
     },
     h6: ({ children, ...props }: any) => {
-      const text = children?.toString() || ''
+      const text = getNodeText(children)
       const id = getHeadingId(6, text)
       return (
         <h6 id={id} style={headingStyles.h6} {...props}>
