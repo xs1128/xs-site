@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Mesh, InstancedMesh, Object3D } from "three";
 import { OrbitControls } from "@react-three/drei";
@@ -8,25 +8,23 @@ import { colors } from "@/styles/colors";
 import TerminalCube from "./TerminalCube";
 import { useTerminalStats } from "./useTerminalStats";
 
+type Particle = { x: number; y: number; z: number; speed: number; offset: number };
+
+const PARTICLE_COUNT = 50;
+
+// Decorative scatter — generated once at module load, so Math.random never
+// runs during render (pure render) and there's no setState-in-effect.
+const PARTICLES: Particle[] = Array.from({ length: PARTICLE_COUNT }, () => ({
+  x: (Math.random() - 0.5) * 15,
+  y: (Math.random() - 0.5) * 15,
+  z: (Math.random() - 0.5) * 10 - 5,
+  speed: Math.random() * 0.5 + 0.5,
+  offset: Math.random() * Math.PI * 2,
+}));
+
 function BackgroundParticles() {
   const particlesRef = useRef<InstancedMesh>(null);
   const dummy = useRef<Object3D>(new Object3D());
-  const count = 50;
-
-  // Initialize particle positions once
-  const particles = useMemo(() => {
-    const result: Array<{ x: number; y: number; z: number; speed: number; offset: number }> = [];
-    for (let i = 0; i < count; i++) {
-      result.push({
-        x: (Math.random() - 0.5) * 15,
-        y: (Math.random() - 0.5) * 15,
-        z: (Math.random() - 0.5) * 10 - 5,
-        speed: Math.random() * 0.5 + 0.5,
-        offset: Math.random() * Math.PI * 2,
-      });
-    }
-    return result;
-  }, [count]);
 
   // Animate background particles
   useFrame((state) => {
@@ -34,8 +32,8 @@ function BackgroundParticles() {
 
     const time = state.clock.getElapsedTime();
 
-    for (let i = 0; i < count; i++) {
-      const particle = particles[i];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const particle = PARTICLES[i];
 
       // Floating animation
       const floatY = Math.sin(time * particle.speed + particle.offset) * 0.3;
@@ -61,7 +59,7 @@ function BackgroundParticles() {
   });
 
   return (
-    <instancedMesh ref={particlesRef} args={[undefined, undefined, count]}>
+    <instancedMesh ref={particlesRef} args={[undefined, undefined, PARTICLE_COUNT]}>
       <octahedronGeometry args={[0.1, 0]} />
       <meshStandardMaterial
         color={colors.accent}

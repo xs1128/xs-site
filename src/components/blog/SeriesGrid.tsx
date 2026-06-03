@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 interface Series {
@@ -15,6 +16,7 @@ interface SeriesGridProps {
 }
 
 export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
+  const router = useRouter();
   const [series, setSeries] = useState<Series[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -51,8 +53,7 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
   }, []);
 
   const handleSeriesClick = (seriesSlug: string) => {
-    // Navigate to series page or filter posts by series
-    window.location.href = `/series/${seriesSlug}`;
+    router.push(`/series/${seriesSlug}`);
   };
 
   const handlePageUp = () => {

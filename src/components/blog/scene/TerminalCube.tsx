@@ -67,11 +67,9 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
   // Clean up textures on unmount
   useEffect(() => {
     return () => {
-      if (meshRef.current) {
-        materials.forEach(mat => {
-          if (mat.map) mat.map.dispose();
-        });
-      }
+      materials.forEach(mat => {
+        if (mat.map) mat.map.dispose();
+      });
     };
   }, [materials]);
 

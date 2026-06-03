@@ -362,8 +362,11 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
   // Check for expanded=true URL parameter on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('expanded') === 'true') {
-      // Trigger the expanded state animation
+    if (params.get('expanded') !== 'true') return;
+
+    // Defer the state burst out of the effect body (avoids synchronous
+    // setState-in-effect) and into the next frame.
+    const raf = requestAnimationFrame(() => {
       setIsAnimating(true);
       setIsSwapped(true);
       setIsExpanded(true);
@@ -371,7 +374,8 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
         setNavDroppedIn(true);
         setTimeout(() => setIsAnimating(false), 400);
       }, 800);
-    }
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
 
   useEffect(() => {

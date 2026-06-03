@@ -1,36 +1,27 @@
-import { useState, useEffect } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 import { breakpoints } from '@/styles/breakpoints'
 
 /**
- * Custom hook for responsive breakpoint detection
- * Replaces all window.innerWidth checks throughout the codebase
+ * Custom hook for responsive breakpoint detection.
+ * Uses useSyncExternalStore so the value is correct on first client render
+ * (no flash) and SSR-safe — no setState-in-effect.
  */
 export function useBreakpoint(breakpointKey: keyof typeof breakpoints = 'md'): boolean {
-  const [isMatch, setIsMatch] = useState(false)
+  const query = `(min-width: ${breakpoints[breakpointKey]})`
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia(`(min-width: ${breakpoints[breakpointKey]})`)
+  const subscribe = useCallback(
+    (onChange: () => void) => {
+      const mql = window.matchMedia(query)
+      mql.addEventListener('change', onChange)
+      return () => mql.removeEventListener('change', onChange)
+    },
+    [query]
+  )
 
-    const handleChange = (e: MediaQueryListEvent | MediaQueryList) => {
-      setIsMatch(e.matches)
-    }
+  const getSnapshot = () => window.matchMedia(query).matches
+  const getServerSnapshot = () => false
 
-    // Set initial value
-    setIsMatch(mediaQuery.matches)
-
-    // Modern browsers
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleChange)
-      return () => mediaQuery.removeEventListener('change', handleChange)
-    }
-    // Legacy support
-    else {
-      mediaQuery.addListener(handleChange)
-      return () => mediaQuery.removeListener(handleChange)
-    }
-  }, [breakpointKey])
-
-  return isMatch
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 }
 
 /**

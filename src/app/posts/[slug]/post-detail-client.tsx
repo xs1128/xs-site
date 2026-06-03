@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import type { Heading, Post, SeriesDetail } from '@/types/post'
 import BlogPageHeader from '@/components/blog/BlogPageHeader'
 import PostHeader from '@/components/blog/PostHeader'
@@ -39,21 +39,11 @@ export default function PostDetailClient({
     next: { title: string; slug: string } | null
   }>({ prev: null, next: null })
 
-  const [seriesWithPosts, setSeriesWithPosts] = useState<SeriesDetail[]>([])
   const [isNavOpen, setIsNavOpen] = useState(false)
   const scrollProgress = useScrollProgress()
   const isMobile = useIsMobile()
   const footerVisible = useFooterVisibility()
   const contentContainerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    // For now, we'll just set prev/next to null since we need to fetch
-    // the full series data with posts to calculate this
-    // This could be enhanced with a separate query
-    if (seriesData && seriesData.length > 0) {
-      setSeriesWithPosts(seriesData)
-    }
-  }, [seriesData])
 
   const pageContainerStyle: React.CSSProperties = {
     display: 'flex',
@@ -133,7 +123,7 @@ export default function PostDetailClient({
         {/* Main Content */}
         <main style={contentStyle}>
           <div style={mainContentStyle}>
-            <PostHeader post={post} series={seriesWithPosts} loading={isLoading} />
+            <PostHeader post={post} series={seriesData} loading={isLoading} />
 
             {isLoading ? (
               <SkeletonHero />
@@ -141,9 +131,9 @@ export default function PostDetailClient({
               <PostHero imageUrl={post.featured_image} alt={post.title} />
             ) : null}
 
-            {seriesWithPosts && seriesWithPosts.length > 0 && (
+            {seriesData && seriesData.length > 0 && (
               <SeriesBanner
-                series={seriesWithPosts[0]}
+                series={seriesData[0]}
                 currentPostSlug={post.slug}
               />
             )}
@@ -162,7 +152,7 @@ export default function PostDetailClient({
             <PostNavigation
               prevPost={prevNext.prev}
               nextPost={prevNext.next}
-              seriesTitle={seriesWithPosts?.[0]?.title}
+              seriesTitle={seriesData?.[0]?.title}
             />
           </div>
         </main>

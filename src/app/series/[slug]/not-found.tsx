@@ -48,7 +48,7 @@ export default function NotFound() {
     <div style={containerStyle}>
       <h1 style={titleStyle}>Series Not Found</h1>
       <p style={messageStyle}>
-        The series you're looking for doesn't exist.
+        The series you&apos;re looking for doesn&apos;t exist.
       </p>
       <Link
         href="/"

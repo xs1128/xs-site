@@ -48,7 +48,7 @@ export default function NotFound() {
     <div style={containerStyle}>
       <h1 style={titleStyle}>404 - Post Not Found</h1>
       <p style={messageStyle}>
-        The post you're looking for doesn't exist or hasn't been published yet.
+        The post you&apos;re looking for doesn&apos;t exist or hasn&apos;t been published yet.
       </p>
       <Link
         href="/"

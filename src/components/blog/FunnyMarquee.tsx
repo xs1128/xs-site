@@ -167,36 +167,37 @@ export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCo
     });
   }, []);
 
-  // Infinite scroll animation - no timers, immediate resume
-  const animateScroll = useCallback((timestamp: number) => {
-    if (!lastTimeRef.current) {
-      lastTimeRef.current = timestamp;
-    }
-
-    const deltaTime = timestamp - lastTimeRef.current;
-    lastTimeRef.current = timestamp;
-
-    // Only update position if NOT paused
-    if (!isPaused && oneSetHeight > 0) {
-      setScrollPosition(prev => {
-        const newPosition = prev + (deltaTime / 1000) * SCROLL_SPEED;
-        // Reset when we've scrolled through one complete set
-        return newPosition >= oneSetHeight ? newPosition % oneSetHeight : newPosition;
-      });
-    }
-
-    animationFrameRef.current = requestAnimationFrame(animateScroll);
-  }, [isPaused, oneSetHeight]);
-
-  // Start/stop animation based on pause state
+  // Infinite scroll animation - no timers, immediate resume.
+  // The rAF loop is a local function inside the effect so it doesn't
+  // self-reference a useCallback (disallowed by the react-hooks rules).
   useEffect(() => {
-    animationFrameRef.current = requestAnimationFrame(animateScroll);
+    const loop = (timestamp: number) => {
+      if (!lastTimeRef.current) {
+        lastTimeRef.current = timestamp;
+      }
+
+      const deltaTime = timestamp - lastTimeRef.current;
+      lastTimeRef.current = timestamp;
+
+      // Only update position if NOT paused
+      if (!isPaused && oneSetHeight > 0) {
+        setScrollPosition(prev => {
+          const newPosition = prev + (deltaTime / 1000) * SCROLL_SPEED;
+          // Reset when we've scrolled through one complete set
+          return newPosition >= oneSetHeight ? newPosition % oneSetHeight : newPosition;
+        });
+      }
+
+      animationFrameRef.current = requestAnimationFrame(loop);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(loop);
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [animateScroll]);
+  }, [isPaused, oneSetHeight]);
 
   // Calculate height using ResizeObserver (reliable, no setTimeout)
   useEffect(() => {
@@ -211,7 +212,7 @@ export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCo
 
     observer.observe(contentRef.current);
     return () => observer.disconnect();
-  }, [visiblePictures.length]);
+  }, [visiblePictures.length, pictures.length]);
 
   // Update DOM transform when scroll position changes
   useEffect(() => {
