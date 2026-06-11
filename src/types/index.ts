@@ -92,6 +92,7 @@ export interface ExpertiseCardProps extends ResponsiveProps {
   icon: React.ReactNode;
   title: string;
   description: string;
+  index?: number;
 }
 
 // Contact Components

@@ -4,10 +4,10 @@ import { CardScene } from '@/components/3d/about/CardScene';
 
 /**
  * Expertise card component with 3D tilt effect
- * Displays an icon, title, and description in a styled card
- * Uses 3D tilt on desktop, regular hover on mobile
+ * Displays an index badge, icon, title, and description in a styled card
+ * Uses 3D tilt + cursor spotlight on desktop, regular hover on mobile
  */
-export function ExpertiseCard({ icon, title, description, isSmallScreen }: ExpertiseCardProps) {
+export function ExpertiseCard({ icon, title, description, isSmallScreen, index = 0 }: ExpertiseCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
@@ -23,8 +23,11 @@ export function ExpertiseCard({ icon, title, description, isSmallScreen }: Exper
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`expertise-card ${isHovered ? 'expertise-card--hovered' : ''}`}
-      index={0} // Only used by CardScene
+      index={index}
     >
+      <span className="expertise-card__index" aria-hidden="true">
+        {String(index + 1).padStart(2, '0')}
+      </span>
       <div className="expertise-card__content">
         <div className="expertise-card__icon">{icon}</div>
         <h3 className="expertise-card__title">{title}</h3>

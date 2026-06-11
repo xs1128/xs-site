@@ -3,8 +3,9 @@
 import React, { useRef, useState, ReactNode } from "react";
 
 /**
- * 3D Card wrapper with tilt effect
+ * 3D Card wrapper with tilt effect and cursor spotlight
  * Creates tactile, responsive card interactions with 3D tilt
+ * Exposes cursor position as --mx/--my CSS variables for the spotlight overlay
  */
 export function CardScene({ children, index }: { children: ReactNode; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -14,9 +15,15 @@ export function CardScene({ children, index }: { children: ReactNode; index: num
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    const localX = e.clientX - rect.left;
+    const localY = e.clientY - rect.top;
+    const x = (localX / rect.width - 0.5) * 2;
+    const y = (localY / rect.height - 0.5) * 2;
     setMousePos({ x, y });
+
+    // Drive the spotlight overlay without re-rendering children
+    cardRef.current.style.setProperty("--mx", `${localX}px`);
+    cardRef.current.style.setProperty("--my", `${localY}px`);
   };
 
   const tiltStyle: React.CSSProperties = {

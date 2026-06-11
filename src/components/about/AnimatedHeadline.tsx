@@ -42,11 +42,11 @@ export function AnimatedHeadline({ text, isVisible }: AnimatedHeadlineProps) {
             <span
               className={`about-content__word ${isAccent ? 'about-content__word--accent' : ''}`}
               style={{
-                transitionDelay: isVisible ? `${index * 0.05}s` : '0s',
+                '--word-delay': isVisible ? `${index * 0.05}s` : '0s',
                 marginRight: '0.25em'
-              }}
+              } as React.CSSProperties}
             >
-              {word}
+              <span className="about-content__word-inner">{word}</span>
             </span>
           </React.Fragment>
         );
