@@ -81,7 +81,10 @@ export function FullScreenNav({ isOpen, onClose, isSmallScreen, setIsDarkTheme }
           CONTACT
         </button>
 
-        <button
+        <a
+          href="https://github.com/xs1128"
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={handleClose}
           className={`nav-item ${isClosing ? 'nav-item-closing' : 'nav-item-opening'}`}
           data-text="PROJECTS"
@@ -104,10 +107,10 @@ export function FullScreenNav({ isOpen, onClose, isSmallScreen, setIsDarkTheme }
               <polyline points="17,17 17,7 7,7" />
             </svg>
           </span>
-        </button>
+        </a>
 
         <a
-          href="https://blog.xsooi.com"
+          href="https://xsooi.com/blog"
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClose}
