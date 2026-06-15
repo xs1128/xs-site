@@ -1,4 +1,6 @@
 export function BreadcrumbSchema() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xsooi.com';
+
   const breadcrumbData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -7,19 +9,19 @@ export function BreadcrumbSchema() {
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://me.xsooi.com"
+        "item": siteUrl
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "About",
-        "item": "https://me.xsooi.com#about"
+        "item": `${siteUrl}#about`
       },
       {
         "@type": "ListItem",
         "position": 3,
         "name": "Contact",
-        "item": "https://me.xsooi.com#contact"
+        "item": `${siteUrl}#contact`
       }
     ]
   };

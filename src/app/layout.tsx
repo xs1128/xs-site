@@ -11,15 +11,17 @@ import "../styles/contact.css";
 import "../styles/landing.css";
 import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xsooi.com';
+
 const canonicalUrl = process.env.NODE_ENV === 'production'
-  ? 'https://me.xsooi.com'
+  ? siteUrl
   : 'http://localhost:3000';
 
 export const metadata: Metadata = {
   title: "Xinsheng Ooi",
   description: "DevOps engineer specializing in automation, scripting, and infrastructure management. Expert in Python, Bash, Docker, and Cloudflare for building robust deployment pipelines and automated solutions.",
   keywords: ["DevOps engineer", "automation specialist", "Docker", "Python scripting", "Bash automation", "server infrastructure", "deployment pipelines", "Cloudflare DNS", "Linux system administration"],
-  authors: [{ name: "Xinsheng Ooi", url: "https://me.xsooi.com" }],
+  authors: [{ name: "Xinsheng Ooi", url: siteUrl }],
   creator: "Xinsheng Ooi",
   publisher: "Xinsheng Ooi",
   formatDetection: {
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://me.xsooi.com'),
+  metadataBase: new URL(siteUrl),
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -44,13 +46,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Xinsheng Ooi",
     description: "DevOps engineer specializing in automation, scripting, and infrastructure management. Expert in Python, Bash, Docker, and Cloudflare.",
-    url: 'https://me.xsooi.com',
+    url: siteUrl,
     siteName: 'Xinsheng Ooi - DevOps Engineer',
     locale: 'en_US',
     type: 'website',
     images: [
       {
-        url: 'https://me.xsooi.com/og-image.png',
+        url: `${siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
         alt: 'Xinsheng Ooi - DevOps Engineer',
@@ -62,7 +64,7 @@ export const metadata: Metadata = {
     title: "Xinsheng Ooi",
     description: "DevOps engineer specializing in automation, scripting, and infrastructure management.",
     creator: '@xs1128',
-    images: ['https://me.xsooi.com/og-image.png'],
+    images: [`${siteUrl}/og-image.png`],
   },
   robots: {
     index: true,
@@ -86,8 +88,8 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Xinsheng Ooi",
-    "url": "https://me.xsooi.com",
-    "image": "https://me.xsooi.com/og-image.png",
+    "url": siteUrl,
+    "image": `${siteUrl}/og-image.png`,
     "sameAs": [
       "https://github.com/xs1128",
       "https://www.linkedin.com/in/xinsheng-ooi-6738083b4",
