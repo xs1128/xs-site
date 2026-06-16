@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useButtonAnimations } from "@/hooks/useButtonAnimations";
 
 type AnimationVariant = 'underline' | 'text-fill' | 'both';
@@ -121,6 +122,14 @@ export default function AnimatedButton({
   };
 
   if (href) {
+    // Internal links (starting with "/") use Next.js Link so basePath is applied.
+    if (href.startsWith('/')) {
+      return (
+        <Link href={href} {...buttonProps}>
+          {buttonContent}
+        </Link>
+      );
+    }
     return (
       <a href={href} {...buttonProps}>
         {buttonContent}

@@ -2,9 +2,11 @@
   "name": "Blog — xsooi",
   "short_name": "Blog",
   "icons": [
-    { "src": "/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/blog/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/blog/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" }
   ],
+  "start_url": "/blog/",
+  "scope": "/blog",
   "theme_color": "#F2E9D8",
   "background_color": "#F2E9D8",
   "display": "standalone"
