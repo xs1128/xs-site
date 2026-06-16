@@ -4,6 +4,8 @@ import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
+import { markdownSanitizeSchema } from '@/lib/markdown/sanitizeSchema'
 import CodeBlock from './CodeBlock'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
@@ -338,7 +340,12 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
     <div style={containerStyle}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
+        // rehypeRaw parses embedded raw HTML into the tree; rehypeSanitize MUST
+        // run immediately after it to strip <script>/<iframe>/on*=... before the
+        // tree is rendered. Heading ids the TOC relies on are assigned by the
+        // custom h1-h6 components below (post-sanitize), so the schema's
+        // user-content- id clobbering does not affect TOC anchors.
+        rehypePlugins={[rehypeRaw, [rehypeSanitize, markdownSanitizeSchema]]}
         components={components}
       >
         {content}
