@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Post } from "@/types/post";
 
 interface BlogCardProps {
@@ -69,7 +70,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
   };
 
   return (
-    <a
+    <Link
       href={`/posts/${post.slug}`}
       style={cardStyle}
       onMouseEnter={(e) => {
@@ -88,6 +89,6 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
           {post.date} {post.author_name && ` • ${post.author_name}`}
         </div>
       </div>
-    </a>
+    </Link>
   );
 }

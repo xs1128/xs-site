@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import type { Post } from "@/types/post";
 
@@ -124,7 +125,7 @@ export default function RecentLogs() {
           <p style={emptyStyle}>No recent posts yet</p>
         ) : (
           posts.map((post) => (
-            <a
+            <Link
               key={post.id}
               href={`/posts/${post.slug}`}
               style={postItemStyle}
@@ -134,7 +135,7 @@ export default function RecentLogs() {
               <div style={dateStyle}>{post.date}</div>
               <div>{post.title}</div>
               {post.summary && <div style={summaryStyle}>{post.summary}</div>}
-            </a>
+            </Link>
           ))
         )}
       </div>
