@@ -17,7 +17,9 @@ export default function PostHeader({ post, loading = false }: PostHeaderProps) {
 
   const titleStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
-    fontSize: clamp['3xl'],
+    // Intentionally diverges from the clamp['3xl'] token: keeps the mobile min (2rem)
+    // but caps desktop smaller (2.75rem vs 3.5rem) for the post title only.
+    fontSize: 'clamp(2rem, 4vw, 2.75rem)',
     fontWeight: 700,
     color: '#F5F5F5',
     marginBottom: spacing.lg,
