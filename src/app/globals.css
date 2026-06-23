@@ -75,6 +75,24 @@ button, .animated-button {
   opacity: 0.8;
 }
 
+/* Paragraph spacing. Kept in CSS (not an inline style) so the
+   .markdown-blockquote > p rules below can override it via normal specificity. */
+.markdown-paragraph {
+  margin-bottom: clamp(12px, 2vh, 24px);
+}
+
+/* Blockquote panel: strip inner paragraph margins so the blockquote's own
+   padding controls spacing, keeping equal space above and below the quote.
+   These win over .markdown-paragraph because `.markdown-blockquote > p` has
+   higher specificity, so no !important is needed. */
+.markdown-blockquote > p:first-child {
+  margin-top: 0;
+}
+
+.markdown-blockquote > p:last-child {
+  margin-bottom: 0;
+}
+
 /* Background blur container */
 .background-blur {
   position: fixed;

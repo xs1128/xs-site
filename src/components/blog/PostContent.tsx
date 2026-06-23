@@ -114,9 +114,10 @@ const headingStyles = {
   },
 }
 
-const paragraphStyle: React.CSSProperties = {
-  marginBottom: spacing.md,
-}
+// marginBottom lives in the .markdown-paragraph CSS class (not inline) so the
+// .markdown-blockquote > p rules can override it via normal specificity without
+// needing !important.
+const paragraphStyle: React.CSSProperties = {}
 
 const linkStyle: React.CSSProperties = {
   color: colors.accent,
@@ -128,12 +129,16 @@ const linkStyle: React.CSSProperties = {
 
 const blockquoteStyle: React.CSSProperties = {
   borderLeft: `4px solid ${colors.accent}`,
-  paddingLeft: spacing.md,
+  // Slightly lighter than the dark slate page bg (#2A2F35) so the quote reads as a set-apart panel
+  backgroundColor: '#353B42',
+  borderRadius: '0 6px 6px 0',
+  padding: `${spacing.xs} ${spacing.md}`,
   marginLeft: 0,
   marginRight: 0,
-  fontStyle: 'italic',
-  color: '#666666',
   marginBottom: spacing.md,
+  fontStyle: 'italic',
+  // Quote text: neutral light grey, readable on the panel. Alternatives: #C9C4B8 (cream), #F0A085 (accent-tinted), #D6CBB3 (colors.border)
+  color: '#B8BCC2',
 }
 
 const listStyle: React.CSSProperties = {
@@ -285,7 +290,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
           }
         : paragraphStyle
 
-      return <p style={style}>{children}</p>
+      return <p className="markdown-paragraph" style={style}>{children}</p>
     },
     a: ({ children, href }: any) => (
       <a
@@ -297,7 +302,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
       </a>
     ),
     blockquote: ({ children }: any) => (
-      <blockquote style={blockquoteStyle}>{children}</blockquote>
+      <blockquote className="markdown-blockquote" style={blockquoteStyle}>{children}</blockquote>
     ),
     ul: ({ children }: any) => <ul style={listStyle}>{children}</ul>,
     ol: ({ children }: any) => <ol style={listStyle}>{children}</ol>,
