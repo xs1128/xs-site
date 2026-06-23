@@ -164,11 +164,13 @@ const tableCellStyle: React.CSSProperties = {
 
 const codeStyle: React.CSSProperties = {
   fontFamily: FONTS.mono,
-  fontSize: clamp.sm,
-  backgroundColor: '#F5F5F5',
-  padding: '2px 6px',
+  fontSize: '0.9em',
+  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+  border: '1px solid rgba(255, 255, 255, 0.1)',
+  padding: '0.15em 0.3em',
+  margin: '0 0.2em',
   borderRadius: '4px',
-  color: colors.accent,
+  color: '#F0A085',
   wordBreak: 'break-all',
   overflowWrap: 'break-word',
 }
