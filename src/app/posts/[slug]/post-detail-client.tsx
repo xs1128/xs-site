@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react'
 import type { Heading, Post, SeriesDetail } from '@/types/post'
 import BlogPageHeader from '@/components/blog/BlogPageHeader'
+import ReadingProgressBar from '@/components/blog/ReadingProgressBar'
 import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs'
 import PostHeader from '@/components/blog/PostHeader'
 import PostHero from '@/components/blog/PostHero'
@@ -16,9 +17,9 @@ import FullScreenNav from '@/components/ui/FullScreenNav'
 import { SkeletonHero, SkeletonText } from '@/components/skeleton'
 import { useIsMobile } from '@/hooks/useBreakpoint'
 import { useScrollProgress, useFooterVisibility } from '@/hooks/useScrollDetection'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
-import { TRANSITIONS } from '@/styles/animations'
 
 interface PostDetailClientProps {
   post: Post
@@ -41,10 +42,15 @@ export default function PostDetailClient({
   }>({ prev: null, next: null })
 
   const [isNavOpen, setIsNavOpen] = useState(false)
-  const scrollProgress = useScrollProgress()
+  const articleRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
   const footerVisible = useFooterVisibility()
-  const contentContainerRef = useRef<HTMLDivElement>(null)
+
+  const reducedMotion = useReducedMotion()
+
+  // Already-smoothed via frame-based lerp inside the hook (skips easing when
+  // reduced motion is preferred), so the bar reads this value directly.
+  const scrollProgress = useScrollProgress(articleRef, reducedMotion)
 
   const pageContainerStyle: React.CSSProperties = {
     display: 'flex',
@@ -121,26 +127,10 @@ export default function PostDetailClient({
     <>
       <div style={pageContainerStyle}>
         {/* Reading Progress Bar - Fixed at bottom of screen, sticks at content bottom when footer visible */}
-        <div style={{
-          position: footerVisible ? 'absolute' : 'fixed',
-          bottom: 0,
-          left: 0,
-          width: '100%',
-          height: '6px',
-          backgroundColor: 'rgba(229, 83, 44, 0.2)',
-          zIndex: 101,
-        }}>
-          <div style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            height: '100%',
-            width: `${scrollProgress}%`,
-            backgroundColor: '#E5532C',
-            transition: TRANSITIONS.slower('width'),
-            boxShadow: '0 0 10px rgba(229, 83, 44, 0.5)',
-          }} />
-        </div>
+        <ReadingProgressBar
+          progress={scrollProgress}
+          footerVisible={footerVisible}
+        />
         {/* Full-width Header */}
         <BlogPageHeader onMenuClick={() => setIsNavOpen(true)} />
 
@@ -172,7 +162,11 @@ export default function PostDetailClient({
               />
             )}
 
-            {post.content && <PostContent content={post.content} headings={headings} />}
+            {post.content && (
+              <div ref={articleRef}>
+                <PostContent content={post.content} headings={headings} />
+              </div>
+            )}
 
             <div style={{
               width: '100%',
