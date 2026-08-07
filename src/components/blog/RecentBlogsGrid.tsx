@@ -11,13 +11,12 @@ interface RecentBlogsGridProps {
   isSmallScreen?: boolean;
 }
 
-// Helper function to format date as YYYY-MM-DD
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
-  const year = date.getFullYear(); // YYYY
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // MM
-  const day = date.getDate().toString().padStart(2, "0"); // DD
-  return `${year}-${month}-${day}`; // YYYY-MM-DD
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 export default function RecentBlogsGrid({
@@ -37,7 +36,7 @@ export default function RecentBlogsGrid({
         .from('posts')
         .select('*')
         .not('published_at', 'is', null)
-        .order('published_at', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(12);
 
       if (data) {
@@ -60,7 +59,6 @@ export default function RecentBlogsGrid({
     fetchPosts();
   }, []);
 
-  // Check scroll position to show/hide arrows
   const checkScroll = () => {
     const container = scrollContainerRef.current;
     if (container) {
@@ -71,11 +69,10 @@ export default function RecentBlogsGrid({
     }
   };
 
-  // Scroll left or right by one card width
   const scroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (container) {
-      const cardWidth = isSmallScreen ? 180 : 280; // Approximate card width + gap
+      const cardWidth = isSmallScreen ? 180 : 280;
       const scrollAmount = cardWidth;
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
@@ -88,7 +85,7 @@ export default function RecentBlogsGrid({
     const container = scrollContainerRef.current;
     if (container) {
       container.addEventListener("scroll", checkScroll);
-      checkScroll(); // Initial check
+      checkScroll();
       return () => container.removeEventListener("scroll", checkScroll);
     }
   }, [posts]);
@@ -140,7 +137,6 @@ export default function RecentBlogsGrid({
     flex: 1,
     alignItems: "center",
     scrollBehavior: "smooth",
-    // Hide scrollbar
     scrollbarWidth: "none",
     msOverflowStyle: "none",
   } as React.CSSProperties;
