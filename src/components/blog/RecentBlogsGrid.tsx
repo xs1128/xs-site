@@ -36,7 +36,7 @@ export default function RecentBlogsGrid({
         .from('posts')
         .select('*')
         .not('published_at', 'is', null)
-        .order('created_at', { ascending: false })
+        .order('published_at', { ascending: false })
         .limit(12);
 
       if (data) {
