@@ -4,7 +4,7 @@
  */
 export const siteConfig = {
   name: 'Blog',
-  title: 'Blog — downtime & inspiration',
+  title: 'Blog | downtime & inspiration',
   description: 'Personal blog for downtime & inspiration. Posts, series, and a 3D terminal cube.',
   // No trailing slash. Falls back to localhost in dev.
   url: (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000').replace(/\/$/, ''),

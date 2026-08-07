@@ -12,7 +12,7 @@ type Particle = { x: number; y: number; z: number; speed: number; offset: number
 
 const PARTICLE_COUNT = 50;
 
-// Decorative scatter — generated once at module load, so Math.random never
+// Decorative scatter, generated once at module load, so Math.random never
 // runs during render (pure render) and there's no setState-in-effect.
 const PARTICLES: Particle[] = Array.from({ length: PARTICLE_COUNT }, () => ({
   x: (Math.random() - 0.5) * 15,

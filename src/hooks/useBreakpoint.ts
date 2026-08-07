@@ -4,7 +4,7 @@ import { breakpoints } from '@/styles/breakpoints'
 /**
  * Custom hook for responsive breakpoint detection.
  * Uses useSyncExternalStore so the value is correct on first client render
- * (no flash) and SSR-safe — no setState-in-effect.
+ * (no flash) and SSR-safe, with no setState-in-effect.
  */
 export function useBreakpoint(breakpointKey: keyof typeof breakpoints = 'md'): boolean {
   const query = `(min-width: ${breakpoints[breakpointKey]})`

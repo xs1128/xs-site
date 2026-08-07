@@ -27,7 +27,7 @@ export function calculateReadTime(content: string): number {
  * derived from the SAME text the renderer ends up showing.
  *
  * Without this, `## Why \`yt-dlp\`?` slugs from raw markdown ("why-yt-dlp")
- * while the rendered <h2> slugs from "[object Object]" — the two never match,
+ * while the rendered <h2> slugs from "[object Object]", so the two never match,
  * breaking both scroll-to-section and active highlighting.
  */
 export function stripInlineMarkdown(text: string): string {

@@ -130,7 +130,7 @@ export default function OtherPosts({ posts, loading = false }: OtherPostsProps) 
     paddingLeft: spacing.lg,
   }
 
-  // Mono accent eyebrow — a recommendation signal. Kept as a real <h3> for the
+  // Mono accent eyebrow, a recommendation signal. Kept as a real <h3> for the
   // heading outline. (The old heading used colors.text, invisible on the dark bg.)
   const headingStyle: React.CSSProperties = {
     fontFamily: FONTS.mono,

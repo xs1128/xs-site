@@ -136,7 +136,7 @@ export default async function PostPage({ params }: PageProps) {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
 
-  // Reuses the cached query — no extra DB round-trip beyond the page render.
+  // Reuses the cached query, no extra DB round-trip beyond the page render.
   const post = await getPostBySlug(slug)
 
   if (!post) {

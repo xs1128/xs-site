@@ -4,7 +4,7 @@ Guidance for Claude Code (claude.ai/code) in this repo.
 
 ## Overview
 
-Public blog frontend. Next.js + TypeScript + Supabase. Shows posts, series, interactive 3D terminal cube. Read-only — displays Supabase content.
+Public blog frontend. Next.js + TypeScript + Supabase. Shows posts, series, interactive 3D terminal cube. Read-only, displays Supabase content.
 
 ## Note
 

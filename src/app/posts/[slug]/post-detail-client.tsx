@@ -86,7 +86,7 @@ export default function PostDetailClient({
     transition: 'opacity 0.3s ease',
     // Sticky so the TOC follows the page; align-self keeps the flex item from
     // stretching to row height (which would defeat sticky). Caps at viewport
-    // height and stops at the content container's bottom — never over header
+    // height and stops at the content container's bottom, never over header
     // or footer.
     ...(isMobile
       ? {}

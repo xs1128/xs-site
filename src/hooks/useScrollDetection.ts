@@ -16,7 +16,7 @@ const PROGRESS_EPSILON = 0.1
 // Fraction of the viewport height by which we shift the progress START anchor
 // UP, so the bar begins filling *before* the article top reaches the viewport
 // top. With 0.5 the bar starts moving once the article top is within half a
-// viewport of the top — i.e. roughly when the article first scrolls into the
+// viewport of the top, i.e. roughly when the article first scrolls into the
 // lower half of the screen, while the header/hero is still partly visible.
 // This avoids the "bar sits at 0% through the whole header" feel the old
 // articleTop-only anchor produced. Expressed as a fraction (not a fixed px
@@ -44,7 +44,7 @@ const PROGRESS_START_OFFSET_VH = 0.5
  * smoothness: the bar eases instead of snapping (no jitter) without the lag a CSS
  * transition would add.
  *
- * When `reducedMotion` is true, interpolation is skipped entirely — the displayed
+ * When `reducedMotion` is true, interpolation is skipped entirely, so the displayed
  * value snaps to the target with no easing loop.
  *
  * Recomputes on scroll, resize, and element reflow (late-loading images/fonts)
@@ -57,7 +57,7 @@ export function useScrollProgress(
   const [scrollProgress, setScrollProgress] = useState(0)
   const tickingRef = useRef(false)
   // Latest measured target (0..100). Written by the scroll handler, read by the
-  // easing loop. A ref so updates don't trigger renders — only the loop does.
+  // easing loop. A ref so updates don't trigger renders; only the loop does.
   const targetProgressRef = useRef(0)
   // Current displayed value, mirrored in a ref so the easing loop can read it
   // without depending on the state value (avoids stale closures / restarts).
@@ -79,7 +79,7 @@ export function useScrollProgress(
       const next = displayed + (target - displayed) * PROGRESS_SMOOTHING
 
       // Intentionally tests `next` (not `displayed`) so the final written value
-      // snaps cleanly to target — keep this when refactoring or convergence breaks.
+      // snaps cleanly to target. Keep this when refactoring or convergence breaks.
       if (Math.abs(target - next) <= PROGRESS_EPSILON) {
         // Close enough: snap to target and stop the loop to save frames.
         setDisplayed(target)

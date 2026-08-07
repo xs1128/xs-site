@@ -6,7 +6,7 @@ import { cache } from 'react'
  *
  * Unlike the cookie-based server client, this does NOT call `cookies()`, so
  * routes that use it stay statically renderable (SSG/ISR). All reads go through
- * the anon key and are gated by RLS — exactly what a public blog needs.
+ * the anon key and are gated by RLS, exactly what a public blog needs.
  *
  * Wrapped in React `cache()` so the client is created once per server request.
  */
