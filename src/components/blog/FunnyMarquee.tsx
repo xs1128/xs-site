@@ -1,12 +1,25 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import type { FunnyPicture } from "@/types/post";
-import { TRANSITIONS } from "@/styles/animations";
+import { TIMING, TRANSITIONS } from "@/styles/animations";
 import { FONTS, clamp, spacing } from "@/styles/typography";
 
-// Constants
-const SCROLL_SPEED = 40; // Pixels per second (2.6x faster than before)
+const SCROLL_SPEED = 40; // Pixels per second
+const DUPLICATE_SETS = 3; // Keeps the loop seamless
+const EXPANDED_WIDTH_RATIO = 0.8;
+const DEFAULT_ASPECT_RATIO = 3 / 2; // Fallback until real image dimensions load
+const EDGE_PADDING = 8;
+const COLLAPSED_HEIGHT = "clamp(60px, 20vh, 120px)";
+const EXPAND_TRANSITION = `0.4s ${TIMING.smooth}`;
+
+const PANEL_COLOR = "#2A2F35";
+const BORDER_COLOR = "rgba(255, 255, 255, 0.2)";
+
+interface Size {
+  width: number;
+  height: number;
+}
 
 interface FunnyMarqueeProps {
   pictures: FunnyPicture[];
@@ -14,9 +27,57 @@ interface FunnyMarqueeProps {
   onToggleCollapse?: () => void;
 }
 
-// Collapse handle component
-function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onToggle: () => void }) {
-  const handleContainerStyle: React.CSSProperties = {
+const isTouchDevice = () =>
+  'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+// Position lives in refs and is written straight to the DOM, so the ~60fps
+// loop never re-renders the photo list.
+function useMarqueeScroll() {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef(false);
+
+  useEffect(() => {
+    const content = contentRef.current;
+    if (!content) return;
+
+    let offset = 0;
+    let oneSetHeight = 0;
+    let lastTimestamp = 0;
+    let frame = 0;
+
+    const observer = new ResizeObserver(([entry]) => {
+      oneSetHeight = entry.contentRect.height / DUPLICATE_SETS;
+    });
+    observer.observe(content);
+
+    const step = (timestamp: number) => {
+      const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 0;
+      lastTimestamp = timestamp;
+
+      if (!isPausedRef.current && oneSetHeight > 0) {
+        offset = (offset + (deltaTime / 1000) * SCROLL_SPEED) % oneSetHeight;
+        content.style.transform = `translateY(-${offset}px)`;
+      }
+
+      frame = requestAnimationFrame(step);
+    };
+    frame = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, []);
+
+  const setPaused = useCallback((paused: boolean) => {
+    isPausedRef.current = paused;
+  }, []);
+
+  return { contentRef, setPaused };
+}
+
+const collapseHandleStyles = {
+  container: (isCollapsed: boolean): React.CSSProperties => ({
     position: "absolute",
     right: 0,
     top: 0,
@@ -25,17 +86,17 @@ function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onTog
     display: "flex",
     flexDirection: isCollapsed ? "column" : "row",
     alignItems: "center",
-    justifyContent: isCollapsed ? "center" : "center",
-    backgroundColor: isCollapsed ? "#2A2F35" : "transparent",
-    borderTop: isCollapsed ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
-    borderBottom: isCollapsed ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
-    borderLeft: isCollapsed ? "1px solid rgba(255, 255, 255, 0.2)" : "none",
+    justifyContent: "center",
+    backgroundColor: isCollapsed ? PANEL_COLOR : "transparent",
+    borderTop: isCollapsed ? `1px solid ${BORDER_COLOR}` : "none",
+    borderBottom: isCollapsed ? `1px solid ${BORDER_COLOR}` : "none",
+    borderLeft: isCollapsed ? `1px solid ${BORDER_COLOR}` : "none",
     borderRight: "none",
     borderRadius: "8px 0 0 8px",
     zIndex: 300,
-  };
+  }),
 
-  const textStyle: React.CSSProperties = {
+  label: (isCollapsed: boolean): React.CSSProperties => ({
     fontFamily: FONTS.primary,
     fontSize: "clamp(14px, 2.5vw, 22px)",
     fontWeight: 700,
@@ -51,9 +112,9 @@ function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onTog
     alignItems: "center",
     justifyContent: "center",
     pointerEvents: "none",
-  };
+  }),
 
-  const handleStyle: React.CSSProperties = {
+  handle: (isCollapsed: boolean): React.CSSProperties => ({
     width: "44px",
     height: "80px",
     display: "flex",
@@ -62,186 +123,210 @@ function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onTog
     cursor: "pointer",
     transition: "background-color 0.2s ease, transform 0.2s ease",
     flexShrink: 0,
-    border: "1px solid rgba(255, 255, 255, 0.2)",
+    border: `1px solid ${BORDER_COLOR}`,
     borderRadius: isCollapsed ? "0 8px 8px 0" : "8px 0 0 8px",
-    backgroundColor: "#2A2F35",
+    backgroundColor: PANEL_COLOR,
     position: "absolute",
     top: "50%",
     transform: "translateY(-50%)",
-  };
+  }),
 
-  const iconStyle: React.CSSProperties = {
+  icon: (isCollapsed: boolean): React.CSSProperties => ({
     fontSize: "24px",
     color: "#E5532C",
     fontWeight: 700,
-    transition: "transform 0.3s ease",
+    transition: TRANSITIONS.fast("transform"),
     transform: isCollapsed ? "rotate(180deg)" : "rotate(0deg)",
     fontFamily: "monospace",
-  };
+  }),
+};
+
+function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onToggle: () => void }) {
+  // Repeated above and below the handle so it reads centred when collapsed
+  const label = <div style={collapseHandleStyles.label(isCollapsed)}>RANDOM MOMENTS</div>;
 
   return (
-    <div style={handleContainerStyle}>
-      {/* Top div - RANDOM MOMENTS (only when collapsed) */}
-      {isCollapsed && <div style={textStyle}>RANDOM MOMENTS</div>}
-
-      {/* Handle */}
+    <div style={collapseHandleStyles.container(isCollapsed)}>
+      {isCollapsed && label}
       <div
-        style={handleStyle}
+        style={collapseHandleStyles.handle(isCollapsed)}
         onClick={onToggle}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#363D44";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "#2A2F35";
-        }}
+        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#363D44"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = PANEL_COLOR; }}
       >
-        <span style={iconStyle}>◀</span>
+        <span style={collapseHandleStyles.icon(isCollapsed)}>◀</span>
       </div>
-
-      {/* Bottom div - RANDOM MOMENTS (only when collapsed) */}
-      {isCollapsed && <div style={textStyle}>RANDOM MOMENTS</div>}
+      {isCollapsed && label}
     </div>
   );
 }
 
-export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCollapse }: FunnyMarqueeProps) {
-  // Clean state - no refs mixed with state
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [oneSetHeight, setOneSetHeight] = useState(0);
-  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
-  const [imageDimensions, setImageDimensions] = useState<Map<number, { width: number; height: number }>>(new Map());
+const photoStyles = {
+  // Slot grows with the photo so neighbours are pushed aside rather than covered
+  slot: (expandedSize: Size | null): React.CSSProperties => ({
+    position: "relative",
+    width: "100%",
+    height: expandedSize ? `${expandedSize.height}px` : COLLAPSED_HEIGHT,
+    flexShrink: 0,
+    cursor: "pointer",
+    transition: TRANSITIONS.marqueeExpand,
+  }),
 
-  // Only refs for direct DOM access
-  const containerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const animationFrameRef = useRef<number>(null);
-  const lastTimeRef = useRef<number>(0);
+  // Matches the photo's aspect ratio exactly, so `contain` never letterboxes
+  frame: (expandedSize: Size | null): React.CSSProperties => ({
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    width: expandedSize ? `${expandedSize.width}px` : "100%",
+    height: "100%",
+    transform: "translate(-50%, -50%)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: `width ${EXPAND_TRANSITION}`,
+  }),
 
-  // 3x duplication ensures seamless infinite loop with no visible gaps
-  const visiblePictures = [...pictures, ...pictures, ...pictures];
+  layer: (objectFit: "cover" | "contain", isVisible: boolean): React.CSSProperties => ({
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    objectFit,
+    objectPosition: "center",
+    opacity: isVisible ? 1 : 0,
+    transition: `opacity ${EXPAND_TRANSITION}`,
+    pointerEvents: "none",
+  }),
 
-  // Detect mobile device
-  const isMobileDevice = useCallback(() => {
-    return 'ontouchstart' in window || (navigator.maxTouchPoints > 0);
-  }, []);
+  fallback: {
+    position: "absolute",
+    inset: 0,
+    backgroundColor: "#444C55",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "clamp(24px, 5vw, 40px)",
+    color: "#666666",
+  } as React.CSSProperties,
 
-  // Unified interaction handler for desktop and mobile
-  const handleInteraction = useCallback((index: number | null, type: 'hover' | 'touch') => {
-    const isMobile = isMobileDevice();
+  caption: (isExpanded: boolean): React.CSSProperties => ({
+    position: "absolute",
+    inset: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.3)",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: spacing.xs,
+    padding: spacing.sm,
+    opacity: isExpanded ? 1 : 0,
+    transition: `opacity ${EXPAND_TRANSITION}`,
+    zIndex: 2,
+  }),
 
-    if (isMobile && type === 'touch') {
-      // Mobile: tap to toggle expansion and pause
-      if (expandedIndex === index) {
-        // Second tap: collapse and resume
-        setExpandedIndex(null);
-        setIsPaused(false);
-      } else {
-        // First tap: expand and pause
-        setExpandedIndex(index);
-        setIsPaused(true);
-      }
-    } else if (!isMobile && type === 'hover') {
-      // Desktop: hover expands and pauses, mouse leave collapses and resumes
-      if (index !== null) {
-        setExpandedIndex(index);
-        setIsPaused(true);
-      } else {
-        // mouse leave - collapse and resume (same as mobile second tap)
-        setExpandedIndex(null);
-        setIsPaused(false);
-      }
-    }
-  }, [expandedIndex, isMobileDevice]);
+  title: {
+    fontFamily: FONTS.primary,
+    fontSize: clamp.sm,
+    fontWeight: 700,
+    color: "#FFFFFF",
+    margin: "0",
+    lineHeight: "1.3",
+    textAlign: "center",
+    textShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
+  } as React.CSSProperties,
 
-  // Capture image natural dimensions for aspect ratio calculation
-  const handleImageLoad = useCallback((pictureId: number, imgElement: HTMLImageElement) => {
-    setImageDimensions(prev => {
-      const newMap = new Map(prev);
-      newMap.set(pictureId, {
-        width: imgElement.naturalWidth,
-        height: imgElement.naturalHeight
-      });
-      return newMap;
-    });
-  }, []);
+  meta: {
+    fontFamily: FONTS.primary,
+    fontSize: clamp.xs,
+    fontWeight: 400,
+    color: "#CCCCCC",
+    margin: "0",
+    textAlign: "center",
+    textShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
+  } as React.CSSProperties,
+};
 
-  // Infinite scroll animation - no timers, immediate resume.
-  // The rAF loop is a local function inside the effect so it doesn't
-  // self-reference a useCallback (disallowed by the react-hooks rules).
-  useEffect(() => {
-    const loop = (timestamp: number) => {
-      if (!lastTimeRef.current) {
-        lastTimeRef.current = timestamp;
-      }
+interface MarqueePhotoProps {
+  picture: FunnyPicture;
+  isExpanded: boolean;
+  expandedSize: Size | null;
+  hasError: boolean;
+  slotRef: (el: HTMLDivElement | null) => void;
+  /** Used as both <img> ref and onLoad handler, so it must tolerate repeat calls */
+  measureImage: (img: HTMLImageElement | null) => void;
+  onError: () => void;
+  onHover: (isEntering: boolean) => void;
+  onTouch: () => void;
+}
 
-      const deltaTime = timestamp - lastTimeRef.current;
-      lastTimeRef.current = timestamp;
+function MarqueePhoto({
+  picture,
+  isExpanded,
+  expandedSize,
+  hasError,
+  slotRef,
+  measureImage,
+  onError,
+  onHover,
+  onTouch,
+}: MarqueePhotoProps) {
+  const size = isExpanded ? expandedSize : null;
 
-      // Only update position if NOT paused
-      if (!isPaused && oneSetHeight > 0) {
-        setScrollPosition(prev => {
-          const newPosition = prev + (deltaTime / 1000) * SCROLL_SPEED;
-          // Reset when we've scrolled through one complete set
-          return newPosition >= oneSetHeight ? newPosition % oneSetHeight : newPosition;
-        });
-      }
+  const imageLayer = (objectFit: "cover" | "contain", isVisible: boolean) => (
+    <img
+      ref={measureImage}
+      src={picture.image}
+      alt={picture.title}
+      loading="lazy"
+      style={photoStyles.layer(objectFit, isVisible)}
+      onLoad={(e) => measureImage(e.currentTarget)}
+      onError={onError}
+    />
+  );
 
-      animationFrameRef.current = requestAnimationFrame(loop);
-    };
+  return (
+    <div
+      ref={slotRef}
+      style={photoStyles.slot(size)}
+      onTouchStart={(e) => {
+        e.preventDefault(); // Prevent mouse emulation
+        onTouch();
+      }}
+      onMouseEnter={() => onHover(true)}
+      onMouseLeave={() => onHover(false)}
+    >
+      <div style={photoStyles.frame(size)}>
+        {hasError ? (
+          <div style={photoStyles.fallback}>📸</div>
+        ) : (
+          <>
+            {/* Cropped by default, swapped for the full photo once expanded */}
+            {imageLayer("cover", !isExpanded)}
+            {imageLayer("contain", isExpanded)}
+          </>
+        )}
+        {/* Keeps pointer events so taps still toggle on mobile */}
+        <div style={photoStyles.caption(isExpanded)}>
+          <h3 style={photoStyles.title}>{picture.title}</h3>
+          <p style={photoStyles.meta}>{picture.location} · {picture.date}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-    animationFrameRef.current = requestAnimationFrame(loop);
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, [isPaused, oneSetHeight]);
-
-  // Calculate height using ResizeObserver (reliable, no setTimeout)
-  useEffect(() => {
-    if (!contentRef.current) return;
-
-    const observer = new ResizeObserver(([entry]) => {
-      const totalHeight = entry.contentRect.height;
-      const sets = visiblePictures.length / pictures.length;
-      const oneSet = totalHeight / sets;
-      setOneSetHeight(oneSet);
-    });
-
-    observer.observe(contentRef.current);
-    return () => observer.disconnect();
-  }, [visiblePictures.length, pictures.length]);
-
-  // Update DOM transform when scroll position changes
-  useEffect(() => {
-    if (contentRef.current && oneSetHeight > 0) {
-      contentRef.current.style.transform = `translateY(-${scrollPosition}px)`;
-      contentRef.current.style.willChange = "transform";
-    }
-  }, [scrollPosition, oneSetHeight]);
-
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-    };
-  }, []);
-
-  const containerStyle: React.CSSProperties = {
+const marqueeStyles = {
+  container: {
     height: "100%",
     overflow: "hidden",
     position: "relative",
-    backgroundColor: "#2A2F35",
+    backgroundColor: PANEL_COLOR,
     display: "flex",
     flexDirection: "column",
-  };
+  } as React.CSSProperties,
 
-  // Content wrapper style - handles collapse animation
-  const contentWrapperStyle: React.CSSProperties = {
+  content: (isCollapsed: boolean): React.CSSProperties => ({
     position: "relative",
     flex: 1,
     display: "flex",
@@ -249,10 +334,10 @@ export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCo
     overflow: "hidden",
     opacity: isCollapsed ? 0 : 1,
     pointerEvents: isCollapsed ? "none" : "auto",
-    transition: "opacity 0.3s ease",
-  };
+    transition: TRANSITIONS.fast("opacity"),
+  }),
 
-  const headerStyle: React.CSSProperties = {
+  header: {
     fontFamily: FONTS.primary,
     fontSize: "clamp(20px, 3vw, 28px)",
     fontWeight: 700,
@@ -261,214 +346,123 @@ export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCo
     margin: "0",
     textTransform: "uppercase",
     letterSpacing: "0.05em",
-    borderTop: "1px solid rgba(255, 255, 255, 0.2)",
-    borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+    borderTop: `1px solid ${BORDER_COLOR}`,
+    borderBottom: `1px solid ${BORDER_COLOR}`,
     flexShrink: 0,
     textAlign: "center",
     position: "relative",
     zIndex: 100,
-    backgroundColor: "#2A2F35",
-  };
+    backgroundColor: PANEL_COLOR,
+  } as React.CSSProperties,
 
-  const marqueeWrapperStyle: React.CSSProperties = {
+  viewport: {
     width: "100%",
     flex: 1,
     overflow: "hidden",
     position: "relative",
-  };
+  } as React.CSSProperties,
 
-  const marqueeContentStyle: React.CSSProperties = {
+  track: {
     padding: `${spacing.sm} clamp(6px, 1vw, 12px)`,
     display: "flex",
     flexDirection: "column",
     gap: spacing.sm,
-  };
+    willChange: "transform",
+  } as React.CSSProperties,
+};
+
+export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCollapse }: FunnyMarqueeProps) {
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [expandedSize, setExpandedSize] = useState<Size | null>(null);
+  const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
+
+  const { contentRef, setPaused } = useMarqueeScroll();
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Ref, not state: recording a ratio must not render, or the <img> ref refires in a loop
+  const aspectRatios = useRef<Map<number, number>>(new Map());
+
+  const visiblePictures = useMemo(
+    () => Array.from({ length: DUPLICATE_SETS }, () => pictures).flat(),
+    [pictures]
+  );
+
+  // As wide as the ratio allows, capped to the visible marquee height
+  const measureExpandedSize = useCallback((index: number, aspectRatio: number): Size => {
+    const slot = slotRefs.current[index];
+    const viewport = viewportRef.current;
+    if (!slot || !viewport) return { width: 0, height: 0 };
+
+    const slotRect = slot.getBoundingClientRect();
+    const maxHeight = Math.max(
+      slotRect.height,
+      viewport.getBoundingClientRect().height - EDGE_PADDING * 2
+    );
+    const width = Math.min(slotRect.width * EXPANDED_WIDTH_RATIO, maxHeight * aspectRatio);
+
+    return { width, height: width / aspectRatio };
+  }, []);
+
+  const collapse = useCallback(() => {
+    setExpandedIndex(null);
+    setExpandedSize(null);
+    setPaused(false);
+  }, [setPaused]);
+
+  const expand = useCallback((index: number) => {
+    const pictureId = visiblePictures[index].id;
+    const aspectRatio = aspectRatios.current.get(pictureId) ?? DEFAULT_ASPECT_RATIO;
+    setExpandedIndex(index);
+    setExpandedSize(measureExpandedSize(index, aspectRatio));
+    setPaused(true);
+  }, [measureExpandedSize, setPaused, visiblePictures]);
+
+  // Also runs as the <img> ref: cached images can load before React attaches onLoad
+  const measureImage = useCallback((index: number, pictureId: number, img: HTMLImageElement | null) => {
+    if (!img?.complete || !img.naturalWidth) return;
+
+    const aspectRatio = img.naturalWidth / img.naturalHeight;
+    if (aspectRatios.current.get(pictureId) === aspectRatio) return;
+    aspectRatios.current.set(pictureId, aspectRatio);
+
+    // Photo was hovered before it loaded: re-measure with the real ratio
+    if (index === expandedIndex) {
+      setExpandedSize(measureExpandedSize(index, aspectRatio));
+    }
+  }, [expandedIndex, measureExpandedSize]);
 
   return (
-    <div style={containerStyle}>
-      {/* Collapse Handle */}
+    <div style={marqueeStyles.container}>
       {onToggleCollapse && (
-        <CollapseHandle
-          isCollapsed={isCollapsed}
-          onToggle={onToggleCollapse}
-        />
+        <CollapseHandle isCollapsed={isCollapsed} onToggle={onToggleCollapse} />
       )}
 
-      {/* Content wrapper - fades out when collapsed */}
-      <div style={contentWrapperStyle}>
-        <h2 style={headerStyle}>RANDOM MOMENT</h2>
-        <div style={marqueeWrapperStyle}>
-        <div
-          ref={contentRef}
-          style={marqueeContentStyle}
-        >
-          {visiblePictures.map((picture, index) => {
-            const isExpanded = expandedIndex === index;
-            const hasError = imageErrors.has(picture.id); // Track by ID, not index
+      <div style={marqueeStyles.content(isCollapsed)}>
+        <h2 style={marqueeStyles.header}>RANDOM MOMENT</h2>
 
-            // Calculate expanded height based on image aspect ratio
-            const dimensions = imageDimensions.get(picture.id);
-            const collapsedHeight = "clamp(60px, 20vh, 120px)";
-            let expandedHeight = collapsedHeight;
-
-            if (dimensions) {
-              const { width: imgWidth, height: imgHeight } = dimensions;
-              const aspectRatio = imgWidth / imgHeight;
-
-              // Container is 30% of viewport width (from gridTemplateColumns)
-              // After scaleX(0.80), visible width = 80% of container
-              const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
-              const containerWidth = viewportWidth * 0.30;
-              const scaledWidth = containerWidth * 0.80;
-              const calculatedHeight = scaledWidth / aspectRatio;
-
-              // Cap at viewport height minus header (~80px) and spacing (~40px)
-              const maxHeight = typeof window !== 'undefined' ? window.innerHeight - 120 : 600;
-              expandedHeight = `${Math.min(calculatedHeight, maxHeight)}px`;
-            }
-
-            return (
-              <div
+        <div ref={viewportRef} style={marqueeStyles.viewport}>
+          <div ref={contentRef} style={marqueeStyles.track}>
+            {visiblePictures.map((picture, index) => (
+              <MarqueePhoto
                 key={`${picture.id}-${index}`}
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  height: isExpanded ? expandedHeight : collapsedHeight,
-                  flexShrink: 0,
-                  overflow: "visible", // Changed from hidden to allow expansion
-                  cursor: "pointer",
-                  zIndex: isExpanded ? 200 : 1, // Above header (z: 100)
-                  transition: `height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), z-index 0s`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                picture={picture}
+                isExpanded={expandedIndex === index}
+                expandedSize={expandedSize}
+                hasError={imageErrors.has(picture.id)} // Track by ID, not index
+                slotRef={(el) => { slotRefs.current[index] = el; }}
+                measureImage={(img) => measureImage(index, picture.id, img)}
+                onError={() => setImageErrors(prev => new Set(prev).add(picture.id))}
+                onHover={(isEntering) => {
+                  if (isTouchDevice()) return;
+                  if (isEntering) expand(index); else collapse();
                 }}
-                onTouchStart={(e) => {
-                  e.preventDefault(); // Prevent mouse emulation
-                  handleInteraction(index, 'touch');
+                onTouch={() => {
+                  if (expandedIndex === index) collapse(); else expand(index);
                 }}
-                onMouseEnter={() => handleInteraction(index, 'hover')}
-                onMouseLeave={() => handleInteraction(null, 'hover')}
-              >
-                <div style={{
-                  position: "relative",
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transform: isExpanded ? "scaleX(0.80)" : "scaleX(1)",
-                  transformOrigin: "center", // Changed from "left"
-                  transition: `transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)`,
-                }}>
-                  {hasError ? (
-                    <div style={{
-                      position: "absolute",
-                      top: 0,
-                      left: 0,
-                      width: "100%",
-                      height: "100%",
-                      backgroundColor: "#444C55",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "clamp(24px, 5vw, 40px)",
-                      color: "#666666"
-                    }}>📸</div>
-                  ) : (
-                    <>
-                      {/* Cover image - default state, crops to fit, fades OUT on hover/expand */}
-                      <img
-                        src={picture.image}
-                        alt={picture.title}
-                        loading="lazy"
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          objectPosition: "center",
-                          opacity: isExpanded ? 0 : 1,
-                          transition: "opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
-                          pointerEvents: "none",
-                        }}
-                        onLoad={(e) => {
-                          const img = e.currentTarget;
-                          handleImageLoad(picture.id, img);
-                        }}
-                        onError={() => setImageErrors(prev => new Set(prev).add(picture.id))}
-                      />
-                      {/* Contain image - shows full photo, fades IN on hover/expand */}
-                      <img
-                        src={picture.image}
-                        alt={picture.title}
-                        loading="lazy"
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          left: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "contain",
-                          objectPosition: "center",
-                          opacity: isExpanded ? 1 : 0,
-                          transition: "opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
-                          pointerEvents: "none",
-                        }}
-                        onLoad={(e) => {
-                          const img = e.currentTarget;
-                          handleImageLoad(picture.id, img);
-                        }}
-                        onError={() => setImageErrors(prev => new Set(prev).add(picture.id))}
-                      />
-                    </>
-                  )}
-                  {/* Overlay - no pointerEvents: "none" to allow tap interactions */}
-                  <div style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: "rgba(0, 0, 0, 0.3)",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: spacing.xs,
-                    padding: spacing.sm,
-                    opacity: isExpanded ? 1 : 0,
-                    transition: "opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
-                    zIndex: 2,
-                  }}>
-                    <h3 style={{
-                      fontFamily: FONTS.primary,
-                      fontSize: clamp.sm,
-                      fontWeight: 700,
-                      color: "#FFFFFF",
-                      margin: "0",
-                      lineHeight: "1.3",
-                      textAlign: "center",
-                      textShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
-                    }}>{picture.title}</h3>
-                    <p style={{
-                      fontFamily: FONTS.primary,
-                      fontSize: clamp.xs,
-                      fontWeight: 400,
-                      color: "#CCCCCC",
-                      margin: "0",
-                      textAlign: "center",
-                      textShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
-                    }}>{picture.location} · {picture.date}</p>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              />
+            ))}
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );
