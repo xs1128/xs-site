@@ -254,7 +254,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
         </div>
 
         <a
-          href="https://me.xsooi.com"
+          href="https://www.xsooi.com"
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClose}
@@ -298,7 +298,10 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
           </span>
         </a>
 
-        <button
+        <a
+          href="https://github.com/xs1128"
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={handleClose}
           className={`nav-item ${isClosing ? "nav-item-closing" : "nav-item-opening"}`}
           data-text="PROJECTS"
@@ -317,6 +320,8 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             transition: "transform 0.2s ease",
             animationDelay: isClosing ? "0ms" : "400ms",
             width: "100%",
+            display: "block",
+            textDecoration: "none",
           }}
         >
           <span style={{ display: "flex", alignItems: "flex-start", gap: isSmallScreen ? "2vw" : "1.5vw" }}>
@@ -336,7 +341,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
               <polyline points="17,17 17,7 7,7" />
             </svg>
           </span>
-        </button>
+        </a>
       </div>
     </div>
   );
