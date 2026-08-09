@@ -12,9 +12,9 @@ interface TerminalCubeProps {
 
 export default function TerminalCube({ stats }: TerminalCubeProps) {
   const meshRef = useRef<Mesh>(null);
+  const { postCount, seriesCount, pictureCount, lastUpdate, isLoading } = stats;
 
-  // Create textures for all 6 faces
-  const materials = useMemo(() => {
+  const textures = useMemo(() => {
     const currentYear = new Date().getFullYear();
 
     // Face configurations (order: right, left, top, bottom, front, back)
@@ -22,22 +22,22 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
       // Face 1 (right): POSTS
       {
         mainText: "POSTS",
-        valueText: stats.isLoading ? "..." : stats.postCount.toString(),
+        valueText: isLoading ? "..." : postCount.toString(),
       },
       // Face 2 (left): SERIES
       {
         mainText: "SERIES",
-        valueText: stats.isLoading ? "..." : stats.seriesCount.toString(),
+        valueText: isLoading ? "..." : seriesCount.toString(),
       },
       // Face 3 (top): LAST UPDATE
       {
         mainText: "LAST UPDATE",
-        subtext: stats.lastUpdate,
+        subtext: lastUpdate,
       },
       // Face 4 (bottom): PICTURES
       {
         mainText: "PICTURES",
-        valueText: stats.isLoading ? "..." : stats.pictureCount.toString(),
+        valueText: isLoading ? "..." : pictureCount.toString(),
       },
       // Face 5 (front): YEAR + VERSION
       {
@@ -51,27 +51,12 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
       },
     ];
 
-    // Create textures
-    const textures = faceConfigs.map(config => createFaceTexture(config));
+    return faceConfigs.map(config => createFaceTexture(config));
+  }, [postCount, seriesCount, pictureCount, lastUpdate, isLoading]);
 
-    // Create materials array (6 materials for 6 faces)
-    const mats = textures.map(texture => ({
-      map: texture,
-      roughness: 0.3,
-      metalness: 0.1,
-    }));
-
-    return mats;
-  }, [stats]);
-
-  // Clean up textures on unmount
   useEffect(() => {
-    return () => {
-      materials.forEach(mat => {
-        if (mat.map) mat.map.dispose();
-      });
-    };
-  }, [materials]);
+    return () => disposeTextures(textures);
+  }, [textures]);
 
   // Gentle auto-rotation
   useFrame((state, delta) => {
@@ -84,8 +69,8 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
     <>
       <mesh ref={meshRef} position={[0, 0, 0]}>
         <boxGeometry args={[2, 2, 2]} />
-        {materials.map((mat, index) => (
-          <meshStandardMaterial key={index} attach={`material-${index}`} {...mat} />
+        {textures.map((texture, index) => (
+          <meshLambertMaterial key={index} attach={`material-${index}`} map={texture} />
         ))}
       </mesh>
     </>

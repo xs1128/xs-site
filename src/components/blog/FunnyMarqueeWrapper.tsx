@@ -22,7 +22,8 @@ export default function FunnyMarqueeWrapper({ isCollapsed = false, onToggleColla
         .from('pictures')
         .select('*')
         .order('date_taken', { ascending: false, nullsFirst: false })
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(12);
 
       if (data) {
         const transformedPictures: FunnyPicture[] = data.map(picture => ({

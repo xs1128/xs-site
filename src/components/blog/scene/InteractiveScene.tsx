@@ -25,10 +25,11 @@ const PARTICLES: Particle[] = Array.from({ length: PARTICLE_COUNT }, () => ({
 function BackgroundParticles() {
   const particlesRef = useRef<InstancedMesh>(null);
   const dummy = useRef<Object3D>(new Object3D());
+  const tick = useRef(0);
 
-  // Animate background particles
   useFrame((state) => {
     if (!particlesRef.current || !dummy.current) return;
+    if (tick.current++ % 2) return;
 
     const time = state.clock.getElapsedTime();
 
@@ -61,13 +62,7 @@ function BackgroundParticles() {
   return (
     <instancedMesh ref={particlesRef} args={[undefined, undefined, PARTICLE_COUNT]}>
       <octahedronGeometry args={[0.1, 0]} />
-      <meshStandardMaterial
-        color={colors.accent}
-        transparent
-        opacity={0.3}
-        roughness={0.5}
-        metalness={0.5}
-      />
+      <meshLambertMaterial color={colors.accent} transparent opacity={0.3} />
     </instancedMesh>
   );
 }

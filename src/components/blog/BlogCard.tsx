@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import { isOptimizable } from "@/lib/images";
 import type { Post } from "@/types/post";
 
 interface BlogCardProps {
@@ -25,14 +27,10 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
   };
 
   const imageAreaStyle: React.CSSProperties = {
+    position: "relative",
     width: "100%",
     height: "60%", // Image takes 60% of card height
     backgroundColor: "#FFFFFF",
-    backgroundImage: post.featured_image
-      ? `url(${post.featured_image})`
-      : "none",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
     flexShrink: 0, // Prevent image from shrinking
   };
 
@@ -82,7 +80,27 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
         e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)";
       }}
     >
-      <div style={imageAreaStyle} />
+      <div style={imageAreaStyle}>
+        {post.featured_image && (
+          isOptimizable(post.featured_image) ? (
+            <Image
+              src={post.featured_image}
+              alt=""
+              fill
+              sizes={isSmallScreen ? "160px" : "200px"}
+              style={{ objectFit: "cover", objectPosition: "center" }}
+            />
+          ) : (
+            <img
+              src={post.featured_image}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center" }}
+            />
+          )
+        )}
+      </div>
       <div style={titleBarStyle}>
         <h3 style={titleStyle}>{post.title}</h3>
         <div style={metadataStyle}>
