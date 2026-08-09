@@ -15,7 +15,7 @@ export default function PostHero({ imageUrl, alt = 'Featured image', loading = f
     maxHeight: '400px',
     position: 'relative',
     marginBottom: spacing.lg,
-    borderRadius: '12px',
+    borderRadius: '8px',
     overflow: 'hidden',
     display: 'flex',
     alignItems: 'center',
@@ -27,6 +27,7 @@ export default function PostHero({ imageUrl, alt = 'Featured image', loading = f
     height: 'auto',
     maxHeight: '400px',
     objectFit: 'contain',
+    borderRadius: '8px',
   }
 
   return (
