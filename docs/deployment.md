@@ -7,6 +7,19 @@
 - **Build verification**: Always test production build before deploying
 - **Storage**: Configure Supabase storage bucket for images if using file uploads
 
+## On-Demand Revalidation
+
+Pages set `revalidate = 3600`, so CMS edits can take an hour to appear.
+`POST /api/revalidate` purges every page immediately via
+`revalidatePath('/', 'layout')`.
+
+Auth: `x-revalidate-secret` header must match `REVALIDATE_SECRET` (timing-safe
+compare); anything else returns 401. Body is ignored.
+
+Called by the admin panel's "Refresh Blog" button, which proxies through its own
+route so the secret stays server-side. A Supabase Database Webhook sending the
+same header also works.
+
 ## Debugging Tips
 
 ### Admin Panel Issues
