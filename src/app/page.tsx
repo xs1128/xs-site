@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { getHeroImageUrl } from "@/lib/supabase/queries";
+import { getHeroImage } from "@/lib/hero-image";
 import { siteConfig } from "@/lib/seo";
 import HomePageClient from "./home-client";
 
@@ -15,8 +15,8 @@ const websiteJsonLd = {
 };
 
 async function HeroImageFetcher() {
-  const heroImageUrl = await getHeroImageUrl();
-  return <HomePageClient heroImageUrl={heroImageUrl} />;
+  const { url, blurDataURL } = await getHeroImage();
+  return <HomePageClient heroImageUrl={url} heroBlurDataURL={blurDataURL} />;
 }
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
-      <Suspense fallback={<HomePageClient heroImageUrl="" />}>
+      <Suspense fallback={<HomePageClient heroImageUrl="" heroBlurDataURL={null} />}>
         <HeroImageFetcher />
       </Suspense>
     </>

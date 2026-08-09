@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import FunnyMarqueeWrapper from "@/components/blog/FunnyMarqueeWrapper";
 import RecentBlogsGrid from "@/components/blog/RecentBlogsGrid";
 import BlogExpandedContent from "@/components/blog/BlogExpandedContent";
@@ -348,7 +349,13 @@ function FullScreenNav({
   );
 }
 
-export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string }) {
+export default function HomePageClient({
+  heroImageUrl,
+  heroBlurDataURL,
+}: {
+  heroImageUrl: string;
+  heroBlurDataURL: string | null;
+}) {
   useNavAnimations();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isSwapped, setIsSwapped] = useState(false);
@@ -620,14 +627,8 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
   };
 
   const imageStyle: React.CSSProperties = {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundImage: `url(${heroImageUrl})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
+    objectFit: "cover",
+    objectPosition: "center",
     filter: "grayscale(100%) brightness(0.7) contrast(1.2)",
     zIndex: 0,
   };
@@ -681,7 +682,18 @@ export default function HomePageClient({ heroImageUrl }: { heroImageUrl: string 
             {/* Hero Card (Front) */}
             <div style={heroCardStyle}>
               {/* Monochrome Background Image */}
-              <div style={imageStyle} />
+              {heroImageUrl && (
+                <Image
+                  src={heroImageUrl}
+                  alt=""
+                  fill
+                  priority
+                  sizes="(max-width: 1375px) 80vw, 1100px"
+                  style={imageStyle}
+                  placeholder={heroBlurDataURL ? "blur" : "empty"}
+                  blurDataURL={heroBlurDataURL ?? undefined}
+                />
+              )}
 
               {/* Headline */}
               <h1 style={headlineStyle}>
