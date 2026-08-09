@@ -19,7 +19,7 @@ interface BreadcrumbsProps {
 
 /**
  * Breadcrumb trail for post/series pages. Matches the dark page theme:
- * accent links, muted current item, chevron separators.
+ * muted links, accent current item, chevron separators.
  */
 export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   if (!items.length) return null
@@ -35,16 +35,16 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   }
 
   const linkStyle: React.CSSProperties = {
-    color: colors.accent,
+    color: '#999999',
     textDecoration: 'none',
-    fontWeight: 600,
+    fontWeight: 500,
     transition: TRANSITIONS.fast('color'),
     whiteSpace: 'nowrap',
   }
 
   const currentStyle: React.CSSProperties = {
-    color: '#999999',
-    fontWeight: 500,
+    color: colors.accent,
+    fontWeight: 600,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
@@ -68,10 +68,10 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                 href={item.href}
                 style={linkStyle}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#CC4420'
+                  e.currentTarget.style.color = colors.darkText
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = colors.accent
+                  e.currentTarget.style.color = '#999999'
                 }}
               >
                 {item.label}
