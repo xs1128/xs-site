@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 import Image from "next/image";
 import FunnyMarqueeWrapper from "@/components/blog/FunnyMarqueeWrapper";
 import RecentBlogsGrid from "@/components/blog/RecentBlogsGrid";
 import BlogExpandedContent from "@/components/blog/BlogExpandedContent";
 import AnimatedButton from "@/components/ui/AnimatedButton";
 import { colors } from "@/styles/colors";
+
+const useBeforePaintEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 // Custom hook for navigation animations
 function useNavAnimations() {
@@ -365,24 +367,27 @@ export default function HomePageClient({
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMarqueeCollapsed, setIsMarqueeCollapsed] = useState(true);
+  const [skipTransitions, setSkipTransitions] = useState(false);
 
-  // Check for expanded=true URL parameter on mount
-  useEffect(() => {
+  // ?expanded=true is a deep link: land on the expanded state instead of
+  // travelling there, so kill the transitions for the commit that flips it.
+  useBeforePaintEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('expanded') !== 'true') return;
 
-    // Defer the state burst out of the effect body (avoids synchronous
-    // setState-in-effect) and into the next frame.
-    const raf = requestAnimationFrame(() => {
-      setIsAnimating(true);
-      setIsSwapped(true);
-      setIsExpanded(true);
-      setTimeout(() => {
-        setNavDroppedIn(true);
-        setTimeout(() => setIsAnimating(false), 400);
-      }, 800);
+    setSkipTransitions(true);
+    setIsSwapped(true);
+    setIsExpanded(true);
+    setNavDroppedIn(true);
+
+    let inner = 0;
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setSkipTransitions(false));
     });
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(outer);
+      cancelAnimationFrame(inner);
+    };
   }, []);
 
   useEffect(() => {
@@ -425,6 +430,8 @@ export default function HomePageClient({
     }
   };
 
+  const transition = (value: string) => (skipTransitions ? "none" : value);
+
   const containerStyle: React.CSSProperties = {
     position: "relative",
     minHeight: "100vh",
@@ -444,7 +451,7 @@ export default function HomePageClient({
     overflow: "hidden",
     overflowX: "hidden",
     borderRadius: isExpanded ? "0" : "12px",
-    transition: "width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)",
+    transition: transition("width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
     willChange: isAnimating ? "width, height, border-radius" : "auto",
   };
 
@@ -455,7 +462,7 @@ export default function HomePageClient({
     width: isExpanded ? "100%" : "100%",
     height: "100%",
     borderRadius: "0px",
-    transition: "transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), left 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)",
+    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), left 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
     transform: "translateX(-50%)",
   };
 
@@ -472,9 +479,11 @@ export default function HomePageClient({
       : "clamp(20px, 3vh, 40px) clamp(30px, 5vw, 60px)",
     zIndex: 9999,
     backgroundColor: isExpanded ? colors.background : "transparent", // Use vintage yellow from color scheme
-    transition: isExpanded
-      ? "background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"
-      : "background-color 0.8s ease, padding 0.8s ease, opacity 0.2s ease",
+    transition: transition(
+      isExpanded
+        ? "background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"
+        : "background-color 0.8s ease, padding 0.8s ease, opacity 0.2s ease"
+    ),
     opacity: navDroppedIn ? 1 : isSwapped ? 0 : (isAtTop ? 1 : 0),
     pointerEvents: navDroppedIn ? "auto" : isSwapped ? "none" : (isAtTop ? "auto" : "none"),
     transform: "translateY(0)",
@@ -495,7 +504,7 @@ export default function HomePageClient({
     color: "#2A2F35",
     textDecoration: "none",
     cursor: "pointer",
-    transition: "opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s",
+    transition: transition("opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"),
     display: "flex",
     alignItems: "center",
     gap: "clamp(4px, 0.5vw, 8px)",
@@ -512,7 +521,7 @@ export default function HomePageClient({
     color: "#2A2F35",
     letterSpacing: "0.05em",
     opacity: !isSwapped || navDroppedIn ? 1 : 0,
-    transition: "opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s",
+    transition: transition("opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"),
     pointerEvents: navDroppedIn ? "auto" : (isSwapped ? "none" : (isAtTop ? "auto" : "none")),
     transform: navDroppedIn ? "translateY(0)" : (isSwapped ? "translateY(0)" : "translateY(10px)"),
     transformOrigin: "top",
@@ -525,7 +534,7 @@ export default function HomePageClient({
     color: "#2A2F35",
     textDecoration: "none",
     cursor: "pointer",
-    transition: "color 0.3s ease, opacity 0.2s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s",
+    transition: transition("color 0.3s ease, opacity 0.2s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"),
     opacity: !isSwapped || navDroppedIn ? 1 : 0,
     pointerEvents: navDroppedIn ? "auto" : (isSwapped ? "none" : (isAtTop ? "auto" : "none")),
     transform: navDroppedIn ? "translateY(0)" : (isSwapped ? "translateY(0)" : "translateY(10px)"),
@@ -542,7 +551,7 @@ export default function HomePageClient({
     alignItems: "center",
     flex: 1,
     padding: isExpanded ? "0" : "0",
-    transition: "padding 0.3s ease",
+    transition: transition("padding 0.3s ease"),
     width: "100%",
     overflowX: "hidden",
   };
@@ -569,7 +578,7 @@ export default function HomePageClient({
     transform: isSwapped ? "translateX(-50%) translateY(-100%)" : "translateX(-50%) translateY(0)",
     backgroundColor: "#FFFFFF",
     zIndex: 1,
-    transition: "transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)",
+    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
     willChange: isAnimating ? "transform" : "auto",
   };
 
@@ -582,7 +591,7 @@ export default function HomePageClient({
     zIndex: 1,
     paddingTop: isExpanded ? "clamp(40px, 7vh, 64px)" : "0",
     transform: isSwapped ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(100%)",
-    transition: "transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), padding-top 0.8s ease, grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)",
+    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), padding-top 0.8s ease, grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)"),
     willChange: isAnimating ? "transform, padding-top, grid-template-columns" : "auto",
   };
 
