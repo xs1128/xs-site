@@ -80,7 +80,7 @@ export default function PostDetailClient({
   const sidebarStyle: React.CSSProperties = {
     width: isMobile ? '0%' : '18%',
     flexShrink: 0,
-    display: 'block',
+    display: isMobile ? 'none' : 'block',
     opacity: isMobile ? 0 : 1,
     transition: 'opacity 0.3s ease',
     // Sticky so the TOC follows the page; align-self keeps the flex item from
