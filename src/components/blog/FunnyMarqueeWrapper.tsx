@@ -21,7 +21,8 @@ export default function FunnyMarqueeWrapper({ isCollapsed = false, onToggleColla
       const { data, error } = await supabase
         .from('pictures')
         .select('*')
-        .order('order_column', { ascending: false, nullsFirst: false });
+        .order('date_taken', { ascending: false, nullsFirst: false })
+        .order('created_at', { ascending: false });
 
       if (data) {
         const transformedPictures: FunnyPicture[] = data.map(picture => ({
