@@ -23,10 +23,10 @@ export default function PostHero({ imageUrl, alt = 'Featured image', loading = f
   }
 
   const imageStyle: React.CSSProperties = {
-    width: '100%',
-    height: 'auto',
+    maxWidth: '100%',
     maxHeight: '400px',
-    objectFit: 'contain',
+    width: 'auto',
+    height: 'auto',
     borderRadius: '8px',
   }
 

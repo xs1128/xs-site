@@ -9,7 +9,6 @@ export interface HeroImage {
   blurDataURL: string | null
 }
 
-// Runs at build/revalidate time, so the inlined placeholder costs the visitor nothing.
 export const getHeroImage = cache(async (): Promise<HeroImage> => {
   const url = await getHeroImageUrl()
   if (!url) return { url: '', blurDataURL: null }
