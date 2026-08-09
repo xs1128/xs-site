@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import type { Heading, Post, SeriesDetail } from '@/types/post'
+import type { Heading, Post, PostLink, SeriesDetail } from '@/types/post'
 import BlogPageHeader from '@/components/blog/BlogPageHeader'
 import ReadingProgressBar from '@/components/blog/ReadingProgressBar'
 import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs'
@@ -13,7 +13,7 @@ import TagList from '@/components/blog/TagList'
 import OtherPosts from '@/components/blog/OtherPosts'
 import PostNavigation from '@/components/blog/PostNavigation'
 import FullScreenNav from '@/components/ui/FullScreenNav'
-import { SkeletonHero, SkeletonText } from '@/components/skeleton'
+import { SkeletonHero } from '@/components/skeleton'
 import { useIsMobile } from '@/hooks/useBreakpoint'
 import { useScrollProgress, useFooterVisibility } from '@/hooks/useScrollDetection'
 import { useReducedMotion } from '@/hooks/useReducedMotion'
@@ -25,6 +25,8 @@ interface PostDetailClientProps {
   seriesData: SeriesDetail[]
   headings: Heading[]
   relatedPosts: Post[]
+  prevPost?: PostLink | null
+  nextPost?: PostLink | null
 }
 
 export default function PostDetailClient({
@@ -32,13 +34,11 @@ export default function PostDetailClient({
   seriesData,
   headings,
   relatedPosts,
+  prevPost = null,
+  nextPost = null,
 }: PostDetailClientProps) {
   // Check if we're in a loading state (empty post object)
   const isLoading = !post || !post.id
-  const [prevNext, setPrevNext] = useState<{
-    prev: { title: string; slug: string } | null
-    next: { title: string; slug: string } | null
-  }>({ prev: null, next: null })
 
   const [isNavOpen, setIsNavOpen] = useState(false)
   const articleRef = useRef<HTMLDivElement>(null)
@@ -65,37 +65,14 @@ export default function PostDetailClient({
 
   const contentContainerStyle: React.CSSProperties = {
     display: 'flex',
-    gap: isMobile ? '0' : spacing.md,
     maxWidth: '1400px',
     margin: '0 auto',
-    padding: isMobile ? `${spacing.md} 36px` : spacing.lg,
     flex: 1,
     position: 'relative',
     width: '100%',
     // Intentionally no overflowX: keep the window as the single scroll root so
     // position: sticky on the sidebar works. The main column uses minWidth: 0
     // so wide children stay contained instead of forcing horizontal scroll.
-  }
-
-  const sidebarStyle: React.CSSProperties = {
-    width: isMobile ? '0%' : '18%',
-    flexShrink: 0,
-    display: isMobile ? 'none' : 'block',
-    opacity: isMobile ? 0 : 1,
-    transition: 'opacity 0.3s ease',
-    // Sticky so the TOC follows the page; align-self keeps the flex item from
-    // stretching to row height (which would defeat sticky). Caps at viewport
-    // height and stops at the content container's bottom, never over header
-    // or footer.
-    ...(isMobile
-      ? {}
-      : {
-          position: 'sticky' as const,
-          top: '88px',
-          alignSelf: 'flex-start' as const,
-          maxHeight: 'calc(100vh - 104px)',
-          overflowY: 'auto' as const,
-        }),
   }
 
   const contentStyle: React.CSSProperties = {
@@ -107,18 +84,13 @@ export default function PostDetailClient({
     minWidth: 0,
   }
 
-  const mainContentStyle: React.CSSProperties = {
-    padding: isMobile ? `0 0 ${spacing.md}` : spacing.lg,
-  }
-
-  // Trail: Home › {parent series | Blog} › {post}. Series parent lets readers
-  // jump to sibling posts; falls back to the expanded blog listing.
+  // Series level lets readers jump to sibling posts; omitted for standalone posts.
   const parentSeries = seriesData?.[0]
   const breadcrumbs: Crumb[] = [
-    { label: 'Home', href: '/' },
-    parentSeries
-      ? { label: parentSeries.title, href: `/series/${parentSeries.slug}` }
-      : { label: 'Blog', href: '/?expanded=true' },
+    { label: 'All Posts', href: '/?expanded=true' },
+    ...(parentSeries
+      ? [{ label: parentSeries.title, href: `/series/${parentSeries.slug}` }]
+      : []),
     { label: post.title },
   ]
 
@@ -134,16 +106,19 @@ export default function PostDetailClient({
         <BlogPageHeader onMenuClick={() => setIsNavOpen(true)} />
 
       {/* Content Container */}
-      <div style={contentContainerStyle}>
-        {/* Left Sidebar */}
-        <aside style={sidebarStyle}>
-          <TableOfContents headings={headings} loading={isLoading} />
-          <OtherPosts posts={relatedPosts} loading={isLoading} />
-        </aside>
+      <div className="post-layout" style={contentContainerStyle}>
+        {/* CSS hides this under 768px; unmounting also drops the TOC's
+            scroll listener on mobile. */}
+        {!isMobile && (
+          <aside className="post-sidebar">
+            <TableOfContents headings={headings} loading={isLoading} />
+            <OtherPosts posts={relatedPosts} loading={isLoading} />
+          </aside>
+        )}
 
         {/* Main Content */}
         <main style={contentStyle}>
-          <div style={mainContentStyle}>
+          <div className="post-main">
             {!isLoading && <Breadcrumbs items={breadcrumbs} />}
 
             <PostHeader post={post} loading={isLoading} />
@@ -170,9 +145,9 @@ export default function PostDetailClient({
             <TagList tags={post.tags || []} loading={isLoading} />
 
             <PostNavigation
-              prevPost={prevNext.prev}
-              nextPost={prevNext.next}
-              seriesTitle={seriesData?.[0]?.title}
+              prevPost={prevPost}
+              nextPost={nextPost}
+              seriesTitle={parentSeries?.title}
             />
           </div>
         </main>

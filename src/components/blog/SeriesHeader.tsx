@@ -18,8 +18,7 @@ export default function SeriesHeader({ series, loading = false }: SeriesHeaderPr
   }
 
   const breadcrumbs: Crumb[] = [
-    { label: 'Home', href: '/' },
-    { label: 'Blog', href: '/?expanded=true' },
+    { label: 'All Posts', href: '/?expanded=true' },
     { label: series.title },
   ]
 

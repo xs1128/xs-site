@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
+import type { PostLink } from '@/types/post'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS } from '@/styles/animations'
 
 interface PostNavigationProps {
-  prevPost: { title: string; slug: string } | null
-  nextPost: { title: string; slug: string } | null
+  prevPost: PostLink | null
+  nextPost: PostLink | null
   seriesTitle?: string
 }
 

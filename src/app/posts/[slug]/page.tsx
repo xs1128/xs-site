@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
-import { getPostBySlug, getRelatedPosts, getAllPostSlugs } from '@/lib/supabase/queries'
+import { getPostBySlug, getRelatedPosts, getAllPostSlugs, getSeriesBySlug } from '@/lib/supabase/queries'
 import { extractHeadings, calculateReadTime } from '@/lib/utils/post'
 import type { Metadata } from 'next'
 import PostDetailClient from './post-detail-client'
 import type { Heading } from '@/types/post'
-import type { Post, SeriesDetail } from '@/types/post'
+import type { Post, PostLink, SeriesDetail } from '@/types/post'
 import { siteConfig, absoluteUrl } from '@/lib/seo'
 
 // ISR: posts render statically and re-validate hourly.
@@ -56,17 +56,30 @@ async function PostDataFetcher({ slug }: { slug: string }) {
     posts: [],
   })) || []
 
-  // Mirrors the visual breadcrumb trail for rich-result eligibility.
   const parentSeries = seriesData[0]
+
+  // Cached query, shared with the series page render.
+  const seriesPosts = parentSeries
+    ? (await getSeriesBySlug(parentSeries.slug))?.posts ?? []
+    : []
+  const currentIndex = seriesPosts.findIndex((p: Post) => p.slug === slug)
+  const toLink = (p: Post): PostLink => ({ title: p.title, slug: p.slug })
+  const prevPost = currentIndex > 0 ? toLink(seriesPosts[currentIndex - 1]) : null
+  const nextPost =
+    currentIndex >= 0 && currentIndex < seriesPosts.length - 1
+      ? toLink(seriesPosts[currentIndex + 1])
+      : null
+
+  // Mirrors the visual breadcrumb trail for rich-result eligibility.
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
-      parentSeries
-        ? { '@type': 'ListItem', position: 2, name: parentSeries.title, item: absoluteUrl(`/series/${parentSeries.slug}`) }
-        : { '@type': 'ListItem', position: 2, name: 'Blog', item: absoluteUrl('/?expanded=true') },
-      { '@type': 'ListItem', position: 3, name: post.title, item: absoluteUrl(`/posts/${slug}`) },
+      { '@type': 'ListItem', position: 1, name: 'All Posts', item: absoluteUrl('/?expanded=true') },
+      ...(parentSeries
+        ? [{ '@type': 'ListItem', position: 2, name: parentSeries.title, item: absoluteUrl(`/series/${parentSeries.slug}`) }]
+        : []),
+      { '@type': 'ListItem', position: parentSeries ? 3 : 2, name: post.title, item: absoluteUrl(`/posts/${slug}`) },
     ],
   }
 
@@ -104,6 +117,8 @@ async function PostDataFetcher({ slug }: { slug: string }) {
         seriesData={seriesData}
         headings={headings}
         relatedPosts={relatedPosts}
+        prevPost={prevPost}
+        nextPost={nextPost}
       />
     </>
   )

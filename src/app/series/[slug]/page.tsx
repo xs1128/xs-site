@@ -29,9 +29,8 @@ export default async function SeriesPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: absoluteUrl('/') },
-      { '@type': 'ListItem', position: 2, name: 'Blog', item: absoluteUrl('/?expanded=true') },
-      { '@type': 'ListItem', position: 3, name: seriesData.title, item: absoluteUrl(`/series/${slug}`) },
+      { '@type': 'ListItem', position: 1, name: 'All Posts', item: absoluteUrl('/?expanded=true') },
+      { '@type': 'ListItem', position: 2, name: seriesData.title, item: absoluteUrl(`/series/${slug}`) },
     ],
   }
 

@@ -27,6 +27,11 @@ export interface FunnyPicture {
   date: string;
 }
 
+export interface PostLink {
+  title: string;
+  slug: string;
+}
+
 export interface Heading {
   id: string;
   text: string;

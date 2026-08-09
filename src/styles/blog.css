@@ -74,6 +74,42 @@
   color: #666;
 }
 
+/* Post Detail Layout. CSS, not isMobile inline styles, so SSR HTML already
+   matches the viewport and mobile skips the desktop-layout flash. */
+.post-layout {
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+}
+
+.post-main {
+  padding: var(--spacing-lg);
+}
+
+.post-sidebar {
+  width: 18%;
+  flex-shrink: 0;
+  position: sticky;
+  top: 88px;
+  align-self: flex-start;
+  max-height: calc(100vh - 104px);
+  overflow-y: auto;
+}
+
+@media (max-width: 767px) {
+  .post-layout {
+    gap: 0;
+    padding: var(--spacing-md) 36px;
+  }
+
+  .post-main {
+    padding: var(--spacing-lg) 0 var(--spacing-md);
+  }
+
+  .post-sidebar {
+    display: none;
+  }
+}
+
 /* Table of Contents */
 .toc-container {
   position: sticky;
