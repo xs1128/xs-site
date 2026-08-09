@@ -171,8 +171,10 @@ const codeStyle: React.CSSProperties = {
   margin: '0 0.2em',
   borderRadius: '4px',
   color: '#F0A085',
-  wordBreak: 'break-all',
+  wordBreak: 'normal',
   overflowWrap: 'break-word',
+  boxDecorationBreak: 'clone',
+  WebkitBoxDecorationBreak: 'clone',
 }
 
 const imageStyle: React.CSSProperties = {

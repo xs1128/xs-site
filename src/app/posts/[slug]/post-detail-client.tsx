@@ -68,7 +68,7 @@ export default function PostDetailClient({
     gap: isMobile ? '0' : spacing.md,
     maxWidth: '1400px',
     margin: '0 auto',
-    padding: spacing.lg,
+    padding: isMobile ? `${spacing.md} 36px` : spacing.lg,
     flex: 1,
     position: 'relative',
     width: '100%',
@@ -108,7 +108,7 @@ export default function PostDetailClient({
   }
 
   const mainContentStyle: React.CSSProperties = {
-    padding: spacing.lg,
+    padding: isMobile ? `0 0 ${spacing.md}` : spacing.lg,
   }
 
   // Trail: Home › {parent series | Blog} › {post}. Series parent lets readers

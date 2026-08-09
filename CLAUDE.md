@@ -51,6 +51,11 @@ Detail: **[3D Animation](./docs/3d-animation.md)**.
 - `src/components/blog/scene/useTerminalStats.ts` - Data hook
 - `src/components/blog/scene/createFaceTexture.ts` - Texture helper
 
+## Code Style
+
+- Minimal code change. Smallest edit that solves the ask; no refactors, no new abstractions, no extra files.
+- Trim comments. Only keep a comment when the "why" is non-obvious. Put reasoning in the commit message.
+
 ## Usage
 
 Starting any task:
