@@ -48,7 +48,6 @@ src/
 │   │   ├── CodeBlock.tsx           # Syntax highlighted code blocks
 │   │   ├── TableOfContents.tsx     # Sidebar TOC with scroll tracking
 │   │   ├── TagList.tsx             # Post tags display
-│   │   ├── SeriesBanner.tsx        # Series navigation banner
 │   │   ├── PostNavigation.tsx      # Previous/next post navigation
 │   │   ├── OtherPosts.tsx          # Related posts sidebar
 │   │   ├── LeftSidebar.tsx         # Left sidebar wrapper

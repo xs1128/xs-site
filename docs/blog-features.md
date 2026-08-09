@@ -46,15 +46,6 @@ Features:
 - Smooth scroll to section on click
 - Hidden on small screens (< 768px)
 
-### Series Navigation
-
-**Location**: `src/components/blog/SeriesBanner.tsx`
-
-Features:
-- Shows series name and description
-- Lists all posts in series with current post highlighted
-- Click to navigate to other posts in series
-
 ### Post Navigation
 
 **Location**: `src/components/blog/PostNavigation.tsx`

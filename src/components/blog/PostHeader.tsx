@@ -1,12 +1,11 @@
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
-import type { Post, SeriesDetail } from '@/types/post'
+import type { Post } from '@/types/post'
 import { formatDate, formatReadTime } from '@/lib/utils/post'
 import { SkeletonText } from '@/components/skeleton'
 
 interface PostHeaderProps {
   post: Post
-  series?: SeriesDetail[]
   loading?: boolean
 }
 

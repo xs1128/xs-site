@@ -11,7 +11,6 @@ import PostContent from '@/components/blog/PostContent'
 import TableOfContents from '@/components/blog/TableOfContents'
 import TagList from '@/components/blog/TagList'
 import OtherPosts from '@/components/blog/OtherPosts'
-import SeriesBanner from '@/components/blog/SeriesBanner'
 import PostNavigation from '@/components/blog/PostNavigation'
 import FullScreenNav from '@/components/ui/FullScreenNav'
 import { SkeletonHero, SkeletonText } from '@/components/skeleton'
@@ -147,20 +146,13 @@ export default function PostDetailClient({
           <div style={mainContentStyle}>
             {!isLoading && <Breadcrumbs items={breadcrumbs} />}
 
-            <PostHeader post={post} series={seriesData} loading={isLoading} />
+            <PostHeader post={post} loading={isLoading} />
 
             {isLoading ? (
               <SkeletonHero />
             ) : post.featured_image ? (
               <PostHero imageUrl={post.featured_image} alt={post.title} />
             ) : null}
-
-            {seriesData && seriesData.length > 0 && (
-              <SeriesBanner
-                series={seriesData[0]}
-                currentPostSlug={post.slug}
-              />
-            )}
 
             {post.content && (
               <div ref={articleRef}>
