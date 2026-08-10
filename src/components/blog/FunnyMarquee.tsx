@@ -6,6 +6,7 @@ import { isOptimizable } from "@/lib/images";
 import type { FunnyPicture } from "@/types/post";
 import { TIMING, TRANSITIONS } from "@/styles/animations";
 import { FONTS, clamp, spacing } from "@/styles/typography";
+import { SkeletonElement } from "@/components/skeleton";
 
 const SCROLL_SPEED = 40; // Pixels per second
 const duplicateSetsFor = (count: number) => (count >= 8 ? 2 : 3);
@@ -28,6 +29,7 @@ interface Size {
 interface FunnyMarqueeProps {
   pictures: FunnyPicture[];
   isCollapsed?: boolean;
+  isResizing?: boolean;
   onToggleCollapse?: () => void;
 }
 
@@ -367,6 +369,7 @@ const marqueeStyles = {
     backgroundColor: PANEL_COLOR,
     display: "flex",
     flexDirection: "column",
+    contain: "layout paint",
   } as React.CSSProperties,
 
   content: (isCollapsed: boolean): React.CSSProperties => ({
@@ -405,22 +408,50 @@ const marqueeStyles = {
     position: "relative",
   } as React.CSSProperties,
 
-  track: (isRunning: boolean): React.CSSProperties => ({
+  track: (isRunning: boolean, isResizing: boolean): React.CSSProperties => ({
     padding: `${spacing.sm} clamp(6px, 1vw, 12px)`,
     display: "flex",
     flexDirection: "column",
     gap: spacing.sm,
     willChange: isRunning ? "transform" : "auto",
+    contentVisibility: isResizing ? "hidden" : "visible",
   }),
+
+  skeletonTrack: {
+    position: "absolute",
+    inset: 0,
+    padding: `${spacing.sm} clamp(6px, 1vw, 12px)`,
+    display: "flex",
+    flexDirection: "column",
+    gap: spacing.sm,
+    pointerEvents: "none",
+  } as React.CSSProperties,
 };
 
-export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCollapse }: FunnyMarqueeProps) {
+const SKELETON_SLOTS = 10;
+
+function MarqueeSkeleton() {
+  return (
+    <div style={marqueeStyles.skeletonTrack}>
+      {Array.from({ length: SKELETON_SLOTS }, (_, index) => (
+        <SkeletonElement key={index} height={COLLAPSED_HEIGHT} style={{ flexShrink: 0 }} />
+      ))}
+    </div>
+  );
+}
+
+export default function FunnyMarquee({
+  pictures,
+  isCollapsed = false,
+  isResizing = false,
+  onToggleCollapse,
+}: FunnyMarqueeProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [expandedSize, setExpandedSize] = useState<Size | null>(null);
   const [imageErrors, setImageErrors] = useState<Set<number>>(new Set());
 
   const duplicateSets = duplicateSetsFor(pictures.length);
-  const { contentRef, setPaused, isRunning } = useMarqueeScroll(!isCollapsed, duplicateSets);
+  const { contentRef, setPaused, isRunning } = useMarqueeScroll(!isCollapsed && !isResizing, duplicateSets);
   const viewportRef = useRef<HTMLDivElement>(null);
   const slotRefs = useRef<(HTMLDivElement | null)[]>([]);
   // Ref, not state: recording a ratio must not render, or the <img> ref refires in a loop
@@ -536,7 +567,8 @@ export default function FunnyMarquee({ pictures, isCollapsed = false, onToggleCo
         <h2 style={marqueeStyles.header}>RANDOM MOMENT</h2>
 
         <div ref={viewportRef} style={marqueeStyles.viewport}>
-          <div ref={contentRef} style={marqueeStyles.track(isRunning)}>
+          {isResizing && !isCollapsed && <MarqueeSkeleton />}
+          <div ref={contentRef} style={marqueeStyles.track(isRunning, isResizing)}>
             {visiblePictures.map((picture, index) => (
               <MarqueePhoto
                 key={`${picture.id}-${index}`}

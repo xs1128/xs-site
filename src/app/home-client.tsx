@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import Image from "next/image";
 import FunnyMarqueeWrapper from "@/components/blog/FunnyMarqueeWrapper";
 import RecentBlogsGrid from "@/components/blog/RecentBlogsGrid";
@@ -9,6 +9,8 @@ import AnimatedButton from "@/components/ui/AnimatedButton";
 import { colors } from "@/styles/colors";
 
 const useBeforePaintEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+
+const MARQUEE_RESIZE_MS = 620;
 
 // Custom hook for navigation animations
 function useNavAnimations() {
@@ -367,7 +369,22 @@ export default function HomePageClient({
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
   const [isMarqueeCollapsed, setIsMarqueeCollapsed] = useState(true);
+  const [isMarqueeResizing, setIsMarqueeResizing] = useState(false);
   const [skipTransitions, setSkipTransitions] = useState(false);
+  const marqueeResizeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (marqueeResizeTimer.current) clearTimeout(marqueeResizeTimer.current);
+    };
+  }, []);
+
+  const toggleMarquee = () => {
+    setIsMarqueeCollapsed((previous) => !previous);
+    setIsMarqueeResizing(true);
+    if (marqueeResizeTimer.current) clearTimeout(marqueeResizeTimer.current);
+    marqueeResizeTimer.current = setTimeout(() => setIsMarqueeResizing(false), MARQUEE_RESIZE_MS);
+  };
 
   // ?expanded=true is a deep link: land on the expanded state instead of
   // travelling there, so kill the transitions for the commit that flips it.
@@ -592,7 +609,7 @@ export default function HomePageClient({
     paddingTop: isExpanded ? "clamp(40px, 7vh, 64px)" : "0",
     transform: isSwapped ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(100%)",
     transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), padding-top 0.8s ease, grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)"),
-    willChange: isAnimating ? "transform, padding-top, grid-template-columns" : "auto",
+    willChange: isAnimating || isMarqueeResizing ? "transform, padding-top, grid-template-columns" : "auto",
   };
 
   const tapAreaStyle: React.CSSProperties = {
@@ -731,17 +748,18 @@ export default function HomePageClient({
               {!isSmallScreen && (
                 <FunnyMarqueeWrapper
                   isCollapsed={isMarqueeCollapsed}
-                  onToggleCollapse={() => setIsMarqueeCollapsed(!isMarqueeCollapsed)}
+                  isResizing={isMarqueeResizing}
+                  onToggleCollapse={toggleMarquee}
                 />
               )}
 
               {/* Right Content */}
-              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: isExpanded ? "0" : "clamp(16px, 3vh, 32px)", gap: isExpanded ? "0" : "clamp(16px, 3vh, 32px)" }}>
+              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: isExpanded ? "0" : "clamp(16px, 3vh, 32px)", gap: isExpanded ? "0" : "clamp(16px, 3vh, 32px)", contain: "layout paint" }}>
                 {/* RECENT BLOGS Section */}
                 <RecentBlogsGrid isExpanded={isExpanded} isSmallScreen={isSmallScreen} />
 
                 {/* FEATURED SERIES & 3D ANIMATION Sections */}
-                <BlogExpandedContent isSmallScreen={isSmallScreen} />
+                <BlogExpandedContent isSmallScreen={isSmallScreen} isResizing={isMarqueeResizing} />
               </div>
             </div>
           </div>

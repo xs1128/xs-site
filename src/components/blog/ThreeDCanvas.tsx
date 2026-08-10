@@ -13,6 +13,7 @@ const RICH_SCENE_KEY = "blog:rich-scene";
 const OVERLAY_Z = 10100;
 const EXIT_MS = 200;
 const READY_TIMEOUT_MS = 8000;
+const MIN_SKELETON_MS = 900;
 
 const OVERLAY_CSS = `
 .scene-overlay {
@@ -77,6 +78,10 @@ const OVERLAY_CSS = `
   opacity: 1;
   filter: blur(0px);
 }
+.scene-canvas-fade[data-busy="true"],
+.scene-skeleton[data-busy="true"] {
+  transition-duration: 140ms;
+}
 
 .scene-skeleton {
   position: absolute;
@@ -138,22 +143,33 @@ function SceneCanvas({
   isMobile,
   rich,
   active,
+  busy = false,
 }: {
   isMobile: boolean;
   rich: boolean;
   active: boolean;
+  busy?: boolean;
 }) {
-  const [isReady, setIsReady] = useState(false);
+  const [isSceneReady, setIsSceneReady] = useState(false);
+  const [isMinElapsed, setIsMinElapsed] = useState(false);
 
   useEffect(() => {
-    if (isReady) return;
-    const timer = setTimeout(() => setIsReady(true), READY_TIMEOUT_MS);
+    const timer = setTimeout(() => setIsMinElapsed(true), MIN_SKELETON_MS);
     return () => clearTimeout(timer);
-  }, [isReady]);
+  }, []);
+
+  useEffect(() => {
+    if (isSceneReady) return;
+    const timer = setTimeout(() => setIsSceneReady(true), READY_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [isSceneReady]);
+
+  const isReady = isSceneReady && isMinElapsed;
+  const isShowing = isReady && !busy;
 
   return (
     <div className="scene-stage">
-      <div className="scene-canvas-fade" data-ready={isReady}>
+      <div className="scene-canvas-fade" data-ready={isShowing} data-busy={busy}>
         <Canvas
           camera={{
             position: (isMobile ? [0, 0, 5] : [0, 0, 4]) as [number, number, number],
@@ -162,24 +178,24 @@ function SceneCanvas({
           style={{ width: "100%", height: "100%", display: "block" }}
           resize={{ offsetSize: true }}
           dpr={[1, isMobile ? 1.5 : 2]}
-          frameloop={!isReady || active ? "always" : "never"}
+          frameloop={!isReady || (active && !busy) ? "always" : "never"}
           gl={{ toneMappingExposure: rich ? 0.62 : 1 }}
         >
           <InteractiveScene
             isMobile={isMobile}
             rich={rich}
-            onReady={() => setIsReady(true)}
+            onReady={() => setIsSceneReady(true)}
           />
         </Canvas>
       </div>
-      <div className="scene-skeleton" data-ready={isReady}>
+      <div className="scene-skeleton" data-ready={isShowing} data-busy={busy}>
         <ThreeDAssetPlaceholder isMobile={isMobile} />
       </div>
     </div>
   );
 }
 
-export default function ThreeDCanvas() {
+export default function ThreeDCanvas({ isResizing = false }: { isResizing?: boolean }) {
   const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -316,6 +332,7 @@ export default function ThreeDCanvas() {
           isMobile={isMobile}
           rich={isRich}
           active={isOnscreen && isPageVisible && !isMounted}
+          busy={isResizing}
         />
       </div>
 

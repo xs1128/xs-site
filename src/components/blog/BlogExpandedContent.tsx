@@ -17,9 +17,13 @@ const ThreeDCanvas = dynamic(() => import("./ThreeDCanvas"), {
 
 interface BlogExpandedContentProps {
   isSmallScreen?: boolean;
+  isResizing?: boolean;
 }
 
-export default function BlogExpandedContent({ isSmallScreen = false }: BlogExpandedContentProps) {
+export default function BlogExpandedContent({
+  isSmallScreen = false,
+  isResizing = false,
+}: BlogExpandedContentProps) {
   const containerStyle: React.CSSProperties = {
     flex: 1,
     display: "flex",
@@ -69,7 +73,7 @@ export default function BlogExpandedContent({ isSmallScreen = false }: BlogExpan
   return (
     <div style={containerStyle}>
       {/* Mobile: 3D Animation Section first, Desktop: Series first */}
-      {isSmallScreen && <ThreeDCanvas />}
+      {isSmallScreen && <ThreeDCanvas isResizing={isResizing} />}
 
       {/* Featured Series Section */}
       <div style={sectionStyle}>
@@ -80,7 +84,7 @@ export default function BlogExpandedContent({ isSmallScreen = false }: BlogExpan
       </div>
 
       {/* Desktop: 3D Animation Section second */}
-      {!isSmallScreen && <ThreeDCanvas />}
+      {!isSmallScreen && <ThreeDCanvas isResizing={isResizing} />}
     </div>
   );
 }

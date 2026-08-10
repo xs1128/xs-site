@@ -8,10 +8,15 @@ import { SkeletonText } from "@/components/skeleton";
 
 interface FunnyMarqueeWrapperProps {
   isCollapsed?: boolean;
+  isResizing?: boolean;
   onToggleCollapse?: () => void;
 }
 
-export default function FunnyMarqueeWrapper({ isCollapsed = false, onToggleCollapse }: FunnyMarqueeWrapperProps) {
+export default function FunnyMarqueeWrapper({
+  isCollapsed = false,
+  isResizing = false,
+  onToggleCollapse,
+}: FunnyMarqueeWrapperProps) {
   const [pictures, setPictures] = useState<FunnyPicture[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -54,5 +59,12 @@ export default function FunnyMarqueeWrapper({ isCollapsed = false, onToggleColla
     );
   }
 
-  return <FunnyMarquee pictures={pictures} isCollapsed={isCollapsed} onToggleCollapse={onToggleCollapse} />;
+  return (
+    <FunnyMarquee
+      pictures={pictures}
+      isCollapsed={isCollapsed}
+      isResizing={isResizing}
+      onToggleCollapse={onToggleCollapse}
+    />
+  );
 }
