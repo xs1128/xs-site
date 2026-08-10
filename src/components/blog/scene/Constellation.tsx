@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import {
   AdditiveBlending,
   BufferGeometry,
@@ -46,6 +47,8 @@ const EDGES: [keyof typeof STARS, keyof typeof STARS][] = [
 ];
 
 const SPREAD = 100;
+const HOVER_PAD = 18;
+const LABEL = "xs is a Sagittarius";
 const CYCLE = 26;
 const DRAW_TIME = 7;
 const HOLD_TIME = 11;
@@ -116,6 +119,21 @@ const LINE_DATA = (() => {
   return { verts, dists };
 })();
 
+const HOVER_AREA = (() => {
+  const points = Object.values(STARS);
+  const xs = points.map(([x]) => x * SPREAD);
+  const ys = points.map(([, y]) => y * SPREAD);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+
+  return {
+    center: [(minX + maxX) / 2, (minY + maxY) / 2, 0] as [number, number, number],
+    size: [maxX - minX + HOVER_PAD * 2, maxY - minY + HOVER_PAD * 2] as [number, number],
+  };
+})();
+
 type LineUniforms = Record<"uProgress" | "uOpacity", { value: number }>;
 type PointUniforms = Record<"uTime" | "uScale" | "uOpacity", { value: number }>;
 
@@ -128,6 +146,7 @@ export default function Constellation({ position, opacity = 1 }: ConstellationPr
   const dpr = useThree((state) => state.viewport.dpr);
   const lineMaterial = useRef<ShaderMaterial>(null);
   const pointMaterial = useRef<ShaderMaterial>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   const { lineGeometry, pointGeometry } = useMemo(() => {
     const { verts, dists } = LINE_DATA;
@@ -172,6 +191,14 @@ export default function Constellation({ position, opacity = 1 }: ConstellationPr
     };
   }, [lineGeometry, pointGeometry]);
 
+  useEffect(() => {
+    if (!isHovered) return;
+    document.body.style.cursor = "help";
+    return () => {
+      document.body.style.cursor = "";
+    };
+  }, [isHovered]);
+
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
     const phase = time % CYCLE;
@@ -196,6 +223,8 @@ export default function Constellation({ position, opacity = 1 }: ConstellationPr
       u.uTime.value = time;
       u.uOpacity.value = fade * opacity;
     }
+
+    if (isHovered && fade * opacity < 0.3) setIsHovered(false);
   });
 
   return (
@@ -223,6 +252,29 @@ export default function Constellation({ position, opacity = 1 }: ConstellationPr
           blending={AdditiveBlending}
         />
       </points>
+      <mesh
+        position={HOVER_AREA.center}
+        onPointerOver={(event) => {
+          event.stopPropagation();
+          setIsHovered(true);
+        }}
+        onPointerOut={() => setIsHovered(false)}
+      >
+        <planeGeometry args={HOVER_AREA.size} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false} />
+      </mesh>
+      {isHovered && (
+        <Html
+          position={HOVER_AREA.center}
+          center
+          zIndexRange={[4, 0]}
+          style={{ pointerEvents: "none" }}
+        >
+          <div className="tooltip" data-ready="true" style={{ position: "static" }}>
+            {LABEL}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }
