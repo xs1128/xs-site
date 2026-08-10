@@ -8,7 +8,11 @@ import ThreeDAssetPlaceholder from "./ThreeDAssetPlaceholder";
 // never ships in the initial bundle and only loads when this section mounts.
 const ThreeDCanvas = dynamic(() => import("./ThreeDCanvas"), {
   ssr: false,
-  loading: () => <ThreeDAssetPlaceholder />,
+  loading: () => (
+    <div style={{ flex: 1, position: "relative", minHeight: 0, overflow: "hidden" }}>
+      <ThreeDAssetPlaceholder />
+    </div>
+  ),
 });
 
 interface BlogExpandedContentProps {
@@ -65,7 +69,7 @@ export default function BlogExpandedContent({ isSmallScreen = false }: BlogExpan
   return (
     <div style={containerStyle}>
       {/* Mobile: 3D Animation Section first, Desktop: Series first */}
-      {isSmallScreen && <ThreeDCanvas isSmallScreen={isSmallScreen} />}
+      {isSmallScreen && <ThreeDCanvas />}
 
       {/* Featured Series Section */}
       <div style={sectionStyle}>
@@ -76,7 +80,7 @@ export default function BlogExpandedContent({ isSmallScreen = false }: BlogExpan
       </div>
 
       {/* Desktop: 3D Animation Section second */}
-      {!isSmallScreen && <ThreeDCanvas isSmallScreen={isSmallScreen} />}
+      {!isSmallScreen && <ThreeDCanvas />}
     </div>
   );
 }

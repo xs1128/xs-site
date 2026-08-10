@@ -70,7 +70,16 @@ export default function TerminalCube({ stats }: TerminalCubeProps) {
       <mesh ref={meshRef} position={[0, 0, 0]}>
         <boxGeometry args={[2, 2, 2]} />
         {textures.map((texture, index) => (
-          <meshLambertMaterial key={index} attach={`material-${index}`} map={texture} />
+          <meshPhongMaterial
+            key={index}
+            attach={`material-${index}`}
+            map={texture}
+            emissive="#FFFFFF"
+            emissiveMap={texture}
+            emissiveIntensity={0.55}
+            specular="#5A5A5A"
+            shininess={45}
+          />
         ))}
       </mesh>
     </>

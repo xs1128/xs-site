@@ -30,7 +30,8 @@ export function useTerminalStats() {
         // Fetch post count
         const { count: postCount } = await supabase
           .from('posts')
-          .select('*', { count: 'exact', head: true });
+          .select('*', { count: 'exact', head: true })
+          .not('published_at', 'is', null);
 
         // Fetch series count
         const { count: seriesCount } = await supabase
@@ -40,10 +41,11 @@ export function useTerminalStats() {
         // Fetch last update date
         const { data: latestPost } = await supabase
           .from('posts')
-          .select('created_at')
-          .order('created_at', { ascending: false })
+          .select('published_at')
+          .not('published_at', 'is', null)
+          .order('published_at', { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle();
 
         // Fetch picture count
         const { count: pictureCount } = await supabase
@@ -52,8 +54,8 @@ export function useTerminalStats() {
 
         // Format last update date
         let lastUpdateText = "NO POSTS";
-        if (latestPost?.created_at) {
-          const date = new Date(latestPost.created_at);
+        if (latestPost?.published_at) {
+          const date = new Date(latestPost.published_at);
           lastUpdateText = date.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',

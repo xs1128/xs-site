@@ -29,32 +29,34 @@ export function createFaceTexture(config: FaceTextConfig): THREE.CanvasTexture {
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, size, size);
 
-  // Set up glow effect
   ctx.shadowColor = '#00FF00';
-  ctx.shadowBlur = 15;
 
   // Configure font settings
   const fontFamily = "'Roboto Mono', monospace";
 
-  // Draw main text (top)
   ctx.fillStyle = '#00FF00';
-  ctx.font = `bold 36px ${fontFamily}`;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(mainText, size / 2, size * 0.25);
 
-  // Draw value text (center/large) if provided
+  // Stacked passes: each one lays another halo down before the crisp glyph
+  const glowText = (text: string, y: number, blurs: number[]) => {
+    for (const blur of blurs) {
+      ctx.shadowBlur = blur;
+      ctx.fillText(text, size / 2, y);
+    }
+  };
+
+  ctx.font = `bold 36px ${fontFamily}`;
+  glowText(mainText, size * 0.25, [14, 5]);
+
   if (valueText) {
     ctx.font = `bold 120px ${fontFamily}`;
-    ctx.shadowBlur = 25; // More glow for the value
-    ctx.fillText(valueText, size / 2, size * 0.5);
+    glowText(valueText, size * 0.5, [22, 8]);
   }
 
-  // Draw subtext (bottom) if provided
   if (subtext) {
-    ctx.shadowBlur = 15; // Reset glow
     ctx.font = `bold 36px ${fontFamily}`;
-    ctx.fillText(subtext, size / 2, size * 0.75);
+    glowText(subtext, size * 0.75, [14, 5]);
   }
 
   // Create texture from canvas
