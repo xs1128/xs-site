@@ -116,7 +116,7 @@ export default function Footer() {
             <div className="footer-heading">Links</div>
             <div className="footer-links">
               <a
-                href="https://me.xsooi.com"
+                href="https://www.xsooi.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-link"
@@ -140,7 +140,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://me.xsooi.com#contact"
+                href="https://www.xsooi.com#contact"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-link"

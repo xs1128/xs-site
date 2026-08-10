@@ -22,7 +22,7 @@ Responsive footer with profile section, navigation links, and social media icons
    - Tagline: "Building things for the web"
 
 2. **Links** (23% width on desktop):
-   - Main Site (me.xsooi.com)
+   - Main Site (www.xsooi.com)
    - Projects (projects.xsooi.com)
    - Contact me link
    - Diagonal arrow icons on hover

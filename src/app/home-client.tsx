@@ -265,7 +265,7 @@ function FullScreenNav({
         </div>
 
         <a
-          href="https://me.xsooi.com"
+          href="https://www.xsooi.com"
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClose}
