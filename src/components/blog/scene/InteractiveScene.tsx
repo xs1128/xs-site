@@ -153,6 +153,7 @@ export default function InteractiveScene({
   onReady,
 }: InteractiveSceneProps) {
   const stats = useTerminalStats();
+  const cubeRef = useRef<Mesh>(null);
   const sun = useSunPosition();
   const isNight = sun.isNight;
   const fogColor = isNight ? "#0A1428" : "#7FA6CC";
@@ -186,7 +187,11 @@ export default function InteractiveScene({
       {sun.daylight < 0.25 && (
         <>
           <StarField opacity={1 - sun.daylight / 0.25} />
-          <Constellation position={SAGITTARIUS_AT} opacity={1 - sun.daylight / 0.25} />
+          <Constellation
+            position={SAGITTARIUS_AT}
+            opacity={1 - sun.daylight / 0.25}
+            occluders={[cubeRef]}
+          />
         </>
       )}
       {isNight ? (
@@ -234,7 +239,7 @@ export default function InteractiveScene({
       <ReadySignal onReady={onReady} />
 
       {/* Terminal Cube - displays blog stats */}
-      <TerminalCube stats={stats} />
+      <TerminalCube stats={stats} meshRef={cubeRef} />
 
       {/* Camera controls for user interaction */}
       <OrbitControls

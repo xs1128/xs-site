@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useMemo, useEffect } from "react";
+import { useMemo, useEffect } from "react";
+import type { RefObject } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Mesh } from "three";
 import { createFaceTexture, disposeTextures, type FaceTextConfig } from "./createFaceTexture";
@@ -8,10 +9,10 @@ import type { TerminalStats } from "./useTerminalStats";
 
 interface TerminalCubeProps {
   stats: TerminalStats;
+  meshRef: RefObject<Mesh | null>;
 }
 
-export default function TerminalCube({ stats }: TerminalCubeProps) {
-  const meshRef = useRef<Mesh>(null);
+export default function TerminalCube({ stats, meshRef }: TerminalCubeProps) {
   const { postCount, seriesCount, pictureCount, lastUpdate, isLoading } = stats;
 
   const textures = useMemo(() => {

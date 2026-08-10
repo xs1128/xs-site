@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import type { RefObject } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import {
   AdditiveBlending,
   BufferGeometry,
   Float32BufferAttribute,
+  Object3D,
   ShaderMaterial,
   Vector3,
 } from "three";
@@ -140,9 +142,14 @@ type PointUniforms = Record<"uTime" | "uScale" | "uOpacity", { value: number }>;
 interface ConstellationProps {
   position: Vector3;
   opacity?: number;
+  occluders?: RefObject<Object3D | null>[];
 }
 
-export default function Constellation({ position, opacity = 1 }: ConstellationProps) {
+export default function Constellation({
+  position,
+  opacity = 1,
+  occluders,
+}: ConstellationProps) {
   const dpr = useThree((state) => state.viewport.dpr);
   const lineMaterial = useRef<ShaderMaterial>(null);
   const pointMaterial = useRef<ShaderMaterial>(null);
@@ -255,6 +262,7 @@ export default function Constellation({ position, opacity = 1 }: ConstellationPr
       <mesh
         position={HOVER_AREA.center}
         onPointerOver={(event) => {
+          if (event.intersections[0]?.object !== event.object) return;
           event.stopPropagation();
           setIsHovered(true);
         }}
@@ -268,6 +276,7 @@ export default function Constellation({ position, opacity = 1 }: ConstellationPr
           position={HOVER_AREA.center}
           center
           zIndexRange={[4, 0]}
+          occlude={occluders as RefObject<Object3D>[] | undefined}
           style={{ pointerEvents: "none" }}
         >
           <div className="tooltip" data-ready="true" style={{ position: "static" }}>
