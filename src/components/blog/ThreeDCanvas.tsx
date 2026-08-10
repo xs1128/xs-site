@@ -155,15 +155,16 @@ function SceneCanvas({
   const [isMinElapsed, setIsMinElapsed] = useState(false);
 
   useEffect(() => {
+    if (!active || isMinElapsed) return;
     const timer = setTimeout(() => setIsMinElapsed(true), MIN_SKELETON_MS);
     return () => clearTimeout(timer);
-  }, []);
+  }, [active, isMinElapsed]);
 
   useEffect(() => {
-    if (isSceneReady) return;
+    if (!active || isSceneReady) return;
     const timer = setTimeout(() => setIsSceneReady(true), READY_TIMEOUT_MS);
     return () => clearTimeout(timer);
-  }, [isSceneReady]);
+  }, [active, isSceneReady]);
 
   const isReady = isSceneReady && isMinElapsed;
   const isShowing = isReady && !busy;
@@ -179,7 +180,7 @@ function SceneCanvas({
           style={{ width: "100%", height: "100%", display: "block" }}
           resize={{ offsetSize: true }}
           dpr={[1, isMobile ? 1.5 : 2]}
-          frameloop={!isReady || (active && !busy) ? "always" : "never"}
+          frameloop={active && !busy ? "always" : "never"}
           gl={{ toneMappingExposure: rich ? 0.62 : 1 }}
         >
           <InteractiveScene
