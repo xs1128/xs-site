@@ -13,7 +13,7 @@ const RICH_SCENE_KEY = "blog:rich-scene";
 const OVERLAY_Z = 10100;
 const EXIT_MS = 200;
 const READY_TIMEOUT_MS = 8000;
-const MIN_SKELETON_MS = 900;
+const MIN_SKELETON_MS = 1000;
 
 const OVERLAY_CSS = `
 .scene-overlay {

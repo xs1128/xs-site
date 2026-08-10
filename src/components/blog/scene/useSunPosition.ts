@@ -20,16 +20,8 @@ function arcVector(t: number, maxElevation: number): Vector3 {
   return new Vector3().setFromSphericalCoords(1, Math.PI / 2 - elevation, theta);
 }
 
-function readHourOverride(): number | null {
-  const raw = new URLSearchParams(window.location.search).get("sunHour");
-  if (raw === null) return null;
-
-  const hour = Number(raw);
-  return Number.isFinite(hour) ? ((hour % 24) + 24) % 24 : null;
-}
-
-function computeSun(date: Date, forcedHour: number | null): SunState {
-  const hours = forcedHour ?? date.getHours() + date.getMinutes() / 60;
+function computeSun(date: Date): SunState {
+  const hours = date.getHours() + date.getMinutes() / 60;
   const isNight = hours < 6 || hours >= 18;
 
   if (isNight) {
@@ -53,13 +45,11 @@ function computeSun(date: Date, forcedHour: number | null): SunState {
 
 export function useSunPosition(): SunState {
   const [now, setNow] = useState(() => new Date());
-  const [forcedHour] = useState(readHourOverride);
 
   useEffect(() => {
-    if (forcedHour !== null) return;
     const timer = setInterval(() => setNow(new Date()), UPDATE_MS);
     return () => clearInterval(timer);
-  }, [forcedHour]);
+  }, []);
 
-  return useMemo(() => computeSun(now, forcedHour), [now, forcedHour]);
+  return useMemo(() => computeSun(now), [now]);
 }
