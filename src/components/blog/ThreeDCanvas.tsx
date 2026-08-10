@@ -6,6 +6,7 @@ import { Canvas } from "@react-three/fiber";
 import { Waves, Sparkles, Maximize2, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/useBreakpoint";
 import { colors } from "@/styles/colors";
+import Tooltip from "@/components/ui/Tooltip";
 import InteractiveScene from "./scene/InteractiveScene";
 import ThreeDAssetPlaceholder from "./ThreeDAssetPlaceholder";
 
@@ -293,17 +294,21 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
   };
 
   const richButton = (
-    <button
-      type="button"
-      className="scene-icon-btn"
-      onClick={toggleRich}
-      style={iconButtonStyle(isRich)}
-      aria-pressed={isRich}
-      aria-label={isRich ? "Turn off the animated sky" : "Turn on the animated sky"}
-      title={isRich ? "Animated sky: on" : "Animated sky: off"}
+    <Tooltip
+      label={isRich ? "Animated background: on" : "Animated background: off"}
+      placement="bottom"
     >
-      {isRich ? <Waves size={18} /> : <Sparkles size={18} />}
-    </button>
+      <button
+        type="button"
+        className="scene-icon-btn"
+        onClick={toggleRich}
+        style={iconButtonStyle(isRich)}
+        aria-pressed={isRich}
+        aria-label={isRich ? "Turn off the animated background" : "Turn on the animated background"}
+      >
+        {isRich ? <Waves size={18} /> : <Sparkles size={18} />}
+      </button>
+    </Tooltip>
   );
 
   return (
@@ -314,16 +319,17 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
         <div style={controlsStyle}>
           {richButton}
           {!isMobile && (
-            <button
-              type="button"
-              className="scene-icon-btn"
-              onClick={open}
-              style={iconButtonStyle(isRich)}
-              aria-label="Enlarge the 3D scene"
-              title="Enlarge"
-            >
-              <Maximize2 size={18} />
-            </button>
+            <Tooltip label="Enlarge" placement="bottom">
+              <button
+                type="button"
+                className="scene-icon-btn"
+                onClick={open}
+                style={iconButtonStyle(isRich)}
+                aria-label="Enlarge the 3D scene"
+              >
+                <Maximize2 size={18} />
+              </button>
+            </Tooltip>
           )}
         </div>
 
@@ -355,17 +361,18 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
             >
               <div style={{ ...controlsStyle, top: "12px", right: "12px" }}>
                 {richButton}
-                <button
-                  type="button"
-                  className="scene-icon-btn"
-                  autoFocus
-                  onClick={close}
-                  style={iconButtonStyle(isRich)}
-                  aria-label="Close the enlarged 3D scene"
-                  title="Close"
-                >
-                  <X size={18} />
-                </button>
+                <Tooltip label="Close" placement="bottom">
+                  <button
+                    type="button"
+                    className="scene-icon-btn"
+                    autoFocus
+                    onClick={close}
+                    style={iconButtonStyle(isRich)}
+                    aria-label="Close the enlarged 3D scene"
+                  >
+                    <X size={18} />
+                  </button>
+                </Tooltip>
               </div>
               <SceneCanvas
                 key={isRich ? "rich" : "plain"}

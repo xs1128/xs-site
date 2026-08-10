@@ -1,0 +1,227 @@
+'use client'
+
+import { cloneElement, useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import type { FocusEvent, MouseEvent, PointerEvent, ReactElement } from 'react'
+import { createPortal } from 'react-dom'
+
+type Placement = 'top' | 'bottom' | 'left' | 'right'
+
+const OPEN_DELAY_MS = 350
+const CLOSE_DELAY_MS = 80
+const SKIP_DELAY_MS = 300
+const GAP = 8
+const EDGE = 8
+
+const OPPOSITE: Record<Placement, Placement> = {
+  top: 'bottom',
+  bottom: 'top',
+  left: 'right',
+  right: 'left',
+}
+
+// Shared across every tooltip: moving along an icon row should feel instant
+// after the first one has already paid the open delay.
+let lastClosedAt = 0
+
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
+
+interface Position {
+  x: number
+  y: number
+  placement: Placement
+}
+
+// tip is measured with offsetWidth/Height, not a rect: the enter transition
+// scales the tooltip, and a scaled rect would offset the centering.
+function place(trigger: DOMRect, tip: { width: number; height: number }, preferred: Placement): Position {
+  const vw = window.innerWidth
+  const vh = window.innerHeight
+
+  const fits = (candidate: Placement) => {
+    switch (candidate) {
+      case 'top':
+        return trigger.top - tip.height - GAP >= EDGE
+      case 'bottom':
+        return trigger.bottom + tip.height + GAP <= vh - EDGE
+      case 'left':
+        return trigger.left - tip.width - GAP >= EDGE
+      case 'right':
+        return trigger.right + tip.width + GAP <= vw - EDGE
+    }
+  }
+
+  const flipped = OPPOSITE[preferred]
+  const placement = fits(preferred) ? preferred : fits(flipped) ? flipped : preferred
+
+  let x: number
+  let y: number
+
+  if (placement === 'top' || placement === 'bottom') {
+    x = trigger.left + trigger.width / 2 - tip.width / 2
+    y = placement === 'top' ? trigger.top - tip.height - GAP : trigger.bottom + GAP
+  } else {
+    x = placement === 'left' ? trigger.left - tip.width - GAP : trigger.right + GAP
+    y = trigger.top + trigger.height / 2 - tip.height / 2
+  }
+
+  return {
+    x: Math.min(Math.max(x, EDGE), Math.max(EDGE, vw - tip.width - EDGE)),
+    y: Math.min(Math.max(y, EDGE), Math.max(EDGE, vh - tip.height - EDGE)),
+    placement,
+  }
+}
+
+function useCanHover(): boolean {
+  const query = '(hover: hover) and (pointer: fine)'
+  const [canHover, setCanHover] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia(query).matches
+  )
+
+  useEffect(() => {
+    const mq = window.matchMedia(query)
+    const onChange = (event: MediaQueryListEvent) => setCanHover(event.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+
+  return canHover
+}
+
+type TriggerProps = {
+  'aria-describedby'?: string
+  onPointerEnter?: (event: PointerEvent<HTMLElement>) => void
+  onPointerLeave?: (event: PointerEvent<HTMLElement>) => void
+  onFocus?: (event: FocusEvent<HTMLElement>) => void
+  onBlur?: (event: FocusEvent<HTMLElement>) => void
+  onClick?: (event: MouseEvent<HTMLElement>) => void
+  ref?: React.Ref<HTMLElement>
+}
+
+interface TooltipProps {
+  label: string
+  placement?: Placement
+  children: ReactElement<TriggerProps>
+}
+
+export default function Tooltip({ label, placement = 'top', children }: TooltipProps) {
+  const canHover = useCanHover()
+  const [open, setOpen] = useState(false)
+  const [position, setPosition] = useState<Position | null>(null)
+  const triggerRef = useRef<HTMLElement | null>(null)
+  const tipRef = useRef<HTMLDivElement | null>(null)
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const id = useId()
+
+  const clearTimer = () => {
+    if (timer.current) clearTimeout(timer.current)
+    timer.current = null
+  }
+
+  const show = useCallback((immediate: boolean) => {
+    clearTimer()
+    const delay = immediate || Date.now() - lastClosedAt < SKIP_DELAY_MS ? 0 : OPEN_DELAY_MS
+    timer.current = setTimeout(() => setOpen(true), delay)
+  }, [])
+
+  const hide = useCallback((immediate: boolean) => {
+    clearTimer()
+    const finish = () => {
+      setOpen((wasOpen) => {
+        if (wasOpen) lastClosedAt = Date.now()
+        return false
+      })
+      setPosition(null)
+    }
+    if (immediate) finish()
+    else timer.current = setTimeout(finish, CLOSE_DELAY_MS)
+  }, [])
+
+  useEffect(() => clearTimer, [])
+
+  const reposition = useCallback(() => {
+    const trigger = triggerRef.current
+    const tip = tipRef.current
+    if (!trigger || !tip) return
+    setPosition(
+      place(
+        trigger.getBoundingClientRect(),
+        { width: tip.offsetWidth, height: tip.offsetHeight },
+        placement
+      )
+    )
+  }, [placement])
+
+  useIsomorphicLayoutEffect(() => {
+    if (open) reposition()
+  }, [open, reposition])
+
+  useEffect(() => {
+    if (!open) return
+
+    const onScrollOrResize = () => reposition()
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') hide(true)
+    }
+
+    window.addEventListener('scroll', onScrollOrResize, true)
+    window.addEventListener('resize', onScrollOrResize)
+    document.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      window.removeEventListener('scroll', onScrollOrResize, true)
+      window.removeEventListener('resize', onScrollOrResize)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open, reposition, hide])
+
+  if (!canHover) return children
+
+  const childProps = children.props
+
+  // eslint-disable-next-line react-hooks/refs -- cloneElement only forwards the ref, nothing reads .current during render
+  const trigger = cloneElement(children, {
+    ref: triggerRef,
+    'aria-describedby': open ? id : childProps['aria-describedby'],
+    onPointerEnter: (event: PointerEvent<HTMLElement>) => {
+      childProps.onPointerEnter?.(event)
+      show(false)
+    },
+    onPointerLeave: (event: PointerEvent<HTMLElement>) => {
+      childProps.onPointerLeave?.(event)
+      hide(false)
+    },
+    onFocus: (event: FocusEvent<HTMLElement>) => {
+      childProps.onFocus?.(event)
+      if (event.currentTarget.matches(':focus-visible')) show(true)
+    },
+    onBlur: (event: FocusEvent<HTMLElement>) => {
+      childProps.onBlur?.(event)
+      hide(true)
+    },
+    onClick: (event: MouseEvent<HTMLElement>) => {
+      childProps.onClick?.(event)
+      hide(true)
+    },
+  })
+
+  return (
+    <>
+      {trigger}
+      {open &&
+        createPortal(
+          <div
+            ref={tipRef}
+            id={id}
+            role="tooltip"
+            className="tooltip"
+            data-placement={position?.placement ?? placement}
+            data-ready={position !== null}
+            style={{ left: position?.x ?? 0, top: position?.y ?? 0 }}
+          >
+            {label}
+          </div>,
+          document.body
+        )}
+    </>
+  )
+}

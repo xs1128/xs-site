@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useIsMobile } from '@/hooks/useBreakpoint'
 import { getAvatarUrl } from '@/lib/supabase/settings'
+import Tooltip from '@/components/ui/Tooltip'
 
 interface SocialLink {
   name: string
@@ -156,21 +157,21 @@ export default function Footer() {
           {/* Social Links */}
           <div className="footer-section">
             <div className="footer-email">
-              email: <a href="mailto:hi@xsooi.com" className="footer-email-link">hi@xsooi.com</a>
+              email: <Tooltip label="email"><a href="mailto:hi@xsooi.com" className="footer-email-link">hi@xsooi.com</a></Tooltip>
             </div>
             <div className="footer-social-links">
               {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.name}
-                  className="footer-social-button"
-                  title={social.name}
-                >
-                  {social.icon}
-                </a>
+                <Tooltip key={social.name} label={social.name}>
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.name}
+                    className="footer-social-button"
+                  >
+                    {social.icon}
+                  </a>
+                </Tooltip>
               ))}
             </div>
           </div>

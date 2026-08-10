@@ -350,6 +350,48 @@ button, .animated-button {
 }
 
 /* ========================================
+   TOOLTIP
+   ======================================== */
+
+/* z-index sits above the 3D scene overlay (10100) so tooltips on the
+   fullscreen scene controls are not swallowed by it. */
+.tooltip {
+  position: fixed;
+  z-index: 10200;
+  max-width: 260px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: var(--color-dark-background);
+  color: var(--color-dark-text);
+  font-family: var(--font-primary);
+  font-size: clamp(10px, 1.2vw, 12px);
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+  white-space: pre-line;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(18, 22, 28, 0.22);
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 140ms ease,
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.tooltip[data-ready='true'] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip,
+  .tooltip[data-ready='true'] {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ========================================
    SKELETON SHIMMER ANIMATION
    ======================================== */
 @keyframes shimmer {

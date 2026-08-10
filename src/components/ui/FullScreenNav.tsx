@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { colors } from "@/styles/colors";
+import Tooltip from "@/components/ui/Tooltip";
 
 // Custom hook for navigation animations
 function useNavAnimations() {
@@ -233,23 +234,26 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
               marginBottom: "0",
             }}
           >
-            <button
-              onClick={handleClose}
-              className="close-button"
-              style={{
-                backgroundColor: "transparent",
-                border: "none",
-                color: colors.darkText,
-                fontSize: isSmallScreen ? "48px" : "64px",
-                cursor: "pointer",
-                padding: "0",
-                lineHeight: 0.85,
-                fontFamily: "Roboto Mono, monospace",
-                fontWeight: 500,
-              }}
-            >
-              ✕
-            </button>
+            <Tooltip label="Close menu" placement="bottom">
+              <button
+                onClick={handleClose}
+                className="close-button"
+                aria-label="Close menu"
+                style={{
+                  backgroundColor: "transparent",
+                  border: "none",
+                  color: colors.darkText,
+                  fontSize: isSmallScreen ? "48px" : "64px",
+                  cursor: "pointer",
+                  padding: "0",
+                  lineHeight: 0.85,
+                  fontFamily: "Roboto Mono, monospace",
+                  fontWeight: 500,
+                }}
+              >
+                ✕
+              </button>
+            </Tooltip>
           </div>
         </div>
 
