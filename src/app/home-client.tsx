@@ -309,7 +309,10 @@ function FullScreenNav({
           </span>
         </a>
 
-        <button
+        <a
+          href="https://github.com/xs1128"
+          target="_blank"
+          rel="noopener noreferrer"
           onClick={handleClose}
           className={`nav-item ${isClosing ? "nav-item-closing" : "nav-item-opening"}`}
           data-text="PROJECTS"
@@ -328,6 +331,8 @@ function FullScreenNav({
             transition: "transform 0.2s ease",
             animationDelay: isClosing ? "0ms" : "400ms",
             width: "100%",
+            display: "block",
+            textDecoration: "none",
           }}
         >
           <span style={{ display: "flex", alignItems: "flex-start", gap: isSmallScreen ? "2vw" : "1.5vw" }}>
@@ -347,7 +352,7 @@ function FullScreenNav({
               <polyline points="17,17 17,7 7,7" />
             </svg>
           </span>
-        </button>
+        </a>
       </div>
     </div>
   );
