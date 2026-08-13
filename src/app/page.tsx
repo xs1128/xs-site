@@ -24,7 +24,7 @@ export default function Home() {
 
     let rafId: number | undefined;
 
-    // Landing (0 - 0.9vh): light | About (0.9 - 1.9vh): dark | Contact (1.9vh+): light
+    // Landing light, about dark, contact light
     const checkScrollPosition = () => {
       rafId = undefined;
       const scrollY = container.scrollTop;
@@ -69,14 +69,11 @@ export default function Home() {
 
   return (
     <>
-      {/* Full-screen overlay navigation */}
       <FullScreenNav
         isOpen={isAboutMenuOpen}
         onClose={() => setIsAboutMenuOpen(false)}
-        isSmallScreen={isSmallScreen}
       />
 
-      {/* Fixed hamburger button - hidden on landing page */}
       {isPastLanding && (
         <HamburgerButton
           onClick={handleMenuToggle}
@@ -87,18 +84,14 @@ export default function Home() {
       )}
 
       <ScrollContainer ref={scrollContainerRef}>
-        {/* First Section - Landing */}
         <LandingSection
-          isSmallScreen={isSmallScreen}
           onScrollToAbout={scrollToAbout}
           onScrollToContact={scrollToContact}
           containerRef={scrollContainerRef}
         />
 
-        {/* Second Section - About */}
         <AboutSection isSmallScreen={isSmallScreen} />
 
-        {/* Third Section - Contact */}
         <ContactSection isSmallScreen={isSmallScreen} />
       </ScrollContainer>
     </>

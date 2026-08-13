@@ -10,16 +10,11 @@ const FOCUSABLE_SELECTOR = [
 ].join(', ');
 
 /**
- * Traps Tab focus inside an overlay while it is active.
- * Cycles at the edges, closes on Escape, and restores focus to the trigger.
+ * Traps Tab focus inside an overlay: cycles at the edges, Escape dismisses,
+ * focus returns to the trigger on close.
  *
- * Focus moves to the container itself rather than the first focusable child,
- * so opening an overlay never highlights its close button or pops up the
- * mobile keyboard. The container must carry tabIndex={-1}.
- *
- * @param isActive - Whether the overlay is currently open
- * @param onDismiss - Called when Escape is pressed
- * @returns Ref to attach to the overlay container
+ * Focus lands on the container, not the first child, so opening never
+ * highlights a close button. Container must carry tabIndex={-1}.
  */
 export function useFocusTrap<T extends HTMLElement>(
   isActive: boolean,

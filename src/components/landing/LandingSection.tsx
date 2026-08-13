@@ -8,12 +8,10 @@ import { LandingButtons } from './LandingButtons';
  * Contains name display and desktop buttons
  */
 export function LandingSection({
-  isSmallScreen,
   onScrollToAbout,
   onScrollToContact,
   containerRef,
 }: {
-  isSmallScreen: boolean;
   onScrollToAbout: () => void;
   onScrollToContact: () => void;
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -21,16 +19,13 @@ export function LandingSection({
   const landingButtonsProps: LandingButtonsProps = {
     onScrollToAbout,
     onScrollToContact,
-    isSmallScreen,
     containerRef,
   };
 
   return (
     <main className="landing-section">
-      {/* Name */}
       <NameDisplay containerRef={containerRef} />
 
-      {/* Desktop Buttons */}
       <LandingButtons {...landingButtonsProps} />
     </main>
   );

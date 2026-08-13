@@ -1,12 +1,11 @@
 import React from 'react';
-import type { ContactHeaderProps } from '@/types';
 
 /**
  * Contact section header with CONTACT button
  * Positioned absolutely at the top-left of the contact section
  * Scrolls to top when clicked
  */
-export function ContactHeader({ isSmallScreen }: ContactHeaderProps) {
+export function ContactHeader() {
   const handleScrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };

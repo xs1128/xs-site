@@ -7,7 +7,7 @@ import React, { useRef, useState, ReactNode } from "react";
  * Creates tactile, responsive card interactions with 3D tilt
  * Exposes cursor position as --mx/--my CSS variables for the spotlight overlay
  */
-export function CardScene({ children, index }: { children: ReactNode; index: number }) {
+export function CardScene({ children }: { children: ReactNode; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);

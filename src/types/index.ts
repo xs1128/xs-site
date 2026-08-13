@@ -12,7 +12,6 @@ export interface ScrollContainerProps {
 export interface FullScreenNavProps {
   isOpen: boolean;
   onClose: () => void;
-  isSmallScreen: boolean;
 }
 
 export interface AnimatedButtonProps {
@@ -34,16 +33,11 @@ export interface NameDisplayProps {
 export interface LandingButtonsProps {
   onScrollToAbout: () => void;
   onScrollToContact: () => void;
-  isSmallScreen: boolean;
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 // About Components
 export type AboutSectionProps = ResponsiveProps;
-
-export interface AboutHeaderProps {
-  isSmallScreen: boolean;
-}
 
 export interface AboutContentProps {
   onScrollToContact: () => void;
@@ -61,10 +55,6 @@ export interface ExpertiseCardProps extends ResponsiveProps {
 // Contact Components
 export type ContactSectionProps = ResponsiveProps;
 
-export interface ContactHeaderProps {
-  isSmallScreen: boolean;
-}
-
 export interface SpinningCircularTextProps {
   text: string;
   diameter: number;
@@ -76,7 +66,6 @@ export interface ContactPopupProps {
   isOpen: boolean;
   isClosing: boolean;
   onClose: () => void;
-  isSmallScreen: boolean;
 }
 
 export interface ContactFormData {

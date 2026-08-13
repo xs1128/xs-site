@@ -7,10 +7,9 @@ import { useFocusTrap } from '@/hooks/useFocusTrap';
  * Full-screen navigation overlay with slide animations
  * Features text fill effect on hover and staggered fade-in animations
  */
-export function FullScreenNav({ isOpen, onClose, isSmallScreen }: FullScreenNavProps) {
+export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
   const [isClosing, setIsClosing] = useState(false);
 
-  // Disable scrolling when nav is open
   useEffect(() => {
     if (isOpen || isClosing) {
       document.body.style.overflow = 'hidden';
@@ -53,19 +52,14 @@ export function FullScreenNav({ isOpen, onClose, isSmallScreen }: FullScreenNavP
       aria-label="Site navigation"
       className={`fullscreen-nav ${isClosing ? 'fullscreen-nav--closing' : ''}`}
     >
-      {/* Navigation items */}
       <div className="fullscreen-nav__items">
-        {/* MENU label with close button - outer container with outline */}
         <div className="fullscreen-nav__header">
-          {/* MENU word with outline */}
           <div className="fullscreen-nav__menu-label">
             MENU
           </div>
 
-          {/* Spacer for gap */}
           <div className="fullscreen-nav__spacer"></div>
 
-          {/* Close button with outline */}
           <div className="fullscreen-nav__close-wrapper">
             <button onClick={handleClose} className="fullscreen-nav__close-button" aria-label="Close navigation">
               ✕

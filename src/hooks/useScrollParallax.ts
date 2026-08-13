@@ -29,7 +29,6 @@ export function useScrollParallax(
   const lastOffsetRef = useRef(0);
 
   const handleScroll = useCallback(() => {
-    // Throttle using requestAnimationFrame for 60fps performance
     if (rafRef.current) return;
 
     rafRef.current = requestAnimationFrame(() => {
@@ -38,17 +37,14 @@ export function useScrollParallax(
       const scrollY = containerRef.current.scrollTop;
       const viewportHeight = window.innerHeight;
 
-      // Calculate scroll progress within landing section (0-90vh)
       const scrollRange = viewportHeight * 0.9;
       const scrollProgress = Math.min(
         Math.max((scrollY - triggerThreshold) / scrollRange, 0),
         1
       );
 
-      // Calculate parallax offset
       const newOffset = scrollProgress * maxScrollDistance;
 
-      // Only update state if value changed significantly (optimization)
       if (Math.abs(newOffset - lastOffsetRef.current) > 0.5) {
         lastOffsetRef.current = newOffset;
         setParallaxOffset(newOffset);
@@ -59,7 +55,6 @@ export function useScrollParallax(
   }, [containerRef, maxScrollDistance, triggerThreshold]);
 
   const handleResize = useCallback(() => {
-    // Recalculate on resize to ensure accuracy
     handleScroll();
   }, [handleScroll]);
 
@@ -68,15 +63,12 @@ export function useScrollParallax(
     if (!container) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    // Set up scroll listener with passive flag for performance
     container.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('resize', handleResize);
 
-    // Calculate initial offset
     handleScroll();
 
     return () => {
-      // Cleanup
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
       }

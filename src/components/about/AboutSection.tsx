@@ -47,7 +47,7 @@ export function AboutSection({ isSmallScreen }: AboutSectionProps) {
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
-      <AboutHeader isSmallScreen={isSmallScreen} />
+      <AboutHeader />
       <AboutContent
         isSmallScreen={isSmallScreen}
         isVisible={isVisible}

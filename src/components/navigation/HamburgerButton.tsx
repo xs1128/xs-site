@@ -1,11 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-// ============================================================================
-// Types
-// ============================================================================
-
 interface HamburgerButtonProps {
   onClick: () => void;
   isPastLanding: boolean;
@@ -13,51 +7,12 @@ interface HamburgerButtonProps {
   isNavOpen: boolean;
 }
 
-// ============================================================================
-// Hooks
-// ============================================================================
+// Vintage yellow on dark sections, charcoal on light
+const iconColorFor = (isDarkTheme: boolean) => (isDarkTheme ? "#F2E9D8" : "#2A2F35");
 
-/**
- * Manages the fade animation state when navigation opens/closes
- */
-function useFadeAnimation(isNavOpen: boolean) {
-  const [isFaded, setIsFaded] = useState(false);
-
-  useEffect(() => {
-    if (isNavOpen) {
-      setIsFaded(true);
-    } else {
-      setIsFaded(false);
-    }
-  }, [isNavOpen]);
-
-  return isFaded;
-}
-
-/**
- * Determines the icon color based on current theme
- */
-function useIconColor(isDarkTheme: boolean): string {
-  // Vintage yellow (#F2E9D8) on dark backgrounds (About section)
-  // Dark charcoal (#2A2F35) on light backgrounds (Contact section)
-  return isDarkTheme ? "#F2E9D8" : "#2A2F35";
-}
-
-// ============================================================================
-// Component
-// ============================================================================
-
-/**
- * Fixed hamburger button for navigation
- *
- * Behavior:
- * - Fades out when full-screen navigation opens
- * - Color changes based on section (vintage yellow after landing, charcoal on landing)
- * - Positioned fixed on right side of screen
- */
 export function HamburgerButton({ onClick, isPastLanding, isDarkTheme, isNavOpen }: HamburgerButtonProps) {
-  const isFaded = useFadeAnimation(isNavOpen);
-  const iconColor = useIconColor(isDarkTheme);
+  const isFaded = isNavOpen;
+  const iconColor = iconColorFor(isDarkTheme);
 
   const handleClick = () => {
     if (!isFaded) {

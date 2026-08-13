@@ -77,7 +77,7 @@ export function MagneticCTA({ onClick, isSmallScreen, isVisible }: MagneticCTAPr
     >
       <div className="about-content__cta-arrow">↓</div>
       <p className="about-content__cta-text">Have a problem that needs solving?</p>
-      <p className="about-content__cta-subtext">Let's chat - I'd love to hear about it</p>
+      <p className="about-content__cta-subtext">Let&apos;s chat &mdash; I&apos;d love to hear about it</p>
     </div>
   );
 }

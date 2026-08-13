@@ -2,22 +2,8 @@ import { useState, useEffect, useRef, RefObject } from 'react';
 import type { AnimationTriggerOptions, IntersectionAnimationState } from '@/types';
 
 /**
- * Hook for detecting when an element enters the viewport and triggering animations
- * Uses IntersectionObserver API for performant scroll detection
- * Latches on first intersection and never resets
- *
- * @param targetRef - Ref to the element to observe
- * @param options - Configuration options
- * @returns Animation state object
- *
- * @example
- * ```tsx
- * const sectionRef = useRef<HTMLElement>(null);
- * const { isVisible } = useIntersectionAnimation(sectionRef, {
- *   threshold: 0.15,
- *   rootMargin: '-50px'
- * });
- * ```
+ * Reveals an element once it enters the viewport.
+ * Latches on first intersection and never resets.
  */
 export function useIntersectionAnimation(
   targetRef: RefObject<Element | null>,
@@ -34,9 +20,10 @@ export function useIntersectionAnimation(
   useEffect(() => {
     const target = targetRef.current;
 
-    // Check if IntersectionObserver is available (browser support)
     if (typeof window === 'undefined' || !window.IntersectionObserver || !target) {
-      // Fallback for browsers without IntersectionObserver
+      // Fires once and cannot cascade. Initial state instead would break
+      // hydration, since the server has no window.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsVisible(true);
       return;
     }

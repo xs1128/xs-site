@@ -10,7 +10,6 @@ export function ContactPopup({
   isOpen,
   isClosing,
   onClose,
-  isSmallScreen,
 }: ContactPopupProps) {
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
@@ -53,7 +52,6 @@ export function ContactPopup({
       });
       setFormData({ name: "", email: "", message: "" });
 
-      // Close form after short delay to show success
       setTimeout(() => {
         onClose();
         setFormState(prev => ({ ...prev, submitStatus: 'idle' }));
@@ -80,13 +78,11 @@ export function ContactPopup({
       aria-labelledby="contact-popup-title"
       className="contact-popup"
     >
-      {/* Header with close button and title */}
       <div className="contact-popup__header">
         <h2 id="contact-popup-title" className="contact-popup__title">
           Get in Touch
         </h2>
 
-        {/* Close button */}
         <button
           onClick={onClose}
           className="contact-popup__close-button"
@@ -150,7 +146,6 @@ export function ContactPopup({
           />
         </div>
 
-        {/* Status messages */}
         {formState.submitStatus === 'success' && (
           <div role="status" className="contact-popup__status contact-popup__status--success">
             Message sent successfully!

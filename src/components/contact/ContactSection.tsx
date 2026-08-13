@@ -4,7 +4,7 @@ import { ContactHeader } from './ContactHeader';
 import { SpinningCircularText } from './SpinningCircularText';
 import { ContactPopup } from './ContactPopup';
 import { SocialIconLink } from './SocialIconLink';
-import { EnvelopeIcon, GitHubIcon, InstagramIcon, FacebookIcon, LinkedInIcon } from '@/components/icons/SocialIcons';
+import { GitHubIcon, InstagramIcon, FacebookIcon, LinkedInIcon } from '@/components/icons/SocialIcons';
 
 /**
  * Contact section with spinning circular text and expandable form
@@ -52,7 +52,7 @@ export function ContactSection({ isSmallScreen }: ContactSectionProps) {
 
   return (
     <section id="contact" className="contact-section">
-      <ContactHeader isSmallScreen={isSmallScreen} />
+      <ContactHeader />
 
       <div className="contact-section__container">
         {/* Main content area with spinning text and form */}
@@ -90,7 +90,6 @@ export function ContactSection({ isSmallScreen }: ContactSectionProps) {
               isOpen={isPopupOpen}
               isClosing={isPopupClosing}
               onClose={handlePopupClose}
-              isSmallScreen={isSmallScreen}
             />
           </div>
         </div>
