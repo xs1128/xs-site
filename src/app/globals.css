@@ -66,10 +66,11 @@ button,
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Square ring. Elements with their own radius keep it — outline follows it */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 /* Dialogs take focus on open only to scope the trap, never to indicate it */

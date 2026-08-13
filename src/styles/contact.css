@@ -368,12 +368,11 @@
   box-sizing: border-box;
 }
 
-/* Global offset is for round/text controls; a boxed one wants none */
+/* Global offset is for bare glyphs; anything with an edge wants none */
 .contact-popup__input:focus-visible,
 .contact-popup__textarea:focus-visible,
 .contact-popup__submit-button:focus-visible {
   outline-offset: 0;
-  border-radius: 0;
 }
 
 .contact-popup__textarea {
@@ -553,6 +552,10 @@
     transform 0.2s ease,
     background-color 0.2s ease,
     color 0.2s ease;
+}
+
+.social-icon-link:focus-visible {
+  outline-offset: 0;
 }
 
 .social-icon-link svg {
