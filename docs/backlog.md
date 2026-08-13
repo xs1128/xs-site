@@ -17,11 +17,6 @@ CSS decisions that media queries already make. The one genuine JS need is
 `ExpertiseCard` swapping `CardScene` for a plain `div`. Push the rest into CSS
 and the prop mostly disappears.
 
-### 5. `AboutSection` mixes concerns
-
-Composition plus imperative pointer tracking plus rAF writing `--glow-x` /
-`--glow-y`. Extract `useCursorGlow(ref)`.
-
 ### 6. Prop-type placement is inconsistent
 
 `types/index.ts` is down from 198 to ~110 lines, but four components
