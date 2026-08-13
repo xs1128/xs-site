@@ -17,7 +17,7 @@ type Placement = 'top' | 'bottom' | 'left' | 'right';
 const OPEN_DELAY_MS = 350;
 const CLOSE_DELAY_MS = 80;
 const SKIP_DELAY_MS = 300;
-const GAP = 8;
+const DEFAULT_GAP = 8;
 const EDGE = 8;
 
 const OPPOSITE: Record<Placement, Placement> = {
@@ -49,6 +49,7 @@ function place(
   trigger: DOMRect,
   tip: { width: number; height: number },
   preferred: Placement,
+  gap: number,
 ): Position {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
@@ -56,13 +57,13 @@ function place(
   const fits = (candidate: Placement) => {
     switch (candidate) {
       case 'top':
-        return trigger.top - tip.height - GAP >= EDGE;
+        return trigger.top - tip.height - gap >= EDGE;
       case 'bottom':
-        return trigger.bottom + tip.height + GAP <= vh - EDGE;
+        return trigger.bottom + tip.height + gap <= vh - EDGE;
       case 'left':
-        return trigger.left - tip.width - GAP >= EDGE;
+        return trigger.left - tip.width - gap >= EDGE;
       case 'right':
-        return trigger.right + tip.width + GAP <= vw - EDGE;
+        return trigger.right + tip.width + gap <= vw - EDGE;
     }
   };
 
@@ -80,13 +81,13 @@ function place(
     x = trigger.left + trigger.width / 2 - tip.width / 2;
     y =
       placement === 'top'
-        ? trigger.top - tip.height - GAP
-        : trigger.bottom + GAP;
+        ? trigger.top - tip.height - gap
+        : trigger.bottom + gap;
   } else {
     x =
       placement === 'left'
-        ? trigger.left - tip.width - GAP
-        : trigger.right + GAP;
+        ? trigger.left - tip.width - gap
+        : trigger.right + gap;
     y = trigger.top + trigger.height / 2 - tip.height / 2;
   }
 
@@ -130,6 +131,8 @@ export interface TooltipProps {
   placement?: Placement;
   /** Anchor to the cursor; keyboard focus still uses the box */
   followCursor?: boolean;
+  /** Distance from the trigger, px */
+  gap?: number;
   /** Cloned, so it must accept a ref and handlers */
   children: ReactElement<TriggerProps>;
 }
@@ -142,6 +145,7 @@ export function Tooltip({
   label,
   placement = 'top',
   followCursor = false,
+  gap = DEFAULT_GAP,
   children,
 }: TooltipProps) {
   const canHover = useCanHover();
@@ -195,8 +199,8 @@ export function Tooltip({
       followCursor && cursor.current
         ? cursorRect(cursor.current.x, cursor.current.y)
         : trigger.getBoundingClientRect();
-    setPosition(place(anchor, tipSize.current, placement));
-  }, [placement, followCursor]);
+    setPosition(place(anchor, tipSize.current, placement, gap));
+  }, [placement, followCursor, gap]);
 
   // Bypasses React: one rAF-throttled style write per frame
   useEffect(() => {
@@ -210,7 +214,12 @@ export function Tooltip({
         const tip = tipRef.current;
         const at = cursor.current;
         if (!tip || !at) return;
-        const next = place(cursorRect(at.x, at.y), tipSize.current, placement);
+        const next = place(
+          cursorRect(at.x, at.y),
+          tipSize.current,
+          placement,
+          gap,
+        );
         tip.style.left = `${next.x}px`;
         tip.style.top = `${next.y}px`;
       });
@@ -222,7 +231,7 @@ export function Tooltip({
       if (raf.current !== null) cancelAnimationFrame(raf.current);
       raf.current = null;
     };
-  }, [open, followCursor, placement]);
+  }, [open, followCursor, placement, gap]);
 
   useIsomorphicLayoutEffect(() => {
     if (open) reposition();

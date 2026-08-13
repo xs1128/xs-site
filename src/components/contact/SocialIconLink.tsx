@@ -19,7 +19,7 @@ export function SocialIconLink({
   const isExternal = href.startsWith('http');
 
   return (
-    <Tooltip label={ariaLabel}>
+    <Tooltip label={ariaLabel} gap={16}>
       <a
         href={href}
         target={isExternal ? '_blank' : undefined}
