@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { ContactPopupProps, ContactFormData, FormState } from '@/types';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 /**
  * Contact form popup with validation and submission
@@ -22,6 +23,7 @@ export function ContactPopup({
     submitStatus: 'idle',
     errorMessage: '',
   });
+  const popupRef = useFocusTrap<HTMLDivElement>(isOpen && !isClosing, onClose);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,10 +72,16 @@ export function ContactPopup({
   if (!isOpen && !isClosing) return null;
 
   return (
-    <div className="contact-popup">
+    <div
+      ref={popupRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="contact-popup-title"
+      className="contact-popup"
+    >
       {/* Header with close button and title */}
       <div className="contact-popup__header">
-        <h2 className="contact-popup__title">
+        <h2 id="contact-popup-title" className="contact-popup__title">
           Get in Touch
         </h2>
 
@@ -81,6 +89,7 @@ export function ContactPopup({
         <button
           onClick={onClose}
           className="contact-popup__close-button"
+          aria-label="Close contact form"
         >
           ✕
         </button>
@@ -88,10 +97,13 @@ export function ContactPopup({
 
       <form onSubmit={handleSubmit} className="contact-popup__form">
         <div className="contact-popup__field">
-          <label className="contact-popup__label">
+          <label htmlFor="contact-name" className="contact-popup__label">
             Name
           </label>
           <input
+            id="contact-name"
+            name="name"
+            autoComplete="name"
             type="text"
             required
             value={formData.name}
@@ -103,10 +115,13 @@ export function ContactPopup({
         </div>
 
         <div className="contact-popup__field">
-          <label className="contact-popup__label">
+          <label htmlFor="contact-email" className="contact-popup__label">
             Email
           </label>
           <input
+            id="contact-email"
+            name="email"
+            autoComplete="email"
             type="email"
             required
             value={formData.email}
@@ -118,10 +133,12 @@ export function ContactPopup({
         </div>
 
         <div className="contact-popup__field">
-          <label className="contact-popup__label">
+          <label htmlFor="contact-message" className="contact-popup__label">
             Message
           </label>
           <textarea
+            id="contact-message"
+            name="message"
             required
             value={formData.message}
             onChange={(e) =>
@@ -134,13 +151,13 @@ export function ContactPopup({
 
         {/* Status messages */}
         {formState.submitStatus === 'success' && (
-          <div className="contact-popup__status contact-popup__status--success">
+          <div role="status" className="contact-popup__status contact-popup__status--success">
             Message sent successfully!
           </div>
         )}
 
         {formState.submitStatus === 'error' && (
-          <div className="contact-popup__status contact-popup__status--error">
+          <div role="alert" className="contact-popup__status contact-popup__status--error">
             {formState.errorMessage || 'Failed to send message. Please try again.'}
           </div>
         )}

@@ -4,26 +4,12 @@ import { ExpertiseCard } from './ExpertiseCard';
 import { AnimatedHeadline } from './AnimatedHeadline';
 import { MagneticCTA } from './MagneticCTA';
 import { StaticIcon } from '../icons/StaticIcon';
-import { useIntersectionAnimation } from '@/hooks/useIntersectionAnimation';
 
 /**
  * About section content with animated headline, introduction, and expertise cards
  * Features scroll-triggered entrance animations and micro-interactions
  */
-export function AboutContent({ onScrollToContact, isSmallScreen }: AboutContentProps) {
-  const { isVisible } = useIntersectionAnimation({
-    threshold: 0.15,
-    rootMargin: '-50px'
-  });
-
-  const handleScrollToContact = () => {
-    const contactSection = document.getElementById("contact");
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: "smooth" });
-    }
-    onScrollToContact();
-  };
-
+export function AboutContent({ onScrollToContact, isSmallScreen, isVisible }: AboutContentProps) {
   return (
     <div className="about-content">
       {/* Hero Headline with animated reveal */}
@@ -59,7 +45,7 @@ export function AboutContent({ onScrollToContact, isSmallScreen }: AboutContentP
 
       {/* Call to Action with magnetic effect */}
       <MagneticCTA
-        onClick={handleScrollToContact}
+        onClick={onScrollToContact}
         isSmallScreen={isSmallScreen}
         isVisible={isVisible}
       />
