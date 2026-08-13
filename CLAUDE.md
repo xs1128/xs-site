@@ -70,8 +70,8 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 
 ## Fonts
 
-- Loaded via `next/font/local` from `src/fonts/`, exposed as `--font-roboto-mono` / `--font-hubot-sans` and consumed by `--font-primary` / `--font-secondary`. Don't add `@fontsource` or a Google Fonts `<link>` back — both lose preloading and fallback metrics.
-- Only the weights actually used are shipped: Roboto Mono 400/500, Hubot Sans 400/700. Using a weight that isn't loaded gets you a synthesised face, which is what happened to Hubot Sans 700 before the migration.
+- Loaded via `@fontsource` CSS imports in `layout.tsx`. A `next/font/local` migration was tried and reverted — it changed bold weights and introduced scroll lag. See `docs/backlog.md` before retrying.
+- Only Hubot Sans 400 is loaded, but CSS uses `font-weight: 700` on headlines and card titles. That bold is browser-synthesised, and the design is built around how it looks. Loading a real 700 face changes the type.
 
 ## Before Pushing
 

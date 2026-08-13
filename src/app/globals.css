@@ -17,8 +17,8 @@
   --color-white: #FFFFFF;
 
   /* Typography */
-  --font-primary: var(--font-roboto-mono), monospace;
-  --font-secondary: var(--font-hubot-sans), sans-serif;
+  --font-primary: "Roboto Mono", monospace;
+  --font-secondary: "Hubot Sans", sans-serif;
 
   /* Spacing */
   --spacing-section-padding-desktop: 4vh 5vw;

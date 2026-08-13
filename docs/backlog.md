@@ -6,22 +6,29 @@ work that changes what the site *is*.
 Everything here was verified against the codebase, not assumed. Items resolved
 along the way are in `git log`, not repeated here.
 
-## Tier 1 — done
+## Tier 1
 
-All three items are implemented. Kept here briefly so the history is legible.
+Items 2 and 3 are done. Item 1 was attempted and reverted.
 
-### 1. Fonts migrated to `next/font` — done
+### 1. Fonts — reverted, needs a second attempt
 
-`next/font/local` with latin-subset woff2 files in `src/fonts/`, exposed as
-`--font-roboto-mono` / `--font-hubot-sans` and consumed by the existing
-`--font-primary` / `--font-secondary` tokens. Fonts are now preloaded with
-`size-adjust` fallback metrics, which is the FOUT/CLS fix.
+Migrating to `next/font/local` was tried and rolled back. It shipped two
+regressions: bold weights visibly changed, and scrolling upward became laggy.
 
-Found on the way: Hubot Sans is used at `font-weight: 700` but only 400 was
-ever loaded, so the browser had been synthesising bold. The real 700 face is
-now loaded.
+The type change is understood. Hubot Sans is used at `font-weight: 700` but
+only 400 was ever loaded, so the browser had always been synthesising bold.
+Loading the real 700 face was technically correct and visually wrong — the
+design was built against the faux-bold. Any retry must either keep shipping
+only 400 and let synthesis continue, or treat the weight change as a
+deliberate design decision rather than a side effect.
 
-`@fontsource/*` uninstalled.
+The scroll lag is *not* understood and must be diagnosed before retrying.
+Nothing in the migration obviously touches scroll. Suspects worth measuring:
+`display: 'swap'` forcing a re-layout of snap containers on font load, or the
+swap landing mid-scroll. Profile it rather than guessing.
+
+The underlying problem is still real: `@fontsource` CSS imports get no
+preload and no `size-adjust` fallback metrics, so first paint shifts.
 
 ### 2. Rate limiter extracted — done, with a caveat
 
@@ -136,7 +143,7 @@ beautiful"; everybody owns "spinning 3D cube."
 
 ## Suggested order
 
-Tier 1 is closed, which means the cleanup with real user impact is done.
+Tier 1 is closed apart from fonts, which needs the scroll lag diagnosed first.
 
 Go to 12 next. Tier 2 and 3 are genuine tidiness but no visitor can perceive
 any of it, and 12 is the item that changes what the site is. The rest can be
