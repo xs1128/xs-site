@@ -16,11 +16,6 @@ Observability. `layout.tsx` metadata and the JSON-LD `knowsAbout` say Python /
 Bash / Docker / Cloudflare. The card is what people see when the site is
 shared — the two should agree.
 
-### 9. Redundant reduced-motion block
-
-The block at the end of `about.css` is superseded by the global one in
-`animations.css`. Safe to delete, zero value either way.
-
 ### 10. Pre-commit formatting hook
 
 Prettier shipped and CI runs `format:check`; a Husky/lint-staged hook is the

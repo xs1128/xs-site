@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useRef, RefObject } from 'react';
 
 /**
  * Tracks the cursor over an element and writes --glow-x/--glow-y/--glow-opacity
- * onto it. Mouse only; rAF-throttled. Returns handlers to spread on the target.
+ * onto it. Mouse only; rAF-throttled; no-ops under reduced motion. Returns
+ * handlers to spread on the target.
  */
 export function useCursorGlow(targetRef: RefObject<HTMLElement | null>) {
   const rafRef = useRef<number | null>(null);
@@ -18,6 +19,8 @@ export function useCursorGlow(targetRef: RefObject<HTMLElement | null>) {
   const onPointerMove = useCallback(
     (e: React.PointerEvent<HTMLElement>) => {
       if (e.pointerType !== 'mouse') return;
+      // CSS can't gate a JS-written custom property
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const { clientX, clientY } = e;
       if (rafRef.current !== null) return;
 
