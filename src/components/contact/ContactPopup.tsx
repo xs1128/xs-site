@@ -40,8 +40,7 @@ export function ContactPopup({
       const data = await response.json();
 
       if (!response.ok) {
-        const errorMsg = data.details ? `${data.error}: ${data.details}` : data.error;
-        throw new Error(errorMsg);
+        throw new Error(data.error ?? 'Failed to send message');
       }
 
       setFormState({

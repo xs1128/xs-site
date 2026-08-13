@@ -19,11 +19,6 @@ export interface SectionWrapperProps extends ResponsiveProps {
   children: React.ReactNode;
 }
 
-// Marquee Component
-export interface AnnouncementMarqueeProps {
-  isDarkTheme: boolean;
-}
-
 // Navigation Components
 export interface FullScreenNavProps {
   isOpen: boolean;
@@ -40,13 +35,6 @@ export interface HamburgerButtonProps {
   isNavOpen: boolean;
 }
 
-export interface MobileDropdownProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onNavigateToSection: (sectionId: string) => void;
-  setIsDarkTheme: (value: boolean) => void;
-}
-
 export interface AnimatedButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
@@ -59,10 +47,7 @@ export interface AnimatedButtonProps {
 }
 
 // Landing Components
-export interface NameDisplayProps extends ResponsiveProps {
-  onToggle: () => void;
-  showInitials: boolean;
-  isFading: boolean;
+export interface NameDisplayProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -96,9 +81,7 @@ export interface ExpertiseCardProps extends ResponsiveProps {
 }
 
 // Contact Components
-export interface ContactSectionProps extends ResponsiveProps {
-  onOpenNav: () => void;
-}
+export interface ContactSectionProps extends ResponsiveProps {}
 
 export interface ContactHeaderProps {
   isSmallScreen: boolean;
@@ -149,12 +132,6 @@ export interface FormState {
   isSubmitting: boolean;
   submitStatus: 'idle' | 'success' | 'error';
   errorMessage: string;
-}
-
-// 3D Components
-export interface ThreeCanvasProps {
-  children: React.ReactNode;
-  isSmallScreen?: boolean;
 }
 
 export interface NameSceneProps {

@@ -1,3 +1,6 @@
+const scrollBehavior = (): ScrollBehavior =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+
 /**
  * Scroll to about section and update theme
  * @param setIsDarkTheme - Function to update dark theme state
@@ -5,7 +8,7 @@
 export function scrollToAbout(setIsDarkTheme: (value: boolean) => void): void {
   const aboutSection = document.getElementById("about");
   if (aboutSection) {
-    aboutSection.scrollIntoView({ behavior: "smooth" });
+    aboutSection.scrollIntoView({ behavior: scrollBehavior() });
     // Update theme after scroll animation completes
     setTimeout(() => {
       const scrollY = window.scrollY;
@@ -24,7 +27,7 @@ export function scrollToAbout(setIsDarkTheme: (value: boolean) => void): void {
 export function scrollToContact(setIsDarkTheme: (value: boolean) => void): void {
   const contactSection = document.getElementById("contact");
   if (contactSection) {
-    contactSection.scrollIntoView({ behavior: "smooth" });
+    contactSection.scrollIntoView({ behavior: scrollBehavior() });
     // Update theme after scroll animation completes
     setTimeout(() => {
       const scrollY = window.scrollY;

@@ -19,7 +19,7 @@ const NameSceneContent = dynamic(() => import('@/components/3d/landing/NameScene
  * Uses 3D parallax tilt effect on all screen sizes
  * Scrolls up with parallax effect when scrolling to about section
  */
-export function NameDisplay({ onToggle, showInitials, isFading, isSmallScreen, containerRef }: NameDisplayProps) {
+export function NameDisplay({ containerRef }: NameDisplayProps) {
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
 

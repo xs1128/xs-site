@@ -1,51 +1,78 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-// Initialize Resend with API key from environment
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
+const RATE_LIMIT = 5;
+const RATE_WINDOW_MS = 60 * 60 * 1000;
+const LIMITS = { name: 100, email: 200, message: 5000 };
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const recentRequests = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const recent = (recentRequests.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
+  recentRequests.set(ip, recent);
+
+  if (recent.length >= RATE_LIMIT) return true;
+
+  recent.push(now);
+  return false;
+}
+
+const asField = (value: unknown): string =>
+  typeof value === 'string' ? value.replace(/[\r\n]+/g, ' ').trim() : '';
+
 export async function POST(request: Request) {
   try {
-    // Check if API key is configured
     if (!resend) {
-      return NextResponse.json(
-        { error: 'Email service not configured. Please add RESEND_API_KEY to environment variables.' },
-        { status: 503 }
-      );
+      return NextResponse.json({ error: 'Email service unavailable' }, { status: 503 });
     }
 
-    const { name, email, message } = await request.json();
+    const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
+    if (isRateLimited(ip)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+    }
 
-    // Validate input
+    const body = await request.json().catch(() => null);
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
+
+    const name = asField(body.name);
+    const email = asField(body.email);
+    const message = typeof body.message === 'string' ? body.message.trim() : '';
+
     if (!name || !email || !message) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Send email
-    const data = await resend.emails.send({
+    if (
+      name.length > LIMITS.name ||
+      email.length > LIMITS.email ||
+      message.length > LIMITS.message
+    ) {
+      return NextResponse.json({ error: 'Field exceeds maximum length' }, { status: 400 });
+    }
+
+    if (!EMAIL_PATTERN.test(email)) {
+      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
+    }
+
+    await resend.emails.send({
       from: 'Portfolio Contact <onboarding@resend.dev>',
       to: 'hi@xsooi.com',
       subject: `Contact from ${name}`,
-      text: `
-Name: ${name}
-Email: ${email}
-
-Message:
-${message}
-      `.trim(),
+      text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
       replyTo: email,
     });
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to send email', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
-    );
+    console.error('[contact] send failed:', error);
+    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
   }
 }

@@ -4,11 +4,11 @@
 
 /* Navigation Animation Classes */
 .nav-item-opening {
-  animation: fadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation: fadeInSlide 0.9s var(--ease-out-expo) backwards;
 }
 
 .nav-item-closing {
-  animation: fadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeOutSlide 0.6s var(--ease-out-expo) forwards;
 }
 
 .hamburger-fading {
@@ -28,7 +28,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  animation: slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideInRight 0.8s var(--ease-out-expo);
   pointer-events: auto;
   will-change: transform, opacity;
   contain: strict;
@@ -37,7 +37,7 @@
 }
 
 .fullscreen-nav--closing {
-  animation: slideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideOutRight 0.8s var(--ease-out-expo);
   pointer-events: none;
 }
 
@@ -124,7 +124,7 @@
 .fullscreen-nav .nav-item__arrow {
   width: 0.75em;
   height: 0.75em;
-  transition: stroke 0.3s cubic-bezier(0.6, 0, 0.4, 1);
+  transition: stroke 0.3s var(--ease-in-out-soft);
   transition-delay: 0.7s;
   position: relative;
   z-index: 2;
@@ -192,7 +192,7 @@
 }
 
 .nav-item svg {
-  transition: stroke 0.3s cubic-bezier(0.6, 0, 0.4, 1);
+  transition: stroke 0.3s var(--ease-in-out-soft);
   transition-delay: 0.7s;
   position: relative;
   z-index: 2;
@@ -280,30 +280,31 @@
 
 /* Hamburger Button */
 .hamburger-button {
-  position: fixed !important;
-  top: 32px !important;
-  right: 5vw !important;
-  background-color: transparent !important;
-  border: none !important;
-  font-size: 40px !important;
-  cursor: pointer !important;
-  padding: 8px !important;
-  line-height: 1 !important;
-  font-family: var(--font-primary) !important;
-  z-index: 3001 !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-  transition: opacity 0.5s ease, color 0.3s ease;
+  position: fixed;
+  top: 32px;
+  right: 5vw;
+  background-color: transparent;
+  border: none;
+  font-size: 40px;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 1;
+  font-family: var(--font-primary);
+  z-index: 3001;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.25s ease, color 0.3s ease;
 }
 
 .hamburger-button--faded {
-  opacity: 0 !important;
-  pointer-events: none !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
 .hamburger-button--hidden {
-  opacity: 0 !important;
-  pointer-events: none !important;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .hamburger-button__icon {

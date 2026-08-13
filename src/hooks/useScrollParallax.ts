@@ -66,6 +66,7 @@ export function useScrollParallax(
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     // Set up scroll listener with passive flag for performance
     container.addEventListener('scroll', handleScroll, { passive: true });
