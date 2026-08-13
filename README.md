@@ -9,7 +9,7 @@ Minimalist single-page landing site: scroll-snapped Landing / About / Contact se
 - **Styling**: Plain CSS with custom properties (no CSS-in-JS, no Tailwind)
 - **Fonts**: Roboto Mono, Hubot Sans (via `@fontsource`, imported in `layout.tsx`)
 - **Email**: Resend
-- **3D deps installed but unused**: `three` / `@react-three/fiber` / `@react-three/drei` are in `package.json`, but the only consumer (`src/components/3d/ThreeCanvas.tsx`) isn't imported anywhere. `NameScene` and `CardScene` are DOM + CSS transforms, not WebGL.
+- **No 3D libraries**: `NameScene` and `CardScene` live under `components/3d/` but are DOM + CSS transforms, not WebGL. `three` / `@react-three/fiber` / `@react-three/drei` were uninstalled once their only consumer was removed.
 
 ## Development
 
@@ -36,7 +36,9 @@ Always run `npm install && npm run build` before pushing; fix any TypeScript/bui
 
 `POST /api/contact` (`src/app/api/contact/route.ts`) — body `{ name, email, message }`.
 
-- `400` if any field missing, `503` if `RESEND_API_KEY` unset, `500` on send failure, `200 { success: true, data }` otherwise.
+- `400` on missing fields, invalid email, or a field over its length cap (name 100, email 200, message 5000); `429` over 5 requests/hour/IP; `503` if `RESEND_API_KEY` unset; `500` on send failure; `200 { success: true }` otherwise.
+- Errors are logged server-side and returned generically — the response never carries provider internals. `name` and `email` are CRLF-stripped to keep the `subject` header on one line.
+- Rate limiting is an in-process `Map`, so on serverless it applies per instance, not globally.
 - Sends from `Portfolio Contact <onboarding@resend.dev>` to `hi@xsooi.com`, with `replyTo` set to the submitter's email.
 - The free `onboarding@resend.dev` sender only delivers to the Resend account's own email — verify a domain in the Resend dashboard and update `from` to send to other recipients.
 
@@ -52,12 +54,13 @@ Always run `npm install && npm run build` before pushing; fix any TypeScript/bui
 
 - One `ScrollContainer` with `scroll-snap-type: y mandatory`; each section uses `scroll-snap-align: start` + `scroll-snap-stop: always`.
 - `page.tsx` derives theme from scroll position: `<0.9vh` landing (light), `0.9–1.9vh` about (dark), `>1.9vh` contact (light). Also tracks `isPastLanding` (hamburger only shows past landing).
-- **Landing**: name renders via `NameScene` (lazy-loaded, `next/dynamic` with `ssr:false`), with a ±5° mouse tilt and scroll parallax (name slides up 40vh from 0vh scroll; ABOUT/CONTACT buttons slide up the same 40vh but start after 20vh, creating a cascade). The old click-to-toggle name/initials feature is gone — `showInitials` is hardcoded `false`.
-- **About**: one-time entrance animation via `useIntersectionAnimation` (threshold 0.15, `-50px` rootMargin), latched by a ref so it never replays. Word-by-word headline. Three `ExpertiseCard`s, wrapped in `CardScene` on desktop (±8° tilt, cursor spotlight) and a plain `div` on mobile. Section-level cursor glow (desktop only). `MagneticCTA` follows the cursor at 15% intensity.
+- **Landing**: name renders via `NameScene` (lazy-loaded, `next/dynamic` with `ssr:false`), with a ±5° mouse tilt and scroll parallax (name slides up 40vh from 0vh scroll; ABOUT/CONTACT buttons slide up the same 40vh but start after 20vh, creating a cascade). The old click-to-toggle name/initials feature is gone; `NameDisplay` now takes only `containerRef`.
+- **About**: one-time entrance animation via `useIntersectionAnimation` (threshold 0.15, `-50px` rootMargin), latched by a ref so it never replays. `AboutSection` owns the hook and passes `isVisible` down. Word-by-word headline. Three `ExpertiseCard`s, wrapped in `CardScene` on desktop (±8° tilt, cursor spotlight) and a plain `div` on mobile. Section-level cursor glow (desktop only). `MagneticCTA` follows the cursor at 15% intensity.
 - **Contact**: spinning circular text (320px / 280px expanded / 240px mobile) opens `ContactPopup` on click; success/error states, auto-closes 1.5s after success. Footer has a `mailto:hi@xsooi.com` link plus GitHub/Instagram/Facebook/LinkedIn.
 - **Nav**: `FullScreenNav` — ABOUT, CONTACT, PROJECTS (github.com/xs1128), BLOG (xsooi.com/blog); 800ms close animation; locks body scroll while open.
+- **Accessibility**: both overlays are `role="dialog"` + `aria-modal` and share `useFocusTrap` (Tab cycles inside, Escape closes, focus returns to the trigger). `:focus-visible` is styled globally. Reduced motion is honored across all CSS animations plus the JS-driven parallax and smooth scrolling.
 
-Breakpoint: 640px (`--breakpoint-small` in CSS, `BREAKPOINT = 640` inlined in `page.tsx`). About cards get an extra tier at 641–1050px, contact at 641–900px. Hover styles are gated behind `@media (hover: hover)`, and `about.css` honors `prefers-reduced-motion: reduce`.
+Breakpoint: 640px (`--breakpoint-small` in CSS, `BREAKPOINT = 640` inlined in `page.tsx`). About cards get an extra tier at 641–1050px, contact at 641–900px. Hover styles are gated behind `@media (hover: hover)`, and a global block in `animations.css` honors `prefers-reduced-motion: reduce`.
 
 ## Colors
 
@@ -71,8 +74,10 @@ All custom properties live in `globals.css` under `:root`.
 | `--color-nav-panel` | `#444C55` | Nav button panels |
 | `--color-text-on-dark` | `#fbf9f4` | Text on dark backgrounds |
 | `--color-text-on-light` | `#2A2F35` | Text on light backgrounds |
-| `--color-accent` | `#E5532C` | Accent / hover fill |
+| `--color-accent` | `#E5532C` | Accent / hover fill — large text and UI only, fails AA as body text |
 | `--color-accent-hover` | `#D64626` | Accent hover state |
+| `--color-accent-on-light` | `#C4421F` | AA-safe accent text on cream (4.8:1) |
+| `--color-accent-on-dark` | `#e87a4d` | AA-safe accent text on charcoal (4.8:1) |
 | `--color-terracotta` | `#e87a4d` | Secondary accent |
 | `--color-card-bg` | `#f0ede5` | About card background |
 | `--color-border` | `#e5e0d5` | Borders |
@@ -84,7 +89,7 @@ All custom properties live in `globals.css` under `:root`.
 src/
   app/            layout.tsx, page.tsx, globals.css, error.tsx, not-found.tsx,
                    robots.ts, sitemap.ts, icon.png, api/contact/route.ts
-  styles/         animations.css, marquee.css, navigation.css, about.css,
+  styles/         animations.css, navigation.css, about.css,
                    contact.css, landing.css   (all imported in layout.tsx)
   components/
     landing/      LandingSection, NameDisplay, LandingButtons
@@ -92,27 +97,27 @@ src/
                    AnimatedHeadline, MagneticCTA
     contact/      ContactSection, ContactHeader, SpinningCircularText,
                    ContactPopup, SocialIconLink
-    navigation/   FullScreenNav, HamburgerButton, AnimatedButton, MobileDropdown
+    navigation/   FullScreenNav, HamburgerButton, AnimatedButton
     layout/       ScrollContainer
-    marquee/      AnnouncementMarquee
     icons/        SocialIcons, StaticIcon
-    3d/           ThreeCanvas, landing/NameScene, about/CardScene
+    3d/           landing/NameScene, about/CardScene
     seo/          BreadcrumbSchema
-  hooks/          useResponsive, useMarquee, useIntersectionAnimation, useScrollParallax
+  hooks/          useIntersectionAnimation, useScrollParallax, useFocusTrap
   types/          index.ts
   lib/            utils.ts
 public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.png,
-                  site.webmanifest, icons/, fonts/
+                  site.webmanifest, icons/
 ```
 
 `@/*` resolves to `./src/*` — the only alias in effect (`tsconfig.json`). `tsconfig.paths.json` defines extra per-directory aliases but nothing extends it, so it is inert.
 
-## Known Unused Code
+## Known Issues
 
-- `AnnouncementMarquee` / `marquee.css` — component is never mounted by `page.tsx`, but the CSS is still imported.
-- `MobileDropdown` — never rendered.
-- `useResponsive` — never imported; `page.tsx` inlines its own resize listener instead.
-- `ThreeCanvas` — never imported (see Tech Stack note above).
+- `lib/utils.ts` reads `window.scrollY`, but scrolling happens inside `.scroll-container` — its `setTimeout` theme updates never fire. Harmless, since `page.tsx` sets theme from its own listener.
+- `HamburgerButton` declares a local props interface duplicating the one in `types/index.ts`.
+- `types/index.ts` is still largely single-consumer prop types.
+- `og-image.png` is 403KB, well above what a 1200x630 needs.
+- No tests, no CI, no formatter config.
 - `tsconfig.paths.json` — not extended by `tsconfig.json`; has no effect.
 
 ## Deploy
