@@ -368,9 +368,10 @@
   box-sizing: border-box;
 }
 
-/* Global offset is for round/text controls; a bordered box wants none */
+/* Global offset is for round/text controls; a boxed one wants none */
 .contact-popup__input:focus-visible,
-.contact-popup__textarea:focus-visible {
+.contact-popup__textarea:focus-visible,
+.contact-popup__submit-button:focus-visible {
   outline-offset: 0;
   border-radius: 0;
 }
