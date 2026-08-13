@@ -15,9 +15,7 @@ export const robotoMono = localFont({
   ],
   variable: '--font-roboto-mono',
   display: 'swap',
-  // CTA arrow (U+2193) isn't in Roboto Mono. Extra families here redraw it.
   fallback: ['monospace'],
-  adjustFontFallback: false,
 });
 
 // 400 only. CSS asks for 700; the design wants that bold synthesised.

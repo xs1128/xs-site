@@ -368,6 +368,13 @@
   box-sizing: border-box;
 }
 
+/* Global offset is for round/text controls; a bordered box wants none */
+.contact-popup__input:focus-visible,
+.contact-popup__textarea:focus-visible {
+  outline-offset: 0;
+  border-radius: 0;
+}
+
 .contact-popup__textarea {
   resize: vertical;
 }

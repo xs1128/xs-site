@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ArrowDown } from 'lucide-react';
 
 /**
  * Props for MagneticCTA component
@@ -68,7 +69,10 @@ export function MagneticCTA({ onClick, isVisible }: MagneticCTAProps) {
       onPointerLeave={handlePointerLeave}
       style={magneticStyle}
     >
-      <div className="about-content__cta-arrow">↓</div>
+      {/* Icon, not ↓ — that glyph isn't in Roboto Mono */}
+      <div className="about-content__cta-arrow" aria-hidden="true">
+        <ArrowDown size={24} />
+      </div>
       <p className="about-content__cta-text">
         Have a problem that needs solving?
       </p>

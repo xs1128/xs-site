@@ -34,22 +34,6 @@ instance, not globally. Deliberately not wired to Redis — that solves spam
 nobody is sending and costs a service dependency. Swapping the `Map` for a
 shared store is a one-function change if spam ever arrives.
 
-### 20. CTA arrow depends on a font fallback
-
-`↓` (U+2193) isn't in Roboto Mono, so a fallback always draws it. That forces
-`adjustFontFallback: false` on `robotoMono` in `src/fonts/index.ts`, which
-costs the font its `size-adjust` metrics (CLS 0.0087). Replace the glyph with
-an SVG and the flag can go.
-
-### 21. Focus outline sits too far off the contact fields
-
-The orange `:focus-visible` ring floats with a visible gap around text inputs.
-Cause is the global `outline-offset: 3px` in `globals.css` — fine for the
-circular and text controls it was written for, wrong on a rectangular field
-that already has a border. Tighten the offset for inputs/textarea rather than
-changing the global, and keep a visible indicator (see the `outline: none` rule
-in `CLAUDE.md`).
-
 ### 17. The contact circle doesn't read as tappable
 
 `SpinningCircularText` is the only way to open the contact form, and nothing

@@ -74,7 +74,7 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 
 - `next/font/local` from `src/fonts/`, via `--font-roboto-mono` / `--font-hubot-sans`. Don't go back to `@fontsource` — it gets no preload.
 - **Ship only Roboto Mono 400/500 and Hubot Sans 400.** CSS asks for 700; that bold is synthesised and the design is built around it. Adding a real 700 file changes the type — tried once, reverted.
-- `robotoMono` sets `adjustFontFallback: false`, `fallback: ['monospace']`. The CTA arrow `↓` isn't in Roboto Mono, so next/font's Arial fallback face would redraw it. `hubotSans` keeps the default — its text is all ASCII.
+- Both faces keep next/font's default `adjustFontFallback` (the `size-adjust` metrics that hold CLS down). That works only while every rendered character exists in the font file — the CTA arrow used to be `↓` (U+2193), which Roboto Mono lacks, and the Arial fallback face redrew it. It is now a lucide `ArrowDown`. Before adding a non-ASCII character to Roboto Mono text, check the file's cmap.
 
 ## Before Pushing
 
