@@ -1,0 +1,28 @@
+/* Tooltip — portalled to body, so it sits above everything including the nav */
+.tooltip {
+  position: fixed;
+  z-index: 4000;
+  max-width: 260px;
+  padding: 6px 10px;
+  background-color: var(--color-about-bg);
+  color: var(--color-text-on-dark);
+  font-family: var(--font-primary);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+  white-space: pre-line;
+  pointer-events: none;
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 140ms ease,
+    transform 140ms var(--ease-out-expo);
+}
+
+/* Set once the tip has been measured and placed */
+.tooltip[data-ready='true'] {
+  opacity: 1;
+  transform: scale(1);
+}

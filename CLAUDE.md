@@ -22,6 +22,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - **Viewport branching is CSS by default.** No `isSmallScreen` prop, no screen-size state in `page.tsx`. `ExpertiseCard` is the only JS consumer (`useIsSmallScreen()` swaps `CardScene` for a `div`, which CSS can't do). The hook returns `false` on the server, so a JS branch costs a post-hydration flip; styling-only cases belong in a 640px media query.
 - `CardScene` / `NameScene` are DOM + CSS transforms despite living in `components/3d/`. No 3D libs installed.
 - `CardScene` ignores every prop but `children`, so `ExpertiseCard`'s `onClick`/`className`/`index` are dropped on desktop and `expertise-card--hovered` is mobile-only. Pre-existing.
+- `Tooltip` (`components/ui/`) clones its single child to attach a ref and handlers, and portals the tip to `document.body` (z-index 4000, above the hamburger's 3001). It returns the child untouched when `(hover: hover) and (pointer: fine)` fails, so nothing it says can be the only place that information exists. Consumer: `SocialIconLink`.
 - Overlays (`FullScreenNav`, `ContactPopup`) use `useFocusTrap` and keep `role="dialog"` + `aria-modal="true"`. The nav passes its animated `handleClose` as dismiss so Escape plays the exit.
 
 ## Behaviors

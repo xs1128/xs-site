@@ -68,9 +68,10 @@ Cues worth trying, cheapest first:
 3. **A one-shot attention cue on entry.** A pulse or expanding ring the first
    time the section scroll-snaps into view, not a permanent loop — a
    permanently pulsing thing becomes decoration again within seconds.
-4. **A tooltip on hover** — see item 18. Desktop only by construction; that
-   component returns its child untouched when `(hover: hover)` fails, so it
-   does nothing for the mobile case, which is the worse one.
+4. **A tooltip on hover** — `src/components/ui/Tooltip.tsx` is in place.
+   Desktop only by construction: it returns its child untouched when
+   `(hover: hover) and (pointer: fine)` fails, so it does nothing for the
+   mobile case, which is the worse one.
 5. **A static hint below the circle.** Least elegant, most reliable.
 
 Gotcha: the catch-all block at the end of `animations.css` neutralises every
@@ -82,40 +83,6 @@ the way `useScrollParallax` does.
 
 Verify against real behaviour before picking. If any analytics exist, the
 contact-form open rate versus `mailto:` click rate answers this directly.
-
-### 18. Port the tooltip system from `../blog`
-
-The blog repo has a finished one at `src/components/ui/Tooltip.tsx` (~230
-lines) with its `.tooltip` styles in `globals.css` around line 356. It is
-better than anything worth writing fresh here:
-
-- portals to `document.body`, so no clipping by `overflow` or stacking context
-- flips to the opposite placement when the preferred side won't fit, then
-  clamps to an 8px viewport margin
-- shared `SKIP_DELAY_MS` grace period across every instance, so moving along a
-  row of social icons feels instant after the first 350ms open delay
-- `role="tooltip"` + `aria-describedby`, opens on `:focus-visible`, closes on
-  Escape, blur, and click
-- measures with `offsetWidth`/`offsetHeight` rather than a rect, because the
-  enter transition scales the tip and a scaled rect would offset the centering
-- returns `children` untouched when `(hover: hover) and (pointer: fine)` fails,
-  so touch devices get no dead tooltip
-
-Site-specific work on the way in, per `CLAUDE.md`:
-
-- The CSS does **not** go in `globals.css`. New file `src/styles/tooltip.css`,
-  and it does nothing until it is imported in `layout.tsx`.
-- Restyle to this repo's palette and easing tokens. No hand-typed
-  `cubic-bezier(...)` — use `--ease-out-expo` / `--ease-in-out-soft`.
-- The blog copy is written without semicolons; this repo uses them. Match the
-  destination, not the source.
-- Drop or re-anchor the blog's z-index comment — it sits above a 3D scene
-  overlay at 10100 that doesn't exist here.
-- Props are declared locally in the component. Leave them there rather than
-  splitting them into `types/index.ts` — that is the repo convention.
-
-Obvious first consumers: the footer social icons (already `aria-label`-only)
-and the contact circle in item 17.
 
 ## Tier 4 — direction
 
@@ -160,7 +127,6 @@ Item 17 is the exception to "Tier 3 is invisible." Most of that tier is
 tidiness no visitor can perceive, but 17 sits on the only path to the contact
 form and currently blocks keyboard users from it outright — treat the
 accessibility half as not-optional and take it whenever contact code is next
-open. 18 is a prerequisite only if the tooltip route is chosen for 17; it is
-otherwise independent and can wait.
+open. The tooltip it can lean on already shipped.
 
 The rest can be picked off opportunistically when touching nearby code.

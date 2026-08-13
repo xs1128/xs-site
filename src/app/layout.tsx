@@ -6,6 +6,7 @@ import '../styles/navigation.css';
 import '../styles/about.css';
 import '../styles/contact.css';
 import '../styles/landing.css';
+import '../styles/tooltip.css';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xsooi.com';

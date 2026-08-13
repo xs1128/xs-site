@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tooltip } from '@/components/ui/Tooltip';
 
 export interface SocialIconLinkProps {
   href: string;
@@ -18,14 +19,16 @@ export function SocialIconLink({
   const isExternal = href.startsWith('http');
 
   return (
-    <a
-      href={href}
-      target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'noopener noreferrer' : undefined}
-      aria-label={ariaLabel}
-      className="social-icon-link"
-    >
-      {children}
-    </a>
+    <Tooltip label={ariaLabel}>
+      <a
+        href={href}
+        target={isExternal ? '_blank' : undefined}
+        rel={isExternal ? 'noopener noreferrer' : undefined}
+        aria-label={ariaLabel}
+        className="social-icon-link"
+      >
+        {children}
+      </a>
+    </Tooltip>
   );
 }
