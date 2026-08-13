@@ -18,52 +18,43 @@ export default function Home() {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Callback ref to detect when container is mounted
-  const setScrollContainerRef = (node: HTMLDivElement | null) => {
-    if (node) {
-      scrollContainerRef.current = node;
-      setupScrollListener(node);
-    }
-  };
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
-  const setupScrollListener = (container: HTMLDivElement) => {
+    let rafId: number | undefined;
+
+    // Landing (0 - 0.9vh): light | About (0.9 - 1.9vh): dark | Contact (1.9vh+): light
     const checkScrollPosition = () => {
+      rafId = undefined;
       const scrollY = container.scrollTop;
       const viewportHeight = window.innerHeight;
 
-      const threshold = viewportHeight * 0.9;
-
-      // Landing section (0 - 1 viewport): light theme
-      // About section (1 - 2 viewports): dark theme
-      // Contact section (2+ viewports): light theme
-      if (scrollY < threshold) {
-        // LANDING SECTION
+      if (scrollY < viewportHeight * 0.9) {
         setIsDarkTheme(false);
         setIsPastLanding(false);
-      } else if (scrollY >= threshold && scrollY < viewportHeight * 1.9) {
-        // ABOUT SECTION
+      } else if (scrollY < viewportHeight * 1.9) {
         setIsDarkTheme(true);
         setIsPastLanding(true);
       } else {
-        // CONTACT SECTION
         setIsDarkTheme(false);
         setIsPastLanding(true);
       }
     };
 
-    // Check initial scroll position
-    checkScrollPosition();
-
     const handleScroll = () => {
-      checkScrollPosition();
+      if (rafId) return;
+      rafId = requestAnimationFrame(checkScrollPosition);
     };
 
-    container.addEventListener("scroll", handleScroll);
+    checkScrollPosition();
+    container.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       container.removeEventListener("scroll", handleScroll);
     };
-  };
+  }, []);
 
   useEffect(() => {
     const checkScreenSize = () => setIsSmallScreen(window.innerWidth < BREAKPOINT);
@@ -96,7 +87,7 @@ export default function Home() {
         />
       )}
 
-      <ScrollContainer ref={setScrollContainerRef}>
+      <ScrollContainer ref={scrollContainerRef}>
         {/* First Section - Landing */}
         <LandingSection
           isSmallScreen={isSmallScreen}

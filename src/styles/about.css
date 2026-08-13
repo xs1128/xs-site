@@ -200,7 +200,7 @@
 .about-content__cta-subtext {
   margin: 0;
   font-size: 16px;
-  color: var(--color-accent);
+  color: var(--color-accent-on-dark);
   font-family: var(--font-primary);
   text-align: center;
 }
@@ -301,7 +301,7 @@
 }
 
 .expertise-card:hover .expertise-card__index {
-  color: var(--color-accent);
+  color: var(--color-accent-on-light);
   opacity: 1;
   transform: translateY(-2px);
 }

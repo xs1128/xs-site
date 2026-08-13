@@ -6,8 +6,10 @@
   --color-nav-panel: #444C55;            /* Medium gray */
   --color-text-on-dark: #fbf9f4;         /* Cream sand */
   --color-text-on-light: #2A2F35;        /* Dark charcoal */
-  --color-accent: #E5532C;               /* Warm vermilion */
+  --color-accent: #E5532C;               /* Warm vermilion - large text & UI only */
   --color-accent-hover: #D64626;         /* Darker vermilion */
+  --color-accent-on-light: #C4421F;      /* AA-safe accent text on cream (4.8:1) */
+  --color-accent-on-dark: #e87a4d;       /* AA-safe accent text on charcoal (4.8:1) */
   --color-terracotta: #e87a4d;           /* Terracotta orange */
   --color-card-bg: #f0ede5;              /* Slightly darker cream */
   --color-border: #e5e0d5;               /* Muted sand */
@@ -54,12 +56,18 @@ body {
 }
 
 a {
-  color: var(--color-accent);
+  color: var(--color-accent-on-light);
 }
 
 button,
 .animated-button {
   -webkit-tap-highlight-color: transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* Scroll Container */
