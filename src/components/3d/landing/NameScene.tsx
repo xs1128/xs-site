@@ -1,7 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import type { NameSceneProps } from "@/types";
+
+export interface NameSceneProps {
+  showInitials: boolean;
+}
 
 /**
  * 3D Name scene content - layered text with depth effect

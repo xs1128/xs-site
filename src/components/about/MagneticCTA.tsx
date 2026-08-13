@@ -6,8 +6,6 @@ import React, { useState } from 'react';
 export interface MagneticCTAProps {
   /** Click handler for the CTA */
   onClick: () => void;
-  /** Whether the screen is small (mobile) */
-  isSmallScreen: boolean;
   /** Whether the element is visible */
   isVisible: boolean;
 }
@@ -31,20 +29,15 @@ export interface MagneticCTAProps {
  *
  * @example
  * ```tsx
- * <MagneticCTA
- *   onClick={handleScrollToContact}
- *   isSmallScreen={isSmallScreen}
- *   hasAnimated={hasAnimated}
- *   isExiting={isExiting}
- * />
+ * <MagneticCTA onClick={handleScrollToContact} isVisible={isVisible} />
  * ```
  */
-export function MagneticCTA({ onClick, isSmallScreen, isVisible }: MagneticCTAProps) {
+export function MagneticCTA({ onClick, isVisible }: MagneticCTAProps) {
   const [magneticStyle, setMagneticStyle] = useState<React.CSSProperties>({});
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Disable magnetic effect on mobile
-    if (isSmallScreen) return;
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Touch synthesises one mousemove per tap, which would stick the offset
+    if (e.pointerType !== 'mouse') return;
 
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
@@ -59,7 +52,7 @@ export function MagneticCTA({ onClick, isSmallScreen, isVisible }: MagneticCTAPr
     });
   };
 
-  const handleMouseLeave = () => {
+  const handlePointerLeave = () => {
     // Smooth spring-back to original position
     setMagneticStyle({
       transform: 'translate(0, 0)',
@@ -71,8 +64,8 @@ export function MagneticCTA({ onClick, isSmallScreen, isVisible }: MagneticCTAPr
     <div
       className={`about-content__cta ${isVisible ? 'about-content__cta--visible' : ''}`}
       onClick={onClick}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       style={magneticStyle}
     >
       <div className="about-content__cta-arrow">↓</div>

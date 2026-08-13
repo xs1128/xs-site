@@ -1,72 +1,4 @@
-// Shared Types
-export interface ResponsiveProps {
-  isSmallScreen: boolean;
-}
-
-// Layout Components
-export interface ScrollContainerProps {
-  children: React.ReactNode;
-}
-
-// Navigation Components
-export interface FullScreenNavProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export interface AnimatedButtonProps {
-  children: React.ReactNode;
-  onClick?: () => void;
-  variant?: 'default' | 'menu' | 'dropdown';
-  reverse?: boolean;
-  isMenuButton?: boolean;
-  isDropdownItem?: boolean;
-  style?: React.CSSProperties;
-  className?: string;
-}
-
-// Landing Components
-export interface NameDisplayProps {
-  containerRef: React.RefObject<HTMLDivElement | null>;
-}
-
-export interface LandingButtonsProps {
-  onScrollToAbout: () => void;
-  onScrollToContact: () => void;
-  containerRef: React.RefObject<HTMLDivElement | null>;
-}
-
-// About Components
-export type AboutSectionProps = ResponsiveProps;
-
-export interface AboutContentProps {
-  onScrollToContact: () => void;
-  isSmallScreen: boolean;
-  isVisible: boolean;
-}
-
-export interface ExpertiseCardProps extends ResponsiveProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  index?: number;
-}
-
-// Contact Components
-export type ContactSectionProps = ResponsiveProps;
-
-export interface SpinningCircularTextProps {
-  text: string;
-  diameter: number;
-  onClick: () => void;
-  isExpanded: boolean;
-}
-
-export interface ContactPopupProps {
-  isOpen: boolean;
-  isClosing: boolean;
-  onClose: () => void;
-}
+// Shared types. Component props live in the component — see CLAUDE.md.
 
 export interface ContactFormData {
   name: string;
@@ -74,13 +6,6 @@ export interface ContactFormData {
   message: string;
 }
 
-export interface SocialIconLinkProps {
-  href: string;
-  'aria-label': string;
-  children: React.ReactNode;
-}
-
-// Form Types
 export interface FormState {
   formData: ContactFormData;
   isSubmitting: boolean;
@@ -88,20 +13,6 @@ export interface FormState {
   errorMessage: string;
 }
 
-export interface NameSceneProps {
-  showInitials: boolean;
-}
-
-// Icon Components
-export interface StaticIconProps {
-  src: string;
-  alt: string;
-  style?: React.CSSProperties;
-  width?: number;
-  height?: number;
-}
-
-// Intersection Animation Hook
 export interface AnimationTriggerOptions {
   threshold?: number;
   rootMargin?: string;

@@ -1,7 +1,6 @@
 import React from 'react';
-import type { LandingButtonsProps } from '@/types';
 import { NameDisplay } from './NameDisplay';
-import { LandingButtons } from './LandingButtons';
+import { LandingButtons, type LandingButtonsProps } from './LandingButtons';
 
 /**
  * Landing section component with centered name and navigation

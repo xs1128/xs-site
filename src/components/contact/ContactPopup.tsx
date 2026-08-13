@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
-import type { ContactPopupProps, ContactFormData, FormState } from '@/types';
+import type { ContactFormData, FormState } from '@/types';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+
+export interface ContactPopupProps {
+  isOpen: boolean;
+  isClosing: boolean;
+  onClose: () => void;
+}
 
 /**
  * Contact form popup with validation and submission

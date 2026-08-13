@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import type { AboutSectionProps } from '@/types';
 import { AboutHeader } from './AboutHeader';
 import { AboutContent } from './AboutContent';
 import { useIntersectionAnimation } from '@/hooks/useIntersectionAnimation';
@@ -10,13 +9,13 @@ import { scrollToContact } from '@/lib/utils';
  * About section wrapper component
  * Contains header navigation and main content
  */
-export function AboutSection({ isSmallScreen }: AboutSectionProps) {
+export function AboutSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const { isVisible } = useIntersectionAnimation(sectionRef, {
     threshold: 0.15,
     rootMargin: '-50px',
   });
-  const glowHandlers = useCursorGlow(sectionRef, !isSmallScreen);
+  const glowHandlers = useCursorGlow(sectionRef);
 
   return (
     <section
@@ -27,7 +26,6 @@ export function AboutSection({ isSmallScreen }: AboutSectionProps) {
     >
       <AboutHeader />
       <AboutContent
-        isSmallScreen={isSmallScreen}
         isVisible={isVisible}
         onScrollToContact={scrollToContact}
       />

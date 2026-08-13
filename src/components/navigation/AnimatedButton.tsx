@@ -1,5 +1,15 @@
 import React from 'react';
-import type { AnimatedButtonProps } from '@/types';
+
+export interface AnimatedButtonProps {
+  children: React.ReactNode;
+  onClick?: () => void;
+  variant?: 'default' | 'menu' | 'dropdown';
+  reverse?: boolean;
+  isMenuButton?: boolean;
+  isDropdownItem?: boolean;
+  style?: React.CSSProperties;
+  className?: string;
+}
 
 /**
  * Reusable button with optional underline animation

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import type { NameDisplayProps } from '@/types';
 import { useScrollParallax } from '@/hooks/useScrollParallax';
+
+export interface NameDisplayProps {
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}
 
 // Lazy load 3D scene component
 const NameSceneContent = dynamic(() => import('@/components/3d/landing/NameScene').then(mod => ({ default: mod.NameScene })), {

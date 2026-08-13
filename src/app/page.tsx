@@ -9,10 +9,7 @@ import { LandingSection } from "../components/landing/LandingSection";
 import { ScrollContainer } from "../components/layout/ScrollContainer";
 import { scrollToAbout, scrollToContact } from "@/lib/utils";
 
-const BREAKPOINT = 640;
-
 export default function Home() {
-  const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
   const [isPastLanding, setIsPastLanding] = useState(false);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -56,13 +53,6 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    const checkScreenSize = () => setIsSmallScreen(window.innerWidth < BREAKPOINT);
-    checkScreenSize();
-    window.addEventListener("resize", checkScreenSize);
-    return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
-
   const handleMenuToggle = () => {
     setIsAboutMenuOpen(!isAboutMenuOpen);
   };
@@ -90,9 +80,9 @@ export default function Home() {
           containerRef={scrollContainerRef}
         />
 
-        <AboutSection isSmallScreen={isSmallScreen} />
+        <AboutSection />
 
-        <ContactSection isSmallScreen={isSmallScreen} />
+        <ContactSection />
       </ScrollContainer>
     </>
   );

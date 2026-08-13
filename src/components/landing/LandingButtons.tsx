@@ -1,7 +1,12 @@
 import React from 'react';
-import type { LandingButtonsProps } from '@/types';
 import { AnimatedButton } from '@/components/navigation/AnimatedButton';
 import { useScrollParallax } from '@/hooks/useScrollParallax';
+
+export interface LandingButtonsProps {
+  onScrollToAbout: () => void;
+  onScrollToContact: () => void;
+  containerRef: React.RefObject<HTMLDivElement | null>;
+}
 
 /**
  * Navigation buttons at bottom of landing section

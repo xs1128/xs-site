@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import type { ExpertiseCardProps } from '@/types';
 import { CardScene } from '@/components/3d/about/CardScene';
+import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
+
+export interface ExpertiseCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  index?: number;
+}
 
 /**
  * Expertise card component with 3D tilt effect
  * Displays an index badge, icon, title, and description in a styled card
  * Uses 3D tilt + cursor spotlight on desktop, regular hover on mobile
  */
-export function ExpertiseCard({ icon, title, description, isSmallScreen, index = 0 }: ExpertiseCardProps) {
+export function ExpertiseCard({ icon, title, description, index = 0 }: ExpertiseCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const isSmallScreen = useIsSmallScreen();
 
   const handleClick = () => {
     setIsHovered(!isHovered);

@@ -1,5 +1,13 @@
 import Image from 'next/image';
-import { StaticIconProps } from '@/types';
+import type React from 'react';
+
+export interface StaticIconProps {
+  src: string;
+  alt: string;
+  style?: React.CSSProperties;
+  width?: number;
+  height?: number;
+}
 
 export function StaticIcon({ src, alt, style, width = 48, height = 48 }: StaticIconProps) {
   return (

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { ContactSectionProps } from '@/types';
 import { ContactHeader } from './ContactHeader';
 import { SpinningCircularText } from './SpinningCircularText';
 import { ContactPopup } from './ContactPopup';
@@ -9,8 +8,9 @@ import { GitHubIcon, InstagramIcon, FacebookIcon, LinkedInIcon } from '@/compone
 /**
  * Contact section with spinning circular text and expandable form
  * Opens contact popup on circle click with complex animations
+ * Small-screen layout is CSS-only — see the 640px blocks in contact.css
  */
-export function ContactSection({ isSmallScreen }: ContactSectionProps) {
+export function ContactSection() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isPopupClosing, setIsPopupClosing] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -57,8 +57,7 @@ export function ContactSection({ isSmallScreen }: ContactSectionProps) {
       <div className="contact-section__container">
         {/* Main content area with spinning text and form */}
         <div className="contact-section__content">
-          {/* Circle - different animation for small vs large screens */}
-          <div className={`contact-section__circle-wrapper ${isSmallScreen ? 'contact-section__circle-wrapper--small' : ''} ${isPopupOpen ? 'contact-section__circle-wrapper--expanded' : ''}`}>
+          <div className={`contact-section__circle-wrapper ${isPopupOpen ? 'contact-section__circle-wrapper--expanded' : ''}`}>
             <div
               className={`contact-section__circle ${isPopupOpen ? 'contact-section__circle--expanded' : ''}`}
               style={{
@@ -67,21 +66,19 @@ export function ContactSection({ isSmallScreen }: ContactSectionProps) {
             >
               <SpinningCircularText
                 text="Xinsheng Ooi • Xinsheng Ooi • Xinsheng Ooi • "
-                diameter={isSmallScreen ? 240 : (isPopupOpen ? 280 : 320)}
                 onClick={handleCircleClick}
                 isExpanded={isPopupOpen}
               />
             </div>
           </div>
 
-          {/* Divider - only for large screens */}
-          {!isSmallScreen && (isPopupOpen || isPopupClosing) && (
+          {/* Divider - hidden under 640px by CSS */}
+          {(isPopupOpen || isPopupClosing) && (
             <div className={`contact-section__divider ${isPopupClosing ? 'contact-section__divider--fading' : 'contact-section__divider--visible'}`} />
           )}
 
-          {/* Form container - different animation for small vs large screens */}
           <div
-            className={`contact-section__form-wrapper ${isSmallScreen ? 'contact-section__form-wrapper--small' : ''} ${isPopupOpen ? 'contact-section__form-wrapper--open' : ''} ${isPopupClosing ? 'contact-section__form-wrapper--closing' : ''}`}
+            className={`contact-section__form-wrapper ${isPopupOpen ? 'contact-section__form-wrapper--open' : ''} ${isPopupClosing ? 'contact-section__form-wrapper--closing' : ''}`}
             style={{
               pointerEvents: isPopupOpen && !isPopupClosing ? 'auto' : 'none',
             }}

@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import type { FullScreenNavProps } from '@/types';
 import { scrollToAbout, scrollToContact } from '@/lib/utils';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+
+export interface FullScreenNavProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
 /**
  * Full-screen navigation overlay with slide animations

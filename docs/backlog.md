@@ -1,28 +1,11 @@
 # Backlog
 
-Outstanding work, ranked. Tiers 2–3 are cleanup on what exists; tier 4 is the
-work that changes what the site *is*. Numbering is stable, so gaps are items
-that shipped.
+Outstanding work, ranked. Tier 3 is cleanup on what exists; tier 4 is the
+work that changes what the site *is*. Tier 2 is empty — the architecture
+items all shipped. Numbering is stable, so gaps are items that shipped.
 
 Everything here was verified against the codebase, not assumed. Items resolved
 along the way are in `git log`, not repeated here.
-
-## Tier 2 — architecture
-
-### 4. `isSmallScreen` prop drilling
-
-Now down to real consumers only, but still threads `page.tsx` →
-`AboutSection` → `AboutContent` → `ExpertiseCard`. Remaining uses are mostly
-CSS decisions that media queries already make. The one genuine JS need is
-`ExpertiseCard` swapping `CardScene` for a plain `div`. Push the rest into CSS
-and the prop mostly disappears.
-
-### 6. Prop-type placement is inconsistent
-
-`types/index.ts` is down from 198 to ~110 lines, but four components
-(`AnimatedHeadline`, `MagneticCTA`, `HamburgerButton`, `CardScene`) declare
-props locally while the rest live in the shared file. Not wrong, just two
-conventions. Pick one.
 
 ## Tier 3 — polish
 
@@ -154,7 +137,7 @@ Site-specific work on the way in, per `CLAUDE.md`:
 - Drop or re-anchor the blog's z-index comment — it sits above a 3D scene
   overlay at 10100 that doesn't exist here.
 - Props are declared locally in the component. Leave them there rather than
-  splitting them into `types/index.ts`; see item 6.
+  splitting them into `types/index.ts` — that is the repo convention.
 
 Obvious first consumers: the footer social icons (already `aria-label`-only)
 and the contact circle in item 17.

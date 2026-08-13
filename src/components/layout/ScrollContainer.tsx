@@ -1,5 +1,8 @@
 import React, { forwardRef } from 'react';
-import type { ScrollContainerProps } from '@/types';
+
+export interface ScrollContainerProps {
+  children: React.ReactNode;
+}
 
 /**
  * Scroll container with snap behavior

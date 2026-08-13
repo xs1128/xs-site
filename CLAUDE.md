@@ -7,7 +7,7 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 - New styles go in the matching file under `src/styles/`, NOT `globals.css`.
 - CSS custom properties go in `globals.css` `:root` only.
 - Every CSS file must be manually imported in `src/app/layout.tsx` — adding a file under `src/styles/` does nothing until it's imported there.
-- Breakpoint is 640px everywhere (`--breakpoint-small`, `BREAKPOINT` const in `page.tsx`, `@media max-width: 640px`).
+- Breakpoint is 640px everywhere (`--breakpoint-small`, `@media max-width: 640px`, and the query in `useIsSmallScreen`).
 - Hover effects are gated behind `@media (hover: hover)` throughout — keep new hover styles inside that guard so touch devices don't get stuck states.
 - **Reduced motion is handled globally** by a catch-all block at the end of `animations.css` that neutralizes every animation and transition. Don't add per-file `prefers-reduced-motion` blocks. The older, now-redundant block at the end of `about.css` is kept only because it is harmless. CSS can't reach JS-driven motion, so anything animating from JS must check `matchMedia('(prefers-reduced-motion: reduce)')` itself — see `useScrollParallax` and `lib/utils.ts`.
 - Palette (`globals.css` `:root`): `--color-landing-bg #fbf9f4`, `--color-about-bg #2A2F35`, `--color-nav-bg #363D44`, `--color-nav-panel #444C55`, `--color-text-on-dark #fbf9f4`, `--color-text-on-light #2A2F35`, `--color-accent #E5532C`, `--color-accent-hover #D64626`, `--color-accent-on-light #C4421F`, `--color-accent-on-dark #e87a4d`, `--color-terracotta #e87a4d`, `--color-card-bg #f0ede5`, `--color-border #e5e0d5`, `--color-dropdown-hover #ebe6dd`. Don't copy older hex values from memory — read this block.
@@ -17,10 +17,12 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 
 ## Component Architecture
 
-- Most component props live in `src/types/index.ts`, but `AnimatedHeadline`, `MagneticCTA`, `HamburgerButton` and `CardScene` declare theirs locally. Both placements are fine; what is not fine is declaring in both, which is how the file accumulated stale duplicates. Check the component before adding an interface here.
+- **Component props are declared in the component that takes them**, exported from there. `src/types/index.ts` holds only types shared across files: `ResponsiveProps`, `ContactFormData`, `FormState`, and the `useIntersectionAnimation` types. Don't put a `*Props` interface there, and never declare one in both places — that is how the file accumulated stale duplicates.
 - Theme is owned entirely by the scroll listener in `page.tsx`. Nothing else sets it, and `setIsDarkTheme` is not passed to any child — scroll helpers just scroll, and the listener reacts. Don't thread a theme setter back through the tree.
 - `ScrollContainer` uses `forwardRef`; `page.tsx` passes a plain ref and wires the scroll listener in a mount-once `useEffect`. It used to pass an inline callback ref that reattached every render and leaked a scroll listener each time — don't reintroduce that pattern.
-- `ExpertiseCard` swaps wrapper by viewport: `CardScene` on desktop, plain `div` on mobile. `CardScene` and `NameScene` live under `components/3d/` but are DOM + CSS transforms, NOT WebGL. No 3D libraries are installed.
+- **Viewport branching is CSS by default.** There is no `isSmallScreen` prop; `page.tsx` holds no screen-size state. `ExpertiseCard` is the sole JS consumer — it calls `useIsSmallScreen()` to swap `CardScene` for a plain `div`, which a media query can't do. Anything styling-only belongs in a 640px media query, not a new hook call. The hook uses `useSyncExternalStore` and returns `false` on the server, so a JS branch still costs a post-hydration flip; CSS doesn't.
+- `CardScene` and `NameScene` live under `components/3d/` but are DOM + CSS transforms, NOT WebGL. No 3D libraries are installed.
+- `CardScene` ignores every prop but `children` — `ExpertiseCard`'s `onClick`/`className`/`index` are dropped on desktop, so `expertise-card--hovered` is a mobile-only class. Pre-existing; don't assume those props do anything.
 - Overlays (`FullScreenNav`, `ContactPopup`) use `useFocusTrap` and must keep `role="dialog"` + `aria-modal="true"`. The nav passes its animated `handleClose` as the dismiss handler so Escape still plays the exit.
 
 ## Key Behaviors

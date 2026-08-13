@@ -1,5 +1,10 @@
 import React from 'react';
-import type { SocialIconLinkProps } from '@/types';
+
+export interface SocialIconLinkProps {
+  href: string;
+  'aria-label': string;
+  children: React.ReactNode;
+}
 
 /**
  * Social media icon link with hover effects
