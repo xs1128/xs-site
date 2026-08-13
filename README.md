@@ -30,7 +30,7 @@ Always run `npm install && npm run build` before pushing; fix any TypeScript/bui
 | `RESEND_API_KEY` | Yes (contact form) | Server-side, used by `/api/contact`. Without it, POSTs return `503`. |
 | `NEXT_PUBLIC_SITE_URL` | No | Base URL for metadata/canonical/OG/sitemap/robots/JSON-LD. Falls back to `https://xsooi.com`. |
 
-`.env.example` currently only lists `NEXT_PUBLIC_SITE_URL` — add `RESEND_API_KEY` there too when touching that file.
+Both are listed in `.env.example`. The build succeeds without either, so CI needs no secrets.
 
 ## Contact Form
 
@@ -113,8 +113,7 @@ public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.p
 
 ## Known Issues
 
-- `og-image.png` is 403KB, well above what a 1200x630 needs.
-- No tests, no CI, no formatter config.
+- No tests and no formatter config. CI runs typecheck, lint and build on push to `main` and on PRs (`.github/workflows/ci.yml`).
 - `tsconfig.paths.json` — not extended by `tsconfig.json`; has no effect.
 
 ## Deploy
