@@ -1,81 +1,76 @@
 # Claude Code Instructions
 
-Conventions, gotchas, and hard rules for agents editing this repo. For stack/setup/features, see README.md.
+Hard rules and gotchas for agents editing this repo. Stack/setup/features: README.md.
 
-## CSS Rules
+## CSS
 
-- New styles go in the matching file under `src/styles/`, NOT `globals.css`.
-- CSS custom properties go in `globals.css` `:root` only.
-- Every CSS file must be manually imported in `src/app/layout.tsx` — adding a file under `src/styles/` does nothing until it's imported there.
-- Breakpoint is 640px everywhere (`--breakpoint-small`, `@media max-width: 640px`, and the query in `useIsSmallScreen`).
-- Hover effects are gated behind `@media (hover: hover)` throughout — keep new hover styles inside that guard so touch devices don't get stuck states.
-- **Reduced motion is handled globally** by a catch-all block at the end of `animations.css` that neutralizes every animation and transition. Don't add per-file `prefers-reduced-motion` blocks — the redundant one at the end of `about.css` was deleted. CSS can't reach JS-driven motion, so anything animating from JS must check `matchMedia('(prefers-reduced-motion: reduce)')` itself — see `useScrollParallax`, `useCursorGlow` (the about-section glow is a JS-written custom property, so CSS can't gate it) and `lib/utils.ts`.
-- Palette (`globals.css` `:root`): `--color-landing-bg #fbf9f4`, `--color-about-bg #2A2F35`, `--color-nav-bg #363D44`, `--color-nav-panel #444C55`, `--color-text-on-dark #fbf9f4`, `--color-text-on-light #2A2F35`, `--color-accent #E5532C`, `--color-accent-hover #D64626`, `--color-accent-on-light #C4421F`, `--color-accent-on-dark #e87a4d`, `--color-terracotta #e87a4d`, `--color-card-bg #f0ede5`, `--color-border #e5e0d5`, `--color-dropdown-hover #ebe6dd`. Don't copy older hex values from memory — read this block.
-- **`--color-accent` fails WCAG AA as small text** (3.56:1 on cream, 3.60:1 on charcoal). Use it only for large/bold text and UI chrome. For body text and links use `--color-accent-on-light` or `--color-accent-on-dark` depending on the background.
-- Easing is tokenized: `--ease-out-expo`, `--ease-in-out-soft`. Never hand-type a `cubic-bezier(...)` — it was duplicated 38 times before being consolidated.
-- `:focus-visible` is styled globally in `globals.css`. Don't add `outline: none` anywhere without a replacement indicator.
+- New styles go in the matching `src/styles/` file, not `globals.css`. Custom properties go in `globals.css` `:root` only.
+- Every CSS file must be imported in `src/app/layout.tsx` — a new file under `src/styles/` does nothing until it is.
+- Breakpoint is 640px everywhere (`--breakpoint-small`, media queries, `useIsSmallScreen`).
+- Keep hover styles inside `@media (hover: hover)` — otherwise touch devices get stuck states.
+- Reduced motion is handled by one catch-all block at the end of `animations.css`. Don't add per-file `prefers-reduced-motion` blocks. It can't reach JS-driven motion, so anything animating from JS checks `matchMedia('(prefers-reduced-motion: reduce)')` itself — `useScrollParallax`, `useCursorGlow`, `lib/utils.ts`.
+- Never hand-type `cubic-bezier(...)`. Use `--ease-out-expo` / `--ease-in-out-soft`.
+- `:focus-visible` is styled globally. No `outline: none` without a replacement indicator.
+- **`--color-accent` fails WCAG AA as small text** (3.56:1 cream, 3.60:1 charcoal) — large/bold text and UI chrome only. Body text and links use `--color-accent-on-light` / `--color-accent-on-dark`.
+- Palette — read it from `globals.css` `:root`, don't recall hex values from memory: `--color-landing-bg #fbf9f4`, `--color-about-bg #2A2F35`, `--color-nav-bg #363D44`, `--color-nav-panel #444C55`, `--color-text-on-dark #fbf9f4`, `--color-text-on-light #2A2F35`, `--color-accent #E5532C`, `--color-accent-hover #D64626`, `--color-accent-on-light #C4421F`, `--color-accent-on-dark #e87a4d`, `--color-terracotta #e87a4d`, `--color-card-bg #f0ede5`, `--color-border #e5e0d5`, `--color-dropdown-hover #ebe6dd`.
 
-## Component Architecture
+## Components
 
-- **Component props are declared in the component that takes them**, exported from there. `src/types/index.ts` holds only types shared across files: `ResponsiveProps`, `ContactFormData`, `FormState`, and the `useIntersectionAnimation` types. Don't put a `*Props` interface there, and never declare one in both places — that is how the file accumulated stale duplicates.
-- Theme is owned entirely by the scroll listener in `page.tsx`. Nothing else sets it, and `setIsDarkTheme` is not passed to any child — scroll helpers just scroll, and the listener reacts. Don't thread a theme setter back through the tree.
-- `ScrollContainer` uses `forwardRef`; `page.tsx` passes a plain ref and wires the scroll listener in a mount-once `useEffect`. It used to pass an inline callback ref that reattached every render and leaked a scroll listener each time — don't reintroduce that pattern.
-- **Viewport branching is CSS by default.** There is no `isSmallScreen` prop; `page.tsx` holds no screen-size state. `ExpertiseCard` is the sole JS consumer — it calls `useIsSmallScreen()` to swap `CardScene` for a plain `div`, which a media query can't do. Anything styling-only belongs in a 640px media query, not a new hook call. The hook uses `useSyncExternalStore` and returns `false` on the server, so a JS branch still costs a post-hydration flip; CSS doesn't.
-- `CardScene` and `NameScene` live under `components/3d/` but are DOM + CSS transforms, NOT WebGL. No 3D libraries are installed.
-- `CardScene` ignores every prop but `children` — `ExpertiseCard`'s `onClick`/`className`/`index` are dropped on desktop, so `expertise-card--hovered` is a mobile-only class. Pre-existing; don't assume those props do anything.
-- Overlays (`FullScreenNav`, `ContactPopup`) use `useFocusTrap` and must keep `role="dialog"` + `aria-modal="true"`. The nav passes its animated `handleClose` as the dismiss handler so Escape still plays the exit.
+- Props are declared and exported from the component that takes them. `src/types/index.ts` holds only cross-file types (`ResponsiveProps`, `ContactFormData`, `FormState`, `useIntersectionAnimation`). No `*Props` there, and never in both places.
+- Theme is owned by the scroll listener in `page.tsx`. Nothing else sets it; `setIsDarkTheme` reaches no child. Scroll helpers just scroll. Don't thread a theme setter down the tree.
+- `ScrollContainer` uses `forwardRef`; `page.tsx` passes a plain ref and wires the listener in a mount-once `useEffect`. An inline callback ref leaked a listener per render — don't reintroduce it.
+- **Viewport branching is CSS by default.** No `isSmallScreen` prop, no screen-size state in `page.tsx`. `ExpertiseCard` is the only JS consumer (`useIsSmallScreen()` swaps `CardScene` for a `div`, which CSS can't do). The hook returns `false` on the server, so a JS branch costs a post-hydration flip; styling-only cases belong in a 640px media query.
+- `CardScene` / `NameScene` are DOM + CSS transforms despite living in `components/3d/`. No 3D libs installed.
+- `CardScene` ignores every prop but `children`, so `ExpertiseCard`'s `onClick`/`className`/`index` are dropped on desktop and `expertise-card--hovered` is mobile-only. Pre-existing.
+- Overlays (`FullScreenNav`, `ContactPopup`) use `useFocusTrap` and keep `role="dialog"` + `aria-modal="true"`. The nav passes its animated `handleClose` as dismiss so Escape plays the exit.
 
-## Key Behaviors
+## Behaviors
 
-- **Landing parallax**: `useScrollParallax` is bidirectional/reversible, rAF-throttled, skips updates under 0.5px, progress denominator is `innerHeight * 0.9`, and no-ops entirely under reduced motion. `NameDisplay` slides up 40vh starting at scroll 0. `LandingButtons` slides up 40vh starting after `innerHeight * 0.2` scroll. Cascading effect: name exits first, buttons follow.
-- **About entrance animation plays ONCE**: `useIntersectionAnimation` latches via a `hasAnimated` useRef (threshold 0.15, rootMargin -50px). It takes a target ref — `AboutSection` owns it and passes `isVisible` down to `AboutContent`. Does not replay on return from contact.
-- Desktop about section: `height: 100dvh`. Mobile (≤640px): `height: auto` + `min-height: 100dvh`.
-- All 3 sections: `scroll-snap-align: start` + `scroll-snap-stop: always`; container has `scroll-snap-type: y mandatory` (`.scroll-container` in `globals.css`).
-- Theme thresholds in `page.tsx`: `scrollY < 0.9*vh` → landing/light, `0.9–1.9*vh` → about/dark, above → contact/light. `isDarkTheme` only drives `HamburgerButton`.
-- The hamburger's opacity transition is deliberately asymmetric — 0.25s in (base rule), 0.5s out (`--faded` rule). A transition is taken from the state being entered, so editing the base rule changes fade-in only.
+- **Landing parallax** (`useScrollParallax`): bidirectional, rAF-throttled, skips sub-0.5px updates, denominator `innerHeight * 0.9`, no-op under reduced motion. `NameDisplay` slides up 40vh from scroll 0; `LandingButtons` the same but only after `innerHeight * 0.2` — name exits first, buttons follow.
+- **About entrance plays once**: `useIntersectionAnimation` latches on a `hasAnimated` ref (threshold 0.15, rootMargin -50px). `AboutSection` owns the target ref and passes `isVisible` to `AboutContent`. No replay on return from contact.
+- About section: `height: 100dvh` desktop; `height: auto` + `min-height: 100dvh` at ≤640px.
+- All 3 sections use `scroll-snap-align: start` + `scroll-snap-stop: always`; `.scroll-container` has `scroll-snap-type: y mandatory`.
+- Theme thresholds in `page.tsx`: `< 0.9*vh` landing/light, `0.9–1.9*vh` about/dark, above contact/light. `isDarkTheme` only drives `HamburgerButton`.
+- The hamburger's opacity transition is asymmetric on purpose — 0.25s in (base rule), 0.5s out (`--faded`). A transition comes from the state being entered, so the base rule only affects fade-in.
 
-## Known Issues — real, unfixed
+## Known issues — real, unfixed
 
-- The contact rate limiter (`src/lib/rateLimit.ts`) is an in-process `Map`, so on serverless it is per-instance, not global. Deliberate — see `docs/backlog.md`.
+- Contact rate limiter (`src/lib/rateLimit.ts`) is an in-process `Map` → per-instance on serverless. Deliberate; see `docs/backlog.md`.
 
 ## Removed — do not re-add
 
-- `BlurOverlay.tsx`, `PrismOverlay.tsx`, `overlay.css`
-- `ThreeCanvas.tsx`, `AnnouncementMarquee.tsx`, `MobileDropdown.tsx`, `useResponsive.ts`, `useMarquee.ts`, `marquee.css`, `public/fonts/`
+- `BlurOverlay.tsx`, `PrismOverlay.tsx`, `overlay.css`, `ThreeCanvas.tsx`, `AnnouncementMarquee.tsx`, `MobileDropdown.tsx`, `useResponsive.ts`, `useMarquee.ts`, `marquee.css`, `public/fonts/`
 - `three`, `@react-three/fiber`, `@react-three/drei` — uninstalled. Nothing renders WebGL.
-- `NameDisplay`'s name/initials toggle. Its `onToggle` / `showInitials` / `isFading` / `isSmallScreen` props were dead and are gone; the component takes only `containerRef`. Don't "fix" the toggle back in without checking why it was disabled.
-- `ContactSection`'s `onOpenNav` prop — was passed but never destructured.
-- `src/lib/utils.ts` exports only `scrollToAbout` and `scrollToContact`, both taking no arguments. `scrollToSection` and `getThemeForScrollPosition` don't exist — don't use them.
-- `setIsDarkTheme` props on `FullScreenNavProps`, `AboutSectionProps`, `AboutHeaderProps`, and the `ThemeProps` / `AnimationState` / `SectionWrapperProps` / `ContactFormProps` interfaces — all deleted as unused.
+- `NameDisplay`'s name/initials toggle and its `onToggle`/`showInitials`/`isFading`/`isSmallScreen` props; it takes only `containerRef`. Check why it was disabled before "fixing" it back.
+- `ContactSection`'s `onOpenNav` prop.
+- `setIsDarkTheme` props on `FullScreenNavProps` / `AboutSectionProps` / `AboutHeaderProps`, and the `ThemeProps` / `AnimationState` / `SectionWrapperProps` / `ContactFormProps` interfaces.
+- `src/lib/utils.ts` exports only `scrollToAbout` and `scrollToContact`, both argument-less. `scrollToSection` and `getThemeForScrollPosition` don't exist.
 
 ## Routing
 
-- `next.config.ts` rewrites `/blog` and `/blog/:path*` to `https://blog.xsooi.com`. `/blog` is NOT a local route — don't create `src/app/blog`.
+`next.config.ts` rewrites `/blog` and `/blog/:path*` to `https://blog.xsooi.com`. Don't create `src/app/blog`.
 
-## Environment Variables
+## Env vars
 
-- `RESEND_API_KEY` — contact API (`src/app/api/contact/route.ts`) returns 503 without it.
-- `NEXT_PUBLIC_SITE_URL` — defaults to `https://xsooi.com`; feeds layout metadata, `robots.ts`, `sitemap.ts`, `BreadcrumbSchema`. `.env.example` only lists this one.
+- `RESEND_API_KEY` — contact route returns 503 without it.
+- `NEXT_PUBLIC_SITE_URL` — defaults to `https://xsooi.com`; feeds layout metadata, `robots.ts`, `sitemap.ts`, `BreadcrumbSchema`. Only entry in `.env.example`.
 
-## Contact API Rules
+## Contact API
 
-- Never return raw provider errors or the Resend response body to the client — log server-side, return a generic message.
-- `name` and `email` are CRLF-stripped before reaching the `subject` header. Keep that if you change the send call.
-- Validation lives at the top of the route: 5 requests/hour/IP, email regex, and length caps (name 100, email 200, message 5000).
+- Never return raw provider errors or the Resend response body to the client — log server-side, send a generic message.
+- `name` and `email` are CRLF-stripped before the `subject` header. Keep that.
+- Validation at the top of the route: 5 req/hour/IP, email regex, length caps (name 100, email 200, message 5000).
 
-## SEO Surfaces — keep in sync when sections change
+## SEO surfaces — keep in sync when sections change
 
-- `layout.tsx` metadata + JSON-LD `Person`
-- `src/components/seo/BreadcrumbSchema.tsx`
-- `sitemap.ts` (`/` only — no fragment URLs)
-- `robots.ts`
+`layout.tsx` metadata + JSON-LD `Person`, `src/components/seo/BreadcrumbSchema.tsx`, `sitemap.ts` (`/` only, no fragments), `robots.ts`.
 
 ## Fonts
 
-- `next/font/local` from `src/fonts/`, via `--font-roboto-mono` / `--font-hubot-sans`. Don't go back to `@fontsource` — it gets no preload.
-- **Ship only Roboto Mono 400/500 and Hubot Sans 400.** CSS asks for 700; that bold is synthesised and the design is built around it. Adding a real 700 file changes the type — tried once, reverted.
-- Both faces keep next/font's default `adjustFontFallback` (the `size-adjust` metrics that hold CLS down). That works only while every rendered character exists in the font file — the CTA arrow used to be `↓` (U+2193), which Roboto Mono lacks, and the Arial fallback face redrew it. It is now a lucide `ArrowDown`. Before adding a non-ASCII character to Roboto Mono text, check the file's cmap.
+- `next/font/local` from `src/fonts/`, via `--font-roboto-mono` / `--font-hubot-sans`. Don't go back to `@fontsource` — no preload.
+- **Ship only Roboto Mono 400/500 and Hubot Sans 400.** CSS asks for 700; that bold is synthesised and the design is built on it. A real 700 file changes the type — tried once, reverted.
+- Both faces keep next/font's default `adjustFontFallback` (`size-adjust` metrics, holds CLS down), which only works while every rendered character exists in the font. The CTA arrow was `↓` (U+2193), absent from Roboto Mono, and the Arial fallback redrew it — it's a lucide `ArrowDown` now. Check the cmap before adding non-ASCII to Roboto Mono text.
 
-## Before Pushing
+## Before pushing
 
-Run `npm install && npm run build`, plus `npm test`, `npm run lint` and `npm run format:check`. CI runs all five; resolve failures before committing. Prettier config is `.prettierrc.json` (single quotes, semicolons) — run `npm run format` to fix.
+`npm install && npm run build`, plus `npm test`, `npm run lint`, `npm run format:check`. CI runs all five. Prettier config is `.prettierrc.json` (single quotes, semicolons); `npm run format` fixes.
