@@ -151,6 +151,7 @@ export function Tooltip({
   const canHover = useCanHover();
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<Position | null>(null);
+  const [instant, setInstant] = useState(false);
   const triggerRef = useRef<HTMLElement | null>(null);
   const tipRef = useRef<HTMLDivElement | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -167,10 +168,11 @@ export function Tooltip({
 
   const show = useCallback((immediate: boolean) => {
     clearTimer();
-    const delay =
-      immediate || Date.now() - lastClosedAt < SKIP_DELAY_MS
-        ? 0
-        : OPEN_DELAY_MS;
+    // Second tip in a row: no delay, and no entrance either — the eye is
+    // already there, so replaying the animation just reads as lag
+    const skipping = Date.now() - lastClosedAt < SKIP_DELAY_MS;
+    setInstant(skipping);
+    const delay = immediate || skipping ? 0 : OPEN_DELAY_MS;
     timer.current = setTimeout(() => setOpen(true), delay);
   }, []);
 
@@ -300,6 +302,7 @@ export function Tooltip({
             className="tooltip"
             data-placement={position?.placement ?? placement}
             data-ready={position !== null}
+            data-instant={instant ? 'true' : undefined}
             style={{ left: position?.x ?? 0, top: position?.y ?? 0 }}
           >
             {label}

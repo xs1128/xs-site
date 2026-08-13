@@ -73,6 +73,11 @@
   will-change: transform;
 }
 
+/* Not a link — `help` says "there is something to read here", not "click me" */
+.name-display__canvas-container {
+  cursor: help;
+}
+
 /* 3D Name Scene */
 .name-3d-scene {
   position: relative;
