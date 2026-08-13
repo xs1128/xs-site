@@ -40,6 +40,11 @@ interface Position {
   placement: Placement;
 }
 
+// A zero-size rect at the cursor. place() reads nothing else, so cursor
+// anchoring gets the same flip and edge clamping as element anchoring.
+const cursorRect = (x: number, y: number) =>
+  ({ top: y, bottom: y, left: x, right: x, width: 0, height: 0 }) as DOMRect;
+
 // tip is measured with offsetWidth/Height, not a rect: the enter transition
 // scales the tooltip, and a scaled rect would offset the centering.
 function place(
@@ -113,6 +118,7 @@ function useCanHover(): boolean {
 type TriggerProps = {
   'aria-describedby'?: string;
   onPointerEnter?: (event: PointerEvent<HTMLElement>) => void;
+  onPointerMove?: (event: PointerEvent<HTMLElement>) => void;
   onPointerLeave?: (event: PointerEvent<HTMLElement>) => void;
   onFocus?: (event: FocusEvent<HTMLElement>) => void;
   onBlur?: (event: FocusEvent<HTMLElement>) => void;
@@ -125,6 +131,8 @@ export interface TooltipProps {
   label: string;
   /** Preferred side; flips to the opposite one when it won't fit */
   placement?: Placement;
+  /** Track the cursor instead of the trigger box. Falls back to the box on keyboard focus */
+  followCursor?: boolean;
   /** Single element trigger — it is cloned, so it must take a ref and handlers */
   children: ReactElement<TriggerProps>;
 }
@@ -134,13 +142,22 @@ export interface TooltipProps {
  * or stacking context can clip it. Returns `children` untouched on touch —
  * a tooltip nothing can hover is dead weight.
  */
-export function Tooltip({ label, placement = 'top', children }: TooltipProps) {
+export function Tooltip({
+  label,
+  placement = 'top',
+  followCursor = false,
+  children,
+}: TooltipProps) {
   const canHover = useCanHover();
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<Position | null>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const tipRef = useRef<HTMLDivElement | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cursor = useRef<{ x: number; y: number } | null>(null);
+  // Cached at open: re-reading offsetWidth per frame would force layout
+  const tipSize = useRef({ width: 0, height: 0 });
+  const raf = useRef<number | null>(null);
   const id = useId();
 
   const clearTimer = () => {
@@ -176,14 +193,39 @@ export function Tooltip({ label, placement = 'top', children }: TooltipProps) {
     const trigger = triggerRef.current;
     const tip = tipRef.current;
     if (!trigger || !tip) return;
-    setPosition(
-      place(
-        trigger.getBoundingClientRect(),
-        { width: tip.offsetWidth, height: tip.offsetHeight },
-        placement,
-      ),
-    );
-  }, [placement]);
+    tipSize.current = { width: tip.offsetWidth, height: tip.offsetHeight };
+    const anchor =
+      followCursor && cursor.current
+        ? cursorRect(cursor.current.x, cursor.current.y)
+        : trigger.getBoundingClientRect();
+    setPosition(place(anchor, tipSize.current, placement));
+  }, [placement, followCursor]);
+
+  // Follow updates bypass React: one rAF-throttled style write per frame
+  useEffect(() => {
+    if (!open || !followCursor) return;
+
+    const onMove = (event: globalThis.PointerEvent) => {
+      cursor.current = { x: event.clientX, y: event.clientY };
+      if (raf.current !== null) return;
+      raf.current = requestAnimationFrame(() => {
+        raf.current = null;
+        const tip = tipRef.current;
+        const at = cursor.current;
+        if (!tip || !at) return;
+        const next = place(cursorRect(at.x, at.y), tipSize.current, placement);
+        tip.style.left = `${next.x}px`;
+        tip.style.top = `${next.y}px`;
+      });
+    };
+
+    window.addEventListener('pointermove', onMove);
+    return () => {
+      window.removeEventListener('pointermove', onMove);
+      if (raf.current !== null) cancelAnimationFrame(raf.current);
+      raf.current = null;
+    };
+  }, [open, followCursor, placement]);
 
   useIsomorphicLayoutEffect(() => {
     if (open) reposition();
@@ -218,7 +260,13 @@ export function Tooltip({ label, placement = 'top', children }: TooltipProps) {
     'aria-describedby': open ? id : childProps['aria-describedby'],
     onPointerEnter: (event: PointerEvent<HTMLElement>) => {
       childProps.onPointerEnter?.(event);
+      cursor.current = { x: event.clientX, y: event.clientY };
       show(false);
+    },
+    // Keeps the open-delay from placing the tip where the cursor used to be
+    onPointerMove: (event: PointerEvent<HTMLElement>) => {
+      childProps.onPointerMove?.(event);
+      cursor.current = { x: event.clientX, y: event.clientY };
     },
     onPointerLeave: (event: PointerEvent<HTMLElement>) => {
       childProps.onPointerLeave?.(event);
@@ -226,6 +274,8 @@ export function Tooltip({ label, placement = 'top', children }: TooltipProps) {
     },
     onFocus: (event: FocusEvent<HTMLElement>) => {
       childProps.onFocus?.(event);
+      // No cursor to follow on a keyboard focus — anchor to the box
+      cursor.current = null;
       if (event.currentTarget.matches(':focus-visible')) show(true);
     },
     onBlur: (event: FocusEvent<HTMLElement>) => {

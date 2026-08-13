@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useScrollParallax } from '@/hooks/useScrollParallax';
+import { Tooltip } from '@/components/ui/Tooltip';
 
 export interface NameDisplayProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -69,18 +70,20 @@ export function NameDisplay({ containerRef }: NameDisplayProps) {
       </div>
 
       <div className="name-display-wrapper" style={containerStyle}>
-        <div
-          className="name-display__canvas-container"
-          role="img"
-          aria-label="3D animation: Xinsheng Ooi"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <NameSceneContent showInitials={false} />
-        </div>
+        <Tooltip label="I make deploys boring." followCursor>
+          <div
+            className="name-display__canvas-container"
+            role="img"
+            aria-label="3D animation: Xinsheng Ooi"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <NameSceneContent showInitials={false} />
+          </div>
+        </Tooltip>
         <h2 className="landing-section__headline">
           I turn real problems into automated solutions.
         </h2>
