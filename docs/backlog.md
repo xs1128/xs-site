@@ -1,41 +1,52 @@
 # Backlog
 
-Outstanding work, ranked. Tiers 1–3 are cleanup on what exists; tier 4 is the
+Outstanding work, ranked. Tiers 2–3 are cleanup on what exists; tier 4 is the
 work that changes what the site *is*.
 
 Everything here was verified against the codebase, not assumed. Items resolved
 along the way are in `git log`, not repeated here.
 
-## Tier 1 — correctness and user impact
+## Tier 1 — done
 
-### 1. Migrate fonts to `next/font`
+All three items are implemented. Kept here briefly so the history is legible.
 
-`layout.tsx` imports `@fontsource` CSS, which gets no preload and no
-`size-adjust` fallback metrics, so first paint flashes and shifts. Largest
-remaining measurable perf item.
+### 1. Fonts migrated to `next/font` — done
 
-Complication: Hubot Sans is not on Google Fonts, and `public/fonts/` was
-deleted as unreferenced. `next/font/local` needs those `.woff2` files back —
-recover from `git show 568ac2e:public/fonts/HubotSans-Regular.woff2` or from
-`node_modules/@fontsource/hubot-sans/files/`. Roboto Mono can go through
-`next/font/google` directly.
+`next/font/local` with latin-subset woff2 files in `src/fonts/`, exposed as
+`--font-roboto-mono` / `--font-hubot-sans` and consumed by the existing
+`--font-primary` / `--font-secondary` tokens. Fonts are now preloaded with
+`size-adjust` fallback metrics, which is the FOUT/CLS fix.
 
-### 2. Contact rate limiter is per-instance
+Found on the way: Hubot Sans is used at `font-weight: 700` but only 400 was
+ever loaded, so the browser had been synthesising bold. The real 700 face is
+now loaded.
 
-`api/contact/route.ts` holds an in-process `Map`, so on serverless the real
-limit is 5/hour × instance count. Adequate against casual form spam, not
-against a determined sender. Needs Upstash Redis or Vercel KV for a global
-limit. Only worth doing if spam actually arrives.
+`@fontsource/*` uninstalled.
 
-### 3. No tests
+### 2. Rate limiter extracted — done, with a caveat
 
-Nothing guards the recent fixes. In priority order:
+`src/lib/rateLimit.ts`, still an in-process `Map`. On serverless the limit
+therefore applies per instance, not globally.
 
-- the scroll listener in `page.tsx` attaches exactly once
-- `useFocusTrap` cycles at both edges and restores focus on close
-- `api/contact` validation branches (429, invalid email, length caps, CRLF strip)
+Deliberately *not* wired to Redis. That solves spam nobody is currently
+sending, and costs a service dependency to do it. The module is small enough
+that swapping the `Map` for a shared store is a one-function change if spam
+ever arrives.
 
-Vitest + Testing Library for the first two, plain handler tests for the third.
+### 3. Tests — done
+
+Vitest + Testing Library, 15 tests, wired into CI:
+
+- `useFocusTrap` — container focus, both wrap directions, Escape, focus restore
+- `rateLimit` — limit boundary, key isolation, window expiry
+- `api/contact` — happy path, missing field, bad email, oversize body, CRLF
+  stripping, 429 on the sixth request, and that provider errors never reach
+  the client
+
+The scroll-listener regression from the original audit is *not* covered.
+Asserting "exactly one listener" needs either a spy on the container or a
+render-count harness, and neither reads clearly enough to be worth it. The
+`useEffect` shape makes the leak hard to reintroduce by accident.
 
 ## Tier 2 — architecture
 
@@ -82,36 +93,42 @@ The block at the end of `about.css` is superseded by the global one in
 
 Prettier, plus a pre-commit hook if commit-time enforcement is wanted.
 
+### 11. Broaden test coverage
+
+Current tests cover the security-sensitive and regression-prone paths only.
+Components have none. Worth adding only where behaviour is genuinely tricky,
+not for coverage's sake.
+
 ## Tier 4 — direction
 
 None of the above moves the needle on what the portfolio actually does. This
 tier does.
 
-### 11. A work / case-study layer
+### 12. A work / case-study layer
 
 The biggest structural gap. Three sections, no projects. Award-tier portfolios
 are roughly 70% work. For a DevOps portfolio that means infra case studies with
 real numbers: deploy time before and after, cost saved, MTTR.
 
-### 12. CSS scroll-driven animations
+### 13. CSS scroll-driven animations
 
 `animation-timeline: view()` / `scroll()` replaces the IntersectionObserver and
 rAF JS with compositor-threaded CSS. Around 84% global support mid-2026; gate
 with `@supports (animation-timeline: scroll())`. Directly serves the
 60fps-on-mid-range-Android bar that award juries score.
 
-### 13. View Transitions API
+### 14. View Transitions API
 
 For the nav overlay and the `/blog` cross-document jump. Same-document is
 widely supported; Firefox falls back to a cross-fade on cross-document.
 
-### 14. Kinetic typography over WebGL
+### 15. Kinetic typography over WebGL
 
 The layered `name-3d-layer` system is already the seed of a signature. Pushing
 it is cheaper, more distinctive, and holds 60fps better than adding a 3D scene
 that every other portfolio has.
 
-### 15. Live infrastructure data
+### 16. Live infrastructure data
 
 The actual differentiator. Uptime, deploy status, real pipeline visualisation,
 rendered in the warm-paper palette. Nobody owns "infrastructure made
@@ -119,6 +136,8 @@ beautiful"; everybody owns "spinning 3D cube."
 
 ## Suggested order
 
-1 (closes out the perf audit), then straight to 11. Tier 2 is genuine
-cleanliness but no visitor can perceive it, and 11 is the item that changes
-what the site is.
+Tier 1 is closed, which means the cleanup with real user impact is done.
+
+Go to 12 next. Tier 2 and 3 are genuine tidiness but no visitor can perceive
+any of it, and 12 is the item that changes what the site is. The rest can be
+picked off opportunistically when touching nearby code.

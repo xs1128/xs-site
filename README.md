@@ -7,7 +7,7 @@ Minimalist single-page landing site: scroll-snapped Landing / About / Contact se
 - **Framework**: Next.js 16 (App Router, Turbopack by default)
 - **UI**: React 19, TypeScript 5
 - **Styling**: Plain CSS with custom properties (no CSS-in-JS, no Tailwind)
-- **Fonts**: Roboto Mono, Hubot Sans (via `@fontsource`, imported in `layout.tsx`)
+- **Fonts**: Roboto Mono, Hubot Sans — self-hosted latin subsets in `src/fonts/`, loaded with `next/font/local` (preloaded, with `size-adjust` fallback metrics)
 - **Email**: Resend
 - **No 3D libraries**: `NameScene` and `CardScene` live under `components/3d/` but are DOM + CSS transforms, not WebGL. `three` / `@react-three/fiber` / `@react-three/drei` were uninstalled once their only consumer was removed.
 
@@ -17,6 +17,7 @@ Minimalist single-page landing site: scroll-snapped Landing / About / Contact se
 npm install
 npm run dev     # start dev server
 npm run lint    # ESLint
+npm test        # Vitest
 npm run build   # production build — run before every push
 npm run start   # serve the production build
 ```
@@ -113,7 +114,9 @@ public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.p
 
 ## Known Issues
 
-- No tests and no formatter config. CI runs typecheck, lint and build on push to `main` and on PRs (`.github/workflows/ci.yml`).
+- No formatter config. CI runs typecheck, lint, test and build on push to `main` and on PRs (`.github/workflows/ci.yml`).
+- Tests cover `useFocusTrap`, `lib/rateLimit` and the contact route; components have none.
+- Contact rate limiting is in-process, so on serverless it applies per instance. See `docs/backlog.md`.
 - `tsconfig.paths.json` — not extended by `tsconfig.json`; has no effect.
 
 ## Deploy

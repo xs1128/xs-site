@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { isRateLimited } from '@/lib/rateLimit';
 
 const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
@@ -9,19 +10,6 @@ const RATE_LIMIT = 5;
 const RATE_WINDOW_MS = 60 * 60 * 1000;
 const LIMITS = { name: 100, email: 200, message: 5000 };
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const recentRequests = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const recent = (recentRequests.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  recentRequests.set(ip, recent);
-
-  if (recent.length >= RATE_LIMIT) return true;
-
-  recent.push(now);
-  return false;
-}
 
 const asField = (value: unknown): string =>
   typeof value === 'string' ? value.replace(/[\r\n]+/g, ' ').trim() : '';
@@ -33,7 +21,7 @@ export async function POST(request: Request) {
     }
 
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
-    if (isRateLimited(ip)) {
+    if (isRateLimited(`contact:${ip}`, RATE_LIMIT, RATE_WINDOW_MS)) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
 

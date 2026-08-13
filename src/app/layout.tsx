@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import "@fontsource/roboto-mono/400.css";
-import "@fontsource/roboto-mono/500.css";
-import "@fontsource/hubot-sans/400.css";
+import { robotoMono, hubotSans } from "@/fonts";
 import "./globals.css";
 import "../styles/animations.css";
 import "../styles/navigation.css";
@@ -117,7 +115,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${robotoMono.variable} ${hubotSans.variable}`}>
       <head>
         <script
           type="application/ld+json"

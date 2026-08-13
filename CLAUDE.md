@@ -34,7 +34,7 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 
 ## Known Issues — real, unfixed
 
-- The contact rate limiter is an in-process `Map`, so on serverless it is per-instance, not global.
+- The contact rate limiter (`src/lib/rateLimit.ts`) is an in-process `Map`, so on serverless it is per-instance, not global. Deliberate — see `docs/backlog.md`.
 
 ## Removed — do not re-add
 
@@ -68,6 +68,11 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 - `sitemap.ts` (`/`, `/#about`, `/#contact`)
 - `robots.ts`
 
+## Fonts
+
+- Loaded via `next/font/local` from `src/fonts/`, exposed as `--font-roboto-mono` / `--font-hubot-sans` and consumed by `--font-primary` / `--font-secondary`. Don't add `@fontsource` or a Google Fonts `<link>` back — both lose preloading and fallback metrics.
+- Only the weights actually used are shipped: Roboto Mono 400/500, Hubot Sans 400/700. Using a weight that isn't loaded gets you a synthesised face, which is what happened to Hubot Sans 700 before the migration.
+
 ## Before Pushing
 
-Always run `npm install && npm run build` and resolve all TypeScript errors before committing.
+Run `npm install && npm run build`, plus `npm test` and `npm run lint`. CI runs all four; resolve failures before committing.
