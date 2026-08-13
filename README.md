@@ -1,198 +1,120 @@
-# Personal Website - Landing Page
+# Personal Website
 
-Minimalist personal landing page with a scrolling announcement bar, centered name display, navigation buttons, and a full-screen navigation overlay.
+Minimalist single-page landing site: scroll-snapped Landing / About / Contact sections, full-screen nav overlay, and an email-backed contact form.
 
 ## Tech Stack
 
-- **Framework**: Next.js 16 (App Router) with Turbopack
-- **UI**: React 19
-- **Language**: TypeScript
-- **Styling**: Plain CSS with CSS custom properties and @media queries
-- **Fonts**: Roboto Mono (primary), Hubot Sans (announcements)
-- **Email Service**: Resend (contact form submissions)
-
-## Color Scheme (Vintage Poster Palette - Warm Vermillion Edition)
-
-- **Landing Page Background**: `#F2E9D8` (warm aged paper)
-- **About Section Background**: `#2A2F35` (dark charcoal)
-- **Full-Screen Nav Background**: `#363D44` (dark gray)
-- **Nav Button Panels**: `#444C55` (medium gray)
-- **Text**: `#F2E9D8` (warm aged paper - on dark backgrounds)
-- **Text**: `#2A2F35` (dark charcoal - on light backgrounds)
-- **Accent**: `#E5532C` (warm vermilion)
-- **Cards**: `#E4D9C2` (light cream)
-- **Borders**: `#D6CBB3` (muted tan)
-
-## Features
-
-### Three-Section Layout with Scroll Snap
-
-1. **Landing Section** (100dvh): Warm aged paper background with centered name
-2. **About Section** (100dvh): Dark charcoal background with expertise cards
-3. **Contact Section** (100dvh): Light background with spinning circular text and contact form
-
-### Announcement Marquee
-
-- Fixed position at top of screen with `z-index: 1000`
-- **Dynamic theme switching** based on scroll position:
-  - Default (landing section): Dark background with off-white text
-  - Scrolled to about section: Light background with dark text
-  - Switches at 90% scroll through first section
-- **Infinite scrolling marquee** with dynamic item generation
-- **Pause on hover** - stops when mouse is anywhere in the marquee container
-
-### Name Display
-
-- Centered "Xinsheng Ooi" on desktop, "xs" on small screens (< 625px)
-- Click to toggle between full name and initials with fade animation (0.4s)
-- Responsive sizing: `clamp(65px, 10vw, 180px)` desktop, `clamp(48px, 15vw, 120px)` mobile
-- Font: Roboto Mono, weight 570, letter spacing -0.06em
-- **3D tilt effect**: Name follows mouse movement with subtle rotation
-- **Scroll-based parallax**: Name slides up as you scroll toward about section (starts immediately, 40vh distance)
-
-### Navigation Buttons (ABOUT & CONTACT)
-
-- Positioned at bottom-left (ABOUT) and bottom-right (CONTACT) of landing section
-- **Scroll-based parallax**: Buttons slide up as you scroll toward about section (starts after 20vh delay, 40vh distance)
-- Creates cascading parallax effect with name display
-- Animated underline effect on hover
-
-### Full-Screen Navigation Overlay
-
-- Triggered by hamburger menu on small screens and ABOUT button in about section
-- **Animations**:
-  - Slide in from right (0.8s cubic-bezier(0.16, 1, 0.3, 1))
-  - Fade-in cascade for nav items
-  - Slide out on close
-- **Text color fill effect** on hover with left-to-right vermilion color fill
-- **Buttons**: ABOUT, CONTACT, PROJECTS, BLOG with SVG arrow indicators
-- Disables page scroll when open
-
-### About Section
-
-- Dark charcoal background (`#2A2F35`)
-- **One-time scroll-triggered animations**: Elements animate in when scrolling from landing to about section (only plays once, does not replay when returning from contact)
-- **Animated headline**: "I turn real problems into automated solutions." with word-by-word reveal effect
-- **Three expertise cards** with enhanced interactions:
-  - 3D tilt effect on desktop (follows cursor movement)
-  - Icon bounce animation on hover/tap
-  - Icon glow effect with vermilion shadow
-  - Parallax depth (title and description float at different Z-levels)
-  - Mobile: Tap animations with `:active` pseudo-class
-  - Mobile: Equal heights, compact padding (20px/32px), no levitation
-- **Magnetic CTA button**: Subtly follows cursor on desktop
-- **Desktop viewport optimization**: Fixed height: `height: 100dvh` (fits exactly one viewport)
-- **Mobile**: `height: auto` (allows scroll if needed)
-
-### Contact Section
-
-- Light cream background (`#F2E9D8`)
-- Spinning circular text with "Xinsheng Ooi" featuring animated +/- symbol in center
-- Clicking circle opens contact form with smooth sequential animations
-- **Form submissions are automatically sent via email using Resend API**
-- Email address at bottom: "email: hi@xsooi.com" with clickable mailto link
-- Social media links at bottom (GitHub, Instagram, Facebook, LinkedIn)
+- **Framework**: Next.js 16 (App Router, Turbopack by default)
+- **UI**: React 19, TypeScript 5
+- **Styling**: Plain CSS with custom properties (no CSS-in-JS, no Tailwind)
+- **Fonts**: Roboto Mono, Hubot Sans (via `@fontsource`, imported in `layout.tsx`)
+- **Email**: Resend
+- **3D deps installed but unused**: `three` / `@react-three/fiber` / `@react-three/drei` are in `package.json`, but the only consumer (`src/components/3d/ThreeCanvas.tsx`) isn't imported anywhere. `NameScene` and `CardScene` are DOM + CSS transforms, not WebGL.
 
 ## Development
 
-### Before Pushing
-
-**ALWAYS** run the following commands before pushing any changes:
-
 ```bash
 npm install
-npm run build
+npm run dev     # start dev server
+npm run lint    # ESLint
+npm run build   # production build — run before every push
+npm run start   # serve the production build
 ```
 
-### Contact Form Email Setup
+Always run `npm install && npm run build` before pushing; fix any TypeScript/build errors first.
 
-**Local Development:**
+## Environment Variables
 
-1. Sign up at https://resend.com/signup (free tier: 3,000 emails/month)
-2. Get your API key from https://app.resend.com/api-keys
-3. Add to `.env.local`:
-   ```env
-   RESEND_API_KEY=re_your_api_key_here
-   ```
-4. Update the `to` field in `src/app/api/contact/route.ts` to match your Resend signup email
-5. Test the contact form locally
+| Variable | Required | Purpose |
+|---|---|---|
+| `RESEND_API_KEY` | Yes (contact form) | Server-side, used by `/api/contact`. Without it, POSTs return `503`. |
+| `NEXT_PUBLIC_SITE_URL` | No | Base URL for metadata/canonical/OG/sitemap/robots/JSON-LD. Falls back to `https://xsooi.com`. |
 
-**Production Deployment:**
+`.env.example` currently only lists `NEXT_PUBLIC_SITE_URL` — add `RESEND_API_KEY` there too when touching that file.
 
-1. Add `RESEND_API_KEY` to your hosting platform's environment variables (Vercel/Netlify)
-2. **Recommended**: Verify your domain in Resend dashboard:
-   - Go to https://app.resend.com/domains
-   - Add your domain (e.g., `xsooi.com`)
-   - Add provided DNS records to your domain provider
-   - Update `from` address in API route
+## Contact Form
 
-**Important Notes:**
+`POST /api/contact` (`src/app/api/contact/route.ts`) — body `{ name, email, message }`.
 
-- Free `@resend.dev` domain can only send to the email used for Resend signup
-- Domain verification required to send to other recipients
-- API route validates input and handles errors gracefully
-- Frontend shows loading states and success/error messages
+- `400` if any field missing, `503` if `RESEND_API_KEY` unset, `500` on send failure, `200 { success: true, data }` otherwise.
+- Sends from `Portfolio Contact <onboarding@resend.dev>` to `hi@xsooi.com`, with `replyTo` set to the submitter's email.
+- The free `onboarding@resend.dev` sender only delivers to the Resend account's own email — verify a domain in the Resend dashboard and update `from` to send to other recipients.
 
-## File Structure
+## SEO
+
+- `src/app/layout.tsx`: full `Metadata` export (title, description, canonical, icons, OpenGraph + Twitter `summary_large_image` using `/og-image.png`, robots directives) plus inline JSON-LD `Person` schema.
+- `src/components/seo/BreadcrumbSchema.tsx`: JSON-LD `BreadcrumbList` (Home / #about / #contact).
+- `src/app/robots.ts`: allows `/`, disallows `/api/`, `/_next/`, `/static/`.
+- `src/app/sitemap.ts`: `/`, `/#about`, `/#contact`.
+- `src/app/error.tsx` / `src/app/not-found.tsx`: minimal inline-styled fallbacks.
+
+## Behavior
+
+- One `ScrollContainer` with `scroll-snap-type: y mandatory`; each section uses `scroll-snap-align: start` + `scroll-snap-stop: always`.
+- `page.tsx` derives theme from scroll position: `<0.9vh` landing (light), `0.9–1.9vh` about (dark), `>1.9vh` contact (light). Also tracks `isPastLanding` (hamburger only shows past landing).
+- **Landing**: name renders via `NameScene` (lazy-loaded, `next/dynamic` with `ssr:false`), with a ±5° mouse tilt and scroll parallax (name slides up 40vh from 0vh scroll; ABOUT/CONTACT buttons slide up the same 40vh but start after 20vh, creating a cascade). The old click-to-toggle name/initials feature is gone — `showInitials` is hardcoded `false`.
+- **About**: one-time entrance animation via `useIntersectionAnimation` (threshold 0.15, `-50px` rootMargin), latched by a ref so it never replays. Word-by-word headline. Three `ExpertiseCard`s, wrapped in `CardScene` on desktop (±8° tilt, cursor spotlight) and a plain `div` on mobile. Section-level cursor glow (desktop only). `MagneticCTA` follows the cursor at 15% intensity.
+- **Contact**: spinning circular text (320px / 280px expanded / 240px mobile) opens `ContactPopup` on click; success/error states, auto-closes 1.5s after success. Footer has a `mailto:hi@xsooi.com` link plus GitHub/Instagram/Facebook/LinkedIn.
+- **Nav**: `FullScreenNav` — ABOUT, CONTACT, PROJECTS (github.com/xs1128), BLOG (xsooi.com/blog); 800ms close animation; locks body scroll while open.
+
+Breakpoint: 640px (`--breakpoint-small` in CSS, `BREAKPOINT = 640` inlined in `page.tsx`). About cards get an extra tier at 641–1050px, contact at 641–900px. Hover styles are gated behind `@media (hover: hover)`, and `about.css` honors `prefers-reduced-motion: reduce`.
+
+## Colors
+
+All custom properties live in `globals.css` under `:root`.
+
+| Token | Value | Use |
+|---|---|---|
+| `--color-landing-bg` | `#fbf9f4` | Landing background (cream sand) |
+| `--color-about-bg` | `#2A2F35` | About background |
+| `--color-nav-bg` | `#363D44` | Nav overlay background |
+| `--color-nav-panel` | `#444C55` | Nav button panels |
+| `--color-text-on-dark` | `#fbf9f4` | Text on dark backgrounds |
+| `--color-text-on-light` | `#2A2F35` | Text on light backgrounds |
+| `--color-accent` | `#E5532C` | Accent / hover fill |
+| `--color-accent-hover` | `#D64626` | Accent hover state |
+| `--color-terracotta` | `#e87a4d` | Secondary accent |
+| `--color-card-bg` | `#f0ede5` | About card background |
+| `--color-border` | `#e5e0d5` | Borders |
+| `--color-dropdown-hover` | `#ebe6dd` | Dropdown hover |
+
+## Structure
 
 ```
 src/
-├── app/
-│   ├── layout.tsx              # Root layout with font imports
-│   ├── page.tsx                # Main page - orchestrates sections and state
-│   ├── globals.css             # Base styles, custom properties, global reset (73 lines)
-│   └── api/
-│       └── contact/
-│           └── route.ts        # API route for contact form submissions
-│
-├── styles/
-│   ├── animations.css          # All @keyframe animations
-│   ├── marquee.css             # Marquee component styles
-│   ├── navigation.css          # Navigation and dropdown styles
-│   ├── about.css               # About section styles
-│   ├── contact.css             # Contact section styles
-│   └── landing.css             # Landing section styles
-│
-├── components/
-│   ├── about/                  # About section components
-│   ├── contact/                # Contact section components
-│   ├── landing/                # Landing section components
-│   ├── layout/                 # Layout components
-│   ├── marquee/                # Marquee component
-│   ├── navigation/             # Navigation components
-│   └── icons/                  # Icon components
-│
-├── hooks/
-│   ├── useResponsive.ts        # Screen size detection
-│   ├── useMarquee.ts           # Dynamic marquee item calculation
-│   ├── useIntersectionAnimation.ts  # Scroll-triggered animation detection
-│   └── useScrollParallax.ts   # Scroll-based parallax effect for landing elements
-│
-├── types/
-│   └── index.ts                # TypeScript interfaces
-│
-└── lib/
-    └── utils.ts                # Utility functions
-
-.env.local                     # Environment variables (RESEND_API_KEY)
-package.json                   # Dependencies
+  app/            layout.tsx, page.tsx, globals.css, error.tsx, not-found.tsx,
+                   robots.ts, sitemap.ts, icon.png, api/contact/route.ts
+  styles/         animations.css, marquee.css, navigation.css, about.css,
+                   contact.css, landing.css   (all imported in layout.tsx)
+  components/
+    landing/      LandingSection, NameDisplay, LandingButtons
+    about/        AboutSection, AboutHeader, AboutContent, ExpertiseCard,
+                   AnimatedHeadline, MagneticCTA
+    contact/      ContactSection, ContactHeader, SpinningCircularText,
+                   ContactPopup, SocialIconLink
+    navigation/   FullScreenNav, HamburgerButton, AnimatedButton, MobileDropdown
+    layout/       ScrollContainer
+    marquee/      AnnouncementMarquee
+    icons/        SocialIcons, StaticIcon
+    3d/           ThreeCanvas, landing/NameScene, about/CardScene
+    seo/          BreadcrumbSchema
+  hooks/          useResponsive, useMarquee, useIntersectionAnimation, useScrollParallax
+  types/          index.ts
+  lib/            utils.ts
+public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.png,
+                  site.webmanifest, icons/, fonts/
 ```
 
-## Recent Changes (2025)
+`@/*` resolves to `./src/*` — the only alias in effect (`tsconfig.json`). `tsconfig.paths.json` defines extra per-directory aliases but nothing extends it, so it is inert.
 
-### Parallax Animation System (March 2025)
+## Known Unused Code
 
-- **Added scroll-based parallax**: Name display and navigation buttons slide up when scrolling to about section
-- **Cascading effect**: Name starts immediately (0vh), buttons start after 20vh
-- **Reversible animations**: All parallax effects reverse when scrolling back up
-- **New hook**: `useScrollParallax` for continuous scroll tracking with requestAnimationFrame throttling
-- **Performance optimizations**: GPU-accelerated transforms with `will-change` hints
+- `AnnouncementMarquee` / `marquee.css` — component is never mounted by `page.tsx`, but the CSS is still imported.
+- `MobileDropdown` — never rendered.
+- `useResponsive` — never imported; `page.tsx` inlines its own resize listener instead.
+- `ThreeCanvas` — never imported (see Tech Stack note above).
+- `tsconfig.paths.json` — not extended by `tsconfig.json`; has no effect.
 
-### Code Cleanup & Optimization
+## Deploy
 
-- **Removed redundant code**: Duplicate interfaces, unused functions, unused state variables, unused overlay components
-- **Modularized CSS**: Split `globals.css` from 1,823 → 73 lines (96% reduction)
-- **Fixed scroll snap**: Added `scroll-snap-align: start` to all section containers
-- **Animation improvements**: About section animation now plays only once
-- **Mobile card enhancements**: Added `:active` pseudo-class for tap animations
-- **Desktop viewport optimization**: About section fixed at `height: 100dvh`
+`next.config.ts` proxies `/blog` and `/blog/:path*` to `https://blog.xsooi.com/blog...` — no local blog route exists. Set `RESEND_API_KEY` and (optionally) `NEXT_PUBLIC_SITE_URL` in the hosting platform's environment variables.

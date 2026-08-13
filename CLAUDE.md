@@ -1,167 +1,62 @@
 # Claude Code Instructions
 
-## Project Overview
+Conventions, gotchas, and hard rules for agents editing this repo. For stack/setup/features, see README.md.
 
-Minimalist personal landing page with modular component architecture using plain CSS with CSS custom properties and @media queries for responsive design.
+## CSS Rules
 
-**Framework**: Next.js 16 (App Router) with Turbopack
-**UI**: React 19
-**Language**: TypeScript
-**Styling**: Plain CSS (modular files under `src/styles/`)
+- New styles go in the matching file under `src/styles/`, NOT `globals.css`.
+- CSS custom properties go in `globals.css` `:root` only.
+- Every CSS file must be manually imported in `src/app/layout.tsx` — adding a file under `src/styles/` does nothing until it's imported there.
+- Breakpoint is 640px everywhere that matters (`--breakpoint-small`, `BREAKPOINT` const in `page.tsx`, `@media max-width: 640px`). The unused `useResponsive` hook defaults to 625 — inconsistent, don't copy it.
+- Hover effects are gated behind `@media (hover: hover)` throughout — keep new hover styles inside that guard so touch devices don't get stuck states.
+- `about.css` ends with a `@media (prefers-reduced-motion: reduce)` block that neutralizes the about-section animations. Add new about animations there too.
+- Palette (`globals.css` `:root`): `--color-landing-bg #fbf9f4`, `--color-about-bg #2A2F35`, `--color-nav-bg #363D44`, `--color-nav-panel #444C55`, `--color-text-on-dark #fbf9f4`, `--color-text-on-light #2A2F35`, `--color-accent #E5532C`, `--color-accent-hover #D64626`, `--color-terracotta #e87a4d`, `--color-card-bg #f0ede5`, `--color-border #e5e0d5`, `--color-dropdown-hover #ebe6dd`. Don't copy older hex values from memory — read this block.
 
-## Architecture
+## Component Architecture
 
-### CSS Modular Structure
+- Component props live in `src/types/index.ts`. Two similarly-named interfaces — don't confuse them:
+  - `AnimationState` — nav animations (`isClosing`, `isPopupClosing`, `isAnimating`)
+  - `IntersectionAnimationState` — scroll-triggered animations (`isVisible`)
+- `ScrollContainer` uses `forwardRef`; `page.tsx` passes a callback ref that also wires the scroll listener.
+- `ExpertiseCard` swaps wrapper by viewport: `CardScene` on desktop, plain `div` on mobile. `CardScene` and `NameScene` live under `components/3d/` but are DOM + CSS transforms, NOT WebGL — `three`/`@react-three/fiber`/`@react-three/drei` are installed yet unrendered.
 
-The project uses a modular CSS architecture with 7 separate CSS files:
+## Key Behaviors
 
-- **globals.css** (73 lines): Base styles, CSS custom properties, global reset
-- **animations.css**: All @keyframe animations
-- **marquee.css**: Marquee component styles
-- **navigation.css**: Navigation and dropdown styles
-- **about.css**: About section styles
-- **contact.css**: Contact section styles
-- **landing.css**: Landing section styles
+- **Landing parallax**: `useScrollParallax` is bidirectional/reversible, rAF-throttled, skips updates under 0.5px, progress denominator is `innerHeight * 0.9`. `NameDisplay` slides up 40vh starting at scroll 0. `LandingButtons` slides up 40vh starting after `innerHeight * 0.2` scroll. Cascading effect: name exits first, buttons follow.
+- **About entrance animation plays ONCE**: `useIntersectionAnimation` latches via a `hasAnimated` useRef, observing `.about-section` directly (threshold 0.15, rootMargin -50px). Does not replay on return from contact.
+- Desktop about section: `height: 100dvh`. Mobile (≤640px): `height: auto` + `min-height: 100dvh`.
+- All 3 sections: `scroll-snap-align: start` + `scroll-snap-stop: always`; container has `scroll-snap-type: y mandatory` (`.scroll-container` in `globals.css`).
+- Theme thresholds in `page.tsx`: `scrollY < 0.9*vh` → landing/light, `0.9–1.9*vh` → about/dark, above → contact/light. `isDarkTheme` currently only drives `HamburgerButton` since the marquee is unmounted (see Dead Code).
 
-**Important**: When adding styles, put them in the appropriate modular CSS file, NOT in globals.css.
+## Dead Code — unused, confirm intent before extending
 
-### Component Architecture
+- `NameDisplay`'s name/initials toggle is dead: `showInitials` is hardcoded `false`, `onToggle` is `() => {}`. No click-to-toggle behavior exists anymore — don't "fix" it back in without checking why it was disabled.
+- `AnnouncementMarquee` (`marquee/`) and `MobileDropdown` (`navigation/`) are never rendered by `page.tsx`.
+- `useResponsive` hook is never imported — `page.tsx` inlines its own resize listener with `const BREAKPOINT = 640`.
+- `ThreeCanvas` is never imported.
+- `marquee.css` is still imported in `layout.tsx` even though the marquee is unmounted.
 
-- **Props Interfaces**: All component props defined in `src/types/index.ts`
-- **Composition**: Complex sections built from smaller, reusable components
-- **State Management**: Global state in page.tsx, local state in components
-- **Forward Refs**: ScrollContainer uses forwardRef to expose ref to parent
+## Removed — do not re-add
 
-### Key Implementation Details
+- `BlurOverlay.tsx`, `PrismOverlay.tsx`, `overlay.css`
+- `src/lib/utils.ts` exports only `scrollToAbout` and `scrollToContact`. `scrollToSection` and `getThemeForScrollPosition` don't exist — don't use them.
 
-#### Landing Section Parallax Animation
+## Routing
 
-**IMPORTANT**: The landing section has reversible scroll-based parallax animations.
+- `next.config.ts` rewrites `/blog` and `/blog/:path*` to `https://blog.xsooi.com`. `/blog` is NOT a local route — don't create `src/app/blog`.
 
-- **Name Display**: Slides up 40vh starting immediately (0vh scroll)
-- **Navigation Buttons**: Slides up 40vh starting after 20vh scroll
-- Creates cascading parallax effect where name exits first, followed by buttons
-- Uses `useScrollParallax` hook with continuous scroll tracking (bidirectional)
-- Preserves existing 3D tilt effect alongside parallax translation
-- All animations are reversible when scrolling back up
+## Environment Variables
 
-#### About Section Animation Behavior
+- `RESEND_API_KEY` — contact API (`src/app/api/contact/route.ts`) returns 503 without it.
+- `NEXT_PUBLIC_SITE_URL` — defaults to `https://xsooi.com`; feeds layout metadata, `robots.ts`, `sitemap.ts`, `BreadcrumbSchema`. `.env.example` only lists this one.
 
-**IMPORTANT**: The about section animation plays **ONLY ONCE** when scrolling from landing → about.
+## SEO Surfaces — keep in sync when sections change
 
-- Uses `useIntersectionAnimation` hook with `useRef` to track if animation has already played
-- Does NOT replay when returning from contact section
-- Hook uses `IntersectionAnimationState` interface (NOT `AnimationState` - that's a different interface)
+- `layout.tsx` metadata + JSON-LD `Person`
+- `src/components/seo/BreadcrumbSchema.tsx`
+- `sitemap.ts` (`/`, `/#about`, `/#contact`)
+- `robots.ts`
 
-#### Mobile vs Desktop Behavior
+## Before Pushing
 
-**Desktop (>640px)**:
-- About section: `height: 100dvh` with `overflow: hidden`
-- Expertise cards: 3D tilt effect, full hover animations
-- Fixed viewport, no internal scroll
-
-**Mobile (≤640px)**:
-- About section: `height: auto` with `overflow: visible` (allows scroll if needed)
-- Expertise cards: Tap animations with `:active` pseudo-class, NO levitation
-- Cards have equal heights with `height: 100%`
-- Compact padding: 20px 32px
-
-#### Scroll Snap Behavior
-
-All three sections have:
-- `scroll-snap-align: start`
-- `scroll-snap-stop: always`
-- Container: `scroll-snap-type: y mandatory`
-
-This ensures smooth section-by-section scrolling.
-
-## Development Workflow
-
-### Before Pushing
-
-**ALWAYS** run:
-```bash
-npm install
-npm run build
-```
-
-Resolve any TypeScript errors or build warnings before committing.
-
-### After Writing Code
-
-- Run `npm run build` to verify production build succeeds
-- Fix any TypeScript errors
-- Ensure no failing builds
-
-## Important Notes
-
-### CSS Custom Properties Location
-
-All CSS custom properties are defined in `globals.css` under `:root`. Add new ones there, NOT in modular CSS files.
-
-### Interface Naming
-
-- `AnimationState`: Used for nav animations (isClosing, isPopupClosing, isAnimating)
-- `IntersectionAnimationState`: Used for scroll-triggered animations (isVisible)
-
-Don't confuse these two - they serve different purposes!
-
-### Removed Components
-
-The following have been removed and should NOT be re-added:
-- BlurOverlay.tsx
-- PrismOverlay.tsx
-- overlay.css
-
-### Utility Functions
-
-Available in `src/lib/utils.ts`:
-- `scrollToAbout(setIsDarkTheme)`: Scroll to about section and update theme
-- `scrollToContact(setIsDarkTheme)`: Scroll to contact section and update theme
-
-Removed (don't use):
-- ~~`scrollToSection(sectionId)`~~ - unused
-- ~~`getThemeForScrollPosition(scrollY, viewportHeight)`~~ - unused
-
-## Contact Form
-
-- **API Route**: `src/app/api/contact/route.ts`
-- **Environment Variable**: `RESEND_API_KEY` in `.env.local`
-- **Email Service**: Resend (free tier: 3,000 emails/month)
-
-## File Structure Reference
-
-```
-src/
-├── app/
-│   ├── layout.tsx
-│   ├── page.tsx
-│   ├── globals.css
-│   └── api/contact/route.ts
-│
-├── styles/                    # Modular CSS files
-│   ├── animations.css
-│   ├── marquee.css
-│   ├── navigation.css
-│   ├── about.css
-│   ├── contact.css
-│   └── landing.css
-│
-├── components/
-│   ├── about/
-│   ├── contact/
-│   ├── landing/
-│   ├── layout/
-│   ├── marquee/
-│   ├── navigation/
-│   └── icons/
-│
-├── hooks/
-│   ├── useResponsive.ts
-│   ├── useMarquee.ts
-│   ├── useIntersectionAnimation.ts
-│   └── useScrollParallax.ts
-│
-├── types/index.ts
-└── lib/utils.ts
-```
+Always run `npm install && npm run build` and resolve all TypeScript errors before committing.
