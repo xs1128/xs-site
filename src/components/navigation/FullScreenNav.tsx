@@ -7,7 +7,7 @@ import { useFocusTrap } from '@/hooks/useFocusTrap';
  * Full-screen navigation overlay with slide animations
  * Features text fill effect on hover and staggered fade-in animations
  */
-export function FullScreenNav({ isOpen, onClose, isSmallScreen, setIsDarkTheme }: FullScreenNavProps) {
+export function FullScreenNav({ isOpen, onClose, isSmallScreen }: FullScreenNavProps) {
   const [isClosing, setIsClosing] = useState(false);
 
   // Disable scrolling when nav is open
@@ -34,12 +34,12 @@ export function FullScreenNav({ isOpen, onClose, isSmallScreen, setIsDarkTheme }
 
   const handleAboutClick = () => {
     handleClose();
-    setTimeout(() => scrollToAbout(setIsDarkTheme), 100);
+    setTimeout(scrollToAbout, 100);
   };
 
   const handleContactClick = () => {
     handleClose();
-    setTimeout(() => scrollToContact(setIsDarkTheme), 100);
+    setTimeout(scrollToContact, 100);
   };
 
   if (!isOpen && !isClosing) return null;

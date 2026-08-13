@@ -11,7 +11,7 @@ import { scrollToContact } from '@/lib/utils';
  * Tracks cursor position (desktop only) to drive the ambient
  * dot-grid reveal and glow via --glow-x/--glow-y CSS variables
  */
-export function AboutSection({ isSmallScreen, setIsDarkTheme }: AboutSectionProps) {
+export function AboutSection({ isSmallScreen }: AboutSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const rafRef = useRef<number | null>(null);
   const { isVisible } = useIntersectionAnimation(sectionRef, {
@@ -47,14 +47,11 @@ export function AboutSection({ isSmallScreen, setIsDarkTheme }: AboutSectionProp
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
     >
-      <AboutHeader
-        isSmallScreen={isSmallScreen}
-        setIsDarkTheme={setIsDarkTheme}
-      />
+      <AboutHeader isSmallScreen={isSmallScreen} />
       <AboutContent
         isSmallScreen={isSmallScreen}
         isVisible={isVisible}
-        onScrollToContact={() => scrollToContact(setIsDarkTheme)}
+        onScrollToContact={scrollToContact}
       />
     </section>
   );

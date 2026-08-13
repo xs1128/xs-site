@@ -17,9 +17,8 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 
 ## Component Architecture
 
-- Component props live in `src/types/index.ts`. Two similarly-named interfaces — don't confuse them:
-  - `AnimationState` — nav animations (`isClosing`, `isPopupClosing`, `isAnimating`)
-  - `IntersectionAnimationState` — scroll-triggered animations (`isVisible`)
+- Most component props live in `src/types/index.ts`, but `AnimatedHeadline`, `MagneticCTA`, `HamburgerButton` and `CardScene` declare theirs locally. Both placements are fine; what is not fine is declaring in both, which is how the file accumulated stale duplicates. Check the component before adding an interface here.
+- Theme is owned entirely by the scroll listener in `page.tsx`. Nothing else sets it, and `setIsDarkTheme` is not passed to any child — scroll helpers just scroll, and the listener reacts. Don't thread a theme setter back through the tree.
 - `ScrollContainer` uses `forwardRef`; `page.tsx` passes a plain ref and wires the scroll listener in a mount-once `useEffect`. It used to pass an inline callback ref that reattached every render and leaked a scroll listener each time — don't reintroduce that pattern.
 - `ExpertiseCard` swaps wrapper by viewport: `CardScene` on desktop, plain `div` on mobile. `CardScene` and `NameScene` live under `components/3d/` but are DOM + CSS transforms, NOT WebGL. No 3D libraries are installed.
 - Overlays (`FullScreenNav`, `ContactPopup`) use `useFocusTrap` and must keep `role="dialog"` + `aria-modal="true"`. The nav passes its animated `handleClose` as the dismiss handler so Escape still plays the exit.
@@ -35,9 +34,6 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 
 ## Known Issues — real, unfixed
 
-- `lib/utils.ts` reads `window.scrollY`, but the page scrolls inside `.scroll-container`, so its `setTimeout` theme updates never fire. Harmless today because the `page.tsx` scroll listener sets theme correctly, but it is dead logic.
-- `HamburgerButton.tsx` declares a local `HamburgerButtonProps` while `types/index.ts` exports another. Duplicated shape.
-- `types/index.ts` is still mostly single-consumer prop types that would be better colocated.
 - The contact rate limiter is an in-process `Map`, so on serverless it is per-instance, not global.
 
 ## Removed — do not re-add
@@ -47,7 +43,8 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 - `three`, `@react-three/fiber`, `@react-three/drei` — uninstalled. Nothing renders WebGL.
 - `NameDisplay`'s name/initials toggle. Its `onToggle` / `showInitials` / `isFading` / `isSmallScreen` props were dead and are gone; the component takes only `containerRef`. Don't "fix" the toggle back in without checking why it was disabled.
 - `ContactSection`'s `onOpenNav` prop — was passed but never destructured.
-- `src/lib/utils.ts` exports only `scrollToAbout` and `scrollToContact`. `scrollToSection` and `getThemeForScrollPosition` don't exist — don't use them.
+- `src/lib/utils.ts` exports only `scrollToAbout` and `scrollToContact`, both taking no arguments. `scrollToSection` and `getThemeForScrollPosition` don't exist — don't use them.
+- `setIsDarkTheme` props on `FullScreenNavProps`, `AboutSectionProps`, `AboutHeaderProps`, and the `ThemeProps` / `AnimationState` / `SectionWrapperProps` / `ContactFormProps` interfaces — all deleted as unused.
 
 ## Routing
 

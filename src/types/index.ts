@@ -3,19 +3,8 @@ export interface ResponsiveProps {
   isSmallScreen: boolean;
 }
 
-export interface ThemeProps {
-  isDarkTheme: boolean;
-  setIsDarkTheme: (value: boolean) => void;
-}
-
 // Layout Components
 export interface ScrollContainerProps {
-  children: React.ReactNode;
-}
-
-export interface SectionWrapperProps extends ResponsiveProps {
-  id: string;
-  backgroundColor: string;
   children: React.ReactNode;
 }
 
@@ -24,15 +13,6 @@ export interface FullScreenNavProps {
   isOpen: boolean;
   onClose: () => void;
   isSmallScreen: boolean;
-  setIsDarkTheme: (value: boolean) => void;
-  onNavigateToSection?: (sectionId: string) => void;
-}
-
-export interface HamburgerButtonProps {
-  onClick: () => void;
-  isPastLanding: boolean;
-  isDarkTheme: boolean;
-  isNavOpen: boolean;
 }
 
 export interface AnimatedButtonProps {
@@ -59,13 +39,10 @@ export interface LandingButtonsProps {
 }
 
 // About Components
-export interface AboutSectionProps extends ResponsiveProps {
-  setIsDarkTheme: (value: boolean) => void;
-}
+export type AboutSectionProps = ResponsiveProps;
 
 export interface AboutHeaderProps {
   isSmallScreen: boolean;
-  setIsDarkTheme: (value: boolean) => void;
 }
 
 export interface AboutContentProps {
@@ -82,7 +59,7 @@ export interface ExpertiseCardProps extends ResponsiveProps {
 }
 
 // Contact Components
-export interface ContactSectionProps extends ResponsiveProps {}
+export type ContactSectionProps = ResponsiveProps;
 
 export interface ContactHeaderProps {
   isSmallScreen: boolean;
@@ -108,23 +85,10 @@ export interface ContactFormData {
   message: string;
 }
 
-export interface ContactFormProps {
-  onSuccess: () => void;
-  onError: (message: string) => void;
-  isSmallScreen: boolean;
-}
-
 export interface SocialIconLinkProps {
   href: string;
   'aria-label': string;
   children: React.ReactNode;
-}
-
-// Animation Types
-export interface AnimationState {
-  isClosing?: boolean;
-  isPopupClosing?: boolean;
-  isAnimating?: boolean;
 }
 
 // Form Types
@@ -139,11 +103,6 @@ export interface NameSceneProps {
   showInitials: boolean;
 }
 
-export interface CardSceneProps {
-  children: React.ReactNode;
-  index: number;
-}
-
 // Icon Components
 export interface StaticIconProps {
   src: string;
@@ -151,18 +110,6 @@ export interface StaticIconProps {
   style?: React.CSSProperties;
   width?: number;
   height?: number;
-}
-
-// Animation Components
-export interface AnimatedHeadlineProps {
-  text: string;
-  isVisible: boolean;
-}
-
-export interface MagneticCTAProps {
-  onClick: () => void;
-  isSmallScreen: boolean;
-  isVisible: boolean;
 }
 
 // Intersection Animation Hook

@@ -6,11 +6,11 @@ import { scrollToAbout } from '@/lib/utils';
  * About section header with ABOUT button
  * Positioned absolutely at the top-left of the about section
  */
-export function AboutHeader({ isSmallScreen, setIsDarkTheme }: AboutHeaderProps) {
+export function AboutHeader({ isSmallScreen }: AboutHeaderProps) {
   return (
     <div className="about-header">
       <button
-        onClick={() => scrollToAbout(setIsDarkTheme)}
+        onClick={scrollToAbout}
         className="about-header__button"
       >
         ABOUT

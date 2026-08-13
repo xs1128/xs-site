@@ -113,9 +113,6 @@ public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.p
 
 ## Known Issues
 
-- `lib/utils.ts` reads `window.scrollY`, but scrolling happens inside `.scroll-container` — its `setTimeout` theme updates never fire. Harmless, since `page.tsx` sets theme from its own listener.
-- `HamburgerButton` declares a local props interface duplicating the one in `types/index.ts`.
-- `types/index.ts` is still largely single-consumer prop types.
 - `og-image.png` is 403KB, well above what a 1200x630 needs.
 - No tests, no CI, no formatter config.
 - `tsconfig.paths.json` — not extended by `tsconfig.json`; has no effect.

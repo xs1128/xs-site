@@ -74,7 +74,6 @@ export default function Home() {
         isOpen={isAboutMenuOpen}
         onClose={() => setIsAboutMenuOpen(false)}
         isSmallScreen={isSmallScreen}
-        setIsDarkTheme={setIsDarkTheme}
       />
 
       {/* Fixed hamburger button - hidden on landing page */}
@@ -91,16 +90,13 @@ export default function Home() {
         {/* First Section - Landing */}
         <LandingSection
           isSmallScreen={isSmallScreen}
-          onScrollToAbout={() => scrollToAbout(setIsDarkTheme)}
-          onScrollToContact={() => scrollToContact(setIsDarkTheme)}
+          onScrollToAbout={scrollToAbout}
+          onScrollToContact={scrollToContact}
           containerRef={scrollContainerRef}
         />
 
         {/* Second Section - About */}
-        <AboutSection
-          isSmallScreen={isSmallScreen}
-          setIsDarkTheme={setIsDarkTheme}
-        />
+        <AboutSection isSmallScreen={isSmallScreen} />
 
         {/* Third Section - Contact */}
         <ContactSection isSmallScreen={isSmallScreen} />
