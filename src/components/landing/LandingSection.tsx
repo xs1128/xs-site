@@ -28,13 +28,7 @@ export function LandingSection({
   return (
     <main className="landing-section">
       {/* Name */}
-      <NameDisplay
-        onToggle={() => {}}
-        showInitials={false}
-        isFading={false}
-        isSmallScreen={isSmallScreen}
-        containerRef={containerRef}
-      />
+      <NameDisplay containerRef={containerRef} />
 
       {/* Desktop Buttons */}
       <LandingButtons {...landingButtonsProps} />

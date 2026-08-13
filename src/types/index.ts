@@ -59,10 +59,7 @@ export interface AnimatedButtonProps {
 }
 
 // Landing Components
-export interface NameDisplayProps extends ResponsiveProps {
-  onToggle: () => void;
-  showInitials: boolean;
-  isFading: boolean;
+export interface NameDisplayProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -96,9 +93,7 @@ export interface ExpertiseCardProps extends ResponsiveProps {
 }
 
 // Contact Components
-export interface ContactSectionProps extends ResponsiveProps {
-  onOpenNav: () => void;
-}
+export interface ContactSectionProps extends ResponsiveProps {}
 
 export interface ContactHeaderProps {
   isSmallScreen: boolean;

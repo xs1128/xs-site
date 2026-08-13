@@ -103,10 +103,7 @@ export default function Home() {
         />
 
         {/* Third Section - Contact */}
-        <ContactSection
-          isSmallScreen={isSmallScreen}
-          onOpenNav={handleMenuToggle}
-        />
+        <ContactSection isSmallScreen={isSmallScreen} />
       </ScrollContainer>
     </>
   );
