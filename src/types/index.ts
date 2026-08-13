@@ -19,11 +19,6 @@ export interface SectionWrapperProps extends ResponsiveProps {
   children: React.ReactNode;
 }
 
-// Marquee Component
-export interface AnnouncementMarqueeProps {
-  isDarkTheme: boolean;
-}
-
 // Navigation Components
 export interface FullScreenNavProps {
   isOpen: boolean;
@@ -38,13 +33,6 @@ export interface HamburgerButtonProps {
   isPastLanding: boolean;
   isDarkTheme: boolean;
   isNavOpen: boolean;
-}
-
-export interface MobileDropdownProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onNavigateToSection: (sectionId: string) => void;
-  setIsDarkTheme: (value: boolean) => void;
 }
 
 export interface AnimatedButtonProps {
@@ -144,12 +132,6 @@ export interface FormState {
   isSubmitting: boolean;
   submitStatus: 'idle' | 'success' | 'error';
   errorMessage: string;
-}
-
-// 3D Components
-export interface ThreeCanvasProps {
-  children: React.ReactNode;
-  isSmallScreen?: boolean;
 }
 
 export interface NameSceneProps {
