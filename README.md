@@ -7,7 +7,7 @@ Minimalist single-page landing site: scroll-snapped Landing / About / Contact se
 - **Framework**: Next.js 16 (App Router, Turbopack by default)
 - **UI**: React 19, TypeScript 5
 - **Styling**: Plain CSS with custom properties (no CSS-in-JS, no Tailwind)
-- **Fonts**: Roboto Mono, Hubot Sans (via `@fontsource`, imported in `layout.tsx`)
+- **Fonts**: Roboto Mono, Hubot Sans — self-hosted latin subsets in `src/fonts/`, loaded with `next/font/local` (preloaded)
 - **Email**: Resend
 - **No 3D libraries**: `NameScene` and `CardScene` live under `components/3d/` but are DOM + CSS transforms, not WebGL. `three` / `@react-three/fiber` / `@react-three/drei` were uninstalled once their only consumer was removed.
 

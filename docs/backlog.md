@@ -1,59 +1,11 @@
 # Backlog
 
 Outstanding work, ranked. Tiers 2–3 are cleanup on what exists; tier 4 is the
-work that changes what the site *is*.
+work that changes what the site *is*. Numbering is stable, so gaps are items
+that shipped.
 
 Everything here was verified against the codebase, not assumed. Items resolved
 along the way are in `git log`, not repeated here.
-
-## Tier 1
-
-Items 2 and 3 are done. Item 1 was attempted and reverted.
-
-### 1. Fonts — reverted, needs a second attempt
-
-Migrating to `next/font/local` was tried and rolled back. It shipped two
-regressions: bold weights visibly changed, and scrolling upward became laggy.
-
-The type change is understood. Hubot Sans is used at `font-weight: 700` but
-only 400 was ever loaded, so the browser had always been synthesising bold.
-Loading the real 700 face was technically correct and visually wrong — the
-design was built against the faux-bold. Any retry must either keep shipping
-only 400 and let synthesis continue, or treat the weight change as a
-deliberate design decision rather than a side effect.
-
-The scroll lag is *not* understood and must be diagnosed before retrying.
-Nothing in the migration obviously touches scroll. Suspects worth measuring:
-`display: 'swap'` forcing a re-layout of snap containers on font load, or the
-swap landing mid-scroll. Profile it rather than guessing.
-
-The underlying problem is still real: `@fontsource` CSS imports get no
-preload and no `size-adjust` fallback metrics, so first paint shifts.
-
-### 2. Rate limiter extracted — done, with a caveat
-
-`src/lib/rateLimit.ts`, still an in-process `Map`. On serverless the limit
-therefore applies per instance, not globally.
-
-Deliberately *not* wired to Redis. That solves spam nobody is currently
-sending, and costs a service dependency to do it. The module is small enough
-that swapping the `Map` for a shared store is a one-function change if spam
-ever arrives.
-
-### 3. Tests — done
-
-Vitest + Testing Library, 15 tests, wired into CI:
-
-- `useFocusTrap` — container focus, both wrap directions, Escape, focus restore
-- `rateLimit` — limit boundary, key isolation, window expiry
-- `api/contact` — happy path, missing field, bad email, oversize body, CRLF
-  stripping, 429 on the sixth request, and that provider errors never reach
-  the client
-
-The scroll-listener regression from the original audit is *not* covered.
-Asserting "exactly one listener" needs either a spy on the container or a
-render-count harness, and neither reads clearly enough to be worth it. The
-`useEffect` shape makes the leak hard to reintroduce by accident.
 
 ## Tier 2 — architecture
 
@@ -106,6 +58,112 @@ Current tests cover the security-sensitive and regression-prone paths only.
 Components have none. Worth adding only where behaviour is genuinely tricky,
 not for coverage's sake.
 
+### 19. Rate limiter is per-instance on serverless
+
+`src/lib/rateLimit.ts` is an in-process `Map`, so the 5/hour limit applies per
+instance, not globally. Deliberately not wired to Redis — that solves spam
+nobody is sending and costs a service dependency. Swapping the `Map` for a
+shared store is a one-function change if spam ever arrives.
+
+### 20. CTA arrow depends on a font fallback
+
+`↓` (U+2193) isn't in Roboto Mono, so a fallback always draws it. That forces
+`adjustFontFallback: false` on `robotoMono` in `src/fonts/index.ts`, which
+costs the font its `size-adjust` metrics (CLS 0.0087). Replace the glyph with
+an SVG and the flag can go.
+
+### 21. Focus outline sits too far off the contact fields
+
+The orange `:focus-visible` ring floats with a visible gap around text inputs.
+Cause is the global `outline-offset: 3px` in `globals.css` — fine for the
+circular and text controls it was written for, wrong on a rectangular field
+that already has a border. Tighten the offset for inputs/textarea rather than
+changing the global, and keep a visible indicator (see the `outline: none` rule
+in `CLAUDE.md`).
+
+### 17. The contact circle doesn't read as tappable
+
+`SpinningCircularText` is the only way to open the contact form, and nothing
+about it says "press me". Current affordances, in full:
+
+- a `+` glyph in the centre
+- `cursor: pointer` on the ring
+- a `scale(1.1)` hover on the centre glyph, inside `@media (hover: hover)`
+
+That's it, and each one is weaker than it looks. The chars carry
+`pointer-events: none`, so the hover scale only fires when the pointer is over
+the centre glyph itself, not the ring — the large, obvious target gives no
+feedback. On touch there is no hover at all, so mobile visitors get a spinning
+name and a `+`. The continuous 20s `contactSpin` actively works against it:
+perpetual rotation reads as decoration or a loading spinner, not a control.
+Meanwhile the footer offers `mailto:hi@xsooi.com`, an unambiguous link, so the
+path of least resistance routes around the form entirely.
+
+It is also not a control in markup. `SpinningCircularText` renders a `<div
+onClick>` with no `role`, no `tabIndex`, no `aria-label`, no key handler.
+Keyboard and screen-reader users cannot open the contact form. Fixing the
+affordance and fixing the accessibility are the same edit — promote it to a
+real `<button>` with an accessible name first, then decorate.
+
+Cues worth trying, cheapest first:
+
+1. **Say what it does.** The ring currently repeats `Xinsheng Ooi • ` three
+   times. Alternating in `Get in touch •` costs nothing and turns decoration
+   into a label.
+2. **Widen the hover target.** Move the hover response to the ring wrapper so
+   the whole circle reacts, not just the glyph.
+3. **A one-shot attention cue on entry.** A pulse or expanding ring the first
+   time the section scroll-snaps into view, not a permanent loop — a
+   permanently pulsing thing becomes decoration again within seconds.
+4. **A tooltip on hover** — see item 18. Desktop only by construction; that
+   component returns its child untouched when `(hover: hover)` fails, so it
+   does nothing for the mobile case, which is the worse one.
+5. **A static hint below the circle.** Least elegant, most reliable.
+
+Gotcha: the catch-all block at the end of `animations.css` neutralises every
+CSS animation and transition under reduced motion, so a CSS-only cue silently
+disappears for those users. If the cue is load-bearing for comprehension, it
+has to survive — either make it non-motion (a label, not a pulse), or drive it
+from JS with its own `matchMedia('(prefers-reduced-motion: reduce)')` check,
+the way `useScrollParallax` does.
+
+Verify against real behaviour before picking. If any analytics exist, the
+contact-form open rate versus `mailto:` click rate answers this directly.
+
+### 18. Port the tooltip system from `../blog`
+
+The blog repo has a finished one at `src/components/ui/Tooltip.tsx` (~230
+lines) with its `.tooltip` styles in `globals.css` around line 356. It is
+better than anything worth writing fresh here:
+
+- portals to `document.body`, so no clipping by `overflow` or stacking context
+- flips to the opposite placement when the preferred side won't fit, then
+  clamps to an 8px viewport margin
+- shared `SKIP_DELAY_MS` grace period across every instance, so moving along a
+  row of social icons feels instant after the first 350ms open delay
+- `role="tooltip"` + `aria-describedby`, opens on `:focus-visible`, closes on
+  Escape, blur, and click
+- measures with `offsetWidth`/`offsetHeight` rather than a rect, because the
+  enter transition scales the tip and a scaled rect would offset the centering
+- returns `children` untouched when `(hover: hover) and (pointer: fine)` fails,
+  so touch devices get no dead tooltip
+
+Site-specific work on the way in, per `CLAUDE.md`:
+
+- The CSS does **not** go in `globals.css`. New file `src/styles/tooltip.css`,
+  and it does nothing until it is imported in `layout.tsx`.
+- Restyle to this repo's palette and easing tokens. No hand-typed
+  `cubic-bezier(...)` — use `--ease-out-expo` / `--ease-in-out-soft`.
+- The blog copy is written without semicolons; this repo uses them. Match the
+  destination, not the source.
+- Drop or re-anchor the blog's z-index comment — it sits above a 3D scene
+  overlay at 10100 that doesn't exist here.
+- Props are declared locally in the component. Leave them there rather than
+  splitting them into `types/index.ts`; see item 6.
+
+Obvious first consumers: the footer social icons (already `aria-label`-only)
+and the contact circle in item 17.
+
 ## Tier 4 — direction
 
 None of the above moves the needle on what the portfolio actually does. This
@@ -143,8 +201,13 @@ beautiful"; everybody owns "spinning 3D cube."
 
 ## Suggested order
 
-Tier 1 is closed apart from fonts, which needs the scroll lag diagnosed first.
+Go to 12 next. It is the item that changes what the site is.
 
-Go to 12 next. Tier 2 and 3 are genuine tidiness but no visitor can perceive
-any of it, and 12 is the item that changes what the site is. The rest can be
-picked off opportunistically when touching nearby code.
+Item 17 is the exception to "Tier 3 is invisible." Most of that tier is
+tidiness no visitor can perceive, but 17 sits on the only path to the contact
+form and currently blocks keyboard users from it outright — treat the
+accessibility half as not-optional and take it whenever contact code is next
+open. 18 is a prerequisite only if the tooltip route is chosen for 17; it is
+otherwise independent and can wait.
+
+The rest can be picked off opportunistically when touching nearby code.
