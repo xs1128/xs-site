@@ -33,7 +33,9 @@ export function SpinningCircularText({
         </span>
       ))}
 
-      <div className="spinning-circular-text__center">{isExpanded ? '-' : '+'}</div>
+      <div className="spinning-circular-text__center">
+        {isExpanded ? '-' : '+'}
+      </div>
     </div>
   );
 }

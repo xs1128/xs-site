@@ -14,7 +14,12 @@ export interface ExpertiseCardProps {
  * Displays an index badge, icon, title, and description in a styled card
  * Uses 3D tilt + cursor spotlight on desktop, regular hover on mobile
  */
-export function ExpertiseCard({ icon, title, description, index = 0 }: ExpertiseCardProps) {
+export function ExpertiseCard({
+  icon,
+  title,
+  description,
+  index = 0,
+}: ExpertiseCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const isSmallScreen = useIsSmallScreen();
 

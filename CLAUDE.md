@@ -67,7 +67,7 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 
 - `layout.tsx` metadata + JSON-LD `Person`
 - `src/components/seo/BreadcrumbSchema.tsx`
-- `sitemap.ts` (`/`, `/#about`, `/#contact`)
+- `sitemap.ts` (`/` only — no fragment URLs)
 - `robots.ts`
 
 ## Fonts
@@ -78,4 +78,4 @@ Conventions, gotchas, and hard rules for agents editing this repo. For stack/set
 
 ## Before Pushing
 
-Run `npm install && npm run build`, plus `npm test` and `npm run lint`. CI runs all four; resolve failures before committing.
+Run `npm install && npm run build`, plus `npm test`, `npm run lint` and `npm run format:check`. CI runs all five; resolve failures before committing. Prettier config is `.prettierrc.json` (single quotes, semicolons) — run `npm run format` to fix.

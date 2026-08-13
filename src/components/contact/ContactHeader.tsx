@@ -7,7 +7,7 @@ import React from 'react';
  */
 export function ContactHeader() {
   const handleScrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (

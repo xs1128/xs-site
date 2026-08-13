@@ -5,7 +5,9 @@ describe('isRateLimited', () => {
   beforeEach(resetRateLimits);
 
   it('allows up to the limit, then blocks', () => {
-    const results = Array.from({ length: 4 }, () => isRateLimited('a', 3, 1000));
+    const results = Array.from({ length: 4 }, () =>
+      isRateLimited('a', 3, 1000),
+    );
     expect(results).toEqual([false, false, false, true]);
   });
 

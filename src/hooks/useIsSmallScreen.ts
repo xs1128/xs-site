@@ -17,6 +17,6 @@ export function useIsSmallScreen(): boolean {
   return useSyncExternalStore(
     subscribe,
     () => window.matchMedia(QUERY).matches,
-    () => false // no viewport on the server; desktop branch
+    () => false, // no viewport on the server; desktop branch
   );
 }

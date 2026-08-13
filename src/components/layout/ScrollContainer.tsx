@@ -11,14 +11,11 @@ export interface ScrollContainerProps {
 export const ScrollContainer = forwardRef<HTMLDivElement, ScrollContainerProps>(
   ({ children }, ref) => {
     return (
-      <div
-        ref={ref}
-        className="scroll-container"
-      >
+      <div ref={ref} className="scroll-container">
         {children}
       </div>
     );
-  }
+  },
 );
 
 ScrollContainer.displayName = 'ScrollContainer';

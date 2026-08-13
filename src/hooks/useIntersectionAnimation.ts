@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef, RefObject } from 'react';
-import type { AnimationTriggerOptions, IntersectionAnimationState } from '@/types';
+import type {
+  AnimationTriggerOptions,
+  IntersectionAnimationState,
+} from '@/types';
 
 /**
  * Reveals an element once it enters the viewport.
@@ -7,12 +10,9 @@ import type { AnimationTriggerOptions, IntersectionAnimationState } from '@/type
  */
 export function useIntersectionAnimation(
   targetRef: RefObject<Element | null>,
-  options: AnimationTriggerOptions = {}
+  options: AnimationTriggerOptions = {},
 ): IntersectionAnimationState {
-  const {
-    threshold = 0.15,
-    rootMargin = '-50px'
-  } = options;
+  const { threshold = 0.15, rootMargin = '-50px' } = options;
 
   const [isVisible, setIsVisible] = useState(false);
   const hasAnimated = useRef(false);
@@ -20,7 +20,11 @@ export function useIntersectionAnimation(
   useEffect(() => {
     const target = targetRef.current;
 
-    if (typeof window === 'undefined' || !window.IntersectionObserver || !target) {
+    if (
+      typeof window === 'undefined' ||
+      !window.IntersectionObserver ||
+      !target
+    ) {
       // Fires once and cannot cascade. Initial state instead would break
       // hydration, since the server has no window.
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -40,8 +44,8 @@ export function useIntersectionAnimation(
       },
       {
         threshold,
-        rootMargin
-      }
+        rootMargin,
+      },
     );
 
     observer.observe(target);
@@ -52,6 +56,6 @@ export function useIntersectionAnimation(
   }, [targetRef, threshold, rootMargin]);
 
   return {
-    isVisible
+    isVisible,
   };
 }

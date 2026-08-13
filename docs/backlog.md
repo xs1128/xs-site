@@ -1,7 +1,7 @@
 # Backlog
 
 Outstanding work, ranked. Tier 3 is cleanup on what exists; tier 4 is the
-work that changes what the site *is*. Tier 2 is empty — the architecture
+work that changes what the site _is_. Tier 2 is empty — the architecture
 items all shipped. Numbering is stable, so gaps are items that shipped.
 
 Everything here was verified against the codebase, not assumed. Items resolved
@@ -16,19 +16,15 @@ Observability. `layout.tsx` metadata and the JSON-LD `knowsAbout` say Python /
 Bash / Docker / Cloudflare. The card is what people see when the site is
 shared — the two should agree.
 
-### 8. Sitemap hash URLs
-
-`sitemap.ts` lists `/#about` and `/#contact`. Search engines ignore fragments.
-Harmless noise.
-
 ### 9. Redundant reduced-motion block
 
 The block at the end of `about.css` is superseded by the global one in
 `animations.css`. Safe to delete, zero value either way.
 
-### 10. No formatter
+### 10. Pre-commit formatting hook
 
-Prettier, plus a pre-commit hook if commit-time enforcement is wanted.
+Prettier shipped and CI runs `format:check`; a Husky/lint-staged hook is the
+only part left, and only if commit-time enforcement is wanted.
 
 ### 11. Broaden test coverage
 

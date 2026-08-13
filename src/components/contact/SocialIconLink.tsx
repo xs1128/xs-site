@@ -10,7 +10,11 @@ export interface SocialIconLinkProps {
  * Social media icon link with hover effects
  * Displays icon in a circular container with scale and color change on hover
  */
-export function SocialIconLink({ href, 'aria-label': ariaLabel, children }: SocialIconLinkProps) {
+export function SocialIconLink({
+  href,
+  'aria-label': ariaLabel,
+  children,
+}: SocialIconLinkProps) {
   const isExternal = href.startsWith('http');
 
   return (

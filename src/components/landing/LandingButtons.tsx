@@ -14,14 +14,20 @@ export interface LandingButtonsProps {
  * Visible on both desktop and mobile
  * Has parallax effect that starts later than the name display
  */
-export function LandingButtons({ onScrollToAbout, onScrollToContact, containerRef }: LandingButtonsProps) {
+export function LandingButtons({
+  onScrollToAbout,
+  onScrollToContact,
+  containerRef,
+}: LandingButtonsProps) {
   // Scroll-based parallax effect with delayed start
   // Buttons start sliding up after 20vh of scroll (name starts at 0)
-  const maxScrollDistance = typeof window !== 'undefined' ? window.innerHeight * 0.4 : 0;
-  const triggerThreshold = typeof window !== 'undefined' ? window.innerHeight * 0.2 : 0;
+  const maxScrollDistance =
+    typeof window !== 'undefined' ? window.innerHeight * 0.4 : 0;
+  const triggerThreshold =
+    typeof window !== 'undefined' ? window.innerHeight * 0.2 : 0;
   const parallaxOffset = useScrollParallax(containerRef, {
-    maxScrollDistance,  // 40vh
-    triggerThreshold  // Start after 20vh
+    maxScrollDistance, // 40vh
+    triggerThreshold, // Start after 20vh
   });
 
   const buttonStyle = {

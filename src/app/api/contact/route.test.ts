@@ -17,7 +17,7 @@ const post = (body: unknown, ip = '1.1.1.1') =>
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-forwarded-for': ip },
       body: JSON.stringify(body),
-    })
+    }),
   );
 
 const valid = { name: 'Ada', email: 'ada@example.com', message: 'hi' };
@@ -43,7 +43,9 @@ describe('POST /api/contact', () => {
   });
 
   it('rejects an oversized message', async () => {
-    expect((await post({ ...valid, message: 'x'.repeat(5001) })).status).toBe(400);
+    expect((await post({ ...valid, message: 'x'.repeat(5001) })).status).toBe(
+      400,
+    );
   });
 
   it('strips CRLF so the subject cannot carry headers', async () => {

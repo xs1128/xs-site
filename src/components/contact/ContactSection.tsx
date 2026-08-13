@@ -3,7 +3,12 @@ import { ContactHeader } from './ContactHeader';
 import { SpinningCircularText } from './SpinningCircularText';
 import { ContactPopup } from './ContactPopup';
 import { SocialIconLink } from './SocialIconLink';
-import { GitHubIcon, InstagramIcon, FacebookIcon, LinkedInIcon } from '@/components/icons/SocialIcons';
+import {
+  GitHubIcon,
+  InstagramIcon,
+  FacebookIcon,
+  LinkedInIcon,
+} from '@/components/icons/SocialIcons';
 
 /**
  * Contact section with spinning circular text and expandable form
@@ -57,7 +62,9 @@ export function ContactSection() {
       <div className="contact-section__container">
         {/* Main content area with spinning text and form */}
         <div className="contact-section__content">
-          <div className={`contact-section__circle-wrapper ${isPopupOpen ? 'contact-section__circle-wrapper--expanded' : ''}`}>
+          <div
+            className={`contact-section__circle-wrapper ${isPopupOpen ? 'contact-section__circle-wrapper--expanded' : ''}`}
+          >
             <div
               className={`contact-section__circle ${isPopupOpen ? 'contact-section__circle--expanded' : ''}`}
               style={{
@@ -74,7 +81,9 @@ export function ContactSection() {
 
           {/* Divider - hidden under 640px by CSS */}
           {(isPopupOpen || isPopupClosing) && (
-            <div className={`contact-section__divider ${isPopupClosing ? 'contact-section__divider--fading' : 'contact-section__divider--visible'}`} />
+            <div
+              className={`contact-section__divider ${isPopupClosing ? 'contact-section__divider--fading' : 'contact-section__divider--visible'}`}
+            />
           )}
 
           <div
@@ -94,7 +103,13 @@ export function ContactSection() {
         {/* Email and social icons at the bottom */}
         <div className="contact-section__footer">
           <div className="contact-section__email">
-            email: <a href="mailto:hi@xsooi.com" className="contact-section__email-link">hi@xsooi.com</a>
+            email:{' '}
+            <a
+              href="mailto:hi@xsooi.com"
+              className="contact-section__email-link"
+            >
+              hi@xsooi.com
+            </a>
           </div>
 
           <div className="contact-section__social-links">

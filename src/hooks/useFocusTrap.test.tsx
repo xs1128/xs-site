@@ -3,7 +3,13 @@ import { render, screen } from '@testing-library/react';
 import { fireEvent } from '@testing-library/dom';
 import { useFocusTrap } from './useFocusTrap';
 
-function Overlay({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
+function Overlay({
+  isOpen,
+  onDismiss,
+}: {
+  isOpen: boolean;
+  onDismiss: () => void;
+}) {
   const ref = useFocusTrap<HTMLDivElement>(isOpen, onDismiss);
   if (!isOpen) return null;
   return (

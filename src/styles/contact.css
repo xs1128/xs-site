@@ -72,16 +72,19 @@
     --diameter: 280px;
   }
 
-  .contact-section__circle-wrapper.contact-section__circle-wrapper--expanded .contact-section__circle {
+  .contact-section__circle-wrapper.contact-section__circle-wrapper--expanded
+    .contact-section__circle {
     transform: scale(0.85);
   }
 
-  .contact-section__circle-wrapper.contact-section__circle-wrapper--expanded .spinning-circular-text__char {
+  .contact-section__circle-wrapper.contact-section__circle-wrapper--expanded
+    .spinning-circular-text__char {
     font-size: 24px;
     font-weight: 700;
   }
 
-  .contact-section__circle-wrapper.contact-section__circle-wrapper--expanded .spinning-circular-text__center {
+  .contact-section__circle-wrapper.contact-section__circle-wrapper--expanded
+    .spinning-circular-text__center {
     font-size: 36px;
     font-weight: 700;
   }
@@ -130,7 +133,9 @@
   width: calc(57% - 60px);
   opacity: 0;
   transform: translate(0, -50%);
-  transition: opacity 0.3s ease 0.8s, transform 0.6s var(--ease-out-expo) 0.8s;
+  transition:
+    opacity 0.3s ease 0.8s,
+    transform 0.6s var(--ease-out-expo) 0.8s;
 }
 
 .contact-section__form-wrapper--open {
@@ -139,7 +144,9 @@
 }
 
 .contact-section__form-wrapper--closing {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
 @media (max-width: 640px) {
@@ -155,7 +162,9 @@
     padding: 0 24px;
     opacity: 0;
     transform: scale(0.95);
-    transition: opacity 0.4s ease 0.3s, transform 0.4s var(--ease-out-expo) 0.3s;
+    transition:
+      opacity 0.4s ease 0.3s,
+      transform 0.4s var(--ease-out-expo) 0.3s;
   }
 
   .contact-section__form-wrapper--open {
@@ -166,7 +175,9 @@
   .contact-section__form-wrapper--closing {
     opacity: 0;
     transform: scale(0.95);
-    transition: opacity 0.3s ease, transform 0.3s var(--ease-out-expo);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s var(--ease-out-expo);
   }
 }
 
@@ -399,7 +410,7 @@
 
 @media (hover: hover) {
   .contact-popup__submit-button:hover:not(:disabled) {
-    background-color: #3A3F45;
+    background-color: #3a3f45;
   }
 }
 
@@ -460,7 +471,10 @@
   height: var(--diameter);
   border-radius: 50%;
   cursor: pointer;
-  transition: width 0.8s var(--ease-out-expo), height 0.8s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+  transition:
+    width 0.8s var(--ease-out-expo),
+    height 0.8s var(--ease-out-expo),
+    transform 0.6s var(--ease-out-expo);
   animation: contactSpin 20s linear infinite;
 }
 
@@ -474,7 +488,10 @@
   color: var(--color-text-on-light);
   font-weight: 500;
   pointer-events: none;
-  transition: transform 0.8s var(--ease-out-expo), font-size 0.8s var(--ease-out-expo), font-weight 0.8s var(--ease-out-expo);
+  transition:
+    transform 0.8s var(--ease-out-expo),
+    font-size 0.8s var(--ease-out-expo),
+    font-weight 0.8s var(--ease-out-expo);
 }
 
 .spinning-circular-text__center {
@@ -488,7 +505,9 @@
   font-weight: 700;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.2s ease, font-size 0.8s var(--ease-out-expo);
+  transition:
+    transform 0.2s ease,
+    font-size 0.8s var(--ease-out-expo);
 }
 
 @media (hover: hover) {
@@ -522,7 +541,10 @@
   background-color: var(--color-card-bg);
   color: var(--color-text-on-light);
   text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .social-icon-link svg {

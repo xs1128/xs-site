@@ -9,7 +9,13 @@ export interface StaticIconProps {
   height?: number;
 }
 
-export function StaticIcon({ src, alt, style, width = 48, height = 48 }: StaticIconProps) {
+export function StaticIcon({
+  src,
+  alt,
+  style,
+  width = 48,
+  height = 48,
+}: StaticIconProps) {
   return (
     <Image
       src={src}
@@ -17,9 +23,9 @@ export function StaticIcon({ src, alt, style, width = 48, height = 48 }: StaticI
       width={width}
       height={height}
       style={{
-        width: "clamp(36px, 5vw, 48px)",
-        height: "auto",
-        ...style
+        width: 'clamp(36px, 5vw, 48px)',
+        height: 'auto',
+        ...style,
       }}
       className="static-icon"
       priority={false}

@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
-import { FullScreenNav } from "../components/navigation/FullScreenNav";
-import { HamburgerButton } from "../components/navigation/HamburgerButton";
-import { AboutSection } from "../components/about/AboutSection";
-import { ContactSection } from "../components/contact/ContactSection";
-import { LandingSection } from "../components/landing/LandingSection";
-import { ScrollContainer } from "../components/layout/ScrollContainer";
-import { scrollToAbout, scrollToContact } from "@/lib/utils";
+import { useState, useEffect, useRef } from 'react';
+import { FullScreenNav } from '../components/navigation/FullScreenNav';
+import { HamburgerButton } from '../components/navigation/HamburgerButton';
+import { AboutSection } from '../components/about/AboutSection';
+import { ContactSection } from '../components/contact/ContactSection';
+import { LandingSection } from '../components/landing/LandingSection';
+import { ScrollContainer } from '../components/layout/ScrollContainer';
+import { scrollToAbout, scrollToContact } from '@/lib/utils';
 
 export default function Home() {
   const [isAboutMenuOpen, setIsAboutMenuOpen] = useState(false);
@@ -45,11 +45,11 @@ export default function Home() {
     };
 
     checkScrollPosition();
-    container.addEventListener("scroll", handleScroll, { passive: true });
+    container.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
-      container.removeEventListener("scroll", handleScroll);
+      container.removeEventListener('scroll', handleScroll);
     };
   }, []);
 

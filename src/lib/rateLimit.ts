@@ -5,7 +5,11 @@ const hits = new Map<string, number[]>();
  * In-process, so on serverless the limit applies per instance, not globally.
  * Swap the Map for a shared store if that ever matters.
  */
-export function isRateLimited(key: string, limit: number, windowMs: number): boolean {
+export function isRateLimited(
+  key: string,
+  limit: number,
+  windowMs: number,
+): boolean {
   const now = Date.now();
   const recent = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
   hits.set(key, recent);

@@ -18,7 +18,7 @@ const FOCUSABLE_SELECTOR = [
  */
 export function useFocusTrap<T extends HTMLElement>(
   isActive: boolean,
-  onDismiss: () => void
+  onDismiss: () => void,
 ): RefObject<T | null> {
   const containerRef = useRef<T>(null);
   const onDismissRef = useRef(onDismiss);

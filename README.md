@@ -18,6 +18,7 @@ npm install
 npm run dev     # start dev server
 npm run lint    # ESLint
 npm test        # Vitest
+npm run format  # Prettier write (`format:check` in CI)
 npm run build   # production build — run before every push
 npm run start   # serve the production build
 ```
@@ -26,10 +27,10 @@ Always run `npm install && npm run build` before pushing; fix any TypeScript/bui
 
 ## Environment Variables
 
-| Variable | Required | Purpose |
-|---|---|---|
-| `RESEND_API_KEY` | Yes (contact form) | Server-side, used by `/api/contact`. Without it, POSTs return `503`. |
-| `NEXT_PUBLIC_SITE_URL` | No | Base URL for metadata/canonical/OG/sitemap/robots/JSON-LD. Falls back to `https://xsooi.com`. |
+| Variable               | Required           | Purpose                                                                                       |
+| ---------------------- | ------------------ | --------------------------------------------------------------------------------------------- |
+| `RESEND_API_KEY`       | Yes (contact form) | Server-side, used by `/api/contact`. Without it, POSTs return `503`.                          |
+| `NEXT_PUBLIC_SITE_URL` | No                 | Base URL for metadata/canonical/OG/sitemap/robots/JSON-LD. Falls back to `https://xsooi.com`. |
 
 Both are listed in `.env.example`. The build succeeds without either, so CI needs no secrets.
 
@@ -48,7 +49,7 @@ Both are listed in `.env.example`. The build succeeds without either, so CI need
 - `src/app/layout.tsx`: full `Metadata` export (title, description, canonical, icons, OpenGraph + Twitter `summary_large_image` using `/og-image.png`, robots directives) plus inline JSON-LD `Person` schema.
 - `src/components/seo/BreadcrumbSchema.tsx`: JSON-LD `BreadcrumbList` (Home / #about / #contact).
 - `src/app/robots.ts`: allows `/`, disallows `/api/`, `/_next/`, `/static/`.
-- `src/app/sitemap.ts`: `/`, `/#about`, `/#contact`.
+- `src/app/sitemap.ts`: `/` only — fragment URLs are ignored by search engines.
 - `src/app/error.tsx` / `src/app/not-found.tsx`: minimal inline-styled fallbacks.
 
 ## Behavior
@@ -67,22 +68,22 @@ Breakpoint: 640px (`--breakpoint-small` in CSS, `BREAKPOINT = 640` inlined in `p
 
 All custom properties live in `globals.css` under `:root`.
 
-| Token | Value | Use |
-|---|---|---|
-| `--color-landing-bg` | `#fbf9f4` | Landing background (cream sand) |
-| `--color-about-bg` | `#2A2F35` | About background |
-| `--color-nav-bg` | `#363D44` | Nav overlay background |
-| `--color-nav-panel` | `#444C55` | Nav button panels |
-| `--color-text-on-dark` | `#fbf9f4` | Text on dark backgrounds |
-| `--color-text-on-light` | `#2A2F35` | Text on light backgrounds |
-| `--color-accent` | `#E5532C` | Accent / hover fill — large text and UI only, fails AA as body text |
-| `--color-accent-hover` | `#D64626` | Accent hover state |
-| `--color-accent-on-light` | `#C4421F` | AA-safe accent text on cream (4.8:1) |
-| `--color-accent-on-dark` | `#e87a4d` | AA-safe accent text on charcoal (4.8:1) |
-| `--color-terracotta` | `#e87a4d` | Secondary accent |
-| `--color-card-bg` | `#f0ede5` | About card background |
-| `--color-border` | `#e5e0d5` | Borders |
-| `--color-dropdown-hover` | `#ebe6dd` | Dropdown hover |
+| Token                     | Value     | Use                                                                 |
+| ------------------------- | --------- | ------------------------------------------------------------------- |
+| `--color-landing-bg`      | `#fbf9f4` | Landing background (cream sand)                                     |
+| `--color-about-bg`        | `#2A2F35` | About background                                                    |
+| `--color-nav-bg`          | `#363D44` | Nav overlay background                                              |
+| `--color-nav-panel`       | `#444C55` | Nav button panels                                                   |
+| `--color-text-on-dark`    | `#fbf9f4` | Text on dark backgrounds                                            |
+| `--color-text-on-light`   | `#2A2F35` | Text on light backgrounds                                           |
+| `--color-accent`          | `#E5532C` | Accent / hover fill — large text and UI only, fails AA as body text |
+| `--color-accent-hover`    | `#D64626` | Accent hover state                                                  |
+| `--color-accent-on-light` | `#C4421F` | AA-safe accent text on cream (4.8:1)                                |
+| `--color-accent-on-dark`  | `#e87a4d` | AA-safe accent text on charcoal (4.8:1)                             |
+| `--color-terracotta`      | `#e87a4d` | Secondary accent                                                    |
+| `--color-card-bg`         | `#f0ede5` | About card background                                               |
+| `--color-border`          | `#e5e0d5` | Borders                                                             |
+| `--color-dropdown-hover`  | `#ebe6dd` | Dropdown hover                                                      |
 
 ## Structure
 
@@ -114,7 +115,7 @@ public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.p
 
 ## Known Issues
 
-- No formatter config. CI runs typecheck, lint, test and build on push to `main` and on PRs (`.github/workflows/ci.yml`).
+- No pre-commit hook — formatting is enforced only in CI. CI runs typecheck, lint, format check, test and build on push to `main` and on PRs (`.github/workflows/ci.yml`).
 - Tests cover `useFocusTrap`, `lib/rateLimit` and the contact route; components have none.
 - Contact rate limiting is in-process, so on serverless it applies per instance. See `docs/backlog.md`.
 - `tsconfig.paths.json` — not extended by `tsconfig.json`; has no effect.

@@ -25,10 +25,7 @@ export function AboutSection() {
       {...glowHandlers}
     >
       <AboutHeader />
-      <AboutContent
-        isVisible={isVisible}
-        onScrollToContact={scrollToContact}
-      />
+      <AboutContent isVisible={isVisible} onScrollToContact={scrollToContact} />
     </section>
   );
 }

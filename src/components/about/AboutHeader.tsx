@@ -8,10 +8,7 @@ import { scrollToAbout } from '@/lib/utils';
 export function AboutHeader() {
   return (
     <div className="about-header">
-      <button
-        onClick={scrollToAbout}
-        className="about-header__button"
-      >
+      <button onClick={scrollToAbout} className="about-header__button">
         ABOUT
         <span className="about-header__underline" />
       </button>

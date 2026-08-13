@@ -1,26 +1,36 @@
-import type { Metadata } from "next";
-import { robotoMono, hubotSans } from "@/fonts";
-import "./globals.css";
-import "../styles/animations.css";
-import "../styles/navigation.css";
-import "../styles/about.css";
-import "../styles/contact.css";
-import "../styles/landing.css";
-import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
+import type { Metadata } from 'next';
+import { robotoMono, hubotSans } from '@/fonts';
+import './globals.css';
+import '../styles/animations.css';
+import '../styles/navigation.css';
+import '../styles/about.css';
+import '../styles/contact.css';
+import '../styles/landing.css';
+import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xsooi.com';
 
-const canonicalUrl = process.env.NODE_ENV === 'production'
-  ? siteUrl
-  : 'http://localhost:3000';
+const canonicalUrl =
+  process.env.NODE_ENV === 'production' ? siteUrl : 'http://localhost:3000';
 
 export const metadata: Metadata = {
-  title: "Xinsheng Ooi",
-  description: "DevOps engineer specializing in automation, scripting, and infrastructure management. Expert in Python, Bash, Docker, and Cloudflare for building robust deployment pipelines and automated solutions.",
-  keywords: ["DevOps engineer", "automation specialist", "Docker", "Python scripting", "Bash automation", "server infrastructure", "deployment pipelines", "Cloudflare DNS", "Linux system administration"],
-  authors: [{ name: "Xinsheng Ooi", url: siteUrl }],
-  creator: "Xinsheng Ooi",
-  publisher: "Xinsheng Ooi",
+  title: 'Xinsheng Ooi',
+  description:
+    'DevOps engineer specializing in automation, scripting, and infrastructure management. Expert in Python, Bash, Docker, and Cloudflare for building robust deployment pipelines and automated solutions.',
+  keywords: [
+    'DevOps engineer',
+    'automation specialist',
+    'Docker',
+    'Python scripting',
+    'Bash automation',
+    'server infrastructure',
+    'deployment pipelines',
+    'Cloudflare DNS',
+    'Linux system administration',
+  ],
+  authors: [{ name: 'Xinsheng Ooi', url: siteUrl }],
+  creator: 'Xinsheng Ooi',
+  publisher: 'Xinsheng Ooi',
   formatDetection: {
     email: false,
     address: false,
@@ -41,8 +51,9 @@ export const metadata: Metadata = {
     canonical: canonicalUrl,
   },
   openGraph: {
-    title: "Xinsheng Ooi",
-    description: "DevOps engineer specializing in automation, scripting, and infrastructure management. Expert in Python, Bash, Docker, and Cloudflare.",
+    title: 'Xinsheng Ooi',
+    description:
+      'DevOps engineer specializing in automation, scripting, and infrastructure management. Expert in Python, Bash, Docker, and Cloudflare.',
     url: siteUrl,
     siteName: 'Xinsheng Ooi - DevOps Engineer',
     locale: 'en_US',
@@ -58,8 +69,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "Xinsheng Ooi",
-    description: "DevOps engineer specializing in automation, scripting, and infrastructure management.",
+    title: 'Xinsheng Ooi',
+    description:
+      'DevOps engineer specializing in automation, scripting, and infrastructure management.',
     creator: '@xs1128',
     images: [`${siteUrl}/og-image.png`],
   },
@@ -82,36 +94,37 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Xinsheng Ooi",
-    "url": siteUrl,
-    "image": `${siteUrl}/og-image.png`,
-    "sameAs": [
-      "https://github.com/xs1128",
-      "https://www.linkedin.com/in/xinsheng-ooi-6738083b4",
-      "https://www.instagram.com/xs_ooi1128",
-      "https://www.facebook.com/ooi.xinsheng/"
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Xinsheng Ooi',
+    url: siteUrl,
+    image: `${siteUrl}/og-image.png`,
+    sameAs: [
+      'https://github.com/xs1128',
+      'https://www.linkedin.com/in/xinsheng-ooi-6738083b4',
+      'https://www.instagram.com/xs_ooi1128',
+      'https://www.facebook.com/ooi.xinsheng/',
     ],
-    "jobTitle": "DevOps Engineer",
-    "description": "DevOps engineer specializing in automation, scripting, and infrastructure management",
-    "knowsAbout": [
-      "DevOps",
-      "Automation",
-      "Docker",
-      "Python",
-      "Bash scripting",
-      "Linux system administration",
-      "Cloudflare DNS",
-      "Server infrastructure",
-      "Deployment pipelines",
-      "Container orchestration"
+    jobTitle: 'DevOps Engineer',
+    description:
+      'DevOps engineer specializing in automation, scripting, and infrastructure management',
+    knowsAbout: [
+      'DevOps',
+      'Automation',
+      'Docker',
+      'Python',
+      'Bash scripting',
+      'Linux system administration',
+      'Cloudflare DNS',
+      'Server infrastructure',
+      'Deployment pipelines',
+      'Container orchestration',
     ],
-    "email": "hi@xsooi.com",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "MY"
-    }
+    email: 'hi@xsooi.com',
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'MY',
+    },
   };
 
   return (

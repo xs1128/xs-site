@@ -8,25 +8,31 @@ export function useCursorGlow(targetRef: RefObject<HTMLElement | null>) {
   const rafRef = useRef<number | null>(null);
 
   // Stale frame would write coords after unmount
-  useEffect(() => () => {
-    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    },
+    [],
+  );
 
-  const onPointerMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
-    if (e.pointerType !== 'mouse') return;
-    const { clientX, clientY } = e;
-    if (rafRef.current !== null) return;
+  const onPointerMove = useCallback(
+    (e: React.PointerEvent<HTMLElement>) => {
+      if (e.pointerType !== 'mouse') return;
+      const { clientX, clientY } = e;
+      if (rafRef.current !== null) return;
 
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-      const target = targetRef.current;
-      if (!target) return;
-      const rect = target.getBoundingClientRect();
-      target.style.setProperty('--glow-x', `${clientX - rect.left}px`);
-      target.style.setProperty('--glow-y', `${clientY - rect.top}px`);
-      target.style.setProperty('--glow-opacity', '1');
-    });
-  }, [targetRef]);
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        const target = targetRef.current;
+        if (!target) return;
+        const rect = target.getBoundingClientRect();
+        target.style.setProperty('--glow-x', `${clientX - rect.left}px`);
+        target.style.setProperty('--glow-y', `${clientY - rect.top}px`);
+        target.style.setProperty('--glow-opacity', '1');
+      });
+    },
+    [targetRef],
+  );
 
   const onPointerLeave = useCallback(() => {
     targetRef.current?.style.setProperty('--glow-opacity', '0');

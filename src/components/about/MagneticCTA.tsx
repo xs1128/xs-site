@@ -48,7 +48,7 @@ export function MagneticCTA({ onClick, isVisible }: MagneticCTAProps) {
     const moveY = y * 0.15;
 
     setMagneticStyle({
-      transform: `translate(${moveX}px, ${moveY}px)`
+      transform: `translate(${moveX}px, ${moveY}px)`,
     });
   };
 
@@ -56,7 +56,7 @@ export function MagneticCTA({ onClick, isVisible }: MagneticCTAProps) {
     // Smooth spring-back to original position
     setMagneticStyle({
       transform: 'translate(0, 0)',
-      transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)'
+      transition: 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
     });
   };
 
@@ -69,8 +69,12 @@ export function MagneticCTA({ onClick, isVisible }: MagneticCTAProps) {
       style={magneticStyle}
     >
       <div className="about-content__cta-arrow">↓</div>
-      <p className="about-content__cta-text">Have a problem that needs solving?</p>
-      <p className="about-content__cta-subtext">Let&apos;s chat &mdash; I&apos;d love to hear about it</p>
+      <p className="about-content__cta-text">
+        Have a problem that needs solving?
+      </p>
+      <p className="about-content__cta-subtext">
+        Let&apos;s chat &mdash; I&apos;d love to hear about it
+      </p>
     </div>
   );
 }

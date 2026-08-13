@@ -13,7 +13,10 @@ export interface AboutContentProps {
  * About section content with animated headline, introduction, and expertise cards
  * Features scroll-triggered entrance animations and micro-interactions
  */
-export function AboutContent({ onScrollToContact, isVisible }: AboutContentProps) {
+export function AboutContent({
+  onScrollToContact,
+  isVisible,
+}: AboutContentProps) {
   return (
     <div className="about-content">
       {/* Hero Headline with animated reveal */}
@@ -23,15 +26,24 @@ export function AboutContent({ onScrollToContact, isVisible }: AboutContentProps
       />
 
       {/* Expertise Cards with staggered entrance animations */}
-      <div className={`about-content__cards ${isVisible ? 'about-content__cards--visible' : ''}`}>
+      <div
+        className={`about-content__cards ${isVisible ? 'about-content__cards--visible' : ''}`}
+      >
         <ExpertiseCard
-          icon={<StaticIcon src="/icons/terminal.svg" alt="Scripting & Automation" />}
+          icon={
+            <StaticIcon
+              src="/icons/terminal.svg"
+              alt="Scripting & Automation"
+            />
+          }
           title="Scripting & Automation"
           description="Streamlining operations through Python, Bash, and Linux/UNIX scripting for custom automation and system management."
           index={0}
         />
         <ExpertiseCard
-          icon={<StaticIcon src="/icons/server.svg" alt="Server Infrastructure" />}
+          icon={
+            <StaticIcon src="/icons/server.svg" alt="Server Infrastructure" />
+          }
           title="Server Infrastructure"
           description="Managing self-hosted servers with Docker, Docker Compose, and Cloudflare for containerization and domain routing."
           index={1}
@@ -45,10 +57,7 @@ export function AboutContent({ onScrollToContact, isVisible }: AboutContentProps
       </div>
 
       {/* Call to Action with magnetic effect */}
-      <MagneticCTA
-        onClick={onScrollToContact}
-        isVisible={isVisible}
-      />
+      <MagneticCTA onClick={onScrollToContact} isVisible={isVisible} />
     </div>
   );
 }

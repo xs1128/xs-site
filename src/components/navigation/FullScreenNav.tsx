@@ -33,7 +33,10 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
     }, 800);
   };
 
-  const navRef = useFocusTrap<HTMLDivElement>(isOpen && !isClosing, handleClose);
+  const navRef = useFocusTrap<HTMLDivElement>(
+    isOpen && !isClosing,
+    handleClose,
+  );
 
   const handleAboutClick = () => {
     handleClose();
@@ -58,14 +61,16 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
     >
       <div className="fullscreen-nav__items">
         <div className="fullscreen-nav__header">
-          <div className="fullscreen-nav__menu-label">
-            MENU
-          </div>
+          <div className="fullscreen-nav__menu-label">MENU</div>
 
           <div className="fullscreen-nav__spacer"></div>
 
           <div className="fullscreen-nav__close-wrapper">
-            <button onClick={handleClose} className="fullscreen-nav__close-button" aria-label="Close navigation">
+            <button
+              onClick={handleClose}
+              className="fullscreen-nav__close-button"
+              aria-label="Close navigation"
+            >
               ✕
             </button>
           </div>

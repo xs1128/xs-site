@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback, RefObject } from 'react';
 
 interface UseScrollParallaxOptions {
-  maxScrollDistance: number;  // Maximum distance in pixels (e.g., 40vh)
-  triggerThreshold: number;   // When to start (0 = immediate)
+  maxScrollDistance: number; // Maximum distance in pixels (e.g., 40vh)
+  triggerThreshold: number; // When to start (0 = immediate)
 }
 
 /**
@@ -21,7 +21,7 @@ interface UseScrollParallaxOptions {
  */
 export function useScrollParallax(
   containerRef: RefObject<HTMLDivElement | null>,
-  options: UseScrollParallaxOptions
+  options: UseScrollParallaxOptions,
 ): number {
   const { maxScrollDistance, triggerThreshold } = options;
   const [parallaxOffset, setParallaxOffset] = useState(0);
@@ -40,7 +40,7 @@ export function useScrollParallax(
       const scrollRange = viewportHeight * 0.9;
       const scrollProgress = Math.min(
         Math.max((scrollY - triggerThreshold) / scrollRange, 0),
-        1
+        1,
       );
 
       const newOffset = scrollProgress * maxScrollDistance;

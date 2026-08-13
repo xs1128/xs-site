@@ -43,7 +43,9 @@ export function AnimatedButton({
   return (
     <button className={baseClasses} style={style} onClick={onClick}>
       {children}
-      {!isMenuButton && !isDropdownItem && <span className={underlineClasses} />}
+      {!isMenuButton && !isDropdownItem && (
+        <span className={underlineClasses} />
+      )}
     </button>
   );
 }

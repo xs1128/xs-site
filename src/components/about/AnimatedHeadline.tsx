@@ -31,9 +31,13 @@ export function AnimatedHeadline({ text, isVisible }: AnimatedHeadlineProps) {
   const accentWords = ['automated', 'solutions'];
 
   return (
-    <h2 className={`about-content__headline ${isVisible ? 'about-content__headline--visible' : ''}`}>
+    <h2
+      className={`about-content__headline ${isVisible ? 'about-content__headline--visible' : ''}`}
+    >
       {words.map((word, index) => {
-        const isAccent = accentWords.includes(word.replace('.', '').toLowerCase());
+        const isAccent = accentWords.includes(
+          word.replace('.', '').toLowerCase(),
+        );
         const needsLineBreak = word.toLowerCase() === 'automated';
 
         return (
@@ -41,10 +45,12 @@ export function AnimatedHeadline({ text, isVisible }: AnimatedHeadlineProps) {
             {needsLineBreak && <br />}
             <span
               className={`about-content__word ${isAccent ? 'about-content__word--accent' : ''}`}
-              style={{
-                '--word-delay': isVisible ? `${index * 0.05}s` : '0s',
-                marginRight: '0.25em'
-              } as React.CSSProperties}
+              style={
+                {
+                  '--word-delay': isVisible ? `${index * 0.05}s` : '0s',
+                  marginRight: '0.25em',
+                } as React.CSSProperties
+              }
             >
               <span className="about-content__word-inner">{word}</span>
             </span>

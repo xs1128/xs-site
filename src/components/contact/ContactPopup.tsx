@@ -18,12 +18,12 @@ export function ContactPopup({
   onClose,
 }: ContactPopupProps) {
   const [formData, setFormData] = useState<ContactFormData>({
-    name: "",
-    email: "",
-    message: "",
+    name: '',
+    email: '',
+    message: '',
   });
   const [formState, setFormState] = useState<FormState>({
-    formData: { name: "", email: "", message: "" },
+    formData: { name: '', email: '', message: '' },
     isSubmitting: false,
     submitStatus: 'idle',
     errorMessage: '',
@@ -33,7 +33,12 @@ export function ContactPopup({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setFormState(prev => ({ ...prev, isSubmitting: true, submitStatus: 'idle', errorMessage: '' }));
+    setFormState((prev) => ({
+      ...prev,
+      isSubmitting: true,
+      submitStatus: 'idle',
+      errorMessage: '',
+    }));
 
     try {
       const response = await fetch('/api/contact', {
@@ -51,24 +56,25 @@ export function ContactPopup({
       }
 
       setFormState({
-        formData: { name: "", email: "", message: "" },
+        formData: { name: '', email: '', message: '' },
         isSubmitting: false,
         submitStatus: 'success',
         errorMessage: '',
       });
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: '', email: '', message: '' });
 
       setTimeout(() => {
         onClose();
-        setFormState(prev => ({ ...prev, submitStatus: 'idle' }));
+        setFormState((prev) => ({ ...prev, submitStatus: 'idle' }));
       }, 1500);
     } catch (error) {
       console.error('Submit error:', error);
-      setFormState(prev => ({
+      setFormState((prev) => ({
         ...prev,
         isSubmitting: false,
         submitStatus: 'error',
-        errorMessage: error instanceof Error ? error.message : 'Failed to send message',
+        errorMessage:
+          error instanceof Error ? error.message : 'Failed to send message',
       }));
     }
   };
@@ -110,9 +116,7 @@ export function ContactPopup({
             type="text"
             required
             value={formData.name}
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="contact-popup__input"
           />
         </div>
@@ -153,14 +157,21 @@ export function ContactPopup({
         </div>
 
         {formState.submitStatus === 'success' && (
-          <div role="status" className="contact-popup__status contact-popup__status--success">
+          <div
+            role="status"
+            className="contact-popup__status contact-popup__status--success"
+          >
             Message sent successfully!
           </div>
         )}
 
         {formState.submitStatus === 'error' && (
-          <div role="alert" className="contact-popup__status contact-popup__status--error">
-            {formState.errorMessage || 'Failed to send message. Please try again.'}
+          <div
+            role="alert"
+            className="contact-popup__status contact-popup__status--error"
+          >
+            {formState.errorMessage ||
+              'Failed to send message. Please try again.'}
           </div>
         )}
 

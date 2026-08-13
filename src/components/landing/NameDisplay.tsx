@@ -7,15 +7,21 @@ export interface NameDisplayProps {
 }
 
 // Lazy load 3D scene component
-const NameSceneContent = dynamic(() => import('@/components/3d/landing/NameScene').then(mod => ({ default: mod.NameScene })), {
-  ssr: false,
-  loading: () => (
-    <div className="name-scene-placeholder">
-      <div className="name-scene-placeholder__bar" />
-      <div className="name-scene-placeholder__bar name-scene-placeholder__bar--short" />
-    </div>
-  ),
-});
+const NameSceneContent = dynamic(
+  () =>
+    import('@/components/3d/landing/NameScene').then((mod) => ({
+      default: mod.NameScene,
+    })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="name-scene-placeholder">
+        <div className="name-scene-placeholder__bar" />
+        <div className="name-scene-placeholder__bar name-scene-placeholder__bar--short" />
+      </div>
+    ),
+  },
+);
 
 /**
  * Centered name display with 3D parallax tilt effect and scroll-based parallax
@@ -35,15 +41,16 @@ export function NameDisplay({ containerRef }: NameDisplayProps) {
       setRotateY(x * 5);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   // Scroll-based parallax effect (with SSR safety)
-  const maxScrollDistance = typeof window !== 'undefined' ? window.innerHeight * 0.4 : 0;
+  const maxScrollDistance =
+    typeof window !== 'undefined' ? window.innerHeight * 0.4 : 0;
   const parallaxOffset = useScrollParallax(containerRef, {
-    maxScrollDistance,  // 40vh
-    triggerThreshold: 0  // Immediate start
+    maxScrollDistance, // 40vh
+    triggerThreshold: 0, // Immediate start
   });
 
   const containerStyle = {
@@ -54,9 +61,7 @@ export function NameDisplay({ containerRef }: NameDisplayProps) {
     <>
       {/* Semantic content for SEO and screen readers */}
       <div className="landing-section__semantic-content">
-        <h1 className="visually-hidden">
-          Xinsheng Ooi
-        </h1>
+        <h1 className="visually-hidden">Xinsheng Ooi</h1>
         <p className="visually-hidden">
           Expert in Python scripting, Docker containerization, Bash automation,
           and deployment pipelines for robust infrastructure solutions.
@@ -69,9 +74,9 @@ export function NameDisplay({ containerRef }: NameDisplayProps) {
           role="img"
           aria-label="3D animation: Xinsheng Ooi"
           style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <NameSceneContent showInitials={false} />

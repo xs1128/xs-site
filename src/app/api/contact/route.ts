@@ -17,17 +17,24 @@ const asField = (value: unknown): string =>
 export async function POST(request: Request) {
   try {
     if (!resend) {
-      return NextResponse.json({ error: 'Email service unavailable' }, { status: 503 });
+      return NextResponse.json(
+        { error: 'Email service unavailable' },
+        { status: 503 },
+      );
     }
 
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown';
     if (isRateLimited(`contact:${ip}`, RATE_LIMIT, RATE_WINDOW_MS)) {
       return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
 
     const body = await request.json().catch(() => null);
     if (!body || typeof body !== 'object') {
-      return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid request body' },
+        { status: 400 },
+      );
     }
 
     const name = asField(body.name);
@@ -35,7 +42,10 @@ export async function POST(request: Request) {
     const message = typeof body.message === 'string' ? body.message.trim() : '';
 
     if (!name || !email || !message) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 },
+      );
     }
 
     if (
@@ -43,11 +53,17 @@ export async function POST(request: Request) {
       email.length > LIMITS.email ||
       message.length > LIMITS.message
     ) {
-      return NextResponse.json({ error: 'Field exceeds maximum length' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Field exceeds maximum length' },
+        { status: 400 },
+      );
     }
 
     if (!EMAIL_PATTERN.test(email)) {
-      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Invalid email address' },
+        { status: 400 },
+      );
     }
 
     await resend.emails.send({
@@ -61,6 +77,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('[contact] send failed:', error);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Failed to send email' },
+      { status: 500 },
+    );
   }
 }
