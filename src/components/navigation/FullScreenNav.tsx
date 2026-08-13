@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { FullScreenNavProps } from '@/types';
 import { scrollToAbout, scrollToContact } from '@/lib/utils';
+import { useFocusTrap } from '@/hooks/useFocusTrap';
 
 /**
  * Full-screen navigation overlay with slide animations
@@ -29,6 +30,8 @@ export function FullScreenNav({ isOpen, onClose, isSmallScreen, setIsDarkTheme }
     }, 800);
   };
 
+  const navRef = useFocusTrap<HTMLDivElement>(isOpen && !isClosing, handleClose);
+
   const handleAboutClick = () => {
     handleClose();
     setTimeout(() => scrollToAbout(setIsDarkTheme), 100);
@@ -42,7 +45,13 @@ export function FullScreenNav({ isOpen, onClose, isSmallScreen, setIsDarkTheme }
   if (!isOpen && !isClosing) return null;
 
   return (
-    <div className={`fullscreen-nav ${isClosing ? 'fullscreen-nav--closing' : ''}`}>
+    <div
+      ref={navRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Site navigation"
+      className={`fullscreen-nav ${isClosing ? 'fullscreen-nav--closing' : ''}`}
+    >
       {/* Navigation items */}
       <div className="fullscreen-nav__items">
         {/* MENU label with close button - outer container with outline */}

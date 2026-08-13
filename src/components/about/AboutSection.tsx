@@ -2,6 +2,8 @@ import React, { useRef, useCallback } from 'react';
 import type { AboutSectionProps } from '@/types';
 import { AboutHeader } from './AboutHeader';
 import { AboutContent } from './AboutContent';
+import { useIntersectionAnimation } from '@/hooks/useIntersectionAnimation';
+import { scrollToContact } from '@/lib/utils';
 
 /**
  * About section wrapper component
@@ -12,6 +14,10 @@ import { AboutContent } from './AboutContent';
 export function AboutSection({ isSmallScreen, setIsDarkTheme }: AboutSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const rafRef = useRef<number | null>(null);
+  const { isVisible } = useIntersectionAnimation(sectionRef, {
+    threshold: 0.15,
+    rootMargin: '-50px',
+  });
 
   const handlePointerMove = useCallback((e: React.PointerEvent<HTMLElement>) => {
     if (isSmallScreen || e.pointerType !== 'mouse') return;
@@ -47,12 +53,8 @@ export function AboutSection({ isSmallScreen, setIsDarkTheme }: AboutSectionProp
       />
       <AboutContent
         isSmallScreen={isSmallScreen}
-        onScrollToContact={() => {
-          const contactSection = document.getElementById("contact");
-          if (contactSection) {
-            contactSection.scrollIntoView({ behavior: "smooth" });
-          }
-        }}
+        isVisible={isVisible}
+        onScrollToContact={() => scrollToContact(setIsDarkTheme)}
       />
     </section>
   );

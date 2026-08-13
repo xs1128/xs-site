@@ -71,6 +71,7 @@ export interface AboutHeaderProps {
 export interface AboutContentProps {
   onScrollToContact: () => void;
   isSmallScreen: boolean;
+  isVisible: boolean;
 }
 
 export interface ExpertiseCardProps extends ResponsiveProps {
