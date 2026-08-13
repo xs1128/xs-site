@@ -72,6 +72,12 @@ button,
   border-radius: 2px;
 }
 
+/* Dialogs take focus on open only to scope the trap, never to indicate it */
+[role="dialog"]:focus,
+[role="dialog"]:focus-visible {
+  outline: none;
+}
+
 /* Scroll Container */
 .scroll-container {
   display: flex;

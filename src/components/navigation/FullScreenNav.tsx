@@ -47,6 +47,7 @@ export function FullScreenNav({ isOpen, onClose, isSmallScreen, setIsDarkTheme }
   return (
     <div
       ref={navRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label="Site navigation"

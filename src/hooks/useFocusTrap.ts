@@ -11,8 +11,11 @@ const FOCUSABLE_SELECTOR = [
 
 /**
  * Traps Tab focus inside an overlay while it is active.
- * Moves focus in on open, cycles at the edges, closes on Escape,
- * and restores focus to the trigger on close.
+ * Cycles at the edges, closes on Escape, and restores focus to the trigger.
+ *
+ * Focus moves to the container itself rather than the first focusable child,
+ * so opening an overlay never highlights its close button or pops up the
+ * mobile keyboard. The container must carry tabIndex={-1}.
  *
  * @param isActive - Whether the overlay is currently open
  * @param onDismiss - Called when Escape is pressed
@@ -37,7 +40,7 @@ export function useFocusTrap<T extends HTMLElement>(
     const getFocusable = () =>
       Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
 
-    getFocusable()[0]?.focus();
+    container.focus({ preventScroll: true });
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -54,10 +57,12 @@ export function useFocusTrap<T extends HTMLElement>(
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
 
-      if (event.shiftKey && document.activeElement === first) {
+      const active = document.activeElement;
+
+      if (event.shiftKey && (active === first || active === container)) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && active === last) {
         event.preventDefault();
         first.focus();
       }

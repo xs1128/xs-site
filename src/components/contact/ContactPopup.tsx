@@ -74,6 +74,7 @@ export function ContactPopup({
   return (
     <div
       ref={popupRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-labelledby="contact-popup-title"
