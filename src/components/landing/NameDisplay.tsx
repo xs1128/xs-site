@@ -70,7 +70,7 @@ export function NameDisplay({ containerRef }: NameDisplayProps) {
       </div>
 
       <div className="name-display-wrapper" style={containerStyle}>
-        <Tooltip label="I make deploys boring." followCursor>
+        <Tooltip label="Automate. Containerize. Ship." followCursor>
           <div
             className="name-display__canvas-container"
             role="img"

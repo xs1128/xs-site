@@ -1,4 +1,4 @@
-/* Tooltip — portalled to body, so it sits above everything including the nav */
+/* Portalled to body, so this sits above the nav */
 .tooltip {
   position: fixed;
   z-index: 4000;
@@ -15,7 +15,7 @@
   text-align: center;
   white-space: pre-line;
   pointer-events: none;
-  /* Hard offset, no blur — a soft shadow would fight the squared corners */
+  /* Hard offset, no blur — nothing else here is rounded or soft */
   box-shadow: 3px 3px 0 var(--color-accent);
   opacity: 0;
   transition:
@@ -23,8 +23,7 @@
     transform 140ms var(--ease-out-expo);
 }
 
-/* Grow out of the trigger, not out of thin air: the origin is the edge
-   facing it, and the entry offset points back toward it */
+/* Grow out of the trigger: origin on the edge facing it, offset points back */
 .tooltip[data-placement='top'] {
   transform-origin: bottom center;
   transform: scale(0.96) translateY(4px);
@@ -45,14 +44,13 @@
   transform: scale(0.96) translateX(-4px);
 }
 
-/* Set once the tip has been measured and placed. Must stay last — it beats
-   the placement rules on source order, not specificity */
+/* Set once measured. Must stay last — beats the placement rules on order */
 .tooltip[data-ready='true'] {
   opacity: 1;
   transform: scale(1) translate(0, 0);
 }
 
-/* Opened inside the skip window: the row already paid for one entrance */
+/* Inside the skip window: the row already paid for one entrance */
 .tooltip[data-instant='true'] {
   transition-duration: 0ms;
 }

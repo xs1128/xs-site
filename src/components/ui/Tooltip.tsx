@@ -27,8 +27,7 @@ const OPPOSITE: Record<Placement, Placement> = {
   right: 'left',
 };
 
-// Shared across every tooltip: moving along an icon row should feel instant
-// once the first one has paid the open delay.
+// Shared: the second tip in a row shouldn't pay the open delay again
 let lastClosedAt = 0;
 
 const useIsomorphicLayoutEffect =
@@ -40,13 +39,12 @@ interface Position {
   placement: Placement;
 }
 
-// A zero-size rect at the cursor. place() reads nothing else, so cursor
-// anchoring gets the same flip and edge clamping as element anchoring.
+// Zero-size rect at the cursor — gets flip and clamping for free
 const cursorRect = (x: number, y: number) =>
   ({ top: y, bottom: y, left: x, right: x, width: 0, height: 0 }) as DOMRect;
 
-// tip is measured with offsetWidth/Height, not a rect: the enter transition
-// scales the tooltip, and a scaled rect would offset the centering.
+// tip is measured with offsetWidth/Height: the enter transition scales it,
+// and a scaled rect would offset the centering.
 function place(
   trigger: DOMRect,
   tip: { width: number; height: number },
@@ -127,20 +125,18 @@ type TriggerProps = {
 };
 
 export interface TooltipProps {
-  /** Text shown in the tip */
   label: string;
-  /** Preferred side; flips to the opposite one when it won't fit */
+  /** Preferred side; flips when it won't fit */
   placement?: Placement;
-  /** Track the cursor instead of the trigger box. Falls back to the box on keyboard focus */
+  /** Anchor to the cursor; keyboard focus still uses the box */
   followCursor?: boolean;
-  /** Single element trigger — it is cloned, so it must take a ref and handlers */
+  /** Cloned, so it must accept a ref and handlers */
   children: ReactElement<TriggerProps>;
 }
 
 /**
- * Hover/focus tooltip portalled to document.body, so no ancestor `overflow`
- * or stacking context can clip it. Returns `children` untouched on touch —
- * a tooltip nothing can hover is dead weight.
+ * Portalled to document.body, so no ancestor overflow can clip it.
+ * Returns children untouched on touch.
  */
 export function Tooltip({
   label,
@@ -156,7 +152,7 @@ export function Tooltip({
   const tipRef = useRef<HTMLDivElement | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cursor = useRef<{ x: number; y: number } | null>(null);
-  // Cached at open: re-reading offsetWidth per frame would force layout
+  // Cached at open: reading offsetWidth per frame would force layout
   const tipSize = useRef({ width: 0, height: 0 });
   const raf = useRef<number | null>(null);
   const id = useId();
@@ -168,8 +164,7 @@ export function Tooltip({
 
   const show = useCallback((immediate: boolean) => {
     clearTimer();
-    // Second tip in a row: no delay, and no entrance either — the eye is
-    // already there, so replaying the animation just reads as lag
+    // Second in a row skips the entrance too — replaying it reads as lag
     const skipping = Date.now() - lastClosedAt < SKIP_DELAY_MS;
     setInstant(skipping);
     const delay = immediate || skipping ? 0 : OPEN_DELAY_MS;
@@ -203,7 +198,7 @@ export function Tooltip({
     setPosition(place(anchor, tipSize.current, placement));
   }, [placement, followCursor]);
 
-  // Follow updates bypass React: one rAF-throttled style write per frame
+  // Bypasses React: one rAF-throttled style write per frame
   useEffect(() => {
     if (!open || !followCursor) return;
 
@@ -256,7 +251,7 @@ export function Tooltip({
 
   const childProps = children.props;
 
-  // eslint-disable-next-line react-hooks/refs -- cloneElement only forwards the ref, nothing reads .current during render
+  // eslint-disable-next-line react-hooks/refs -- cloneElement forwards the ref, nothing reads .current in render
   const trigger = cloneElement(children, {
     ref: triggerRef,
     'aria-describedby': open ? id : childProps['aria-describedby'],
@@ -265,7 +260,7 @@ export function Tooltip({
       cursor.current = { x: event.clientX, y: event.clientY };
       show(false);
     },
-    // Keeps the open-delay from placing the tip where the cursor used to be
+    // Or the open delay places the tip where the cursor was
     onPointerMove: (event: PointerEvent<HTMLElement>) => {
       childProps.onPointerMove?.(event);
       cursor.current = { x: event.clientX, y: event.clientY };
@@ -276,7 +271,7 @@ export function Tooltip({
     },
     onFocus: (event: FocusEvent<HTMLElement>) => {
       childProps.onFocus?.(event);
-      // No cursor to follow on a keyboard focus — anchor to the box
+      // Keyboard focus has no cursor — anchor to the box
       cursor.current = null;
       if (event.currentTarget.matches(':focus-visible')) show(true);
     },

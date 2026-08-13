@@ -73,7 +73,7 @@
   will-change: transform;
 }
 
-/* Not a link — `help` says "there is something to read here", not "click me" */
+/* Not a link, so not `pointer` */
 .name-display__canvas-container {
   cursor: help;
 }
