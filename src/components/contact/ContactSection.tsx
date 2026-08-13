@@ -3,6 +3,7 @@ import { ContactHeader } from './ContactHeader';
 import { SpinningCircularText } from './SpinningCircularText';
 import { ContactPopup } from './ContactPopup';
 import { SocialIconLink } from './SocialIconLink';
+import { Tooltip } from '@/components/ui/Tooltip';
 import {
   GitHubIcon,
   InstagramIcon,
@@ -104,12 +105,14 @@ export function ContactSection() {
         <div className="contact-section__footer">
           <div className="contact-section__email">
             email:{' '}
-            <a
-              href="mailto:hi@xsooi.com"
-              className="contact-section__email-link"
-            >
-              hi@xsooi.com
-            </a>
+            <Tooltip label="Reach Out">
+              <a
+                href="mailto:hi@xsooi.com"
+                className="contact-section__email-link"
+              >
+                hi@xsooi.com
+              </a>
+            </Tooltip>
           </div>
 
           <div className="contact-section__social-links">
