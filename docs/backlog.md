@@ -43,10 +43,20 @@ Investigated and rejected on 2026-08-14, so it doesn't get reopened:
   since robots.txt is per-host, but it stops Google reading the canonical on
   those URLs, which is what performs the consolidation.
 
-Distinguishing a proxy fetch from a real visit needs `x-forwarded-host`, which
-Next.js forwards on external rewrites but [has open bugs
-around](https://github.com/vercel/next.js/issues/67469). Not worth a deindexing
-risk for the upside.
+Distinguishing a proxy fetch from a real visit needs `x-forwarded-host`.
+Measured on production, it does not work: conditional header rules keyed on
+that header returned `direct` for both `blog.xsooi.com/blog` and
+`www.xsooi.com/blog`, so a rule meant for the subdomain fires on the real
+pages too. Response headers pass through the rewrite unchanged, confirmed by
+diffing both hosts, which is why every header-based fix leaks.
+
+Full elimination means merging the blog into this repo as a native `/blog`
+route: one project, no rewrite, no subdomain. Not done, and not free. The blog
+brings `@react-three/fiber`, `drei` and `@fontsource`, all three listed under
+"do not re-add" here; `basePath: '/blog'` has to come out; Supabase,
+`/api/revalidate` and the `blog-admin` project all need rewiring; and the blog
+stops deploying independently of the portfolio. Worth it only if the second
+hostname starts causing real problems.
 
 ## Tier 3 — polish
 
