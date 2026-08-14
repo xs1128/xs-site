@@ -6,7 +6,7 @@ import FunnyMarqueeWrapper from "@/components/blog/FunnyMarqueeWrapper";
 import RecentBlogsGrid from "@/components/blog/RecentBlogsGrid";
 import BlogExpandedContent from "@/components/blog/BlogExpandedContent";
 import AnimatedButton from "@/components/ui/AnimatedButton";
-import { ArrowUp, ArrowDown, ArrowUpRight } from "lucide-react";
+import { ArrowUp, ArrowDown, ArrowUpRight, X } from "lucide-react";
 import { colors } from "@/styles/colors";
 
 const useBeforePaintEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -259,9 +259,15 @@ function FullScreenNav({
                 lineHeight: 0.85,
                 fontFamily: "Roboto Mono, monospace",
                 fontWeight: 500,
+                display: "flex",
               }}
             >
-              ✕
+              <X
+                viewBox="5 5 14 14"
+                style={{ width: "0.62em", height: "0.62em" }}
+                strokeWidth={2}
+                strokeLinecap="butt"
+              />
             </button>
           </div>
         </div>

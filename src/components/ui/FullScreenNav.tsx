@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 import { colors } from "@/styles/colors";
 import Tooltip from "@/components/ui/Tooltip";
 
@@ -251,9 +251,15 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
                   lineHeight: 0.85,
                   fontFamily: "Roboto Mono, monospace",
                   fontWeight: 500,
+                  display: "flex",
                 }}
               >
-                ✕
+                <X
+                  viewBox="5 5 14 14"
+                  style={{ width: "0.62em", height: "0.62em" }}
+                  strokeWidth={2}
+                  strokeLinecap="butt"
+                />
               </button>
             </Tooltip>
           </div>
