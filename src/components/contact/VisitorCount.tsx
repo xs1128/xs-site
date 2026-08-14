@@ -33,7 +33,13 @@ export function VisitorCount() {
 
   return (
     <p className="contact-section__visits">
-      {total.toLocaleString('en-US')} visits and counting
+      <span className="contact-section__visits-number">
+        {total.toLocaleString('en-US')}
+      </span>
+      <span className="contact-section__visits-label">
+        {' '}
+        visits and counting
+      </span>
     </p>
   );
 }
