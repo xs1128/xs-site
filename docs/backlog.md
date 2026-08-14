@@ -8,52 +8,45 @@ shipped.
 Everything here was verified against the codebase, not assumed. Items resolved
 along the way are in `git log`, not repeated here.
 
-## Tier 1: SEO defects, live in production
+## Tier 1: SEO decisions worth keeping
 
-Verified against production HTML on 2026-08-14, not inferred from source.
+The defects here shipped on 2026-08-14 and were verified live. What remains is
+the reasoning, so settled calls don't get relitigated.
 
-### 20. Finish the move to www
+**www is canonical.** The apex 308s to www, so every emitted URL carries the
+`www.`: `NEXT_PUBLIC_SITE_URL` and its fallback in `layout.tsx`, `robots.ts`
+and `sitemap.ts`, plus the same var on the blog project. Keep the apex to www
+redirect. Do not add a second hop, and do not let a canonical point at a URL
+that redirects.
 
-Settled: **www is canonical.** Production already served `xsooi.com` as a 308
-to `www.xsooi.com`, so www is what Google has been crawling; matching it
-avoids a reindex. The apex stays free for other subdomains, and apex cookies
-would otherwise leak into `blog.xsooi.com`.
+### 24. `blog.xsooi.com` is directly reachable. Won't fix
 
-Done in this repo. The `NEXT_PUBLIC_SITE_URL` fallback is `https://www.xsooi.com`
-in all four readers (`layout.tsx`, `robots.ts`, `sitemap.ts`,
-`BreadcrumbSchema.tsx`), and in `.env.example` / `.env.local`.
+`blog.xsooi.com/blog` serves 200 alongside the proxied copy at
+`www.xsooi.com/blog`, so the content has two hostnames. It self-canonicals to
+the www URL, which is Google's documented fix for cross-domain duplicates and
+is verified working. Closing this: every way of removing the second hostname is
+worse than the crawl budget it costs.
 
-Two steps remain outside it:
+Investigated and rejected on 2026-08-14, so it doesn't get reopened:
 
-1. **Vercel env var.** If `NEXT_PUBLIC_SITE_URL` is set in the project
-   settings it still says `https://xsooi.com` and overrides the fallback.
-   Update or delete it.
-2. **Blog app canonical.** It emits `https://xsooi.com/blog/`, which is now
-   wrong on both counts. Should be `https://www.xsooi.com/blog`, no trailing
-   slash, since `/blog/` 308s to `/blog`.
+- **301 on `Host: blog.xsooi.com`.** Loops. The site rewrites `/blog` by
+  proxying to that host, so the proxy fetch takes the 301 to
+  `www.xsooi.com/blog` and rewrites again.
+- **`noindex` on the subdomain.** The rewrite proxies the response, headers
+  included, so it lands on the real pages.
+- **Detach the domain, rewrite to `blog-xsooi-projects.vercel.app`.** That URL
+  is behind Vercel Deployment Protection (302 to SSO), so the proxy gets a
+  login page. Disabling protection does not help: Vercel serves `.vercel.app`
+  with `x-robots-tag: noindex`, which the rewrite would pass through and
+  deindex `www.xsooi.com/blog`.
+- **Disallow-all `robots.txt` at the root of `blog.xsooi.com`.** Safe for `www`,
+  since robots.txt is per-host, but it stops Google reading the canonical on
+  those URLs, which is what performs the consolidation.
 
-Keep the apex to www redirect in place. Do not add a second hop.
-
-### 23. Breadcrumb schema points at fragments
-
-`BreadcrumbSchema.tsx:18,24` emit `#about` and `#contact` as breadcrumb items.
-A one-page site has no trail, and breadcrumb items are meant to be pages on a
-[typical user path](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb).
-It earns no rich result and reads as decorative markup. Delete the component
-and its wiring at `layout.tsx:10,138`; the `Person` schema is the one that
-does work.
-
-### 24. `blog.xsooi.com` is still directly reachable
-
-`blog.xsooi.com/blog` serves 200 and its `robots.txt` 404s, so the subdomain is
-fully crawlable alongside the proxied copy. Its self-canonical to the main
-domain mitigates the duplicate but doesn't remove it, and that canonical
-currently points at `https://xsooi.com/blog/`, which is non-www _and_
-trailing-slash, so it redirects twice (see 20; `/blog/` 308s to `/blog`).
-
-Fix in the blog app: 301 on `Host: blog.xsooi.com`, and canonicalise to the
-exact final URL. Do **not** put `noindex` on the subdomain, because the rewrite
-proxies that same response and it would deindex the real pages.
+Distinguishing a proxy fetch from a real visit needs `x-forwarded-host`, which
+Next.js forwards on external rewrites but [has open bugs
+around](https://github.com/vercel/next.js/issues/67469). Not worth a deindexing
+risk for the upside.
 
 ## Tier 3 — polish
 
@@ -222,8 +215,8 @@ beautiful"; everybody owns "spinning 3D cube."
 
 ## Suggested order
 
-Tier 1 first, and what is left of it is small. 20 has to land before 24 and 33,
-since both depend on which host wins.
+Tier 1 is closed. The SEO work left is tier 3, and of it only 30 is worth doing
+soon: without Search Console there is no way to see whether any of this landed.
 
 Then 12. It is the item that changes what the site is, and the one-pager will
 never rank for anything but the name, so the blog and the case-study layer are
