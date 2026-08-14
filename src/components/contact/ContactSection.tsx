@@ -3,6 +3,7 @@ import { ContactHeader } from './ContactHeader';
 import { SpinningCircularText } from './SpinningCircularText';
 import { ContactPopup } from './ContactPopup';
 import { SocialIconLink } from './SocialIconLink';
+import { VisitorCount } from './VisitorCount';
 import { Tooltip } from '@/components/ui/Tooltip';
 import { NotebookPen } from 'lucide-react';
 import {
@@ -145,6 +146,8 @@ export function ContactSection() {
               <LinkedInIcon />
             </SocialIconLink>
           </div>
+
+          <VisitorCount />
         </div>
       </div>
     </section>

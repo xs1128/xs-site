@@ -14,8 +14,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.xsooi.com';
 const canonicalUrl =
   process.env.NODE_ENV === 'production' ? siteUrl : 'http://localhost:3000';
 
-// Cloudflare Web Analytics. Unset means no beacon, so dev and previews stay out of the stats.
-const cfBeaconToken = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN;
+// GoatCounter. Unset means no script, so dev and previews stay out of the stats.
+const goatCounterCode = process.env.NEXT_PUBLIC_GOATCOUNTER_CODE;
 
 export const metadata: Metadata = {
   title: {
@@ -144,11 +144,11 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning>
         {children}
-        {cfBeaconToken && (
+        {goatCounterCode && (
           <Script
-            src="https://static.cloudflareinsights.com/beacon.min.js"
+            src="https://gc.zgo.at/count.js"
             strategy="afterInteractive"
-            data-cf-beacon={JSON.stringify({ token: cfBeaconToken })}
+            data-goatcounter={`https://${goatCounterCode}.goatcounter.com/count`}
           />
         )}
       </body>
