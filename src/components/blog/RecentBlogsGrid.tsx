@@ -36,14 +36,14 @@ export default function RecentBlogsGrid({
         .from('posts')
         .select('*')
         .not('published_at', 'is', null)
-        .order('published_at', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(12);
 
       if (data) {
         const transformedPosts: Post[] = data.map(post => ({
           id: post.id,
           title: post.title,
-          date: post.published_at ? formatDate(post.published_at) : '',
+          date: formatDate(post.created_at),
           summary: post.excerpt || '',
           slug: post.slug,
           featured_image: post.featured_image,
