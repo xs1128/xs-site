@@ -123,7 +123,7 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
         </a>
 
         <a
-          href="https://xsooi.com/blog"
+          href="/blog"
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClose}

@@ -1,11 +1,59 @@
 # Backlog
 
-Outstanding work, ranked. Tier 3 is cleanup on what exists; tier 4 is the
-work that changes what the site _is_. Tier 2 is empty — the architecture
-items all shipped. Numbering is stable, so gaps are items that shipped.
+Outstanding work, ranked. Tier 1 is live defects; tier 3 is cleanup on what
+exists; tier 4 is the work that changes what the site _is_. Tier 2 is empty,
+the architecture items all shipped. Numbering is stable, so gaps are items that
+shipped.
 
 Everything here was verified against the codebase, not assumed. Items resolved
 along the way are in `git log`, not repeated here.
+
+## Tier 1: SEO defects, live in production
+
+Verified against production HTML on 2026-08-14, not inferred from source.
+
+### 20. Finish the move to www
+
+Settled: **www is canonical.** Production already served `xsooi.com` as a 308
+to `www.xsooi.com`, so www is what Google has been crawling; matching it
+avoids a reindex. The apex stays free for other subdomains, and apex cookies
+would otherwise leak into `blog.xsooi.com`.
+
+Done in this repo. The `NEXT_PUBLIC_SITE_URL` fallback is `https://www.xsooi.com`
+in all four readers (`layout.tsx`, `robots.ts`, `sitemap.ts`,
+`BreadcrumbSchema.tsx`), and in `.env.example` / `.env.local`.
+
+Two steps remain outside it:
+
+1. **Vercel env var.** If `NEXT_PUBLIC_SITE_URL` is set in the project
+   settings it still says `https://xsooi.com` and overrides the fallback.
+   Update or delete it.
+2. **Blog app canonical.** It emits `https://xsooi.com/blog/`, which is now
+   wrong on both counts. Should be `https://www.xsooi.com/blog`, no trailing
+   slash, since `/blog/` 308s to `/blog`.
+
+Keep the apex to www redirect in place. Do not add a second hop.
+
+### 23. Breadcrumb schema points at fragments
+
+`BreadcrumbSchema.tsx:18,24` emit `#about` and `#contact` as breadcrumb items.
+A one-page site has no trail, and breadcrumb items are meant to be pages on a
+[typical user path](https://developers.google.com/search/docs/appearance/structured-data/breadcrumb).
+It earns no rich result and reads as decorative markup. Delete the component
+and its wiring at `layout.tsx:10,138`; the `Person` schema is the one that
+does work.
+
+### 24. `blog.xsooi.com` is still directly reachable
+
+`blog.xsooi.com/blog` serves 200 and its `robots.txt` 404s, so the subdomain is
+fully crawlable alongside the proxied copy. Its self-canonical to the main
+domain mitigates the duplicate but doesn't remove it, and that canonical
+currently points at `https://xsooi.com/blog/`, which is non-www _and_
+trailing-slash, so it redirects twice (see 20; `/blog/` 308s to `/blog`).
+
+Fix in the blog app: 301 on `Host: blog.xsooi.com`, and canonicalise to the
+exact final URL. Do **not** put `noindex` on the subdomain, because the rewrite
+proxies that same response and it would deindex the real pages.
 
 ## Tier 3 — polish
 
@@ -84,6 +132,59 @@ the way `useScrollParallax` does.
 Verify against real behaviour before picking. If any analytics exist, the
 contact-form open rate versus `mailto:` click rate answers this directly.
 
+### 26. `site.webmanifest` is never linked
+
+`public/site.webmanifest` exists and nothing references it, so no `manifest`
+reaches the served HTML. Add `manifest: '/site.webmanifest'` to the metadata
+object. While there: no `theme-color` is emitted either, and
+`metadata.themeColor` has been deprecated since Next 14, so it belongs in a
+[`viewport` export](https://nextjs.org/docs/app/api-reference/functions/generate-viewport).
+
+### 27. Sitemap claims it changed on every build
+
+`sitemap.ts:9` sets `lastModified: new Date()`, so each deploy asserts the page
+changed whether or not it did. A hardcoded date or the git commit time is
+honest; a false freshness signal is worth less than none.
+
+### 28. The 404 self-canonicals to the homepage
+
+`not-found.tsx` sets no metadata, so it inherits `alternates.canonical` from the
+root layout and every missing URL declares itself canonical to `/`. Give it
+`robots: { index: false }`.
+
+### 30. No Search Console verification
+
+Nothing measurable until this exists. Use `metadata.verification.google` or
+DNS, but register the host chosen in 20, or a Domain property covering both.
+
+### 31. `keywords` metadata is dead weight
+
+`layout.tsx:21-31`. Google has [disregarded the keywords meta
+tag](https://developers.google.com/search/blog/2009/09/google-does-not-use-keywords-meta-tag)
+since 2009. Harmless, but it publishes the target terms to anyone reading the
+source and moves nothing. Drop when convenient.
+
+### 32. Entity signals are the real lever
+
+The JSON-LD `Person` is the strongest SEO asset here, and `sameAs`
+(`layout.tsx:103-108`) is what builds knowledge-panel eligibility. Add every
+profile that names you identically. Wrapping it in `ProfilePage` is the correct
+type for a personal site. Do not expand `knowsAbout`, which at ten entries is
+already at the edge of stuffing.
+
+Ruled out, so it doesn't get re-proposed: `llms.txt` (Google's June 2026 docs
+say Search does not use it, and its AI guidance lists it as unnecessary for AI
+Overviews and AI Mode; Anthropic and Perplexity do read it, but that argues for
+developer docs, not a portfolio); `changefreq` and `priority` tuning in the
+sitemap (Google ignores both); a sitelinks `SearchAction`, which needs a search
+this site does not have.
+
+### 33. `Host` is not a robots.txt directive
+
+`robots.ts`. Google supports four fields: `user-agent`, `allow`, `disallow`,
+`sitemap`. `Host` is Yandex-only and currently names the losing side of 20.
+Harmless; remove with 20 or leave.
+
 ## Tier 4 — direction
 
 None of the above moves the needle on what the portfolio actually does. This
@@ -121,7 +222,12 @@ beautiful"; everybody owns "spinning 3D cube."
 
 ## Suggested order
 
-Go to 12 next. It is the item that changes what the site is.
+Tier 1 first, and what is left of it is small. 20 has to land before 24 and 33,
+since both depend on which host wins.
+
+Then 12. It is the item that changes what the site is, and the one-pager will
+never rank for anything but the name, so the blog and the case-study layer are
+the same bet.
 
 Item 17 is the exception to "Tier 3 is invisible." Most of that tier is
 tidiness no visitor can perceive, but 17 sits on the only path to the contact

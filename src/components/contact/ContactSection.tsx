@@ -4,6 +4,7 @@ import { SpinningCircularText } from './SpinningCircularText';
 import { ContactPopup } from './ContactPopup';
 import { SocialIconLink } from './SocialIconLink';
 import { Tooltip } from '@/components/ui/Tooltip';
+import { NotebookPen } from 'lucide-react';
 import {
   GitHubIcon,
   InstagramIcon,
@@ -116,6 +117,9 @@ export function ContactSection() {
           </div>
 
           <div className="contact-section__social-links">
+            <SocialIconLink href="/blog" aria-label="My Blog">
+              <NotebookPen />
+            </SocialIconLink>
             <SocialIconLink
               href="https://github.com/xs1128"
               aria-label="GitHub"

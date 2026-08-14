@@ -9,13 +9,16 @@ import '../styles/landing.css';
 import '../styles/tooltip.css';
 import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xsooi.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.xsooi.com';
 
 const canonicalUrl =
   process.env.NODE_ENV === 'production' ? siteUrl : 'http://localhost:3000';
 
 export const metadata: Metadata = {
-  title: 'Xinsheng Ooi',
+  title: {
+    default: 'Xinsheng Ooi | DevOps Engineer',
+    template: '%s | Xinsheng Ooi',
+  },
   description:
     'DevOps engineer specializing in automation, scripting, and infrastructure management. Expert in Python, Bash, Docker, and Cloudflare for building robust deployment pipelines and automated solutions.',
   keywords: [
@@ -52,7 +55,7 @@ export const metadata: Metadata = {
     canonical: canonicalUrl,
   },
   openGraph: {
-    title: 'Xinsheng Ooi',
+    title: 'Xinsheng Ooi | DevOps Engineer',
     description:
       'DevOps engineer specializing in automation, scripting, and infrastructure management. Expert in Python, Bash, Docker, and Cloudflare.',
     url: siteUrl,
@@ -70,7 +73,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Xinsheng Ooi',
+    title: 'Xinsheng Ooi | DevOps Engineer',
     description:
       'DevOps engineer specializing in automation, scripting, and infrastructure management.',
     creator: '@xs1128',

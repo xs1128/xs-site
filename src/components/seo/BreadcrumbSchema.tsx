@@ -1,5 +1,5 @@
 export function BreadcrumbSchema() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://xsooi.com';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.xsooi.com';
 
   const breadcrumbData = {
     '@context': 'https://schema.org',
