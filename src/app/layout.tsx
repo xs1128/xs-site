@@ -7,7 +7,6 @@ import '../styles/about.css';
 import '../styles/contact.css';
 import '../styles/landing.css';
 import '../styles/tooltip.css';
-import { BreadcrumbSchema } from '@/components/seo/BreadcrumbSchema';
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.xsooi.com';
 
@@ -138,7 +137,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <BreadcrumbSchema />
       </head>
       <body suppressHydrationWarning>{children}</body>
     </html>

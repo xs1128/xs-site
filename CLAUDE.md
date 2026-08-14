@@ -41,6 +41,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 ## Removed — do not re-add
 
 - `BlurOverlay.tsx`, `PrismOverlay.tsx`, `overlay.css`, `ThreeCanvas.tsx`, `AnnouncementMarquee.tsx`, `MobileDropdown.tsx`, `useResponsive.ts`, `useMarquee.ts`, `marquee.css`, `public/fonts/`
+- `src/components/seo/BreadcrumbSchema.tsx` and the whole `seo/` dir. A one-page site has no breadcrumb trail, and its items were `#about` / `#contact` fragments, which are not pages. Earned no rich result. `Person` in `layout.tsx` is the only structured data now.
 - `three`, `@react-three/fiber`, `@react-three/drei` — uninstalled. Nothing renders WebGL.
 - `NameDisplay`'s name/initials toggle and its `onToggle`/`showInitials`/`isFading`/`isSmallScreen` props; it takes only `containerRef`. Check why it was disabled before "fixing" it back.
 - `ContactSection`'s `onOpenNav` prop.
@@ -54,7 +55,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 ## Env vars
 
 - `RESEND_API_KEY` — contact route returns 503 without it.
-- `NEXT_PUBLIC_SITE_URL` — defaults to `https://xsooi.com`; feeds layout metadata, `robots.ts`, `sitemap.ts`, `BreadcrumbSchema`. Only entry in `.env.example`.
+- `NEXT_PUBLIC_SITE_URL` — defaults to `https://www.xsooi.com`; feeds layout metadata, `robots.ts`, `sitemap.ts`. www is canonical: the apex 308s to it, so every emitted URL must carry the `www.`. Only entry in `.env.example`.
 
 ## Contact API
 
@@ -64,7 +65,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 
 ## SEO surfaces — keep in sync when sections change
 
-`layout.tsx` metadata + JSON-LD `Person`, `src/components/seo/BreadcrumbSchema.tsx`, `sitemap.ts` (`/` only, no fragments), `robots.ts`.
+`layout.tsx` metadata + JSON-LD `Person`, `sitemap.ts` (`/` only, no fragments), `robots.ts`.
 
 ## Fonts
 

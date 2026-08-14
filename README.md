@@ -48,8 +48,7 @@ Both are listed in `.env.example`. The build succeeds without either, so CI need
 ## SEO
 
 - `src/app/layout.tsx`: full `Metadata` export (title, description, canonical, icons, OpenGraph + Twitter `summary_large_image` using `/og-image.png`, robots directives) plus inline JSON-LD `Person` schema.
-- `src/components/seo/BreadcrumbSchema.tsx`: JSON-LD `BreadcrumbList` (Home / #about / #contact).
-- `src/app/robots.ts`: allows `/`, disallows `/api/`, `/_next/`, `/static/`.
+- `src/app/robots.ts`: allows `/`, disallows `/api/`, and declares both the site and blog sitemaps.
 - `src/app/sitemap.ts`: `/` only — fragment URLs are ignored by search engines.
 - `src/app/error.tsx` / `src/app/not-found.tsx`: minimal inline-styled fallbacks.
 
@@ -104,7 +103,6 @@ src/
     layout/       ScrollContainer
     icons/        SocialIcons, StaticIcon
     3d/           landing/NameScene, about/CardScene
-    seo/          BreadcrumbSchema
   hooks/          useIntersectionAnimation, useScrollParallax, useFocusTrap
   types/          index.ts
   lib/            utils.ts
