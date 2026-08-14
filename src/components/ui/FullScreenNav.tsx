@@ -76,6 +76,7 @@ function useNavAnimations() {
         letter-spacing: inherit;
         text-align: inherit;
         padding: inherit;
+        padding-right: 0;
         margin: inherit;
         clip-path: inset(0 100% 0 0);
         pointer-events: none;
@@ -269,12 +270,12 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             backgroundColor: colors.navButtonPanel,
             border: `1px solid ${colors.border}`,
             color: colors.darkText,
-            fontSize: isSmallScreen ? "15vw" : "11vw",
+            fontSize: isSmallScreen ? "14.5vw" : "10.5vw",
             fontWeight: 700,
             fontFamily: "Roboto Mono, monospace",
             cursor: "pointer",
             textAlign: "left",
-            padding: isSmallScreen ? "0.5vh 1vw" : "0.5vh 1vw",
+            padding: "0.5vh 3vw 0.5vh 1vw",
             margin: "0",
             lineHeight: 0.85,
             transition: "transform 0.2s ease",
@@ -307,12 +308,12 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             backgroundColor: colors.navButtonPanel,
             border: `1px solid ${colors.border}`,
             color: colors.darkText,
-            fontSize: isSmallScreen ? "15vw" : "11vw",
+            fontSize: isSmallScreen ? "14.5vw" : "10.5vw",
             fontWeight: 700,
             fontFamily: "Roboto Mono, monospace",
             cursor: "pointer",
             textAlign: "left",
-            padding: isSmallScreen ? "0.5vh 1vw" : "0.5vh 1vw",
+            padding: "0.5vh 3vw 0.5vh 1vw",
             margin: "0",
             lineHeight: 0.85,
             transition: "transform 0.2s ease",
