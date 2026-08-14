@@ -122,3 +122,7 @@ public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.p
 ## Deploy
 
 `next.config.ts` proxies `/blog` and `/blog/:path*` to `https://blog.xsooi.com/blog...` — no local blog route exists. Set `RESEND_API_KEY` and (optionally) `NEXT_PUBLIC_SITE_URL` in the hosting platform's environment variables.
+
+## Analytics
+
+Cloudflare Web Analytics, cookieless, no consent banner. `layout.tsx` renders the beacon only when `NEXT_PUBLIC_CF_BEACON_TOKEN` is set, so dev and previews are excluded. Get the token from the Cloudflare dashboard under Web Analytics, add a site for `www.xsooi.com`, set it as a Production environment variable in Vercel and redeploy.

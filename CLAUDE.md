@@ -55,7 +55,8 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 ## Env vars
 
 - `RESEND_API_KEY` — contact route returns 503 without it.
-- `NEXT_PUBLIC_SITE_URL` — defaults to `https://www.xsooi.com`; feeds layout metadata, `robots.ts`, `sitemap.ts`. www is canonical: the apex 308s to it, so every emitted URL must carry the `www.`. Only entry in `.env.example`.
+- `NEXT_PUBLIC_SITE_URL` — defaults to `https://www.xsooi.com`; feeds layout metadata, `robots.ts`, `sitemap.ts`. www is canonical: the apex 308s to it, so every emitted URL must carry the `www.`.
+- `NEXT_PUBLIC_CF_BEACON_TOKEN` — Cloudflare Web Analytics site token. Unset means `layout.tsx` renders no beacon, which keeps dev and preview traffic out of the stats. `NEXT_PUBLIC_` is inlined at build time, so changing it needs a redeploy, not just a restart.
 
 ## Contact API
 

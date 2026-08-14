@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { robotoMono, hubotSans } from '@/fonts';
 import './globals.css';
 import '../styles/animations.css';
@@ -12,6 +13,9 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.xsooi.com';
 
 const canonicalUrl =
   process.env.NODE_ENV === 'production' ? siteUrl : 'http://localhost:3000';
+
+// Cloudflare Web Analytics. Unset means no beacon, so dev and previews stay out of the stats.
+const cfBeaconToken = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN;
 
 export const metadata: Metadata = {
   title: {
@@ -138,7 +142,16 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        {cfBeaconToken && (
+          <Script
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            strategy="afterInteractive"
+            data-cf-beacon={JSON.stringify({ token: cfBeaconToken })}
+          />
+        )}
+      </body>
     </html>
   );
 }
