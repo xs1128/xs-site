@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { colors } from "@/styles/colors";
 import Tooltip from "@/components/ui/Tooltip";
 
@@ -283,22 +284,15 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             textDecoration: "none",
           }}
         >
-          <span style={{ display: "flex", alignItems: "flex-start", gap: isSmallScreen ? "2vw" : "1.5vw" }}>
+          <span style={{ display: "flex", alignItems: "baseline", gap: isSmallScreen ? "2vw" : "1.5vw" }}>
             SITE
-            <svg
-              width={isSmallScreen ? "0.9em" : "0.75em"}
-              height={isSmallScreen ? "0.9em" : "0.75em"}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="square"
+            <ArrowUpRight
+              viewBox="5.5 5.5 13 13"
+              style={{ width: "0.8cap", height: "0.8cap", transform: "translateY(-0.2cap)", flexShrink: 0 }}
+              strokeWidth={3}
+              strokeLinecap="butt"
               strokeLinejoin="miter"
-              style={{ fontWeight: 700 }}
-            >
-              <polyline points="7,17 15,9" />
-              <polyline points="17,17 17,7 7,7" />
-            </svg>
+            />
           </span>
         </a>
 
@@ -328,22 +322,15 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             textDecoration: "none",
           }}
         >
-          <span style={{ display: "flex", alignItems: "flex-start", gap: isSmallScreen ? "2vw" : "1.5vw" }}>
+          <span style={{ display: "flex", alignItems: "baseline", gap: isSmallScreen ? "2vw" : "1.5vw" }}>
             PROJECTS
-            <svg
-              width={isSmallScreen ? "0.9em" : "0.75em"}
-              height={isSmallScreen ? "0.9em" : "0.75em"}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="square"
+            <ArrowUpRight
+              viewBox="5.5 5.5 13 13"
+              style={{ width: "0.8cap", height: "0.8cap", transform: "translateY(-0.2cap)", flexShrink: 0 }}
+              strokeWidth={3}
+              strokeLinecap="butt"
               strokeLinejoin="miter"
-              style={{ fontWeight: 700 }}
-            >
-              <polyline points="7,17 15,9" />
-              <polyline points="17,17 17,7 7,7" />
-            </svg>
+            />
           </span>
         </a>
       </div>

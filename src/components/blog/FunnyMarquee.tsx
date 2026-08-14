@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo, memo } from "react";
 import Image from "next/image";
+import { Play } from "lucide-react";
 import { isOptimizable } from "@/lib/images";
 import type { FunnyPicture } from "@/types/post";
 import { TIMING, TRANSITIONS } from "@/styles/animations";
@@ -160,10 +161,9 @@ const collapseHandleStyles = {
   icon: (isCollapsed: boolean): React.CSSProperties => ({
     fontSize: "24px",
     color: "#E5532C",
-    fontWeight: 700,
+    display: "inline-flex",
     transition: TRANSITIONS.fast("transform"),
-    transform: isCollapsed ? "rotate(180deg)" : "rotate(0deg)",
-    fontFamily: "monospace",
+    transform: isCollapsed ? "rotate(0deg)" : "rotate(180deg)",
   }),
 };
 
@@ -180,7 +180,9 @@ function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onTog
         onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#363D44"; }}
         onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = PANEL_COLOR; }}
       >
-        <span style={collapseHandleStyles.icon(isCollapsed)}>◀</span>
+        <span style={collapseHandleStyles.icon(isCollapsed)}>
+          <Play size="0.8em" fill="currentColor" strokeWidth={1.5} />
+        </span>
       </div>
       {isCollapsed && label}
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { Series } from "@/types/post";
 
 interface FeaturedSeriesProps {
@@ -261,7 +262,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
                 ))}
               </div>
               <div style={viewAllStyle}>
-                View all →
+                View all <ArrowRight size="1em" strokeWidth={2.5} />
               </div>
             </div>
           ))}
@@ -279,7 +280,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
               e.currentTarget.style.transform = "translateY(-50%) translateX(0)";
             }}
           >
-            ←
+            <ArrowLeft size="1em" strokeWidth={2.5} />
           </span>
         )}
         {canScrollRight && (
@@ -295,7 +296,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
               e.currentTarget.style.transform = "translateY(-50%) translateX(0)";
             }}
           >
-            →
+            <ArrowRight size="1em" strokeWidth={2.5} />
           </span>
         )}
       </div>

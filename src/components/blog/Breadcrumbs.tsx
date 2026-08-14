@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { Fragment } from 'react'
+import { ChevronRight } from 'lucide-react'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
 import { TRANSITIONS } from '@/styles/animations'
@@ -53,7 +54,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
 
   const separatorStyle: React.CSSProperties = {
     color: colors.navText,
-    fontWeight: 400,
+    display: 'inline-flex',
     userSelect: 'none',
   }
 
@@ -83,7 +84,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
             )}
             {!isLast && (
               <span style={separatorStyle} aria-hidden="true">
-                ›
+                <ChevronRight size="1em" strokeWidth={2.5} />
               </span>
             )}
           </Fragment>

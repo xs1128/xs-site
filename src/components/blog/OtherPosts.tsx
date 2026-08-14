@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { ChevronDown } from 'lucide-react'
 import type { Post } from '@/types/post'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
@@ -181,8 +182,8 @@ export default function OtherPosts({ posts, loading = false }: OtherPostsProps) 
   }
 
   const chevronStyle: React.CSSProperties = {
-    display: 'inline-block',
-    fontSize: '0.8em',
+    display: 'inline-flex',
+    fontSize: '1.2em',
     transition: TRANSITIONS.fast('transform'),
     transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
   }
@@ -216,7 +217,7 @@ export default function OtherPosts({ posts, loading = false }: OtherPostsProps) 
         >
           {expanded ? 'Show less' : `Show ${hiddenCount} more`}
           <span aria-hidden style={chevronStyle}>
-            ▾
+            <ChevronDown size="1em" strokeWidth={2.5} />
           </span>
         </button>
       )}

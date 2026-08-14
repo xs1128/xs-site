@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Post } from "@/types/post";
 import BlogCard from "./BlogCard";
@@ -206,7 +207,7 @@ export default function RecentBlogsGrid({
               e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
             }}
           >
-            ‹
+            <ChevronLeft size="1em" strokeWidth={2.5} />
           </button>
         )}
         <div
@@ -241,7 +242,7 @@ export default function RecentBlogsGrid({
               e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
             }}
           >
-            ›
+            <ChevronRight size="1em" strokeWidth={2.5} />
           </button>
         )}
       </div>

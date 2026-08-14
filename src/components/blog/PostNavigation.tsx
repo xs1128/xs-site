@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import type { PostLink } from '@/types/post'
 import { FONTS, clamp, spacing } from '@/styles/typography'
 import { colors } from '@/styles/colors'
@@ -80,7 +81,7 @@ export default function PostNavigation({
               e.currentTarget.style.color = colors.accent
             }}
           >
-            ← {prevPost.title}
+            <ArrowLeft size="1em" strokeWidth={2.5} style={{ verticalAlign: '-0.15em' }} /> {prevPost.title}
           </Link>
         </div>
       )}
@@ -100,7 +101,7 @@ export default function PostNavigation({
               e.currentTarget.style.color = colors.accent
             }}
           >
-            {nextPost.title} →
+            {nextPost.title} <ArrowRight size="1em" strokeWidth={2.5} style={{ verticalAlign: '-0.15em' }} />
           </Link>
         </div>
       )}

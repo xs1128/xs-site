@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowUp, ArrowDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 interface Series {
@@ -173,7 +174,7 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            ↑
+            <ArrowUp size="1em" strokeWidth={2.5} />
           </button>
           <button
             onClick={handlePageDown}
@@ -188,7 +189,7 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            ↓
+            <ArrowDown size="1em" strokeWidth={2.5} />
           </button>
         </div>
       )}

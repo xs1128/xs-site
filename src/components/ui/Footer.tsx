@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { ArrowUpRight } from 'lucide-react'
 import { useIsMobile } from '@/hooks/useBreakpoint'
 import { getAvatarUrl } from '@/lib/supabase/settings'
 import Tooltip from '@/components/ui/Tooltip'
@@ -122,10 +123,7 @@ export default function Footer() {
                 className="footer-link"
               >
                 <span>Main Site</span>
-                <svg width="0.7em" height="0.7em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="square" strokeLinejoin="miter">
-                  <polyline points="7,17 15,9" />
-                  <polyline points="17,17 17,7 7,7" />
-                </svg>
+                <ArrowUpRight size="0.7em" strokeWidth={2.5} />
               </a>
               <a
                 href="https://github.com/xs1128"
@@ -134,10 +132,7 @@ export default function Footer() {
                 className="footer-link"
               >
                 <span>Projects</span>
-                <svg width="0.7em" height="0.7em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="square" strokeLinejoin="miter">
-                  <polyline points="7,17 15,9" />
-                  <polyline points="17,17 17,7 7,7" />
-                </svg>
+                <ArrowUpRight size="0.7em" strokeWidth={2.5} />
               </a>
               <a
                 href="https://www.xsooi.com#contact"
@@ -146,10 +141,7 @@ export default function Footer() {
                 className="footer-link"
               >
                 <span>Contact me</span>
-                <svg width="0.7em" height="0.7em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="square" strokeLinejoin="miter">
-                  <polyline points="7,17 15,9" />
-                  <polyline points="17,17 17,7 7,7" />
-                </svg>
+                <ArrowUpRight size="0.7em" strokeWidth={2.5} />
               </a>
             </div>
           </div>
