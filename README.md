@@ -127,6 +127,8 @@ public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.p
 
 GoatCounter, cookieless, no consent banner. `layout.tsx` loads `gc.zgo.at/count.js` only when `NEXT_PUBLIC_GOATCOUNTER_CODE` is set, so dev and previews are excluded.
 
-`VisitorCount` (contact footer) reads `https://<code>.goatcounter.com/counter/TOTAL.json`, which is public and CORS-open, and adds a 570 offset for pageviews recorded on xsooi.com hosts before GoatCounter. That endpoint caches for up to 4 hours, so the number lags.
+`VisitorCount` (contact footer) reads `/api/visits`, which proxies GoatCounter's public `TOTAL.json` and adds a 570 offset for pageviews recorded on xsooi.com hosts before GoatCounter. The proxy exists because content blockers filter `goatcounter.com` as a third party; same-origin requests do not match those rules. Responses are cached an hour on our side and up to four hours upstream, so the number lags.
+
+`count.js` is still loaded from `gc.zgo.at`, so visitors running a content blocker are not recorded at all.
 
 Cloudflare Web Analytics was tried first and dropped: the zone site tag rejects beacons from `www.xsooi.com` because the host is DNS-only on Vercel rather than proxied, and its data is only queryable for about 13 weeks, so it cannot back an all-time counter.
