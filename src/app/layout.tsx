@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     apple: [{ url: "/blog/apple-touch-icon.png", sizes: "180x180" }],
   },
   alternates: {
-    canonical: "/",
+    canonical: siteConfig.url,
   },
   openGraph: {
     type: "website",
