@@ -119,7 +119,6 @@ const collapseHandleStyles = {
     zIndex: 300,
   }),
 
-  // Collapsed, the rail is just the arrow: no box to compete with the page.
   handle: (isCollapsed: boolean): React.CSSProperties => ({
     width: "44px",
     height: "80px",

@@ -21,7 +21,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
     textDecoration: "none",
     transition: "transform 0.2s ease, borderColor 0.2s ease",
     cursor: "pointer",
-    height: isSmallScreen ? "min(100%, 200px)" : "min(100%, 260px)",
+    height: isSmallScreen ? "min(100%, 200px)" : "min(100%, 40vh)",
     aspectRatio: isSmallScreen ? "160 / 200" : "200 / 260",
     width: "auto",
     containerType: "size", // makes the cqh text sizes below resolve against the card
@@ -31,7 +31,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
   const imageAreaStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
-    flex: "1 1 60%",
+    flex: "1 1 72%",
     minHeight: 0,
     backgroundColor: "#FFFFFF",
   };
@@ -41,7 +41,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
     padding: "clamp(6px, 4.5cqh, 20px) clamp(8px, 4.5cqh, 20px)",
     textAlign: "left",
     flex: "0 0 auto",
-    minHeight: "40%", // grows past 40% for long titles rather than clipping them
+    minHeight: "28%", // grows past 28% for long titles rather than clipping them
     maxHeight: "55%",
     display: "flex",
     flexDirection: "column",

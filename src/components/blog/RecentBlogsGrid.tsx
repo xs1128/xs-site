@@ -97,7 +97,7 @@ export default function RecentBlogsGrid({
     flexDirection: "column",
     overflow: "hidden",
     minHeight: 0,
-    height: isSmallScreen ? "min(52%, 300px)" : "min(52%, 400px)",
+    height: isSmallScreen ? "min(52%, 300px)" : "48%",
   };
 
   const headerStyle: React.CSSProperties = {

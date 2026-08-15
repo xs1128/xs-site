@@ -75,11 +75,17 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
   };
 
   const styles = `
-    .series-scroll::-webkit-scrollbar { width: 3px; }
+    /* No scrollbar-width/color: either one makes Chrome ignore these rules */
+    .series-scroll::-webkit-scrollbar { width: 4px; }
     .series-scroll::-webkit-scrollbar-track { background: transparent; }
-    .series-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
-    .series-scroll::-webkit-scrollbar-thumb:hover { background: rgba(229,83,44,0.6); }
-    .series-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.1) transparent; }
+    .series-scroll::-webkit-scrollbar-thumb {
+      background: transparent;
+      border-radius: 0;
+      border: none;
+      transition: background 0.2s ease;
+    }
+    .series-scroll:hover::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); }
+    .series-scroll::-webkit-scrollbar-thumb:hover { background: #E5532C; }
 
     .series-list {
       display: flex;
@@ -136,7 +142,6 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
       transition: color 0.24s ease;
     }
 
-    /* Underline is the only ornament: grows under the title text alone. */
     .series-name::after {
       content: "";
       position: absolute;
