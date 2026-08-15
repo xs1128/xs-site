@@ -777,7 +777,7 @@ export default function HomePageClient({
                 <RecentBlogsGrid isExpanded={isExpanded} isSmallScreen={isSmallScreen} />
 
                 {/* FEATURED SERIES & 3D ANIMATION Sections */}
-                <BlogExpandedContent isSmallScreen={isSmallScreen} isResizing={isMarqueeResizing} />
+                <BlogExpandedContent isSmallScreen={isSmallScreen} isResizing={isMarqueeResizing || isAnimating} />
               </div>
             </div>
           </div>
