@@ -114,35 +114,12 @@ const collapseHandleStyles = {
     flexDirection: isCollapsed ? "column" : "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: isCollapsed ? PANEL_COLOR : "transparent",
-    borderTop: isCollapsed ? `1px solid ${BORDER_COLOR}` : "none",
-    borderBottom: isCollapsed ? `1px solid ${BORDER_COLOR}` : "none",
-    borderLeft: isCollapsed ? `1px solid ${BORDER_COLOR}` : "none",
-    borderRight: "none",
-    borderRadius: "8px 0 0 8px",
+    backgroundColor: "transparent",
+    border: "none",
     zIndex: 300,
   }),
 
-  label: (isCollapsed: boolean): React.CSSProperties => ({
-    fontFamily: FONTS.primary,
-    fontSize: "clamp(11px, 1.8vh, 22px)", // vh, not vw: the text runs along the rail's height
-    fontWeight: 700,
-    color: "#F2E9D8",
-    textTransform: "uppercase",
-    letterSpacing: "0.1em",
-    overflow: "hidden",
-    minHeight: 0,
-    writingMode: "vertical-rl",
-    textOrientation: "mixed",
-    transform: "rotate(180deg)",
-    whiteSpace: "nowrap",
-    flex: 1,
-    display: isCollapsed ? "flex" : "none",
-    alignItems: "center",
-    justifyContent: "center",
-    pointerEvents: "none",
-  }),
-
+  // Collapsed, the rail is just the arrow: no box to compete with the page.
   handle: (isCollapsed: boolean): React.CSSProperties => ({
     width: "44px",
     height: "80px",
@@ -150,11 +127,11 @@ const collapseHandleStyles = {
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
-    transition: "background-color 0.2s ease, transform 0.2s ease",
+    transition: "background-color 0.2s ease, opacity 0.2s ease",
     flexShrink: 0,
-    border: `1px solid ${BORDER_COLOR}`,
-    borderRadius: isCollapsed ? "0 8px 8px 0" : "8px 0 0 8px",
-    backgroundColor: PANEL_COLOR,
+    border: isCollapsed ? "none" : `1px solid ${BORDER_COLOR}`,
+    borderRadius: isCollapsed ? "0" : "8px 0 0 8px",
+    backgroundColor: isCollapsed ? "transparent" : PANEL_COLOR,
     position: "absolute",
     top: "50%",
     transform: "translateY(-50%)",
@@ -170,23 +147,24 @@ const collapseHandleStyles = {
 };
 
 function CollapseHandle({ isCollapsed, onToggle }: { isCollapsed: boolean; onToggle: () => void }) {
-  // Repeated above and below the handle so it reads centred when collapsed
-  const label = <div style={collapseHandleStyles.label(isCollapsed)}>RANDOM MOMENTS</div>;
-
   return (
     <div style={collapseHandleStyles.container(isCollapsed)}>
-      {isCollapsed && label}
       <div
         style={collapseHandleStyles.handle(isCollapsed)}
         onClick={onToggle}
-        onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#363D44"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = PANEL_COLOR; }}
+        onMouseEnter={(e) => {
+          if (isCollapsed) e.currentTarget.style.opacity = "0.7";
+          else e.currentTarget.style.backgroundColor = "#363D44";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.opacity = "1";
+          e.currentTarget.style.backgroundColor = isCollapsed ? "transparent" : PANEL_COLOR;
+        }}
       >
         <span style={collapseHandleStyles.icon(isCollapsed)}>
           <Play size="0.8em" fill="currentColor" strokeWidth={1.5} />
         </span>
       </div>
-      {isCollapsed && label}
     </div>
   );
 }
