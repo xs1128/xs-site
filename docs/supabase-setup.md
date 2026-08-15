@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS public.posts (
   excerpt TEXT,
   published_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  view_count BIGINT NOT NULL DEFAULT 0
 );
 
 -- Series table
@@ -272,6 +273,28 @@ Or use SQL:
 -- This will create a user - they'll need to reset password
 INSERT INTO auth.users (email, email_confirmed_at)
 VALUES ('admin@example.com', now());
+```
+
+## Post View Counts
+
+`posts.view_count` is private analytics. The blog increments it and never renders
+it; the only public number on the site is the GoatCounter total on the cube.
+
+The anon role has no write access to `posts`, so increments go through
+`increment_post_view(p_slug)`, a `SECURITY DEFINER` function that can do nothing
+but add one to the counter of an already-published row. The blog calls it from
+`post-detail-client.tsx`, guarded by a `sessionStorage` key so a refresh or a
+back-navigation does not re-count the same read.
+
+Migration lives in the admin repo: `blog-admin/supabase/migrations/20260815120000_post_view_counts.sql`.
+
+Read the numbers with:
+
+```sql
+SELECT slug, title, view_count
+FROM public.posts
+WHERE published_at IS NOT NULL
+ORDER BY view_count DESC;
 ```
 
 ## Verify Setup

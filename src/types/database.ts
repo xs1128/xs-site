@@ -26,6 +26,7 @@ export type Database = {
           tags: string[] | null
           read_time: number | null
           author_name: string | null
+          view_count: number
         }
         Insert: {
           id?: number
@@ -40,6 +41,7 @@ export type Database = {
           tags?: string[] | null
           read_time?: number | null
           author_name?: string | null
+          view_count?: number
         }
         Update: {
           id?: number
@@ -54,6 +56,7 @@ export type Database = {
           tags?: string[] | null
           read_time?: number | null
           author_name?: string | null
+          view_count?: number
         }
         Relationships: []
       }
@@ -182,7 +185,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      increment_post_view: {
+        Args: { p_slug: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

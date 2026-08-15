@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import type { Heading, Post, PostLink, SeriesDetail } from '@/types/post'
 import BlogPageHeader from '@/components/blog/BlogPageHeader'
 import ReadingProgressBar from '@/components/blog/ReadingProgressBar'
@@ -46,6 +47,18 @@ export default function PostDetailClient({
   const footerVisible = useFooterVisibility()
 
   const reducedMotion = useReducedMotion()
+
+  useEffect(() => {
+    if (isLoading || !post?.slug) return
+
+    const key = `post-view:${post.slug}`
+    if (sessionStorage.getItem(key)) return
+    sessionStorage.setItem(key, '1')
+
+    createClient()
+      .rpc('increment_post_view', { p_slug: post.slug })
+      .then(() => {})
+  }, [isLoading, post?.slug])
 
   // Already-smoothed via frame-based lerp inside the hook (skips easing when
   // reduced motion is preferred), so the bar reads this value directly.
