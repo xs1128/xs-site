@@ -21,50 +21,60 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
     textDecoration: "none",
     transition: "transform 0.2s ease, borderColor 0.2s ease",
     cursor: "pointer",
-    height: isSmallScreen ? "200px" : "260px", // Smaller height on mobile
-    width: isSmallScreen ? "160px" : "200px", // Fixed width, doesn't squeeze
-    flexShrink: 0, // Prevent card from shrinking
+    height: isSmallScreen ? "min(100%, 200px)" : "min(100%, 260px)",
+    aspectRatio: isSmallScreen ? "160 / 200" : "200 / 260",
+    width: "auto",
+    containerType: "size", // makes the cqh text sizes below resolve against the card
+    flexShrink: 0,
   };
 
   const imageAreaStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
-    height: "60%", // Image takes 60% of card height
+    flex: "1 1 60%",
+    minHeight: 0,
     backgroundColor: "#FFFFFF",
-    flexShrink: 0, // Prevent image from shrinking
   };
 
   const titleBarStyle: React.CSSProperties = {
     backgroundColor: "#1A1D21",
-    padding: "clamp(12px, 2vh, 20px) clamp(12px, 2vh, 20px)", // Increased padding
-    textAlign: "left", // Left align the text
-    flex: 1, // Title area takes remaining 40% of space
+    padding: "clamp(6px, 4.5cqh, 20px) clamp(8px, 4.5cqh, 20px)",
+    textAlign: "left",
+    flex: "0 0 auto",
+    minHeight: "40%", // grows past 40% for long titles rather than clipping them
+    maxHeight: "55%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-start", // Align to top
-    minHeight: 0, // Allow flex to work properly
-    gap: "0", // No gap between title and metadata
+    justifyContent: "flex-start",
+    overflow: "hidden",
+    gap: "0"
   };
 
   const titleStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(10px, 1.4vw, 14px)",
+    fontSize: "clamp(9px, 5.4cqh, 14px)",
     fontWeight: 700,
     color: "#FFFFFF",
     margin: "0",
     padding: "0",
-    lineHeight: 1.2, // Slightly better line height
-    wordBreak: "keep-all", // Break only at word boundaries, not in middle of words
-    overflowWrap: "break-word", // Break long words if needed
-    hyphens: "auto", // Add hyphens for better word breaking
+    lineHeight: 1.2,
+    wordBreak: "keep-all",
+    overflowWrap: "break-word",
+    hyphens: "auto",
+    display: "-webkit-box",
+    WebkitBoxOrient: "vertical",
+    WebkitLineClamp: 5,
+    overflow: "hidden",
+    minHeight: 0,
   };
 
   const metadataStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(8px, 1.1vw, 11px)",
+    fontSize: "clamp(7px, 4.2cqh, 11px)",
     fontWeight: 400,
     color: "#CCCCCC",
     padding: "0",
+    flexShrink: 0,
   };
 
   return (
@@ -87,7 +97,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
               src={post.featured_image}
               alt=""
               fill
-              sizes={isSmallScreen ? "160px" : "200px"}
+              sizes="(max-width: 480px) 160px, 200px"
               style={{ objectFit: "cover", objectPosition: "center" }}
             />
           ) : (

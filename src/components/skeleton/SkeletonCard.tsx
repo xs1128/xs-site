@@ -29,8 +29,9 @@ export default function SkeletonCard({
       border: '1px solid rgba(255, 255, 255, 0.1)',
       borderRadius: 'clamp(6px, 1vw, 10px)',
       overflow: 'hidden',
-      height: isSmallScreen ? '200px' : '260px',
-      width: isSmallScreen ? '160px' : '200px',
+      height: isSmallScreen ? 'min(100%, 200px)' : 'min(100%, 260px)',
+      aspectRatio: isSmallScreen ? '160 / 200' : '200 / 260',
+      width: 'auto',
       flexShrink: 0,
     }
 

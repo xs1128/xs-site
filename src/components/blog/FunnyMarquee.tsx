@@ -125,11 +125,13 @@ const collapseHandleStyles = {
 
   label: (isCollapsed: boolean): React.CSSProperties => ({
     fontFamily: FONTS.primary,
-    fontSize: "clamp(14px, 2.5vw, 22px)",
+    fontSize: "clamp(11px, 1.8vh, 22px)", // vh, not vw: the text runs along the rail's height
     fontWeight: 700,
     color: "#F2E9D8",
     textTransform: "uppercase",
     letterSpacing: "0.1em",
+    overflow: "hidden",
+    minHeight: 0,
     writingMode: "vertical-rl",
     textOrientation: "mixed",
     transform: "rotate(180deg)",

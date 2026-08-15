@@ -371,6 +371,18 @@ export default function HomePageClient({
   const [isMarqueeResizing, setIsMarqueeResizing] = useState(false);
   const [skipTransitions, setSkipTransitions] = useState(false);
   const marqueeResizeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navRef = useRef<HTMLElement>(null);
+
+  // border-box: the nav resizes by padding alone, which a content-box observer never sees.
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const observer = new ResizeObserver(() => {
+      document.documentElement.style.setProperty("--nav-h", `${nav.offsetHeight}px`);
+    });
+    observer.observe(nav, { box: "border-box" });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     return () => {
@@ -605,10 +617,10 @@ export default function HomePageClient({
     gridTemplateColumns: isSmallScreen ? "100%" : (isMarqueeCollapsed ? "40px 1fr" : "30% 70%"),
     overflow: "hidden",
     zIndex: 1,
-    paddingTop: isExpanded ? "clamp(40px, 7vh, 64px)" : "0",
+    paddingTop: isExpanded ? "var(--nav-h, 64px)" : "0",
     transform: isSwapped ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(100%)",
-    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), padding-top 0.8s ease, grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)"),
-    willChange: isAnimating || isMarqueeResizing ? "transform, padding-top, grid-template-columns" : "auto",
+    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)"),
+    willChange: isAnimating || isMarqueeResizing ? "transform, grid-template-columns" : "auto",
   };
 
   const tapAreaStyle: React.CSSProperties = {
@@ -676,7 +688,7 @@ export default function HomePageClient({
       {/* Container */}
       <div style={containerStyle}>
         {/* Navigation */}
-        <nav style={navStyle}>
+        <nav ref={navRef} style={navStyle}>
           <div style={brandStyle}>BLOG</div>
           <div style={navRightStyle}>
             <AnimatedButton

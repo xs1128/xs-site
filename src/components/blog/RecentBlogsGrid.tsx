@@ -92,12 +92,12 @@ export default function RecentBlogsGrid({
   }, [posts]);
 
   const containerStyle: React.CSSProperties = {
-    flex: 1,
+    flex: "0 0 auto",
     display: "flex",
     flexDirection: "column",
     overflow: "hidden",
     minHeight: 0,
-    height: "100%",
+    height: isSmallScreen ? "min(52%, 300px)" : "min(52%, 400px)",
   };
 
   const headerStyle: React.CSSProperties = {
@@ -131,8 +131,8 @@ export default function RecentBlogsGrid({
     gap: "clamp(12px, 2vh, 24px)",
     paddingLeft: "clamp(12px, 2vh, 24px)",
     paddingRight: "clamp(12px, 2vh, 24px)",
-    paddingTop: "clamp(24px, 4vh, 48px)",
-    paddingBottom: "clamp(24px, 4vh, 48px)",
+    paddingTop: "clamp(10px, 2.5vh, 32px)",
+    paddingBottom: "clamp(10px, 2.5vh, 32px)",
     overflowX: "auto",
     overflowY: "hidden",
     flex: 1,
