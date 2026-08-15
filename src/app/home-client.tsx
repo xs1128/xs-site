@@ -483,15 +483,18 @@ export default function HomePageClient({
     willChange: isAnimating ? "width, height, border-radius" : "auto",
   };
 
+  // Auto margins, not translateX(-50%): Safari freezes a percentage transform at
+  // the layer's pre-animation width while the container's width transitions.
   const cardBaseStyle = {
     position: "absolute" as const,
     top: 0,
-    left: "50%",
-    width: isExpanded ? "100%" : "100%",
+    left: 0,
+    right: 0,
+    marginInline: "auto",
+    width: "100%",
     height: "100%",
     borderRadius: "0px",
-    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), left 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
-    transform: "translateX(-50%)",
+    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
   };
 
   const navStyle: React.CSSProperties = {
@@ -603,7 +606,7 @@ export default function HomePageClient({
   const heroCardStyle: React.CSSProperties = {
     ...cardBaseStyle,
     ...contentBlockStyle,
-    transform: isSwapped ? "translateX(-50%) translateY(-100%)" : "translateX(-50%) translateY(0)",
+    transform: isSwapped ? "translateY(-100%)" : "translateY(0)",
     backgroundColor: "#FFFFFF",
     zIndex: 1,
     transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
@@ -618,7 +621,7 @@ export default function HomePageClient({
     overflow: "hidden",
     zIndex: 1,
     paddingTop: isExpanded ? "var(--nav-h, 64px)" : "0",
-    transform: isSwapped ? "translateX(-50%) translateY(0)" : "translateX(-50%) translateY(100%)",
+    transform: isSwapped ? "translateY(0)" : "translateY(100%)",
     transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)"),
     willChange: isAnimating || isMarqueeResizing ? "transform, grid-template-columns" : "auto",
   };
