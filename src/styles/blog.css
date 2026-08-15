@@ -93,6 +93,7 @@
   align-self: flex-start;
   max-height: calc(100vh - 104px);
   overflow-y: auto;
+  overflow-x: hidden; /* overflow-y alone promotes this axis to auto, showing a bar with nothing to scroll */
 }
 
 @media (max-width: 767px) {

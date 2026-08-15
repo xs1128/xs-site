@@ -9,7 +9,8 @@
 
 html,
 body {
-  max-width: 100vw;
+  /* 100% not 100vw: vw counts the classic scrollbar's width, so it overflows by ~15px */
+  max-width: 100%;
   width: 100%;
   position: relative;
   overscroll-behavior: none;
@@ -32,7 +33,7 @@ html {
 }
 
 img, video, canvas, svg {
-  max-width: 100vw;
+  max-width: 100%;
 }
 
 /* Mobile-specific overscroll fixes */
