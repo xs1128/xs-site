@@ -215,25 +215,6 @@
   align-items: center;
 }
 
-/* No opacity on the parent, it would cap the highlighted number too */
-.contact-section__visits {
-  margin: 0;
-  font-family: var(--font-primary);
-  font-size: 15px;
-  letter-spacing: 0.04em;
-  color: var(--color-text-on-light);
-}
-
-.contact-section__visits-number {
-  font-weight: 500;
-  font-size: 17px;
-  color: var(--color-accent-on-light);
-}
-
-.contact-section__visits-label {
-  opacity: 0.6;
-}
-
 @media (max-width: 640px) {
   .contact-section {
     padding: var(--spacing-section-padding-mobile);
@@ -252,14 +233,6 @@
 
   .contact-section__email {
     font-size: 20px;
-  }
-
-  .contact-section__visits {
-    font-size: 13px;
-  }
-
-  .contact-section__visits-number {
-    font-size: 15px;
   }
 }
 

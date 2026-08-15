@@ -45,6 +45,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - `three`, `@react-three/fiber`, `@react-three/drei` — uninstalled. Nothing renders WebGL.
 - `NameDisplay`'s name/initials toggle and its `onToggle`/`showInitials`/`isFading`/`isSmallScreen` props; it takes only `containerRef`. Check why it was disabled before "fixing" it back.
 - `ContactSection`'s `onOpenNav` prop.
+- `VisitorCount.tsx`, `src/app/api/visits/route.ts` and the `.contact-section__visits*` rules. A visit counter under the social icons broke the footer's rhythm. GoatCounter still records; read the numbers at `xsooi.goatcounter.com`. The route existed only to dodge content blockers for that display.
 - `setIsDarkTheme` props on `FullScreenNavProps` / `AboutSectionProps` / `AboutHeaderProps`, and the `ThemeProps` / `AnimationState` / `SectionWrapperProps` / `ContactFormProps` interfaces.
 - `src/lib/utils.ts` exports only `scrollToAbout` and `scrollToContact`, both argument-less. `scrollToSection` and `getThemeForScrollPosition` don't exist.
 
@@ -57,10 +58,6 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - `RESEND_API_KEY` — contact route returns 503 without it.
 - `NEXT_PUBLIC_SITE_URL` — defaults to `https://www.xsooi.com`; feeds layout metadata, `robots.ts`, `sitemap.ts`. www is canonical: the apex 308s to it, so every emitted URL must carry the `www.`.
 - `NEXT_PUBLIC_GOATCOUNTER_CODE` — GoatCounter site code (the subdomain, not a URL). Unset means `layout.tsx` renders no script and `VisitorCount` renders nothing, which keeps dev and preview traffic out of the stats. `NEXT_PUBLIC_` is inlined at build time, so changing it needs a redeploy, not just a restart.
-
-## Visit counter
-
-`VisitorCount` must fetch `/api/visits`, never `goatcounter.com` directly — blockers filter that domain as a third party and the count silently vanishes. `HISTORICAL_OFFSET` (570) is pre-GoatCounter Cloudflare data and is deliberately hardcoded.
 
 ## Contact API
 
