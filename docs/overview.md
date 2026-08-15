@@ -26,6 +26,10 @@ Create `.env.local` with:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Optional. GoatCounter site code (the subdomain, not a URL). Unset means no
+# tracking script and no visit count on the cube, keeping dev out of the stats.
+NEXT_PUBLIC_GOATCOUNTER_CODE=
 ```
 
 ## Documentation

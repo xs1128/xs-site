@@ -13,7 +13,7 @@ interface TerminalCubeProps {
 }
 
 export default function TerminalCube({ stats, meshRef }: TerminalCubeProps) {
-  const { postCount, seriesCount, pictureCount, lastUpdate, isLoading } = stats;
+  const { postCount, seriesCount, pictureCount, lastUpdate, totalViews, isLoading } = stats;
 
   const textures = useMemo(() => {
     const currentYear = new Date().getFullYear();
@@ -40,20 +40,20 @@ export default function TerminalCube({ stats, meshRef }: TerminalCubeProps) {
         mainText: "PICTURES",
         valueText: isLoading ? "..." : pictureCount.toString(),
       },
-      // Face 5 (front): YEAR + VERSION
+      // Face 5 (front): VISITS
+      {
+        mainText: "VISITS",
+        valueText: isLoading ? "..." : totalViews?.toLocaleString('en-US') ?? "—",
+      },
+      // Face 6 (back): YEAR + VERSION
       {
         mainText: `© ${currentYear}`,
         subtext: "BLOG v1.0",
       },
-      // Face 6 (back): GREETING
-      {
-        mainText: '> echo "Hello, world!"',
-        subtext: '> "Xinsheng here."',
-      },
     ];
 
     return faceConfigs.map(config => createFaceTexture(config));
-  }, [postCount, seriesCount, pictureCount, lastUpdate, isLoading]);
+  }, [postCount, seriesCount, pictureCount, lastUpdate, totalViews, isLoading]);
 
   useEffect(() => {
     return () => disposeTextures(textures);

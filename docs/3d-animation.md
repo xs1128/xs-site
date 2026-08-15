@@ -78,8 +78,8 @@ interface ThreeDCanvasProps {
 2. **CATEGORIES** - Series/category count (real data)
 3. **LAST UPDATE** - Most recent post date (real data)
 4. **PICTURES** - Picture count (real data)
-5. **© [YEAR] / BLOG v1.0** - Copyright and version (dynamic/static)
-6. **Terminal greeting** - `> echo "Hello, world!"` / `> "Xinsheng here."`
+5. **VISITS** - All-time GoatCounter total (real data, `—` when unavailable)
+6. **© [YEAR] / BLOG v1.0** - Copyright and version (dynamic/static)
 
 **Props**:
 ```typescript
@@ -95,7 +95,7 @@ interface TerminalStats {
   categoryCount: number;
   lastUpdate: string;
   pictureCount: number;
-  totalViews: number;
+  totalViews: number | null;
   isLoading: boolean;
 }
 ```
@@ -109,6 +109,7 @@ interface TerminalStats {
 - Categories count from `series` table
 - Latest post date from `posts` table
 - Pictures count from `pictures` table
+- Visit total from `/blog/api/visits`, which proxies GoatCounter's `TOTAL.json`
 
 **Usage**:
 ```tsx

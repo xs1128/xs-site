@@ -8,8 +8,25 @@ export interface TerminalStats {
   seriesCount: number;
   lastUpdate: string;
   pictureCount: number;
-  totalViews: number; // If you track views
+  totalViews: number | null;
   isLoading: boolean;
+}
+
+// basePath is not applied to client fetches, so the proxy route needs its prefix spelled out.
+async function fetchTotalViews(): Promise<number | null> {
+  try {
+    const res = await fetch('/blog/api/visits');
+    if (!res.ok) return null;
+
+    // count comes back formatted, e.g. "1 088 394" or "441,799"
+    const { count } = await res.json();
+    if (typeof count !== 'string') return null;
+
+    const parsed = Number(count.replace(/\D/g, ''));
+    return Number.isFinite(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
 }
 
 export function useTerminalStats() {
@@ -18,7 +35,7 @@ export function useTerminalStats() {
     seriesCount: 0,
     lastUpdate: "LOADING...",
     pictureCount: 0,
-    totalViews: 0,
+    totalViews: null,
     isLoading: true,
   });
 
@@ -52,6 +69,8 @@ export function useTerminalStats() {
           .from('pictures')
           .select('*', { count: 'exact', head: true });
 
+        const totalViews = await fetchTotalViews();
+
         // Format last update date
         let lastUpdateText = "NO POSTS";
         if (latestPost?.published_at) {
@@ -68,7 +87,7 @@ export function useTerminalStats() {
           seriesCount: seriesCount || 0,
           lastUpdate: lastUpdateText,
           pictureCount: pictureCount || 0,
-          totalViews: 0, // Add view tracking if you have it
+          totalViews,
           isLoading: false,
         });
       } catch (error) {
