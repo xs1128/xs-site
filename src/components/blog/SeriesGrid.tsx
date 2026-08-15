@@ -31,7 +31,7 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
           slug,
           title,
           description,
-          series_posts (count)
+          series_posts ( posts ( published_at ) )
         `)
         .order('created_at', { ascending: false });
 
@@ -44,7 +44,8 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
             slug: s.slug,
             title: s.title,
             description: s.description,
-            postCount: s.series_posts?.[0]?.count ?? 0,
+            // Match the series page, which lists published posts only
+            postCount: (s.series_posts ?? []).filter((sp: any) => sp.posts?.published_at).length,
           }))
         );
       }
