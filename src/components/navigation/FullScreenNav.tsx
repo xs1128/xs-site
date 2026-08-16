@@ -1,11 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import { ArrowUpRight, X } from 'lucide-react';
 import { scrollToAbout, scrollToContact } from '@/lib/utils';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
+
+type NavItem =
+  | { kind: 'action'; label: string; onSelect: () => void }
+  | { kind: 'link'; label: string; href: string; newTab?: boolean };
 
 export interface FullScreenNavProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+// viewBox cropped to ink bounds so it sits flush with the letter tops.
+const ExternalArrow = () => (
+  <ArrowUpRight
+    className="nav-item__arrow"
+    viewBox="5.5 5.5 13 13"
+    strokeWidth={3}
+    strokeLinecap="butt"
+    strokeLinejoin="miter"
+  />
+);
 
 /**
  * Full-screen navigation overlay with slide animations
@@ -48,6 +64,18 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
     setTimeout(scrollToContact, 100);
   };
 
+  const resolved: NavItem[] = [
+    { kind: 'action', label: 'ABOUT', onSelect: handleAboutClick },
+    { kind: 'action', label: 'CONTACT', onSelect: handleContactClick },
+    {
+      kind: 'link',
+      label: 'PROJECTS',
+      href: 'https://github.com/xs1128',
+      newTab: true,
+    },
+    { kind: 'link', label: 'BLOG', href: '/blog' },
+  ];
+
   if (!isOpen && !isClosing) return null;
 
   return (
@@ -71,84 +99,56 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
               className="fullscreen-nav__close-button"
               aria-label="Close navigation"
             >
-              ✕
+              <X
+                viewBox="5 5 14 14"
+                style={{ width: '0.62em', height: '0.62em' }}
+                strokeWidth={2}
+                strokeLinecap="butt"
+              />
             </button>
           </div>
         </div>
 
-        <button
-          onClick={handleAboutClick}
-          className={`nav-item ${isClosing ? 'nav-item-closing' : 'nav-item-opening'}`}
-          data-text="ABOUT"
-          style={{ animationDelay: isClosing ? '0ms' : '100ms' }}
-        >
-          ABOUT
-        </button>
+        {resolved.map((item, i) => {
+          const cls = `nav-item ${isClosing ? 'nav-item-closing' : 'nav-item-opening'}`;
+          const delay = {
+            animationDelay: isClosing ? '0ms' : `${(i + 1) * 100}ms`,
+          };
 
-        <button
-          onClick={handleContactClick}
-          className={`nav-item ${isClosing ? 'nav-item-closing' : 'nav-item-opening'}`}
-          data-text="CONTACT"
-          style={{ animationDelay: isClosing ? '0ms' : '200ms' }}
-        >
-          CONTACT
-        </button>
+          if (item.kind === 'action') {
+            return (
+              <button
+                key={item.label}
+                onClick={item.onSelect}
+                className={cls}
+                data-text={item.label}
+                style={delay}
+              >
+                {item.label}
+              </button>
+            );
+          }
 
-        <a
-          href="https://github.com/xs1128"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleClose}
-          className={`nav-item ${isClosing ? 'nav-item-closing' : 'nav-item-opening'}`}
-          data-text="PROJECTS"
-          style={{ animationDelay: isClosing ? '0ms' : '400ms' }}
-        >
-          <span className="nav-item__content">
-            PROJECTS
-            <svg
-              className="nav-item__arrow"
-              width="0.75em"
-              height="0.75em"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
+          const external = item.newTab ?? /^https?:/.test(item.href);
+          return (
+            <a
+              key={item.label}
+              href={item.href}
+              {...(external
+                ? { target: '_blank', rel: 'noopener noreferrer' }
+                : {})}
+              onClick={handleClose}
+              className={cls}
+              data-text={item.label}
+              style={delay}
             >
-              <polyline points="7,17 15,9" />
-              <polyline points="17,17 17,7 7,7" />
-            </svg>
-          </span>
-        </a>
-
-        <a
-          href="/blog"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleClose}
-          className={`nav-item ${isClosing ? 'nav-item-closing' : 'nav-item-opening'}`}
-          data-text="BLOG"
-          style={{ animationDelay: isClosing ? '0ms' : '500ms' }}
-        >
-          <span className="nav-item__content">
-            BLOG
-            <svg
-              className="nav-item__arrow"
-              width="0.75em"
-              height="0.75em"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="4"
-              strokeLinecap="square"
-              strokeLinejoin="miter"
-            >
-              <polyline points="7,17 15,9" />
-              <polyline points="17,17 17,7 7,7" />
-            </svg>
-          </span>
-        </a>
+              <span className="nav-item__content">
+                {item.label}
+                {external && <ExternalArrow />}
+              </span>
+            </a>
+          );
+        })}
       </div>
     </div>
   );

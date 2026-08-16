@@ -102,12 +102,12 @@
   background-color: var(--color-nav-panel);
   border: 1px solid var(--color-border);
   color: var(--color-text-on-dark);
-  font-size: 11vw;
+  font-size: 10.5vw;
   font-weight: 700;
   font-family: var(--font-primary);
   cursor: pointer;
   text-align: left;
-  padding: 0.5vh 1vw;
+  padding: 0.5vh 3vw 0.5vh 1vw;
   margin: 0;
   line-height: 0.85;
   transition: transform 0.2s ease;
@@ -117,13 +117,17 @@
 
 .fullscreen-nav .nav-item__content {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   gap: 1.5vw;
 }
 
 .fullscreen-nav .nav-item__arrow {
-  width: 0.75em;
-  height: 0.75em;
+  /* cap units, not em: the viewBox is cropped to the ink bounds, so em
+     oversizes it. Aligns the arrow with the letter tops. */
+  width: 0.8cap;
+  height: 0.8cap;
+  transform: translateY(-0.2cap);
+  flex-shrink: 0;
   transition: stroke 0.3s var(--ease-in-out-soft);
   transition-delay: 0.7s;
   position: relative;
@@ -144,16 +148,11 @@
   }
 
   .fullscreen-nav .nav-item {
-    font-size: 15vw;
+    font-size: 14.5vw;
   }
 
   .fullscreen-nav .nav-item__content {
     gap: 2vw;
-  }
-
-  .fullscreen-nav .nav-item__arrow {
-    width: 0.9em;
-    height: 0.9em;
   }
 }
 
@@ -178,6 +177,7 @@
   letter-spacing: inherit;
   text-align: inherit;
   padding: inherit;
+  padding-right: 0;
   margin: inherit;
   clip-path: inset(0 100% 0 0);
   pointer-events: none;
