@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { robotoMono, hubotSans } from '@/fonts';
 import './globals.css';
 import '../styles/animations.css';
@@ -151,6 +153,8 @@ export default function RootLayout({
             data-goatcounter={`https://${goatCounterCode}.goatcounter.com/count`}
           />
         )}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
