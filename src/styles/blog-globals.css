@@ -27,7 +27,7 @@ body:has(.blog-root) {
 }
 
 .blog-root {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-weight: 400;
   color: var(--color-text-on-light);
   background-color: var(--color-landing-bg);
@@ -65,14 +65,14 @@ body:has(.blog-root) {
 .blog-root h4,
 .blog-root h5,
 .blog-root h6 {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-weight: 700;
 }
 
 .blog-root code,
 .blog-root pre,
 .blog-root .mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
 }
 
 .blog-root button,
@@ -142,8 +142,8 @@ body:has(.blog-root) {
 
   /* Roles are inverted vs site: body and headings in Hubot Sans, Roboto Mono
      for code. Own faces so 700 is a real cut, not synthesised. */
-  --font-primary: var(--font-blog-sans), sans-serif;
-  --font-mono: var(--font-blog-mono), monospace;
+  --font-body: var(--font-blog-sans), sans-serif;
+  --font-code: var(--font-blog-mono), monospace;
 }
 
 /* ========================================
@@ -218,10 +218,10 @@ body:has(.blog-root) {
 
 /* Typography */
 .text-primary {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
 }
 .text-mono {
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
 }
 .font-bold {
   font-weight: 700;

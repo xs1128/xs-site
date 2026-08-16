@@ -17,9 +17,11 @@
   --color-white: #ffffff;
   --color-muted: #666666; /* Secondary text on sand */
 
-  /* Typography */
-  --font-primary: var(--font-roboto-mono), monospace;
-  --font-secondary: var(--font-hubot-sans), sans-serif;
+  /* Typography. Named by role, not by face — the site sets body in Roboto Mono
+     and reserves Hubot Sans for display, while .blog-root rebinds --font-body
+     to Hubot Sans and adds --font-code. Read the role, not the family. */
+  --font-body: var(--font-roboto-mono), monospace;
+  --font-display: var(--font-hubot-sans), sans-serif;
 
   /* Type scale. Single source for both CSS files and the blog's inline
      styles (src/styles/blog/typography.ts reads these). */
@@ -74,7 +76,7 @@ body {
 body {
   background-color: var(--color-landing-bg);
   color: var(--color-text-on-light);
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
 }
 
 a {

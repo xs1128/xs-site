@@ -7,7 +7,7 @@ export default function LeftSidebar() {
   };
 
   const titleStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(14px, 2vw, 18px)',
     fontWeight: 700,
     color: '#FFFFFF',
@@ -23,7 +23,7 @@ export default function LeftSidebar() {
   };
 
   const linkStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(14px, 1.5vw, 16px)',
     fontWeight: 400,
     color: '#CCCCCC',

@@ -61,7 +61,7 @@ function PostItem({ post }: { post: Post }) {
 
   const titleStyle: React.CSSProperties = {
     minWidth: 0,
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.sm,
     lineHeight: 1.5,
     color: active ? 'var(--color-accent)' : TITLE_REST,
@@ -75,7 +75,7 @@ function PostItem({ post }: { post: Post }) {
   };
 
   const metaStyle: React.CSSProperties = {
-    fontFamily: FONTS.mono,
+    fontFamily: FONTS.code,
     fontSize: clamp.xs,
     color: META_COLOR,
     marginTop: spacing.xs,
@@ -140,7 +140,7 @@ export default function OtherPosts({
   // Mono accent eyebrow, a recommendation signal. Kept as a real <h3> for the
   // heading outline. (The old heading used --color-text, invisible on the dark bg.)
   const headingStyle: React.CSSProperties = {
-    fontFamily: FONTS.mono,
+    fontFamily: FONTS.code,
     fontSize: clamp.xs,
     fontWeight: 600,
     letterSpacing: '0.12em',
@@ -177,7 +177,7 @@ export default function OtherPosts({
     padding: 0,
     background: 'none',
     border: 'none',
-    fontFamily: FONTS.mono,
+    fontFamily: FONTS.code,
     fontSize: clamp.xs,
     fontWeight: 600,
     letterSpacing: '0.04em',

@@ -248,7 +248,7 @@ const photoStyles = {
   }),
 
   title: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.sm,
     fontWeight: 700,
     color: '#FFFFFF',
@@ -259,7 +259,7 @@ const photoStyles = {
   } as React.CSSProperties,
 
   meta: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.xs,
     fontWeight: 400,
     color: '#CCCCCC',
@@ -389,7 +389,7 @@ const marqueeStyles = {
   }),
 
   header: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: 'clamp(20px, 3vw, 28px)',
     fontWeight: 700,
     color: '#FFFFFF',

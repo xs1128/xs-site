@@ -96,7 +96,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             style={{
               borderRight: `1px solid var(--color-border)`,
               color: 'var(--color-dark-text)',
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-code)',
               fontSize: isSmallScreen ? '32px' : '48px',
               fontWeight: 500,
               padding: '0.5vh 1vw',
@@ -133,7 +133,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
                 cursor: 'pointer',
                 padding: '0',
                 lineHeight: 0.85,
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-code)',
                 fontWeight: 500,
                 display: 'flex',
               }}
@@ -163,7 +163,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
               color: 'var(--color-dark-text)',
               fontSize: isSmallScreen ? '14.5vw' : '10.5vw',
               fontWeight: 700,
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-code)',
               cursor: 'pointer',
               textAlign: 'left',
               padding: '0.5vh 3vw 0.5vh 1vw',

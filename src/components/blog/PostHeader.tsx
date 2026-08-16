@@ -14,7 +14,7 @@ export default function PostHeader({ post, loading = false }: PostHeaderProps) {
   };
 
   const titleStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     // Intentionally diverges from the clamp['3xl'] token: keeps the mobile min (2rem)
     // but caps desktop smaller (2.75rem vs 3.5rem) for the post title only.
     fontSize: 'clamp(2rem, 4vw, 2.75rem)',
@@ -50,13 +50,13 @@ export default function PostHeader({ post, loading = false }: PostHeaderProps) {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.sm,
     color: '#999999',
   };
 
   const authorStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.sm,
     color: '#999999',
     fontWeight: 500,

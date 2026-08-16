@@ -61,7 +61,7 @@ export default function AnimatedButton({
     display: 'inline-flex',
     alignItems: 'center',
     gap: 'clamp(4px, 0.5vw, 8px)',
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: '#2A2F35',

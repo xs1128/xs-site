@@ -4,7 +4,7 @@
 
 /* Post Content Styles */
 .post-content {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: clamp(12px, 1.8vw, 18px);
   line-height: 1.8;
   color: #f5f5f5;
@@ -17,7 +17,7 @@
 .post-content h4,
 .post-content h5,
 .post-content h6 {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-weight: 700;
   color: #f5f5f5;
 }
@@ -58,7 +58,7 @@
 }
 
 .post-content code {
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
   font-size: var(--text-sm);
   background-color: #f5f5f5;
   padding: 2px 6px;
@@ -126,7 +126,7 @@
 }
 
 .toc-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: clamp(12px, 1.8vw, 18px);
   font-weight: 700;
   color: var(--color-text);
@@ -142,7 +142,7 @@
 }
 
 .toc-item {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: 400;
   color: #999;
@@ -193,7 +193,7 @@
 }
 
 .series-card-title {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: clamp(12px, 1.8vw, 18px);
   font-weight: 700;
   color: var(--color-accent);
@@ -340,14 +340,14 @@
 }
 
 .footer-name {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: clamp(16px, 2.5vw, 20px);
   font-weight: 700;
   color: var(--color-text);
 }
 
 .footer-bio {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: clamp(13px, 1.8vw, 16px);
   font-weight: 400;
   color: var(--color-text);
@@ -355,7 +355,7 @@
 }
 
 .footer-heading {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: clamp(14px, 2vw, 16px);
   font-weight: 600;
   color: var(--color-text);
@@ -377,7 +377,7 @@
   gap: var(--spacing-xs);
   text-decoration: none;
   color: var(--color-text);
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: clamp(13px, 1.8vw, 16px);
   transition: all 0.3s ease;
 }
@@ -409,7 +409,7 @@
 }
 
 .footer-email {
-  font-family: var(--font-mono);
+  font-family: var(--font-code);
   font-size: clamp(13px, 1.8vw, 16px);
   color: var(--color-text);
   margin-bottom: var(--spacing-sm);
@@ -464,7 +464,7 @@
 }
 
 .footer-copyright {
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-size: var(--text-xs);
   color: var(--color-text);
   text-align: center;

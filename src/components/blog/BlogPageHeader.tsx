@@ -24,7 +24,7 @@ export default function BlogPageHeader({ onMenuClick }: BlogPageHeaderProps) {
   };
 
   const logoStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: 'var(--color-dark-background)',
@@ -35,7 +35,7 @@ export default function BlogPageHeader({ onMenuClick }: BlogPageHeaderProps) {
   };
 
   const menuButtonStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: 'var(--color-dark-background)',

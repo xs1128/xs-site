@@ -1,7 +1,8 @@
-// Shared typography and text styles
+/* Both names are surface-relative: on .blog-root --font-body resolves to Hubot
+   Sans and --font-code to Roboto Mono, the inverse of the site's roles. */
 export const FONTS = {
-  primary: 'var(--font-primary)',
-  mono: 'var(--font-mono)',
+  body: 'var(--font-body)',
+  code: 'var(--font-code)',
 } as const;
 
 /* The scales themselves live in app/globals.css :root — these are handles for

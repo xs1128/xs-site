@@ -193,7 +193,7 @@
 .contact-section__email {
   text-align: center;
   font-size: 24px;
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   color: var(--color-text-on-light);
 }
 
@@ -246,7 +246,7 @@
   justify-content: flex-start;
   align-items: center;
   color: var(--color-text-on-light);
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   z-index: 10;
 }
 
@@ -309,7 +309,7 @@
   font-size: 32px;
   font-weight: 700;
   color: var(--color-about-bg);
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   order: 1;
 }
 
@@ -319,7 +319,7 @@
   color: var(--color-about-bg);
   font-size: 32px;
   cursor: pointer;
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   padding: 0;
   line-height: 1;
   order: 2;
@@ -351,7 +351,7 @@
   margin-bottom: 4px;
   font-size: 18px;
   color: var(--color-about-bg);
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-weight: 500;
 }
 
@@ -360,7 +360,7 @@
   width: 100%;
   padding: 14px 18px;
   font-size: 18px;
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   background-color: var(--color-card-bg);
   border: 1px solid var(--color-border);
   color: var(--color-about-bg);
@@ -382,7 +382,7 @@
 .contact-popup__status {
   padding: 16px;
   font-size: 16px;
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   border-radius: 0;
 }
 
@@ -400,7 +400,7 @@
   padding: 16px 32px;
   font-size: 18px;
   font-weight: 500;
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   background-color: var(--color-about-bg);
   color: var(--color-text-on-dark);
   border: none;
@@ -491,7 +491,7 @@
   top: 50%;
   transform-origin: 0 0;
   font-size: 32px;
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   color: var(--color-text-on-light);
   font-weight: 500;
   pointer-events: none;
@@ -508,7 +508,7 @@
   transform: translate(-50%, -50%);
   color: var(--color-text-on-light);
   font-size: 48px;
-  font-family: var(--font-primary);
+  font-family: var(--font-body);
   font-weight: 700;
   cursor: pointer;
   user-select: none;

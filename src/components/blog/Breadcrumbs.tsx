@@ -30,7 +30,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
     flexWrap: 'wrap',
     gap: '6px',
     marginBottom: spacing.md,
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.sm,
   };
 

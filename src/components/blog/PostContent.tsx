@@ -55,7 +55,7 @@ MemoizedImage.displayName = 'MemoizedImage';
 
 // Move all styles outside component to prevent recreation on every render
 const containerStyle: React.CSSProperties = {
-  fontFamily: FONTS.primary,
+  fontFamily: FONTS.body,
   fontSize: clamp.base,
   fontWeight: 400,
   color: '#F5F5F5',
@@ -67,7 +67,7 @@ const containerStyle: React.CSSProperties = {
 
 const headingStyles = {
   h1: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp['3xl'],
     fontWeight: 700,
     color: '#F5F5F5',
@@ -77,7 +77,7 @@ const headingStyles = {
     lineHeight: 1.2,
   },
   h2: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp['2xl'],
     fontWeight: 700,
     color: '#F5F5F5',
@@ -87,7 +87,7 @@ const headingStyles = {
     lineHeight: 1.3,
   },
   h3: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.xl,
     fontWeight: 600,
     color: '#F5F5F5',
@@ -97,7 +97,7 @@ const headingStyles = {
     lineHeight: 1.4,
   },
   h4: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.lg,
     fontWeight: 600,
     color: '#F5F5F5',
@@ -107,7 +107,7 @@ const headingStyles = {
     lineHeight: 1.4,
   },
   h5: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.base,
     fontWeight: 600,
     color: '#F5F5F5',
@@ -115,7 +115,7 @@ const headingStyles = {
     marginBottom: spacing.xs,
   },
   h6: {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.sm,
     fontWeight: 600,
     color: '#F5F5F5',
@@ -173,7 +173,7 @@ const tableCellStyle: React.CSSProperties = {
 };
 
 const codeStyle: React.CSSProperties = {
-  fontFamily: FONTS.mono,
+  fontFamily: FONTS.code,
   fontSize: '0.9em',
   backgroundColor: 'rgba(255, 255, 255, 0.08)',
   border: '1px solid rgba(255, 255, 255, 0.1)',

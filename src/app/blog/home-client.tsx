@@ -204,7 +204,7 @@ export default function HomePageClient({
   };
 
   const backButtonTextStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: '#2A2F35',
@@ -227,7 +227,7 @@ export default function HomePageClient({
   };
 
   const brandStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: '#2A2F35',
@@ -252,7 +252,7 @@ export default function HomePageClient({
   };
 
   const menuLinkStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: '#2A2F35',
@@ -358,7 +358,7 @@ export default function HomePageClient({
   };
 
   const tapAreaTextStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(10px, 1.5vw, 14px)',
     fontWeight: 600,
     color: '#E5532C',
@@ -388,7 +388,7 @@ export default function HomePageClient({
   };
 
   const headlineStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(2rem, 5vw, 3.5rem)',
     fontWeight: 700,
     color: '#E5532C',

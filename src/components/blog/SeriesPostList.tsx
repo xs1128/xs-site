@@ -27,7 +27,7 @@ export default function SeriesPostList({ posts }: SeriesPostListProps) {
   };
 
   const emptyStateStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(14px, 2vw, 18px)',
     color: '#CCCCCC',
     textAlign: 'center',

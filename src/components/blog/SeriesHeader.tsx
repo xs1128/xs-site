@@ -25,7 +25,7 @@ export default function SeriesHeader({
   ];
 
   const titleStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp['2xl'],
     fontWeight: 700,
     color: 'var(--color-dark-text)',
@@ -34,7 +34,7 @@ export default function SeriesHeader({
   };
 
   const descriptionStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.base,
     color: '#CCCCCC',
     lineHeight: 1.6,

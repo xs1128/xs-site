@@ -23,7 +23,7 @@ export default function TagList({ tags, loading = false }: TagListProps) {
   if (!tags || tags.length === 0) return null;
 
   const tagStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.xs,
     fontWeight: 500,
     color: 'var(--color-accent)',

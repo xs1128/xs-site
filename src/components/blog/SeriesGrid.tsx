@@ -83,7 +83,7 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
   const messageStyle: React.CSSProperties = {
     color: '#8A929B',
     padding: 'clamp(16px, 3vh, 28px) clamp(16px, 3vw, 28px)',
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(12px, 1.5vw, 15px)',
     letterSpacing: '0.04em',
     textTransform: 'uppercase',
@@ -119,7 +119,7 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
       border: 0;
       text-align: left;
       cursor: pointer;
-      font-family: var(--font-primary);
+      font-family: var(--font-body);
       transition: transform 0.26s var(--ease-out-quart);
       animation: series-in 0.45s var(--ease-out-quart) backwards;
     }

@@ -16,7 +16,7 @@ export default function NotFound() {
   };
 
   const titleStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp['3xl'],
     fontWeight: 700,
     color: 'var(--color-text)',
@@ -24,7 +24,7 @@ export default function NotFound() {
   };
 
   const messageStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.base,
     color: '#666666',
     marginBottom: spacing.lg,
@@ -32,7 +32,7 @@ export default function NotFound() {
   };
 
   const buttonStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.base,
     fontWeight: 600,
     color: '#FFFFFF',

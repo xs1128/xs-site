@@ -25,7 +25,7 @@ import { colors } from '@/styles/colors';
 
 // Good
 const style = {
-  fontFamily: FONTS.primary,
+  fontFamily: FONTS.body,
   fontSize: clamp.base,
   padding: spacing.md,
   color: colors.accent,
@@ -50,8 +50,8 @@ const style = {
 
 **`src/styles/typography.ts`**:
 
-- `FONTS.primary` - `'Hubot Sans', sans-serif`
-- `FONTS.mono` - `'Roboto Mono', monospace`
+- `FONTS.body` - `var(--font-body)`, Hubot Sans on `.blog-root`
+- `FONTS.code` - `var(--font-code)`, Roboto Mono on `.blog-root`
 - `clamp.xs` through `clamp.3xl` - Responsive font sizes
 - `spacing.xs` through `spacing.lg` - Responsive spacing
 

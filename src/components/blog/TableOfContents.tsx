@@ -115,7 +115,7 @@ export default function TableOfContents({
   };
 
   const titleStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.base,
     fontWeight: 700,
     color: 'var(--color-dark-text)',
@@ -136,7 +136,7 @@ export default function TableOfContents({
     isActive: boolean,
     isHovered: boolean,
   ): React.CSSProperties => ({
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.sm,
     fontWeight: isActive ? 600 : 400,
     color: isActive

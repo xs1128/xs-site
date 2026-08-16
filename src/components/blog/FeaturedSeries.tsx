@@ -57,7 +57,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
   };
 
   const headerStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(20px, 3vw, 28px)',
     fontWeight: 700,
     color: '#FFFFFF',
@@ -112,7 +112,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
   };
 
   const cardTitleStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(12px, 1.8vw, 18px)',
     fontWeight: 700,
     color: '#E5532C',
@@ -128,7 +128,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
   };
 
   const cardDescriptionStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(10px, 1.3vw, 14px)',
     fontWeight: 400,
     color: '#CCCCCC',
@@ -160,7 +160,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
   };
 
   const postTitleStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(10px, 1.3vw, 13px)',
     fontWeight: 500,
     color: '#FFFFFF',
@@ -172,7 +172,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
   };
 
   const postDateStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(9px, 1.2vw, 12px)',
     fontWeight: 400,
     color: '#666666',
@@ -181,7 +181,7 @@ export default function FeaturedSeries({ series }: FeaturedSeriesProps) {
   };
 
   const viewAllStyle: React.CSSProperties = {
-    fontFamily: 'var(--font-primary)',
+    fontFamily: 'var(--font-body)',
     fontSize: 'clamp(10px, 1.3vw, 13px)',
     fontWeight: 700,
     color: '#E5532C',

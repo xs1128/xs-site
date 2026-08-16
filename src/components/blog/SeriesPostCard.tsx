@@ -109,7 +109,7 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
           }
         }
         .title {
-          font-family: ${FONTS.primary};
+          font-family: ${FONTS.body};
           font-size: ${clamp.lg};
           font-weight: 700;
           color: var(--color-dark-text);
@@ -119,13 +119,13 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
           display: flex;
           gap: ${spacing.sm};
           align-items: center;
-          font-family: ${FONTS.primary};
+          font-family: ${FONTS.body};
           font-size: ${clamp.sm};
           color: #cccccc;
           margin-bottom: clamp(12px, 2vh, 16px);
         }
         .excerpt {
-          font-family: ${FONTS.primary};
+          font-family: ${FONTS.body};
           font-size: ${clamp.sm};
           color: #cccccc;
           line-height: 1.6;

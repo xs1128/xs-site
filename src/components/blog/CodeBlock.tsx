@@ -42,7 +42,7 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
   };
 
   const languageStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.xs,
     color: '#CCCCCC',
     textTransform: 'uppercase' as const,
@@ -54,7 +54,7 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
     display: 'flex',
     alignItems: 'center',
     gap: '6px',
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.xs,
     color: copied ? '#4EC9B0' : '#CCCCCC',
     backgroundColor: 'transparent',
@@ -123,7 +123,7 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
         language={language}
         style={vscDarkPlus}
         customStyle={{
-          fontFamily: FONTS.mono,
+          fontFamily: FONTS.code,
           fontSize: clamp.sm,
           lineHeight: 1.6,
           backgroundColor: '#1E1E1E',

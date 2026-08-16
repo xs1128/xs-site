@@ -36,7 +36,7 @@ export default function PostNavigation({
   };
 
   const labelStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.xs,
     color: '#666666',
     textTransform: 'uppercase',
@@ -44,7 +44,7 @@ export default function PostNavigation({
   };
 
   const linkStyle: React.CSSProperties = {
-    fontFamily: FONTS.primary,
+    fontFamily: FONTS.body,
     fontSize: clamp.base,
     fontWeight: 600,
     color: 'var(--color-accent)',
