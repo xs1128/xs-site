@@ -1,0 +1,412 @@
+/* ========================================
+   BASE STYLES
+   ======================================== */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  /* 100% not 100vw: vw counts the classic scrollbar's width, so it overflows by ~15px */
+  max-width: 100%;
+  width: 100%;
+  position: relative;
+  overscroll-behavior: none;
+}
+
+body {
+  font-family: 'Hubot Sans', sans-serif;
+  font-weight: 400;
+  color: #2A2F35;
+  background-color: #F2E9D8;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #F2E9D8;
+}
+
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+img, video, canvas, svg {
+  max-width: 100%;
+}
+
+/* Mobile-specific overscroll fixes */
+@media (max-width: 767px) {
+  html,
+  body {
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+    touch-action: pan-y pinch-zoom;
+  }
+}
+
+.wrapgrid {
+  overflow-x: hidden;
+}
+
+a {
+  color: #E5532C;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Hubot Sans', sans-serif;
+  font-weight: 700;
+}
+
+code, pre, .mono {
+  font-family: 'Roboto Mono', monospace;
+}
+
+button, .animated-button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Markdown link hover effect */
+.markdown-link {
+  transition: opacity 0.2s ease;
+}
+
+.markdown-link:hover {
+  opacity: 0.8;
+}
+
+/* Paragraph spacing. Kept in CSS (not an inline style) so the
+   .markdown-blockquote > p rules below can override it via normal specificity. */
+.markdown-paragraph {
+  margin-bottom: clamp(12px, 2vh, 24px);
+}
+
+/* Blockquote panel: strip inner paragraph margins so the blockquote's own
+   padding controls spacing, keeping equal space above and below the quote.
+   These win over .markdown-paragraph because `.markdown-blockquote > p` has
+   higher specificity, so no !important is needed. */
+.markdown-blockquote > p:first-child {
+  margin-top: 0;
+}
+
+.markdown-blockquote > p:last-child {
+  margin-bottom: 0;
+}
+
+/* Background blur container */
+.background-blur {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.background-blur img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(10px);
+  transform: scale(1.05);
+  opacity: 1;
+}
+
+/* ========================================
+   CSS CUSTOM PROPERTIES
+   ======================================== */
+:root {
+  /* Colors */
+  --color-background: #F2E9D8;
+  --color-text: #2A2F35;
+  --color-accent: #E5532C;
+  --color-dark-background: #2A2F35;
+  --color-dark-text: #F2E9D8;
+  --color-nav-background: #363D44;
+  --color-card: #E4D9C2;
+  --color-border: #D6CBB3;
+
+  /* Typography */
+  --font-primary: 'Hubot Sans', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+
+  /* Spacing */
+  --spacing-xs: clamp(4px, 1vh, 8px);
+  --spacing-sm: clamp(8px, 1.5vh, 16px);
+  --spacing-md: clamp(12px, 2vh, 24px);
+  --spacing-lg: clamp(20px, 3vh, 40px);
+
+  /* Transitions */
+  --transition-fast: 0.3s ease;
+  --transition-medium: 0.4s ease;
+  --transition-slow: 0.6s ease;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Display */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.inline-flex { display: inline-flex; }
+.grid { display: grid; }
+.hidden { display: none; }
+
+/* Flexbox utilities */
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+
+/* Spacing */
+.m-0 { margin: 0; }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+
+/* Typography */
+.text-primary { font-family: var(--font-primary); }
+.text-mono { font-family: var(--font-mono); }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+/* Colors */
+.text-accent { color: var(--color-accent); }
+.text-dark { color: var(--color-text); }
+.bg-dark { background-color: var(--color-dark-background); }
+
+/* Width */
+.w-full { width: 100%; }
+
+/* Cursor */
+.cursor-pointer { cursor: pointer; }
+
+/* ========================================
+   RESPONSIVE UTILITIES
+   ======================================== */
+
+/* Hide on mobile */
+@media (max-width: 767px) {
+  .hide-mobile { display: none !important; }
+}
+
+/* Show on mobile only */
+@media (min-width: 768px) {
+  .show-mobile-only { display: none !important; }
+}
+
+/* Flex direction changes on mobile */
+@media (max-width: 767px) {
+  .flex-col-mobile { flex-direction: column; }
+}
+
+/* ========================================
+   HOVER EFFECT UTILITIES
+   ======================================== */
+
+@media (hover: hover) {
+  .hover-accent:hover {
+    color: var(--color-accent);
+  }
+
+  .hover-translate-x:hover {
+    transform: translateX(4px);
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.1);
+  }
+
+  .hover-opacity:hover {
+    opacity: 0.8;
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(100%); }
+}
+
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeOutSlide {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(50px); }
+}
+
+@keyframes hamburgerFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease; }
+.animate-slide-in { animation: slideInRight 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+
+/* Navigation animations */
+.nav-item-opening {
+  animation: fadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.nav-item-closing {
+  animation: fadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hamburger-fading {
+  animation: hamburgerFadeOut 0.3s ease forwards;
+}
+
+/* Text fill animation for navigation buttons */
+.nav-item {
+  position: relative;
+}
+
+.nav-item::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 0;
+  bottom: 0;
+  color: #E5532C;
+  background-color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  padding: inherit;
+  margin: inherit;
+  clip-path: inset(0 100% 0 0);
+  pointer-events: none;
+  transition: clip-path 0.7s cubic-bezier(0.6, 0, 0.4, 1);
+  z-index: 1;
+  width: fit-content;
+}
+
+.nav-item > span {
+  position: relative;
+  z-index: 2;
+}
+
+@media (hover: hover) {
+  .nav-item:hover::before {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ========================================
+   TRANSITION UTILITIES
+   ======================================== */
+
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.transition-fast {
+  transition: all var(--transition-fast);
+}
+
+.transition-medium {
+  transition: all var(--transition-medium);
+}
+
+.transition-slow {
+  transition: all var(--transition-slow);
+}
+
+/* ========================================
+   TOOLTIP
+   ======================================== */
+
+/* z-index sits above the 3D scene overlay (10100) so tooltips on the
+   fullscreen scene controls are not swallowed by it. */
+.tooltip {
+  position: fixed;
+  z-index: 10200;
+  max-width: 260px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: var(--color-dark-background);
+  color: var(--color-dark-text);
+  font-family: var(--font-primary);
+  font-size: clamp(10px, 1.2vw, 12px);
+  font-weight: 500;
+  line-height: 1.35;
+  text-align: center;
+  white-space: pre-line;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(18, 22, 28, 0.22);
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 140ms ease,
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.tooltip[data-ready='true'] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip,
+  .tooltip[data-ready='true'] {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ========================================
+   SKELETON SHIMMER ANIMATION
+   ======================================== */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
