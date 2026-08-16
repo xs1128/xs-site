@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 /**
  * Injects CSS for button animations
@@ -6,7 +6,7 @@ import { useEffect } from "react";
  */
 export function useButtonAnimations() {
   useEffect(() => {
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.innerHTML = `
       /* Underline Animation */
       @media (hover: hover) {

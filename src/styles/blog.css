@@ -7,7 +7,7 @@
   font-family: var(--font-primary);
   font-size: clamp(12px, 1.8vw, 18px);
   line-height: 1.8;
-  color: #F5F5F5;
+  color: #f5f5f5;
   text-align: justify;
 }
 
@@ -19,7 +19,7 @@
 .post-content h6 {
   font-family: var(--font-primary);
   font-weight: 700;
-  color: #F5F5F5;
+  color: #f5f5f5;
 }
 
 .post-content h1 {
@@ -60,7 +60,7 @@
 .post-content code {
   font-family: var(--font-mono);
   font-size: clamp(11px, 1.5vw, 14px);
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   padding: 2px 6px;
   border-radius: 4px;
   color: var(--color-accent);
@@ -148,9 +148,10 @@
   color: #999;
   cursor: pointer;
   padding: var(--spacing-xs) 0;
-  transition: color 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
-              font-weight 0.4s ease,
-              transform 0.3s ease;
+  transition:
+    color 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+    font-weight 0.4s ease,
+    transform 0.3s ease;
 }
 
 @media (hover: hover) {
@@ -167,7 +168,7 @@
 
 /* Featured Series Cards */
 .series-card {
-  background-color: #363D44;
+  background-color: #363d44;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: clamp(4px, 1vw, 8px);
   padding: clamp(8px, 1.5vh, 16px);
@@ -179,7 +180,9 @@
   overflow: hidden;
   flex-shrink: 0;
   width: clamp(120px, 20vw, 240px);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
 }
 
 @media (hover: hover) {
@@ -221,7 +224,7 @@
 /* Footer Responsive Layout */
 .footer {
   width: 100%;
-  background-color: #F2E9D8;
+  background-color: #f2e9d8;
   padding: 24px 0 16px 0;
   margin-top: auto;
   position: relative;
@@ -434,13 +437,16 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #E4D9C2;
-  color: #2A2F35;
+  background-color: #e4d9c2;
+  color: #2a2f35;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .footer-social-button svg {
@@ -452,8 +458,8 @@
 @media (hover: hover) {
   .footer-social-button:hover {
     transform: scale(1.1);
-    background-color: #2A2F35;
-    color: #E4D9C2;
+    background-color: #2a2f35;
+    color: #e4d9c2;
   }
 }
 

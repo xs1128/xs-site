@@ -1,18 +1,20 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import type { SeriesPost } from '@/types/post'
-import SeriesPostCard from './SeriesPostCard'
-import SeriesPostCardSkeleton from './SeriesPostCardSkeleton'
-import { spacing } from '@/styles/blog/typography'
+import { useState, useEffect } from 'react';
+import type { SeriesPost } from '@/types/post';
+import SeriesPostCard from './SeriesPostCard';
+import SeriesPostCardSkeleton from './SeriesPostCardSkeleton';
+import { spacing } from '@/styles/blog/typography';
 
 interface SeriesPostListProps {
-  posts: SeriesPost[]
+  posts: SeriesPost[];
 }
 
 export default function SeriesPostList({ posts }: SeriesPostListProps) {
-  const [allImagesLoaded, setAllImagesLoaded] = useState(false)
-  const [postsWithImages, setPostsWithImages] = useState<Set<string>>(new Set())
+  const [allImagesLoaded, setAllImagesLoaded] = useState(false);
+  const [postsWithImages, setPostsWithImages] = useState<Set<string>>(
+    new Set(),
+  );
 
   const containerStyle: React.CSSProperties = {
     maxWidth: '1200px',
@@ -22,7 +24,7 @@ export default function SeriesPostList({ posts }: SeriesPostListProps) {
     display: 'flex',
     flexDirection: 'column',
     gap: 'clamp(24px, 4vh, 40px)',
-  }
+  };
 
   const emptyStateStyle: React.CSSProperties = {
     fontFamily: 'var(--font-primary)',
@@ -30,58 +32,56 @@ export default function SeriesPostList({ posts }: SeriesPostListProps) {
     color: '#CCCCCC',
     textAlign: 'center',
     padding: 'clamp(40px, 6vh, 80px)',
-  }
+  };
 
   useEffect(() => {
     // Track image loading
-    const postsWithFeatureImages = posts.filter(post => post.featured_image)
+    const postsWithFeatureImages = posts.filter((post) => post.featured_image);
 
     if (postsWithFeatureImages.length === 0) {
-      setAllImagesLoaded(true)
-      return
+      setAllImagesLoaded(true);
+      return;
     }
 
-    let loadedCount = 0
-    const totalToLoad = postsWithFeatureImages.length
+    let loadedCount = 0;
+    const totalToLoad = postsWithFeatureImages.length;
 
-    postsWithFeatureImages.forEach(post => {
-      const img = new Image()
-      img.src = post.featured_image!
+    postsWithFeatureImages.forEach((post) => {
+      const img = new Image();
+      img.src = post.featured_image!;
 
       img.onload = () => {
-        setPostsWithImages(prev => new Set(prev).add(post.slug))
-        loadedCount++
+        setPostsWithImages((prev) => new Set(prev).add(post.slug));
+        loadedCount++;
         if (loadedCount === totalToLoad) {
-          setAllImagesLoaded(true)
+          setAllImagesLoaded(true);
         }
-      }
+      };
 
       img.onerror = () => {
         // Count as loaded even on error so we don't wait forever
-        loadedCount++
+        loadedCount++;
         if (loadedCount === totalToLoad) {
-          setAllImagesLoaded(true)
+          setAllImagesLoaded(true);
         }
-      }
-    })
+      };
+    });
 
     // If all images are already cached, they might load instantly
     // Set a minimum loading time of 500ms for better UX
     const minLoadingTime = setTimeout(() => {
-      setAllImagesLoaded(true)
-    }, 500)
+      setAllImagesLoaded(true);
+    }, 500);
 
-    return () => clearTimeout(minLoadingTime)
-  }, [posts])
+    return () => clearTimeout(minLoadingTime);
+  }, [posts]);
 
   if (!posts || posts.length === 0) {
     return (
       <div style={containerStyle}>
-        <p style={emptyStateStyle}>
-          This series has no posts yet.
-        </p>
+        <p style={emptyStateStyle}>This series has no posts yet.</p>
       </div>
-    )
+    );
   }
 
   // Show skeletons while images are loading
@@ -92,7 +92,7 @@ export default function SeriesPostList({ posts }: SeriesPostListProps) {
           <SeriesPostCardSkeleton key={post.slug} />
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -101,5 +101,5 @@ export default function SeriesPostList({ posts }: SeriesPostListProps) {
         <SeriesPostCard key={post.slug} post={post} />
       ))}
     </div>
-  )
+  );
 }

@@ -1,11 +1,15 @@
-"use client";
+'use client';
 
-import { useMemo, useEffect } from "react";
-import type { RefObject } from "react";
-import { useFrame } from "@react-three/fiber";
-import { Mesh } from "three";
-import { createFaceTexture, disposeTextures, type FaceTextConfig } from "./createFaceTexture";
-import type { TerminalStats } from "./useTerminalStats";
+import { useMemo, useEffect } from 'react';
+import type { RefObject } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { Mesh } from 'three';
+import {
+  createFaceTexture,
+  disposeTextures,
+  type FaceTextConfig,
+} from './createFaceTexture';
+import type { TerminalStats } from './useTerminalStats';
 
 interface TerminalCubeProps {
   stats: TerminalStats;
@@ -13,7 +17,14 @@ interface TerminalCubeProps {
 }
 
 export default function TerminalCube({ stats, meshRef }: TerminalCubeProps) {
-  const { postCount, seriesCount, pictureCount, lastUpdate, totalViews, isLoading } = stats;
+  const {
+    postCount,
+    seriesCount,
+    pictureCount,
+    lastUpdate,
+    totalViews,
+    isLoading,
+  } = stats;
 
   const textures = useMemo(() => {
     const currentYear = new Date().getFullYear();
@@ -22,37 +33,39 @@ export default function TerminalCube({ stats, meshRef }: TerminalCubeProps) {
     const faceConfigs: FaceTextConfig[] = [
       // Face 1 (right): POSTS
       {
-        mainText: "POSTS",
-        valueText: isLoading ? "..." : postCount.toString(),
+        mainText: 'POSTS',
+        valueText: isLoading ? '...' : postCount.toString(),
       },
       // Face 2 (left): SERIES
       {
-        mainText: "SERIES",
-        valueText: isLoading ? "..." : seriesCount.toString(),
+        mainText: 'SERIES',
+        valueText: isLoading ? '...' : seriesCount.toString(),
       },
       // Face 3 (top): LAST UPDATE
       {
-        mainText: "LAST UPDATE",
+        mainText: 'LAST UPDATE',
         subtext: lastUpdate,
       },
       // Face 4 (bottom): PICTURES
       {
-        mainText: "PICTURES",
-        valueText: isLoading ? "..." : pictureCount.toString(),
+        mainText: 'PICTURES',
+        valueText: isLoading ? '...' : pictureCount.toString(),
       },
       // Face 5 (front): VISITS
       {
-        mainText: "VISITS",
-        valueText: isLoading ? "..." : totalViews?.toLocaleString('en-US') ?? "—",
+        mainText: 'VISITS',
+        valueText: isLoading
+          ? '...'
+          : (totalViews?.toLocaleString('en-US') ?? '—'),
       },
       // Face 6 (back): YEAR + VERSION
       {
         mainText: `© ${currentYear}`,
-        subtext: "BLOG v1.0",
+        subtext: 'BLOG v1.0',
       },
     ];
 
-    return faceConfigs.map(config => createFaceTexture(config));
+    return faceConfigs.map((config) => createFaceTexture(config));
   }, [postCount, seriesCount, pictureCount, lastUpdate, totalViews, isLoading]);
 
   useEffect(() => {

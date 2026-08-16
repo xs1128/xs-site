@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import { Vector3 } from "three";
+import { useEffect, useMemo, useState } from 'react';
+import { Vector3 } from 'three';
 
 const MAX_ELEVATION = (19 * Math.PI) / 180;
 const AZIMUTH_HALF = (34 * Math.PI) / 180;
@@ -17,7 +17,11 @@ export interface SunState {
 function arcVector(t: number, maxElevation: number): Vector3 {
   const elevation = Math.sin(t * Math.PI) * maxElevation;
   const theta = Math.PI + (t - 0.5) * 2 * AZIMUTH_HALF;
-  return new Vector3().setFromSphericalCoords(1, Math.PI / 2 - elevation, theta);
+  return new Vector3().setFromSphericalCoords(
+    1,
+    Math.PI / 2 - elevation,
+    theta,
+  );
 }
 
 function computeSun(date: Date): SunState {
@@ -25,7 +29,7 @@ function computeSun(date: Date): SunState {
   const isNight = hours < 6 || hours >= 18;
 
   if (isNight) {
-    const t = (((hours - 18) % 24) + 24) % 24 / 12;
+    const t = ((((hours - 18) % 24) + 24) % 24) / 12;
     return {
       sunPosition: arcVector(t, -MAX_ELEVATION),
       moonPosition: arcVector(t, MAX_ELEVATION),

@@ -1,24 +1,27 @@
-import type { Heading } from '@/types/post'
+import type { Heading } from '@/types/post';
 
 /**
  * Calculate estimated reading time for post content
  * Average reading speed: 200 words per minute
  */
 export function calculateReadTime(content: string): number {
-  if (!content) return 0
+  if (!content) return 0;
 
   // Remove markdown syntax for word count
   const plainText = content
     .replace(/```[\s\S]*?```/g, '') // Remove code blocks
-    .replace(/`[^`]+`/g, '')         // Remove inline code
+    .replace(/`[^`]+`/g, '') // Remove inline code
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Remove markdown links
-    .replace(/[#*_~`-]/g, '')        // Remove markdown chars
+    .replace(/[#*_~`-]/g, ''); // Remove markdown chars
 
-  const words = plainText.trim().split(/\s+/).filter(word => word.length > 0)
-  const wordCount = words.length
+  const words = plainText
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word.length > 0);
+  const wordCount = words.length;
 
   // Calculate: 200 words per minute, minimum 1 minute
-  return Math.max(1, Math.ceil(wordCount / 200))
+  return Math.max(1, Math.ceil(wordCount / 200));
 }
 
 /**
@@ -33,14 +36,14 @@ export function calculateReadTime(content: string): number {
 export function stripInlineMarkdown(text: string): string {
   return text
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1') // image -> alt text
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')  // link -> link text
-    .replace(/`([^`]+)`/g, '$1')              // inline code
-    .replace(/\*\*([^*]+)\*\*/g, '$1')        // bold
-    .replace(/__([^_]+)__/g, '$1')            // bold
-    .replace(/\*([^*]+)\*/g, '$1')            // italic
-    .replace(/_([^_]+)_/g, '$1')              // italic
-    .replace(/~~([^~]+)~~/g, '$1')            // strikethrough
-    .trim()
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') // link -> link text
+    .replace(/`([^`]+)`/g, '$1') // inline code
+    .replace(/\*\*([^*]+)\*\*/g, '$1') // bold
+    .replace(/__([^_]+)__/g, '$1') // bold
+    .replace(/\*([^*]+)\*/g, '$1') // italic
+    .replace(/_([^_]+)_/g, '$1') // italic
+    .replace(/~~([^~]+)~~/g, '$1') // strikethrough
+    .trim();
 }
 
 /**
@@ -53,7 +56,7 @@ export function slugifyHeading(text: string): string {
     .replace(/[^\w\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '')
+    .replace(/^-+|-+$/g, '');
 }
 
 /**
@@ -62,45 +65,45 @@ export function slugifyHeading(text: string): string {
  * renderer assigns to each heading element.
  */
 export function extractHeadings(content: string): Heading[] {
-  if (!content) return []
+  if (!content) return [];
 
-  const headings: Heading[] = []
-  const lines = content.split('\n')
-  const headingCount: Record<string, number> = {}
-  let inFence = false
+  const headings: Heading[] = [];
+  const lines = content.split('\n');
+  const headingCount: Record<string, number> = {};
+  let inFence = false;
 
   for (const line of lines) {
     // Skip fenced code blocks so "# comment" inside code isn't treated as a heading.
     if (/^\s*```/.test(line)) {
-      inFence = !inFence
-      continue
+      inFence = !inFence;
+      continue;
     }
-    if (inFence) continue
+    if (inFence) continue;
 
     // Match h1 (#) through h6 (######) headings
-    const match = line.match(/^(#{1,6})\s+(.+)$/)
+    const match = line.match(/^(#{1,6})\s+(.+)$/);
     if (match) {
-      const level = match[1].length
-      const text = stripInlineMarkdown(match[2].trim())
-      if (!text) continue
+      const level = match[1].length;
+      const text = stripInlineMarkdown(match[2].trim());
+      if (!text) continue;
 
-      const baseId = slugifyHeading(text)
+      const baseId = slugifyHeading(text);
 
       // Handle duplicates deterministically (same scheme as the renderer).
       if (!headingCount[baseId]) {
-        headingCount[baseId] = 0
+        headingCount[baseId] = 0;
       }
 
-      const count = headingCount[baseId]
-      headingCount[baseId]++
+      const count = headingCount[baseId];
+      headingCount[baseId]++;
 
-      const id = count === 0 ? baseId : `${baseId}-${count}`
+      const id = count === 0 ? baseId : `${baseId}-${count}`;
 
-      headings.push({ id, text, level })
+      headings.push({ id, text, level });
     }
   }
 
-  return headings
+  return headings;
 }
 
 /**
@@ -112,13 +115,13 @@ export function generateSlug(title: string): string {
     .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
+    .replace(/^-|-$/g, '');
 
   if (!slug) {
-    throw new Error('Please enter a valid title')
+    throw new Error('Please enter a valid title');
   }
 
-  return slug
+  return slug;
 }
 
 /**
@@ -128,14 +131,14 @@ export function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
-    day: 'numeric'
-  })
+    day: 'numeric',
+  });
 }
 
 /**
  * Format read time for display
  */
 export function formatReadTime(minutes: number): string {
-  if (minutes === 1) return '1 min read'
-  return `${minutes} min read`
+  if (minutes === 1) return '1 min read';
+  return `${minutes} min read`;
 }

@@ -1,15 +1,19 @@
-'use client'
+'use client';
 
-import { spacing } from '@/styles/blog/typography'
-import { SkeletonHero } from '@/components/blog/skeleton'
+import { spacing } from '@/styles/blog/typography';
+import { SkeletonHero } from '@/components/blog/skeleton';
 
 interface PostHeroProps {
-  imageUrl: string
-  alt?: string
-  loading?: boolean
+  imageUrl: string;
+  alt?: string;
+  loading?: boolean;
 }
 
-export default function PostHero({ imageUrl, alt = 'Featured image', loading = false }: PostHeroProps) {
+export default function PostHero({
+  imageUrl,
+  alt = 'Featured image',
+  loading = false,
+}: PostHeroProps) {
   const containerStyle: React.CSSProperties = {
     width: '100%',
     maxHeight: '400px',
@@ -20,7 +24,7 @@ export default function PostHero({ imageUrl, alt = 'Featured image', loading = f
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  };
 
   const imageStyle: React.CSSProperties = {
     maxWidth: '100%',
@@ -28,7 +32,7 @@ export default function PostHero({ imageUrl, alt = 'Featured image', loading = f
     width: 'auto',
     height: 'auto',
     borderRadius: '8px',
-  }
+  };
 
   return (
     <div style={containerStyle}>
@@ -38,5 +42,5 @@ export default function PostHero({ imageUrl, alt = 'Featured image', loading = f
         <img src={imageUrl} alt={alt} style={imageStyle} />
       )}
     </div>
-  )
+  );
 }

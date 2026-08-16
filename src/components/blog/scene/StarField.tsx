@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useMemo, useRef } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import {
   AdditiveBlending,
   BufferGeometry,
@@ -9,7 +9,7 @@ import {
   ShaderMaterial,
   Spherical,
   Vector3,
-} from "three";
+} from 'three';
 
 const COUNT = 900;
 const RADIUS = 760;
@@ -69,7 +69,7 @@ const STAR_DATA = (() => {
     spherical.set(
       RADIUS + Math.random() * DEPTH,
       Math.acos(1 - Math.random() * 2),
-      Math.random() * 2 * Math.PI
+      Math.random() * 2 * Math.PI,
     );
     vector.setFromSpherical(spherical);
     positions.set([vector.x, vector.y, vector.z], i * 3);
@@ -82,7 +82,7 @@ const STAR_DATA = (() => {
   return { positions, colors, sizes, phases, speeds };
 })();
 
-type StarUniforms = Record<"uTime" | "uScale" | "uOpacity", { value: number }>;
+type StarUniforms = Record<'uTime' | 'uScale' | 'uOpacity', { value: number }>;
 
 export default function StarField({ opacity = 1 }: { opacity?: number }) {
   const dpr = useThree((state) => state.viewport.dpr);
@@ -90,11 +90,14 @@ export default function StarField({ opacity = 1 }: { opacity?: number }) {
 
   const geometry = useMemo(() => {
     const geo = new BufferGeometry();
-    geo.setAttribute("position", new Float32BufferAttribute(STAR_DATA.positions, 3));
-    geo.setAttribute("aColor", new Float32BufferAttribute(STAR_DATA.colors, 3));
-    geo.setAttribute("aSize", new Float32BufferAttribute(STAR_DATA.sizes, 1));
-    geo.setAttribute("aPhase", new Float32BufferAttribute(STAR_DATA.phases, 1));
-    geo.setAttribute("aSpeed", new Float32BufferAttribute(STAR_DATA.speeds, 1));
+    geo.setAttribute(
+      'position',
+      new Float32BufferAttribute(STAR_DATA.positions, 3),
+    );
+    geo.setAttribute('aColor', new Float32BufferAttribute(STAR_DATA.colors, 3));
+    geo.setAttribute('aSize', new Float32BufferAttribute(STAR_DATA.sizes, 1));
+    geo.setAttribute('aPhase', new Float32BufferAttribute(STAR_DATA.phases, 1));
+    geo.setAttribute('aSpeed', new Float32BufferAttribute(STAR_DATA.speeds, 1));
     return geo;
   }, []);
 
@@ -104,7 +107,7 @@ export default function StarField({ opacity = 1 }: { opacity?: number }) {
       uScale: { value: BASE_SCALE },
       uOpacity: { value: 1 },
     }),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -113,7 +116,8 @@ export default function StarField({ opacity = 1 }: { opacity?: number }) {
 
   useFrame((state) => {
     const mat = material.current;
-    if (mat) (mat.uniforms as StarUniforms).uTime.value = state.clock.getElapsedTime();
+    if (mat)
+      (mat.uniforms as StarUniforms).uTime.value = state.clock.getElapsedTime();
   });
 
   return (

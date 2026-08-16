@@ -5,7 +5,7 @@ export interface Post {
   summary: string;
   slug: string;
   featured_image?: string | null;
-  tags?: string[];
+  tags?: string[] | null;
   read_time?: number | null;
   author_name?: string | null;
   content?: string | null;

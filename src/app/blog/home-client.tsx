@@ -1,22 +1,23 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useLayoutEffect, useRef } from "react";
-import Image from "next/image";
-import FunnyMarqueeWrapper from "@/components/blog/FunnyMarqueeWrapper";
-import RecentBlogsGrid from "@/components/blog/RecentBlogsGrid";
-import BlogExpandedContent from "@/components/blog/BlogExpandedContent";
-import AnimatedButton from "@/components/blog/ui/AnimatedButton";
-import { ArrowUp, ArrowDown, ArrowUpRight, X } from "lucide-react";
-import { colors } from "@/styles/blog/colors";
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import Image from 'next/image';
+import FunnyMarqueeWrapper from '@/components/blog/FunnyMarqueeWrapper';
+import RecentBlogsGrid from '@/components/blog/RecentBlogsGrid';
+import BlogExpandedContent from '@/components/blog/BlogExpandedContent';
+import AnimatedButton from '@/components/blog/ui/AnimatedButton';
+import { ArrowUp, ArrowDown, ArrowUpRight, X } from 'lucide-react';
+import { colors } from '@/styles/blog/colors';
 
-const useBeforePaintEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+const useBeforePaintEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 const MARQUEE_RESIZE_MS = 620;
 
 // Custom hook for navigation animations
 function useNavAnimations() {
   useEffect(() => {
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.innerHTML = `
       @keyframes blogSlideInRight {
         0% {
@@ -172,34 +173,34 @@ function FullScreenNav({
   return (
     <div
       style={{
-        position: "fixed",
+        position: 'fixed',
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
         backgroundColor: colors.navBackground,
         zIndex: 10000,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
         animation: isClosing
-          ? "blogSlideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)"
-          : "blogSlideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
-        pointerEvents: isClosing ? "none" : "auto",
-        willChange: isClosing ? "transform, opacity" : "auto",
-        contain: "strict",
-        transform: "translateZ(0)",
-        backfaceVisibility: "hidden" as const,
+          ? 'blogSlideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)'
+          : 'blogSlideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+        pointerEvents: isClosing ? 'none' : 'auto',
+        willChange: isClosing ? 'transform, opacity' : 'auto',
+        contain: 'strict',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden' as const,
       }}
     >
       {/* Navigation items */}
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0",
-          textAlign: "left",
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0',
+          textAlign: 'left',
         }}
       >
         {/* MENU label with close button - outer container with outline */}
@@ -207,10 +208,10 @@ function FullScreenNav({
           style={{
             border: `1px solid ${colors.border}`,
             backgroundColor: colors.navButtonPanel,
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
           }}
         >
           {/* MENU word with outline */}
@@ -218,53 +219,53 @@ function FullScreenNav({
             style={{
               borderRight: `1px solid ${colors.border}`,
               color: colors.darkText,
-              fontFamily: "Roboto Mono, monospace",
-              fontSize: isSmallScreen ? "32px" : "48px",
+              fontFamily: 'Roboto Mono, monospace',
+              fontSize: isSmallScreen ? '32px' : '48px',
               fontWeight: 500,
-              padding: isSmallScreen ? "0.5vh 1vw" : "0.5vh 1vw",
+              padding: isSmallScreen ? '0.5vh 1vw' : '0.5vh 1vw',
             }}
           >
             MENU
           </div>
 
           {/* Spacer for gap */}
-          <div style={{ width: isSmallScreen ? "1vw" : "1.5vw" }}></div>
+          <div style={{ width: isSmallScreen ? '1vw' : '1.5vw' }}></div>
 
           {/* Close button with outline */}
           <div
             style={{
               borderLeft: `1px solid ${colors.border}`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              alignSelf: "stretch",
-              paddingLeft: isSmallScreen ? "1vw" : "1vw",
-              paddingRight: isSmallScreen ? "1vw" : "1vw",
-              paddingTop: "0",
-              paddingBottom: "0",
-              marginTop: "0",
-              marginBottom: "0",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              alignSelf: 'stretch',
+              paddingLeft: isSmallScreen ? '1vw' : '1vw',
+              paddingRight: isSmallScreen ? '1vw' : '1vw',
+              paddingTop: '0',
+              paddingBottom: '0',
+              marginTop: '0',
+              marginBottom: '0',
             }}
           >
             <button
               onClick={handleClose}
               className="close-button"
               style={{
-                backgroundColor: "transparent",
-                border: "none",
+                backgroundColor: 'transparent',
+                border: 'none',
                 color: colors.darkText,
-                fontSize: isSmallScreen ? "48px" : "64px",
-                cursor: "pointer",
-                padding: "0",
+                fontSize: isSmallScreen ? '48px' : '64px',
+                cursor: 'pointer',
+                padding: '0',
                 lineHeight: 0.85,
-                fontFamily: "Roboto Mono, monospace",
+                fontFamily: 'Roboto Mono, monospace',
                 fontWeight: 500,
-                display: "flex",
+                display: 'flex',
               }}
             >
               <X
                 viewBox="5 5 14 14"
-                style={{ width: "0.62em", height: "0.62em" }}
+                style={{ width: '0.62em', height: '0.62em' }}
                 strokeWidth={2}
                 strokeLinecap="butt"
               />
@@ -277,32 +278,43 @@ function FullScreenNav({
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClose}
-          className={`blog-nav-item ${isClosing ? "blog-nav-item-closing" : "blog-nav-item-opening"}`}
+          className={`blog-nav-item ${isClosing ? 'blog-nav-item-closing' : 'blog-nav-item-opening'}`}
           data-text="SITE"
           style={{
             backgroundColor: colors.navButtonPanel,
             border: `1px solid ${colors.border}`,
             color: colors.darkText,
-            fontSize: isSmallScreen ? "14.5vw" : "10.5vw",
+            fontSize: isSmallScreen ? '14.5vw' : '10.5vw',
             fontWeight: 700,
-            fontFamily: "Roboto Mono, monospace",
-            cursor: "pointer",
-            textAlign: "left",
-            padding: "0.5vh 3vw 0.5vh 1vw",
-            margin: "0",
+            fontFamily: 'Roboto Mono, monospace',
+            cursor: 'pointer',
+            textAlign: 'left',
+            padding: '0.5vh 3vw 0.5vh 1vw',
+            margin: '0',
             lineHeight: 0.85,
-            transition: "transform 0.2s ease",
-            animationDelay: isClosing ? "0ms" : "200ms",
-            width: "100%",
-            display: "block",
-            textDecoration: "none",
+            transition: 'transform 0.2s ease',
+            animationDelay: isClosing ? '0ms' : '200ms',
+            width: '100%',
+            display: 'block',
+            textDecoration: 'none',
           }}
         >
-          <span style={{ display: "flex", alignItems: "baseline", gap: isSmallScreen ? "2vw" : "1.5vw" }}>
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: isSmallScreen ? '2vw' : '1.5vw',
+            }}
+          >
             SITE
             <ArrowUpRight
               viewBox="5.5 5.5 13 13"
-              style={{ width: "0.8cap", height: "0.8cap", transform: "translateY(-0.2cap)", flexShrink: 0 }}
+              style={{
+                width: '0.8cap',
+                height: '0.8cap',
+                transform: 'translateY(-0.2cap)',
+                flexShrink: 0,
+              }}
               strokeWidth={3}
               strokeLinecap="butt"
               strokeLinejoin="miter"
@@ -315,32 +327,43 @@ function FullScreenNav({
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClose}
-          className={`blog-nav-item ${isClosing ? "blog-nav-item-closing" : "blog-nav-item-opening"}`}
+          className={`blog-nav-item ${isClosing ? 'blog-nav-item-closing' : 'blog-nav-item-opening'}`}
           data-text="PROJECTS"
           style={{
             backgroundColor: colors.navButtonPanel,
             border: `1px solid ${colors.border}`,
             color: colors.darkText,
-            fontSize: isSmallScreen ? "14.5vw" : "10.5vw",
+            fontSize: isSmallScreen ? '14.5vw' : '10.5vw',
             fontWeight: 700,
-            fontFamily: "Roboto Mono, monospace",
-            cursor: "pointer",
-            textAlign: "left",
-            padding: "0.5vh 3vw 0.5vh 1vw",
-            margin: "0",
+            fontFamily: 'Roboto Mono, monospace',
+            cursor: 'pointer',
+            textAlign: 'left',
+            padding: '0.5vh 3vw 0.5vh 1vw',
+            margin: '0',
             lineHeight: 0.85,
-            transition: "transform 0.2s ease",
-            animationDelay: isClosing ? "0ms" : "400ms",
-            width: "100%",
-            display: "block",
-            textDecoration: "none",
+            transition: 'transform 0.2s ease',
+            animationDelay: isClosing ? '0ms' : '400ms',
+            width: '100%',
+            display: 'block',
+            textDecoration: 'none',
           }}
         >
-          <span style={{ display: "flex", alignItems: "baseline", gap: isSmallScreen ? "2vw" : "1.5vw" }}>
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'baseline',
+              gap: isSmallScreen ? '2vw' : '1.5vw',
+            }}
+          >
             PROJECTS
             <ArrowUpRight
               viewBox="5.5 5.5 13 13"
-              style={{ width: "0.8cap", height: "0.8cap", transform: "translateY(-0.2cap)", flexShrink: 0 }}
+              style={{
+                width: '0.8cap',
+                height: '0.8cap',
+                transform: 'translateY(-0.2cap)',
+                flexShrink: 0,
+              }}
               strokeWidth={3}
               strokeLinecap="butt"
               strokeLinejoin="miter"
@@ -378,9 +401,12 @@ export default function HomePageClient({
     const nav = navRef.current;
     if (!nav) return;
     const observer = new ResizeObserver(() => {
-      document.documentElement.style.setProperty("--nav-h", `${nav.offsetHeight}px`);
+      document.documentElement.style.setProperty(
+        '--nav-h',
+        `${nav.offsetHeight}px`,
+      );
     });
-    observer.observe(nav, { box: "border-box" });
+    observer.observe(nav, { box: 'border-box' });
     return () => observer.disconnect();
   }, []);
 
@@ -394,7 +420,10 @@ export default function HomePageClient({
     setIsMarqueeCollapsed((previous) => !previous);
     setIsMarqueeResizing(true);
     if (marqueeResizeTimer.current) clearTimeout(marqueeResizeTimer.current);
-    marqueeResizeTimer.current = setTimeout(() => setIsMarqueeResizing(false), MARQUEE_RESIZE_MS);
+    marqueeResizeTimer.current = setTimeout(
+      () => setIsMarqueeResizing(false),
+      MARQUEE_RESIZE_MS,
+    );
   };
 
   // ?expanded=true is a deep link: land on the expanded state instead of
@@ -429,11 +458,11 @@ export default function HomePageClient({
 
     checkScreenSize();
     checkScroll();
-    window.addEventListener("resize", checkScreenSize);
-    window.addEventListener("scroll", checkScroll, { passive: true });
+    window.addEventListener('resize', checkScreenSize);
+    window.addEventListener('scroll', checkScroll, { passive: true });
     return () => {
-      window.removeEventListener("resize", checkScreenSize);
-      window.removeEventListener("scroll", checkScroll);
+      window.removeEventListener('resize', checkScreenSize);
+      window.removeEventListener('scroll', checkScroll);
     };
   }, []);
 
@@ -458,231 +487,278 @@ export default function HomePageClient({
     }
   };
 
-  const transition = (value: string) => (skipTransitions ? "none" : value);
+  const transition = (value: string) => (skipTransitions ? 'none' : value);
 
   const containerStyle: React.CSSProperties = {
-    position: "relative",
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    width: "100%",
-    alignItems: "center",
-    overflowX: "hidden",
+    position: 'relative',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    width: '100%',
+    alignItems: 'center',
+    overflowX: 'hidden',
   };
 
   const cardContainerStyle: React.CSSProperties = {
-    position: "relative",
-    width: isExpanded ? "100%" : "clamp(300px, 90vw, 1100px)",
-    height: isExpanded
-      ? "100vh"
-      : "clamp(400px, 80vh, 750px)",
-    overflow: "hidden",
-    overflowX: "hidden",
-    borderRadius: isExpanded ? "0" : "12px",
-    transition: transition("width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
-    willChange: isAnimating ? "width, height, border-radius" : "auto",
+    position: 'relative',
+    width: isExpanded ? '100%' : 'clamp(300px, 90vw, 1100px)',
+    height: isExpanded ? '100vh' : 'clamp(400px, 80vh, 750px)',
+    overflow: 'hidden',
+    overflowX: 'hidden',
+    borderRadius: isExpanded ? '0' : '12px',
+    transition: transition(
+      'width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
+    ),
+    willChange: isAnimating ? 'width, height, border-radius' : 'auto',
   };
 
   // Auto margins, not translateX(-50%): Safari freezes a percentage transform at
   // the layer's pre-animation width while the container's width transitions.
   const cardBaseStyle = {
-    position: "absolute" as const,
+    position: 'absolute' as const,
     top: 0,
     left: 0,
     right: 0,
-    marginInline: "auto",
-    width: "100%",
-    height: "100%",
-    borderRadius: "0px",
-    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
+    marginInline: 'auto',
+    width: '100%',
+    height: '100%',
+    borderRadius: '0px',
+    transition: transition('transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)'),
   };
 
   const navStyle: React.CSSProperties = {
-    position: "fixed",
+    position: 'fixed',
     top: 0,
     left: 0,
     right: 0,
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: isExpanded
-      ? "clamp(10px, 1.5vh, 20px) clamp(30px, 5vw, 60px)"
-      : "clamp(20px, 3vh, 40px) clamp(30px, 5vw, 60px)",
+      ? 'clamp(10px, 1.5vh, 20px) clamp(30px, 5vw, 60px)'
+      : 'clamp(20px, 3vh, 40px) clamp(30px, 5vw, 60px)',
     zIndex: 9999,
-    backgroundColor: isExpanded ? colors.background : "transparent", // Use vintage yellow from color scheme
+    backgroundColor: isExpanded ? colors.background : 'transparent', // Use vintage yellow from color scheme
     transition: transition(
       isExpanded
-        ? "background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"
-        : "background-color 0.8s ease, padding 0.8s ease, opacity 0.2s ease"
+        ? 'background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s'
+        : 'background-color 0.8s ease, padding 0.8s ease, opacity 0.2s ease',
     ),
-    opacity: navDroppedIn ? 1 : isSwapped ? 0 : (isAtTop ? 1 : 0),
-    pointerEvents: navDroppedIn ? "auto" : isSwapped ? "none" : (isAtTop ? "auto" : "none"),
-    transform: "translateY(0)",
-    transformOrigin: "top",
-    willChange: isAnimating ? "padding, background-color, transform, opacity" : "auto",
+    opacity: navDroppedIn ? 1 : isSwapped ? 0 : isAtTop ? 1 : 0,
+    pointerEvents: navDroppedIn
+      ? 'auto'
+      : isSwapped
+        ? 'none'
+        : isAtTop
+          ? 'auto'
+          : 'none',
+    transform: 'translateY(0)',
+    transformOrigin: 'top',
+    willChange: isAnimating
+      ? 'padding, background-color, transform, opacity'
+      : 'auto',
   };
 
   const navRightStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "clamp(20px, 3vw, 40px)",
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'clamp(20px, 3vw, 40px)',
   };
 
   const backButtonTextStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(18px, 2.5vw, 24px)",
+    fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
-    color: "#2A2F35",
-    textDecoration: "none",
-    cursor: "pointer",
-    transition: transition("opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"),
-    display: "flex",
-    alignItems: "center",
-    gap: "clamp(4px, 0.5vw, 8px)",
+    color: '#2A2F35',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    transition: transition(
+      'opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+    ),
+    display: 'flex',
+    alignItems: 'center',
+    gap: 'clamp(4px, 0.5vw, 8px)',
     opacity: navDroppedIn ? 1 : 0,
-    pointerEvents: navDroppedIn ? "auto" : "none",
-    transform: navDroppedIn ? "translateY(0)" : (isSwapped ? "translateY(0)" : "translateY(-20px)"),
-    transformOrigin: "top",
+    pointerEvents: navDroppedIn ? 'auto' : 'none',
+    transform: navDroppedIn
+      ? 'translateY(0)'
+      : isSwapped
+        ? 'translateY(0)'
+        : 'translateY(-20px)',
+    transformOrigin: 'top',
   };
 
   const brandStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(18px, 2.5vw, 24px)",
+    fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
-    color: "#2A2F35",
-    letterSpacing: "0.05em",
+    color: '#2A2F35',
+    letterSpacing: '0.05em',
     opacity: !isSwapped || navDroppedIn ? 1 : 0,
-    transition: transition("opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"),
-    pointerEvents: navDroppedIn ? "auto" : (isSwapped ? "none" : (isAtTop ? "auto" : "none")),
-    transform: navDroppedIn ? "translateY(0)" : (isSwapped ? "translateY(0)" : "translateY(10px)"),
-    transformOrigin: "top",
+    transition: transition(
+      'opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+    ),
+    pointerEvents: navDroppedIn
+      ? 'auto'
+      : isSwapped
+        ? 'none'
+        : isAtTop
+          ? 'auto'
+          : 'none',
+    transform: navDroppedIn
+      ? 'translateY(0)'
+      : isSwapped
+        ? 'translateY(0)'
+        : 'translateY(10px)',
+    transformOrigin: 'top',
   };
 
   const menuLinkStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(18px, 2.5vw, 24px)",
+    fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
-    color: "#2A2F35",
-    textDecoration: "none",
-    cursor: "pointer",
-    transition: transition("color 0.3s ease, opacity 0.2s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s"),
+    color: '#2A2F35',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    transition: transition(
+      'color 0.3s ease, opacity 0.2s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+    ),
     opacity: !isSwapped || navDroppedIn ? 1 : 0,
-    pointerEvents: navDroppedIn ? "auto" : (isSwapped ? "none" : (isAtTop ? "auto" : "none")),
-    transform: navDroppedIn ? "translateY(0)" : (isSwapped ? "translateY(0)" : "translateY(10px)"),
-    transformOrigin: "top",
-    display: "flex",
-    alignItems: "center",
+    pointerEvents: navDroppedIn
+      ? 'auto'
+      : isSwapped
+        ? 'none'
+        : isAtTop
+          ? 'auto'
+          : 'none',
+    transform: navDroppedIn
+      ? 'translateY(0)'
+      : isSwapped
+        ? 'translateY(0)'
+        : 'translateY(10px)',
+    transformOrigin: 'top',
+    display: 'flex',
+    alignItems: 'center',
   };
 
   const mainStyle: React.CSSProperties = {
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: isExpanded ? "flex-start" : "center",
-    alignItems: "center",
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: isExpanded ? 'flex-start' : 'center',
+    alignItems: 'center',
     flex: 1,
-    padding: isExpanded ? "0" : "0",
-    transition: transition("padding 0.3s ease"),
-    width: "100%",
-    overflowX: "hidden",
+    padding: isExpanded ? '0' : '0',
+    transition: transition('padding 0.3s ease'),
+    width: '100%',
+    overflowX: 'hidden',
   };
 
   const contentBlockStyle: React.CSSProperties = {
-    backgroundColor: "#FFFFFF",
-    borderRadius: "12px",
-    padding: "0",
-    width: "clamp(300px, 80vw, 1100px)",
-    height: "clamp(400px, 80vh, 750px)",
-    maxWidth: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    position: "relative",
-    overflow: "hidden",
+    backgroundColor: '#FFFFFF',
+    borderRadius: '12px',
+    padding: '0',
+    width: 'clamp(300px, 80vw, 1100px)',
+    height: 'clamp(400px, 80vh, 750px)',
+    maxWidth: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    position: 'relative',
+    overflow: 'hidden',
   };
 
   const heroCardStyle: React.CSSProperties = {
     ...cardBaseStyle,
     ...contentBlockStyle,
-    transform: isSwapped ? "translateY(-100%)" : "translateY(0)",
-    backgroundColor: "#FFFFFF",
+    transform: isSwapped ? 'translateY(-100%)' : 'translateY(0)',
+    backgroundColor: '#FFFFFF',
     zIndex: 1,
-    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)"),
-    willChange: isAnimating ? "transform" : "auto",
+    transition: transition('transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)'),
+    willChange: isAnimating ? 'transform' : 'auto',
   };
 
   const contentCardStyle: React.CSSProperties = {
     ...cardBaseStyle,
-    backgroundColor: "#2A2F35",
-    display: "grid",
-    gridTemplateColumns: isSmallScreen ? "100%" : (isMarqueeCollapsed ? "40px 1fr" : "30% 70%"),
-    overflow: "hidden",
+    backgroundColor: '#2A2F35',
+    display: 'grid',
+    gridTemplateColumns: isSmallScreen
+      ? '100%'
+      : isMarqueeCollapsed
+        ? '40px 1fr'
+        : '30% 70%',
+    overflow: 'hidden',
     zIndex: 1,
-    paddingTop: isExpanded ? "var(--nav-h, 64px)" : "0",
-    transform: isSwapped ? "translateY(0)" : "translateY(100%)",
-    transition: transition("transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)"),
-    willChange: isAnimating || isMarqueeResizing ? "transform, grid-template-columns" : "auto",
+    paddingTop: isExpanded ? 'var(--nav-h, 64px)' : '0',
+    transform: isSwapped ? 'translateY(0)' : 'translateY(100%)',
+    transition: transition(
+      'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
+    ),
+    willChange:
+      isAnimating || isMarqueeResizing
+        ? 'transform, grid-template-columns'
+        : 'auto',
   };
 
   const tapAreaStyle: React.CSSProperties = {
-    position: "absolute",
-    bottom: "60px",
-    left: "50%",
-    transform: "translateX(-50%)",
-    width: "clamp(120px, 20vw, 200px)",
-    height: "clamp(60px, 10vh, 100px)",
-    cursor: "pointer",
+    position: 'absolute',
+    bottom: '60px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: 'clamp(120px, 20vw, 200px)',
+    height: 'clamp(60px, 10vh, 100px)',
+    cursor: 'pointer',
     zIndex: 10,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "clamp(4px, 1vh, 8px)",
-    transition: "transform 0.2s ease",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 'clamp(4px, 1vh, 8px)',
+    transition: 'transform 0.2s ease',
   };
 
   const tapAreaTextStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(10px, 1.5vw, 14px)",
+    fontSize: 'clamp(10px, 1.5vw, 14px)',
     fontWeight: 600,
-    color: "#E5532C",
-    textTransform: "uppercase",
-    letterSpacing: "0.1em",
-    textAlign: "center",
+    color: '#E5532C',
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+    textAlign: 'center',
   };
 
   const tapAreaDotStyle: React.CSSProperties = {
-    width: "clamp(40px, 6vw, 60px)",
-    height: "clamp(40px, 6vw, 60px)",
-    borderRadius: "50%",
-    border: "2px solid #E5532C",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "clamp(18px, 3vw, 24px)",
-    color: "#E5532C",
+    width: 'clamp(40px, 6vw, 60px)',
+    height: 'clamp(40px, 6vw, 60px)',
+    borderRadius: '50%',
+    border: '2px solid #E5532C',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: 'clamp(18px, 3vw, 24px)',
+    color: '#E5532C',
     fontWeight: 700,
   };
 
   const imageStyle: React.CSSProperties = {
-    objectFit: "cover",
-    objectPosition: "center",
-    filter: "grayscale(100%) brightness(0.7) contrast(1.2)",
+    objectFit: 'cover',
+    objectPosition: 'center',
+    filter: 'grayscale(100%) brightness(0.7) contrast(1.2)',
     zIndex: 0,
   };
 
   const headlineStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(2rem, 5vw, 3.5rem)",
+    fontSize: 'clamp(2rem, 5vw, 3.5rem)',
     fontWeight: 700,
-    color: "#E5532C",
-    margin: "0",
-    padding: "clamp(16px, 3vh, 32px)",
-    letterSpacing: "-0.02em",
-    lineHeight: "1.2",
-    position: "relative",
+    color: '#E5532C',
+    margin: '0',
+    padding: 'clamp(16px, 3vh, 32px)',
+    letterSpacing: '-0.02em',
+    lineHeight: '1.2',
+    position: 'relative',
     zIndex: 1,
   };
 
@@ -700,10 +776,15 @@ export default function HomePageClient({
               onClick={triggerCardSwap}
               style={backButtonTextStyle}
             >
-              <span style={{ fontSize: "clamp(20px, 3vw, 28px)", display: "inline-flex" }}>
+              <span
+                style={{
+                  fontSize: 'clamp(20px, 3vw, 28px)',
+                  display: 'inline-flex',
+                }}
+              >
                 <ArrowUp size="1em" strokeWidth={2.5} />
               </span>
-              {!isSmallScreen && " BACK"}
+              {!isSmallScreen && ' BACK'}
             </AnimatedButton>
             <AnimatedButton
               variant="underline"
@@ -711,8 +792,16 @@ export default function HomePageClient({
               onClick={() => setIsNavOpen(true)}
               style={menuLinkStyle}
             >
-              <span style={{ fontSize: "clamp(22px, 3vw, 28px)", transform: "translateY(-3px)", display: "inline-block" }}>☰</span>
-              {isSmallScreen ? "" : " MENU"}
+              <span
+                style={{
+                  fontSize: 'clamp(22px, 3vw, 28px)',
+                  transform: 'translateY(-3px)',
+                  display: 'inline-block',
+                }}
+              >
+                ☰
+              </span>
+              {isSmallScreen ? '' : ' MENU'}
             </AnimatedButton>
           </div>
         </nav>
@@ -732,25 +821,24 @@ export default function HomePageClient({
                   priority
                   sizes="(max-width: 1375px) 80vw, 1100px"
                   style={imageStyle}
-                  placeholder={heroBlurDataURL ? "blur" : "empty"}
+                  placeholder={heroBlurDataURL ? 'blur' : 'empty'}
                   blurDataURL={heroBlurDataURL ?? undefined}
                 />
               )}
 
               {/* Headline */}
-              <h1 style={headlineStyle}>
-                SHARING & LOGGING
-              </h1>
+              <h1 style={headlineStyle}>SHARING & LOGGING</h1>
 
               {/* Tap Area */}
               <div
                 style={tapAreaStyle}
                 onClick={triggerCardSwap}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = "translateX(-50%) scale(1.05)";
+                  e.currentTarget.style.transform =
+                    'translateX(-50%) scale(1.05)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = "translateX(-50%) scale(1)";
+                  e.currentTarget.style.transform = 'translateX(-50%) scale(1)';
                 }}
               >
                 <span style={tapAreaDotStyle}>
@@ -772,12 +860,32 @@ export default function HomePageClient({
               )}
 
               {/* Right Content */}
-              <div style={{ display: "flex", flexDirection: "column", overflow: "hidden", height: "100%", borderLeft: isSmallScreen ? "none" : "1px solid rgba(255, 255, 255, 0.2)", position: "relative", padding: isExpanded ? "0" : "clamp(16px, 3vh, 32px)", gap: isExpanded ? "0" : "clamp(16px, 3vh, 32px)", contain: "layout paint" }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  overflow: 'hidden',
+                  height: '100%',
+                  borderLeft: isSmallScreen
+                    ? 'none'
+                    : '1px solid rgba(255, 255, 255, 0.2)',
+                  position: 'relative',
+                  padding: isExpanded ? '0' : 'clamp(16px, 3vh, 32px)',
+                  gap: isExpanded ? '0' : 'clamp(16px, 3vh, 32px)',
+                  contain: 'layout paint',
+                }}
+              >
                 {/* RECENT BLOGS Section */}
-                <RecentBlogsGrid isExpanded={isExpanded} isSmallScreen={isSmallScreen} />
+                <RecentBlogsGrid
+                  isExpanded={isExpanded}
+                  isSmallScreen={isSmallScreen}
+                />
 
                 {/* FEATURED SERIES & 3D ANIMATION Sections */}
-                <BlogExpandedContent isSmallScreen={isSmallScreen} isResizing={isMarqueeResizing || isAnimating} />
+                <BlogExpandedContent
+                  isSmallScreen={isSmallScreen}
+                  isResizing={isMarqueeResizing || isAnimating}
+                />
               </div>
             </div>
           </div>

@@ -1,101 +1,123 @@
-import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
-import { getPostBySlug, getRelatedPosts, getAllPostSlugs, getSeriesBySlug } from '@/lib/blog/supabase/queries'
-import { extractHeadings, calculateReadTime } from '@/lib/blog/utils/post'
-import type { Metadata } from 'next'
-import PostDetailClient from './post-detail-client'
-import type { Heading } from '@/types/post'
-import type { Post, PostLink, SeriesDetail } from '@/types/post'
-import { siteConfig, absoluteUrl, blogUrl } from '@/lib/blog/seo'
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
+import {
+  getPostBySlug,
+  getRelatedPosts,
+  getAllPostSlugs,
+  getSeriesBySlug,
+} from '@/lib/blog/supabase/queries';
+import { extractHeadings, calculateReadTime } from '@/lib/blog/utils/post';
+import type { Metadata } from 'next';
+import PostDetailClient from './post-detail-client';
+import type { Heading } from '@/types/post';
+import type { Post, PostLink, SeriesDetail } from '@/types/post';
+import { siteConfig, absoluteUrl, blogUrl } from '@/lib/blog/seo';
 
 // ISR: posts render statically and re-validate hourly.
-export const revalidate = 3600
+export const revalidate = 3600;
 
 interface PageProps {
   params: Promise<{
-    slug: string
-  }>
+    slug: string;
+  }>;
 }
 
 // Pre-render known posts at build; unknown slugs render on-demand then cache.
 export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs()
-  return (slugs ?? []).map((p) => ({ slug: p.slug }))
+  const slugs = await getAllPostSlugs();
+  return (slugs ?? []).map((p) => ({ slug: p.slug }));
 }
 
 async function PostDataFetcher({ slug }: { slug: string }) {
   // Fetch post with series data
-  const postData = await getPostBySlug(slug)
+  const postData = await getPostBySlug(slug);
 
   if (!postData) {
-    notFound()
+    notFound();
   }
 
   // Extract post data from the combined response
-  const { series, ...post } = postData as any
+  const { series, ...post } = postData;
 
   // Fetch related posts
-  const relatedPosts = await getRelatedPosts(
-    slug,
-    post.tags || [],
-    5
-  )
+  const relatedPosts = await getRelatedPosts(slug, post.tags || [], 5);
 
   // Extract headings for TOC
-  const headings: Heading[] = post.content ? extractHeadings(post.content) : []
+  const headings: Heading[] = post.content ? extractHeadings(post.content) : [];
 
   // Calculate read time if not set
-  const readTime = post.read_time || calculateReadTime(post.content || '')
+  const readTime = post.read_time || calculateReadTime(post.content || '');
 
   // Prepare series data
-  const seriesData: SeriesDetail[] = series?.map((s: any) => ({
-    id: s.id,
-    title: s.title,
-    slug: s.slug,
-    description: s.description,
-    posts: [],
-  })) || []
+  const seriesData: SeriesDetail[] =
+    series?.map((s) => ({
+      id: s.id,
+      title: s.title,
+      slug: s.slug,
+      description: s.description,
+      posts: [],
+    })) || [];
 
-  const parentSeries = seriesData[0]
+  const parentSeries = seriesData[0];
 
   // Cached query, shared with the series page render.
   const seriesPosts = parentSeries
-    ? (await getSeriesBySlug(parentSeries.slug))?.posts ?? []
-    : []
-  const currentIndex = seriesPosts.findIndex((p: Post) => p.slug === slug)
-  const toLink = (p: Post): PostLink => ({ title: p.title, slug: p.slug })
-  const prevPost = currentIndex > 0 ? toLink(seriesPosts[currentIndex - 1]) : null
+    ? ((await getSeriesBySlug(parentSeries.slug))?.posts ?? [])
+    : [];
+  const currentIndex = seriesPosts.findIndex((p: Post) => p.slug === slug);
+  const toLink = (p: Post): PostLink => ({ title: p.title, slug: p.slug });
+  const prevPost =
+    currentIndex > 0 ? toLink(seriesPosts[currentIndex - 1]) : null;
   const nextPost =
     currentIndex >= 0 && currentIndex < seriesPosts.length - 1
       ? toLink(seriesPosts[currentIndex + 1])
-      : null
+      : null;
 
   // Mirrors the visual breadcrumb trail for rich-result eligibility.
   const breadcrumbJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'All Posts', item: blogUrl('/?expanded=true') },
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'All Posts',
+        item: blogUrl('/?expanded=true'),
+      },
       ...(parentSeries
-        ? [{ '@type': 'ListItem', position: 2, name: parentSeries.title, item: blogUrl(`/series/${parentSeries.slug}`) }]
+        ? [
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: parentSeries.title,
+              item: blogUrl(`/series/${parentSeries.slug}`),
+            },
+          ]
         : []),
-      { '@type': 'ListItem', position: parentSeries ? 3 : 2, name: post.title, item: blogUrl(`/posts/${slug}`) },
+      {
+        '@type': 'ListItem',
+        position: parentSeries ? 3 : 2,
+        name: post.title,
+        item: blogUrl(`/posts/${slug}`),
+      },
     ],
-  }
+  };
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.excerpt || siteConfig.description,
-    image: post.featured_image ? [absoluteUrl(post.featured_image)] : [absoluteUrl(siteConfig.ogImage)],
+    image: post.featured_image
+      ? [absoluteUrl(post.featured_image)]
+      : [absoluteUrl(siteConfig.ogImage)],
     datePublished: post.published_at || post.created_at,
     dateModified: post.updated_at || post.published_at || post.created_at,
     author: { '@type': 'Person', name: post.author_name || siteConfig.author },
     publisher: { '@type': 'Organization', name: siteConfig.name },
     keywords: (post.tags || []).join(', '),
     mainEntityOfPage: { '@type': 'WebPage', '@id': blogUrl(`/posts/${slug}`) },
-  }
+  };
 
   return (
     <>
@@ -121,11 +143,11 @@ async function PostDataFetcher({ slug }: { slug: string }) {
         nextPost={nextPost}
       />
     </>
-  )
+  );
 }
 
 export default async function PostPage({ params }: PageProps) {
-  const { slug } = await params
+  const { slug } = await params;
 
   const emptyPost: Post = {
     id: 0,
@@ -138,29 +160,40 @@ export default async function PostPage({ params }: PageProps) {
     featured_image: undefined,
     summary: '',
     date: '',
-  }
+  };
 
   return (
-    <Suspense fallback={<PostDetailClient post={emptyPost} seriesData={[]} headings={[]} relatedPosts={[]} />}>
+    <Suspense
+      fallback={
+        <PostDetailClient
+          post={emptyPost}
+          seriesData={[]}
+          headings={[]}
+          relatedPosts={[]}
+        />
+      }
+    >
       <PostDataFetcher slug={slug} />
     </Suspense>
-  )
+  );
 }
 
 // Generate metadata for SEO
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
 
   // Reuses the cached query, no extra DB round-trip beyond the page render.
-  const post = await getPostBySlug(slug)
+  const post = await getPostBySlug(slug);
 
   if (!post) {
-    return { title: 'Post not found' }
+    return { title: 'Post not found' };
   }
 
-  const url = blogUrl(`/posts/${slug}`)
-  const description = post.excerpt || siteConfig.description
-  const ogImage = post.featured_image || siteConfig.ogImage
+  const url = blogUrl(`/posts/${slug}`);
+  const description = post.excerpt || siteConfig.description;
+  const ogImage = post.featured_image || siteConfig.ogImage;
 
   return {
     title: post.title,
@@ -186,5 +219,5 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       images: [ogImage],
     },
-  }
+  };
 }

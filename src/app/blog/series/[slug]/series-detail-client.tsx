@@ -1,22 +1,24 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import type { SeriesDetail } from '@/types/post'
-import BlogPageHeader from '@/components/blog/BlogPageHeader'
-import SeriesHeader from '@/components/blog/SeriesHeader'
-import SeriesPostList from '@/components/blog/SeriesPostList'
-import FullScreenNav from '@/components/blog/ui/FullScreenNav'
-import { useIsMobile } from '@/hooks/useBreakpoint'
-import { spacing } from '@/styles/blog/typography'
-import { colors } from '@/styles/blog/colors'
+import { useState } from 'react';
+import type { SeriesDetail } from '@/types/post';
+import BlogPageHeader from '@/components/blog/BlogPageHeader';
+import SeriesHeader from '@/components/blog/SeriesHeader';
+import SeriesPostList from '@/components/blog/SeriesPostList';
+import FullScreenNav from '@/components/blog/ui/FullScreenNav';
+import { useIsMobile } from '@/hooks/useBreakpoint';
+import { spacing } from '@/styles/blog/typography';
+import { colors } from '@/styles/blog/colors';
 
 interface SeriesDetailClientProps {
-  series: SeriesDetail
+  series: SeriesDetail;
 }
 
-export default function SeriesDetailClient({ series }: SeriesDetailClientProps) {
-  const [isNavOpen, setIsNavOpen] = useState(false)
-  const isMobile = useIsMobile()
+export default function SeriesDetailClient({
+  series,
+}: SeriesDetailClientProps) {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const pageContainerStyle: React.CSSProperties = {
     display: 'flex',
@@ -25,14 +27,14 @@ export default function SeriesDetailClient({ series }: SeriesDetailClientProps) 
     backgroundColor: colors.darkBackground,
     width: '100%',
     position: 'relative',
-  }
+  };
 
   const contentContainerStyle: React.CSSProperties = {
     flex: 1,
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-  }
+  };
 
   return (
     <>
@@ -48,10 +50,7 @@ export default function SeriesDetailClient({ series }: SeriesDetailClientProps) 
       </div>
 
       {/* Full-Screen Navigation */}
-      <FullScreenNav
-        isOpen={isNavOpen}
-        onClose={() => setIsNavOpen(false)}
-      />
+      <FullScreenNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
     </>
-  )
+  );
 }

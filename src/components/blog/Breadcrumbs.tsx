@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { Fragment } from 'react'
-import { ChevronRight } from 'lucide-react'
-import { FONTS, clamp, spacing } from '@/styles/blog/typography'
-import { colors } from '@/styles/blog/colors'
-import { TRANSITIONS } from '@/styles/blog/animations'
+import Link from 'next/link';
+import { Fragment } from 'react';
+import { ChevronRight } from 'lucide-react';
+import { FONTS, clamp, spacing } from '@/styles/blog/typography';
+import { colors } from '@/styles/blog/colors';
+import { TRANSITIONS } from '@/styles/blog/animations';
 
 export interface Crumb {
   /** Visible label. */
-  label: string
+  label: string;
   /** Link target. Omit for the current (last) crumb. */
-  href?: string
+  href?: string;
 }
 
 interface BreadcrumbsProps {
-  items: Crumb[]
+  items: Crumb[];
 }
 
 /**
@@ -23,7 +23,7 @@ interface BreadcrumbsProps {
  * muted links, accent current item, chevron separators.
  */
 export default function Breadcrumbs({ items }: BreadcrumbsProps) {
-  if (!items.length) return null
+  if (!items.length) return null;
 
   const navStyle: React.CSSProperties = {
     display: 'flex',
@@ -33,7 +33,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
     marginBottom: spacing.md,
     fontFamily: FONTS.primary,
     fontSize: clamp.sm,
-  }
+  };
 
   const linkStyle: React.CSSProperties = {
     color: '#999999',
@@ -41,7 +41,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
     fontWeight: 500,
     transition: TRANSITIONS.fast('color'),
     whiteSpace: 'nowrap',
-  }
+  };
 
   const currentStyle: React.CSSProperties = {
     color: colors.accent,
@@ -50,18 +50,18 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     maxWidth: '60vw',
-  }
+  };
 
   const separatorStyle: React.CSSProperties = {
     color: colors.navText,
     display: 'inline-flex',
     userSelect: 'none',
-  }
+  };
 
   return (
     <nav aria-label="Breadcrumb" style={navStyle}>
       {items.map((item, i) => {
-        const isLast = i === items.length - 1
+        const isLast = i === items.length - 1;
         return (
           <Fragment key={`${item.label}-${i}`}>
             {item.href && !isLast ? (
@@ -69,16 +69,19 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                 href={item.href}
                 style={linkStyle}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = colors.darkText
+                  e.currentTarget.style.color = colors.darkText;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#999999'
+                  e.currentTarget.style.color = '#999999';
                 }}
               >
                 {item.label}
               </Link>
             ) : (
-              <span style={currentStyle} aria-current={isLast ? 'page' : undefined}>
+              <span
+                style={currentStyle}
+                aria-current={isLast ? 'page' : undefined}
+              >
                 {item.label}
               </span>
             )}
@@ -88,8 +91,8 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
               </span>
             )}
           </Fragment>
-        )
+        );
       })}
     </nav>
-  )
+  );
 }

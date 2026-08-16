@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { RefObject } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
-import { Html } from "@react-three/drei";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { RefObject } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { Html } from '@react-three/drei';
 import {
   AdditiveBlending,
   BufferGeometry,
@@ -11,7 +11,7 @@ import {
   Object3D,
   ShaderMaterial,
   Vector3,
-} from "three";
+} from 'three';
 
 const STARS: Record<string, [number, number]> = {
   alnasl: [0.97, -0.21],
@@ -36,21 +36,21 @@ const SIZES: Record<keyof typeof STARS, number> = {
 };
 
 const EDGES: [keyof typeof STARS, keyof typeof STARS][] = [
-  ["alnasl", "kausMedia"],
-  ["alnasl", "kausAustralis"],
-  ["kausMedia", "kausAustralis"],
-  ["kausAustralis", "ascella"],
-  ["ascella", "phi"],
-  ["phi", "kausMedia"],
-  ["kausMedia", "kausBorealis"],
-  ["kausBorealis", "nunki"],
-  ["nunki", "tau"],
-  ["tau", "ascella"],
+  ['alnasl', 'kausMedia'],
+  ['alnasl', 'kausAustralis'],
+  ['kausMedia', 'kausAustralis'],
+  ['kausAustralis', 'ascella'],
+  ['ascella', 'phi'],
+  ['phi', 'kausMedia'],
+  ['kausMedia', 'kausBorealis'],
+  ['kausBorealis', 'nunki'],
+  ['nunki', 'tau'],
+  ['tau', 'ascella'],
 ];
 
 const SPREAD = 100;
 const HOVER_PAD = 18;
-const LABEL = "xs is a Sagittarius";
+const LABEL = 'xs is a Sagittarius';
 const CYCLE = 26;
 const DRAW_TIME = 7;
 const HOLD_TIME = 11;
@@ -107,7 +107,14 @@ const LINE_DATA = (() => {
   for (const [from, to] of EDGES) {
     const a = STARS[from];
     const b = STARS[to];
-    verts.push(a[0] * SPREAD, a[1] * SPREAD, 0, b[0] * SPREAD, b[1] * SPREAD, 0);
+    verts.push(
+      a[0] * SPREAD,
+      a[1] * SPREAD,
+      0,
+      b[0] * SPREAD,
+      b[1] * SPREAD,
+      0,
+    );
     starts.push(walked);
     lengths.push(Math.hypot(b[0] - a[0], b[1] - a[1]));
     walked += lengths[lengths.length - 1];
@@ -131,13 +138,20 @@ const HOVER_AREA = (() => {
   const maxY = Math.max(...ys);
 
   return {
-    center: [(minX + maxX) / 2, (minY + maxY) / 2, 0] as [number, number, number],
-    size: [maxX - minX + HOVER_PAD * 2, maxY - minY + HOVER_PAD * 2] as [number, number],
+    center: [(minX + maxX) / 2, (minY + maxY) / 2, 0] as [
+      number,
+      number,
+      number,
+    ],
+    size: [maxX - minX + HOVER_PAD * 2, maxY - minY + HOVER_PAD * 2] as [
+      number,
+      number,
+    ],
   };
 })();
 
-type LineUniforms = Record<"uProgress" | "uOpacity", { value: number }>;
-type PointUniforms = Record<"uTime" | "uScale" | "uOpacity", { value: number }>;
+type LineUniforms = Record<'uProgress' | 'uOpacity', { value: number }>;
+type PointUniforms = Record<'uTime' | 'uScale' | 'uOpacity', { value: number }>;
 
 interface ConstellationProps {
   position: Vector3;
@@ -159,8 +173,8 @@ export default function Constellation({
     const { verts, dists } = LINE_DATA;
 
     const lineGeo = new BufferGeometry();
-    lineGeo.setAttribute("position", new Float32BufferAttribute(verts, 3));
-    lineGeo.setAttribute("aDist", new Float32BufferAttribute(dists, 1));
+    lineGeo.setAttribute('position', new Float32BufferAttribute(verts, 3));
+    lineGeo.setAttribute('aDist', new Float32BufferAttribute(dists, 1));
 
     const names = Object.keys(STARS);
     const points: number[] = [];
@@ -175,20 +189,24 @@ export default function Constellation({
     });
 
     const pointGeo = new BufferGeometry();
-    pointGeo.setAttribute("position", new Float32BufferAttribute(points, 3));
-    pointGeo.setAttribute("aSize", new Float32BufferAttribute(sizes, 1));
-    pointGeo.setAttribute("aOrder", new Float32BufferAttribute(orders, 1));
+    pointGeo.setAttribute('position', new Float32BufferAttribute(points, 3));
+    pointGeo.setAttribute('aSize', new Float32BufferAttribute(sizes, 1));
+    pointGeo.setAttribute('aOrder', new Float32BufferAttribute(orders, 1));
 
     return { lineGeometry: lineGeo, pointGeometry: pointGeo };
   }, []);
 
   const lineUniforms = useMemo(
     () => ({ uProgress: { value: 0 }, uOpacity: { value: 1 } }),
-    []
+    [],
   );
   const pointUniforms = useMemo(
-    () => ({ uTime: { value: 0 }, uScale: { value: 1400 }, uOpacity: { value: 1 } }),
-    []
+    () => ({
+      uTime: { value: 0 },
+      uScale: { value: 1400 },
+      uOpacity: { value: 1 },
+    }),
+    [],
   );
 
   useEffect(() => {
@@ -200,9 +218,9 @@ export default function Constellation({
 
   useEffect(() => {
     if (!isHovered) return;
-    document.body.style.cursor = "help";
+    document.body.style.cursor = 'help';
     return () => {
-      document.body.style.cursor = "";
+      document.body.style.cursor = '';
     };
   }, [isHovered]);
 
@@ -213,7 +231,9 @@ export default function Constellation({
     let visible: number;
     if (phase < DRAW_TIME) visible = phase / DRAW_TIME;
     else if (phase < DRAW_TIME + HOLD_TIME) visible = 1;
-    else visible = 1 - (phase - DRAW_TIME - HOLD_TIME) / (CYCLE - DRAW_TIME - HOLD_TIME);
+    else
+      visible =
+        1 - (phase - DRAW_TIME - HOLD_TIME) / (CYCLE - DRAW_TIME - HOLD_TIME);
 
     const fade = phase < DRAW_TIME + HOLD_TIME ? 1 : visible;
 
@@ -269,7 +289,12 @@ export default function Constellation({
         onPointerOut={() => setIsHovered(false)}
       >
         <planeGeometry args={HOVER_AREA.size} />
-        <meshBasicMaterial transparent opacity={0} depthWrite={false} colorWrite={false} />
+        <meshBasicMaterial
+          transparent
+          opacity={0}
+          depthWrite={false}
+          colorWrite={false}
+        />
       </mesh>
       {isHovered && (
         <Html
@@ -277,9 +302,13 @@ export default function Constellation({
           center
           zIndexRange={[4, 0]}
           occlude={occluders as RefObject<Object3D>[] | undefined}
-          style={{ pointerEvents: "none" }}
+          style={{ pointerEvents: 'none' }}
         >
-          <div className="blog-tooltip" data-ready="true" style={{ position: "static" }}>
+          <div
+            className="blog-tooltip"
+            data-ready="true"
+            style={{ position: 'static' }}
+          >
             {LABEL}
           </div>
         </Html>

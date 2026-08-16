@@ -1,5 +1,5 @@
-import { FONTS, clamp } from '@/styles/blog/typography'
-import { colors } from '@/styles/blog/colors'
+import { FONTS, clamp } from '@/styles/blog/typography';
+import { colors } from '@/styles/blog/colors';
 
 export default function SeriesPostCardSkeleton() {
   const cardStyle: React.CSSProperties = {
@@ -9,7 +9,7 @@ export default function SeriesPostCardSkeleton() {
     display: 'block',
     overflow: 'hidden',
     position: 'relative',
-  }
+  };
 
   return (
     <>
@@ -41,7 +41,12 @@ export default function SeriesPostCardSkeleton() {
         .skeleton {
           position: absolute;
           inset: 0;
-          background: linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%);
+          background: linear-gradient(
+            90deg,
+            #3e454c 0%,
+            #4a535c 50%,
+            #3e454c 100%
+          );
           background-size: 200% 100%;
           animation: blogShimmer 1.5s ease-in-out infinite;
         }
@@ -109,5 +114,5 @@ export default function SeriesPostCardSkeleton() {
         </div>
       </div>
     </>
-  )
+  );
 }

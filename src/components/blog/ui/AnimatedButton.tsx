@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { useButtonAnimations } from "@/hooks/useButtonAnimations";
+import { useEffect } from 'react';
+import Link from 'next/link';
+import { useButtonAnimations } from '@/hooks/useButtonAnimations';
 
 type AnimationVariant = 'underline' | 'text-fill' | 'both';
 
@@ -50,36 +50,39 @@ export default function AnimatedButton({
         break;
     }
 
-    const reverseClass = reverse && variant !== 'text-fill' ? 'btn-underline-reverse' : '';
+    const reverseClass =
+      reverse && variant !== 'text-fill' ? 'btn-underline-reverse' : '';
 
     return `${baseClass} ${variantClass} ${reverseClass}`.trim();
   };
 
   const baseStyle: React.CSSProperties = {
-    position: "relative",
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "clamp(4px, 0.5vw, 8px)",
+    position: 'relative',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 'clamp(4px, 0.5vw, 8px)',
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(18px, 2.5vw, 24px)",
+    fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
-    color: "#2A2F35",
-    backgroundColor: "transparent",
-    border: "none",
-    cursor: "pointer",
-    padding: isMenuButton ? "12px 20px" : "0",
-    borderRadius: isMenuButton ? "8px" : isDropdownItem ? "0" : "4px",
-    transition: "opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s",
-    textDecoration: "none",
-    WebkitTapHighlightColor: "transparent",
-    overflow: variant === 'text-fill' || variant === 'both' ? 'visible' : 'hidden',
+    color: '#2A2F35',
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    padding: isMenuButton ? '12px 20px' : '0',
+    borderRadius: isMenuButton ? '8px' : isDropdownItem ? '0' : '4px',
+    transition:
+      'opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+    textDecoration: 'none',
+    WebkitTapHighlightColor: 'transparent',
+    overflow:
+      variant === 'text-fill' || variant === 'both' ? 'visible' : 'hidden',
     ...style,
   };
 
   const menuButtonStyle: React.CSSProperties = isMenuButton
     ? {
-        backgroundColor: "#E4D9C2",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        backgroundColor: '#E4D9C2',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
       }
     : {};
 
@@ -87,16 +90,13 @@ export default function AnimatedButton({
 
   // Wrap children in span for text-fill and both variants
   const shouldWrapChildren = variant === 'text-fill' || variant === 'both';
-  const content = shouldWrapChildren ? (
-    <span>{children}</span>
-  ) : (
-    children
-  );
+  const content = shouldWrapChildren ? <span>{children}</span> : children;
 
   // Add underline for underline and both variants
-  const underline = (variant === 'underline' || variant === 'both') ? (
-    <span className="btn-underline-line" />
-  ) : null;
+  const underline =
+    variant === 'underline' || variant === 'both' ? (
+      <span className="btn-underline-line" />
+    ) : null;
 
   const buttonContent = (
     <>

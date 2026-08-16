@@ -1,47 +1,58 @@
-'use client'
+'use client';
 
-import React from 'react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import rehypeRaw from 'rehype-raw'
-import rehypeSanitize from 'rehype-sanitize'
-import { markdownSanitizeSchema } from '@/lib/blog/markdown/sanitizeSchema'
-import CodeBlock from './CodeBlock'
-import { FONTS, clamp, spacing } from '@/styles/blog/typography'
-import { colors } from '@/styles/blog/colors'
-import { TRANSITIONS } from '@/styles/blog/animations'
-import { slugifyHeading } from '@/lib/blog/utils/post'
-import type { Heading } from '@/types/post'
+import React from 'react';
+import ReactMarkdown, { type Components } from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import rehypeSanitize from 'rehype-sanitize';
+import { markdownSanitizeSchema } from '@/lib/blog/markdown/sanitizeSchema';
+import CodeBlock from './CodeBlock';
+import { FONTS, clamp, spacing } from '@/styles/blog/typography';
+import { colors } from '@/styles/blog/colors';
+import { TRANSITIONS } from '@/styles/blog/animations';
+import { slugifyHeading } from '@/lib/blog/utils/post';
+import type { Heading } from '@/types/post';
 
 // Recursively flatten a rendered heading's children into plain text, so an
 // <h2>Why <code>yt-dlp</code>?</h2> yields "Why yt-dlp?" (not "[object Object]").
 // This must match the plain text extractHeadings derives from the markdown.
 function getNodeText(node: React.ReactNode): string {
-  if (node === null || node === undefined || typeof node === 'boolean') return ''
-  if (typeof node === 'string' || typeof node === 'number') return String(node)
-  if (Array.isArray(node)) return node.map(getNodeText).join('')
+  if (node === null || node === undefined || typeof node === 'boolean')
+    return '';
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(getNodeText).join('');
   if (React.isValidElement(node)) {
-    return getNodeText((node.props as { children?: React.ReactNode }).children)
+    return getNodeText((node.props as { children?: React.ReactNode }).children);
   }
-  return ''
+  return '';
 }
 
 interface PostContentProps {
-  content: string
-  headings: Heading[]
+  content: string;
+  headings: Heading[];
 }
 
 // Memoize image component to prevent re-renders
-const MemoizedImage = React.memo(({ src, alt, style }: { src: string | Blob | undefined; alt: string | undefined; style: React.CSSProperties }) => (
-  <img
-    src={typeof src === 'string' ? src : ''}
-    alt={alt || ''}
-    loading="eager"
-    fetchPriority="high"
-    style={style}
-  />
-))
-MemoizedImage.displayName = 'MemoizedImage'
+const MemoizedImage = React.memo(
+  ({
+    src,
+    alt,
+    style,
+  }: {
+    src: string | Blob | undefined;
+    alt: string | undefined;
+    style: React.CSSProperties;
+  }) => (
+    <img
+      src={typeof src === 'string' ? src : ''}
+      alt={alt || ''}
+      loading="eager"
+      fetchPriority="high"
+      style={style}
+    />
+  ),
+);
+MemoizedImage.displayName = 'MemoizedImage';
 
 // Move all styles outside component to prevent recreation on every render
 const containerStyle: React.CSSProperties = {
@@ -53,7 +64,7 @@ const containerStyle: React.CSSProperties = {
   textAlign: 'justify',
   overflowWrap: 'break-word',
   wordBreak: 'break-word',
-}
+};
 
 const headingStyles = {
   h1: {
@@ -112,12 +123,12 @@ const headingStyles = {
     marginTop: spacing.xs,
     marginBottom: spacing.xs,
   },
-}
+};
 
 // marginBottom lives in the .markdown-paragraph CSS class (not inline) so the
 // .markdown-blockquote > p rules can override it via normal specificity without
 // needing !important.
-const paragraphStyle: React.CSSProperties = {}
+const paragraphStyle: React.CSSProperties = {};
 
 const linkStyle: React.CSSProperties = {
   color: colors.accent,
@@ -125,7 +136,7 @@ const linkStyle: React.CSSProperties = {
   transition: TRANSITIONS.fast('color'),
   cursor: 'pointer',
   overflowWrap: 'break-word',
-}
+};
 
 const blockquoteStyle: React.CSSProperties = {
   borderLeft: `4px solid ${colors.accent}`,
@@ -139,28 +150,28 @@ const blockquoteStyle: React.CSSProperties = {
   fontStyle: 'italic',
   // Quote text: neutral light grey, readable on the panel. Alternatives: #C9C4B8 (cream), #F0A085 (accent-tinted), #D6CBB3 (colors.border)
   color: '#B8BCC2',
-}
+};
 
 const listStyle: React.CSSProperties = {
   marginBottom: spacing.md,
   paddingLeft: spacing.md,
-}
+};
 
 const listItemStyle: React.CSSProperties = {
   marginBottom: '4px',
-}
+};
 
 const tableStyle: React.CSSProperties = {
   width: '100%',
   borderCollapse: 'collapse' as const,
   marginBottom: spacing.md,
   textAlign: 'left' as const,
-}
+};
 
 const tableCellStyle: React.CSSProperties = {
   border: `1px solid ${colors.border}`,
   padding: '8px 12px',
-}
+};
 
 const codeStyle: React.CSSProperties = {
   fontFamily: FONTS.mono,
@@ -175,7 +186,7 @@ const codeStyle: React.CSSProperties = {
   overflowWrap: 'break-word',
   boxDecorationBreak: 'clone',
   WebkitBoxDecorationBreak: 'clone',
-}
+};
 
 const imageStyle: React.CSSProperties = {
   display: 'block',
@@ -185,165 +196,171 @@ const imageStyle: React.CSSProperties = {
   height: 'auto',
   borderRadius: '8px',
   margin: `${spacing.md} auto`,
-}
+};
 
 const PostContentComponent = ({ content, headings }: PostContentProps) => {
   // Build a map from each heading (level + plain text) to its DOM id, using the
   // exact same slug + dedup scheme as extractHeadings. heading.text is already
   // plain (markdown stripped), so renderer ids and TOC ids stay in lockstep.
   const headingIdMap = React.useMemo(() => {
-    const map = new Map<string, string>()
-    const headingCount: Record<string, number> = {}
+    const map = new Map<string, string>();
+    const headingCount: Record<string, number> = {};
 
     for (const heading of headings) {
-      const key = `${heading.level}-${heading.text}`
-      const baseId = slugifyHeading(heading.text)
+      const key = `${heading.level}-${heading.text}`;
+      const baseId = slugifyHeading(heading.text);
 
       if (!headingCount[baseId]) {
-        headingCount[baseId] = 0
+        headingCount[baseId] = 0;
       }
 
-      const count = headingCount[baseId]
-      headingCount[baseId]++
+      const count = headingCount[baseId];
+      headingCount[baseId]++;
 
-      map.set(key, count === 0 ? baseId : `${baseId}-${count}`)
+      map.set(key, count === 0 ? baseId : `${baseId}-${count}`);
     }
 
-    return map
-  }, [headings])
+    return map;
+  }, [headings]);
 
-  const getHeadingId = React.useCallback((level: number, text: string): string => {
-    const key = `${level}-${text}`
-    return headingIdMap.get(key) || slugifyHeading(text)
-  }, [headingIdMap])
+  const getHeadingId = React.useCallback(
+    (level: number, text: string): string => {
+      const key = `${level}-${text}`;
+      return headingIdMap.get(key) || slugifyHeading(text);
+    },
+    [headingIdMap],
+  );
 
   // Memoize the markdown components to prevent recreation
-  const components = React.useMemo(() => ({
-    h1: ({ children, ...props }: any) => {
-      const text = getNodeText(children)
-      const id = getHeadingId(1, text)
-      return (
-        <h1 id={id} style={headingStyles.h1} {...props}>
-          {children}
-        </h1>
-      )
-    },
-    h2: ({ children, ...props }: any) => {
-      const text = getNodeText(children)
-      const id = getHeadingId(2, text)
-      return (
-        <h2 id={id} style={headingStyles.h2} {...props}>
-          {children}
-        </h2>
-      )
-    },
-    h3: ({ children, ...props }: any) => {
-      const text = getNodeText(children)
-      const id = getHeadingId(3, text)
-      return (
-        <h3 id={id} style={headingStyles.h3} {...props}>
-          {children}
-        </h3>
-      )
-    },
-    h4: ({ children, ...props }: any) => {
-      const text = getNodeText(children)
-      const id = getHeadingId(4, text)
-      return (
-        <h4 id={id} style={headingStyles.h4} {...props}>
-          {children}
-        </h4>
-      )
-    },
-    h5: ({ children, ...props }: any) => {
-      const text = getNodeText(children)
-      const id = getHeadingId(5, text)
-      return (
-        <h5 id={id} style={headingStyles.h5} {...props}>
-          {children}
-        </h5>
-      )
-    },
-    h6: ({ children, ...props }: any) => {
-      const text = getNodeText(children)
-      const id = getHeadingId(6, text)
-      return (
-        <h6 id={id} style={headingStyles.h6} {...props}>
-          {children}
-        </h6>
-      )
-    },
-    p: ({ children, node }: any) => {
-      // Check if paragraph only contains an image
-      const childArray = React.Children.toArray(children)
-      const firstChild = childArray[0] as React.ReactElement
-      const hasOnlyImage =
-        childArray.length === 1 &&
-        React.isValidElement(firstChild) &&
-        (firstChild.type === 'img' || firstChild.type === MemoizedImage)
+  const components = React.useMemo<Components>(
+    () => ({
+      h1: ({ children, ...props }) => {
+        const text = getNodeText(children);
+        const id = getHeadingId(1, text);
+        return (
+          <h1 id={id} style={headingStyles.h1} {...props}>
+            {children}
+          </h1>
+        );
+      },
+      h2: ({ children, ...props }) => {
+        const text = getNodeText(children);
+        const id = getHeadingId(2, text);
+        return (
+          <h2 id={id} style={headingStyles.h2} {...props}>
+            {children}
+          </h2>
+        );
+      },
+      h3: ({ children, ...props }) => {
+        const text = getNodeText(children);
+        const id = getHeadingId(3, text);
+        return (
+          <h3 id={id} style={headingStyles.h3} {...props}>
+            {children}
+          </h3>
+        );
+      },
+      h4: ({ children, ...props }) => {
+        const text = getNodeText(children);
+        const id = getHeadingId(4, text);
+        return (
+          <h4 id={id} style={headingStyles.h4} {...props}>
+            {children}
+          </h4>
+        );
+      },
+      h5: ({ children, ...props }) => {
+        const text = getNodeText(children);
+        const id = getHeadingId(5, text);
+        return (
+          <h5 id={id} style={headingStyles.h5} {...props}>
+            {children}
+          </h5>
+        );
+      },
+      h6: ({ children, ...props }) => {
+        const text = getNodeText(children);
+        const id = getHeadingId(6, text);
+        return (
+          <h6 id={id} style={headingStyles.h6} {...props}>
+            {children}
+          </h6>
+        );
+      },
+      p: ({ children }) => {
+        // Check if paragraph only contains an image
+        const childArray = React.Children.toArray(children);
+        const firstChild = childArray[0] as React.ReactElement;
+        const hasOnlyImage =
+          childArray.length === 1 &&
+          React.isValidElement(firstChild) &&
+          (firstChild.type === 'img' || firstChild.type === MemoizedImage);
 
-      // Add min-height for image paragraphs to prevent layout shift
-      const style = hasOnlyImage
-        ? {
-            ...paragraphStyle,
-            minHeight: '400px',
-            backgroundColor: '#2a2a2a',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }
-        : paragraphStyle
+        // Add min-height for image paragraphs to prevent layout shift
+        const style = hasOnlyImage
+          ? {
+              ...paragraphStyle,
+              minHeight: '400px',
+              backgroundColor: '#2a2a2a',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }
+          : paragraphStyle;
 
-      return <p className="markdown-paragraph" style={style}>{children}</p>
-    },
-    a: ({ children, href }: any) => (
-      <a
-        href={href}
-        style={linkStyle}
-        className="markdown-link"
-      >
-        {children}
-      </a>
-    ),
-    blockquote: ({ children }: any) => (
-      <blockquote className="markdown-blockquote" style={blockquoteStyle}>{children}</blockquote>
-    ),
-    ul: ({ children }: any) => <ul style={listStyle}>{children}</ul>,
-    ol: ({ children }: any) => <ol style={listStyle}>{children}</ol>,
-    li: ({ children }: any) => <li style={listItemStyle}>{children}</li>,
-    code: ({ className, children }: any) => {
-      const match = /language-(\w+)/.exec(className || '')
-      return match ? (
-        <CodeBlock language={match[1]} code={String(children).trim()} />
-      ) : (
-        <code style={codeStyle}>
+        return (
+          <p className="markdown-paragraph" style={style}>
+            {children}
+          </p>
+        );
+      },
+      a: ({ children, href }) => (
+        <a href={href} style={linkStyle} className="markdown-link">
           {children}
-        </code>
-      )
-    },
-    img: ({ src, alt }: any) => (
-      <MemoizedImage
-        key={typeof src === 'string' ? src : 'image'}
-        src={src}
-        alt={alt}
-        style={imageStyle}
-      />
-    ),
-    table: ({ children }: any) => (
-      <div style={{ overflowX: 'auto', margin: `${spacing.md} 0` }}>
-        <table style={tableStyle}>{children}</table>
-      </div>
-    ),
-    thead: ({ children }: any) => <thead>{children}</thead>,
-    tbody: ({ children }: any) => <tbody>{children}</tbody>,
-    tr: ({ children }: any) => <tr>{children}</tr>,
-    th: ({ children }: any) => (
-      <th style={{ ...tableCellStyle, backgroundColor: colors.card }}>
-        {children}
-      </th>
-    ),
-    td: ({ children }: any) => <td style={tableCellStyle}>{children}</td>,
-  }), [getHeadingId])
+        </a>
+      ),
+      blockquote: ({ children }) => (
+        <blockquote className="markdown-blockquote" style={blockquoteStyle}>
+          {children}
+        </blockquote>
+      ),
+      ul: ({ children }) => <ul style={listStyle}>{children}</ul>,
+      ol: ({ children }) => <ol style={listStyle}>{children}</ol>,
+      li: ({ children }) => <li style={listItemStyle}>{children}</li>,
+      code: ({ className, children }) => {
+        const match = /language-(\w+)/.exec(className || '');
+        return match ? (
+          <CodeBlock language={match[1]} code={String(children).trim()} />
+        ) : (
+          <code style={codeStyle}>{children}</code>
+        );
+      },
+      img: ({ src, alt }) => (
+        <MemoizedImage
+          key={typeof src === 'string' ? src : 'image'}
+          src={src}
+          alt={alt}
+          style={imageStyle}
+        />
+      ),
+      table: ({ children }) => (
+        <div style={{ overflowX: 'auto', margin: `${spacing.md} 0` }}>
+          <table style={tableStyle}>{children}</table>
+        </div>
+      ),
+      thead: ({ children }) => <thead>{children}</thead>,
+      tbody: ({ children }) => <tbody>{children}</tbody>,
+      tr: ({ children }) => <tr>{children}</tr>,
+      th: ({ children }) => (
+        <th style={{ ...tableCellStyle, backgroundColor: colors.card }}>
+          {children}
+        </th>
+      ),
+      td: ({ children }) => <td style={tableCellStyle}>{children}</td>,
+    }),
+    [getHeadingId],
+  );
 
   return (
     <div style={containerStyle}>
@@ -360,34 +377,36 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
         {content}
       </ReactMarkdown>
     </div>
-  )
-}
+  );
+};
 
 // Memoize the entire component to prevent re-renders when parent updates
 export default React.memo(PostContentComponent, (prevProps, nextProps) => {
   // Compare content directly
   if (prevProps.content !== nextProps.content) {
-    return false
+    return false;
   }
 
   // Deep compare headings array since it might be a new reference with same content
-  const prevHeadings = prevProps.headings
-  const nextHeadings = nextProps.headings
+  const prevHeadings = prevProps.headings;
+  const nextHeadings = nextProps.headings;
 
   if (prevHeadings.length !== nextHeadings.length) {
-    return false
+    return false;
   }
 
   for (let i = 0; i < prevHeadings.length; i++) {
-    const prev = prevHeadings[i]
-    const next = nextHeadings[i]
+    const prev = prevHeadings[i];
+    const next = nextHeadings[i];
 
-    if (prev.level !== next.level ||
-        prev.text !== next.text ||
-        prev.id !== next.id) {
-      return false
+    if (
+      prev.level !== next.level ||
+      prev.text !== next.text ||
+      prev.id !== next.id
+    ) {
+      return false;
     }
   }
 
-  return true
-})
+  return true;
+});

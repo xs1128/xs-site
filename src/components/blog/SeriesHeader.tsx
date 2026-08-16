@@ -1,26 +1,29 @@
-import type { SeriesDetail } from '@/types/post'
-import { FONTS, clamp, spacing } from '@/styles/blog/typography'
-import { colors } from '@/styles/blog/colors'
-import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs'
-import { SkeletonText } from '@/components/blog/skeleton'
+import type { SeriesDetail } from '@/types/post';
+import { FONTS, clamp, spacing } from '@/styles/blog/typography';
+import { colors } from '@/styles/blog/colors';
+import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs';
+import { SkeletonText } from '@/components/blog/skeleton';
 
 interface SeriesHeaderProps {
-  series: SeriesDetail
-  loading?: boolean
+  series: SeriesDetail;
+  loading?: boolean;
 }
 
-export default function SeriesHeader({ series, loading = false }: SeriesHeaderProps) {
+export default function SeriesHeader({
+  series,
+  loading = false,
+}: SeriesHeaderProps) {
   const headerStyle: React.CSSProperties = {
     padding: 'clamp(40px, 6vh, 80px) clamp(20px, 3vh, 40px)',
     maxWidth: '1200px',
     margin: '0 auto',
     width: '100%',
-  }
+  };
 
   const breadcrumbs: Crumb[] = [
-    { label: 'All Posts', href: '/?expanded=true' },
+    { label: 'All Posts', href: '/blog?expanded=true' },
     { label: series.title },
-  ]
+  ];
 
   const titleStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
@@ -29,7 +32,7 @@ export default function SeriesHeader({ series, loading = false }: SeriesHeaderPr
     color: colors.darkText,
     marginBottom: spacing.md,
     lineHeight: 1.2,
-  }
+  };
 
   const descriptionStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
@@ -37,7 +40,7 @@ export default function SeriesHeader({ series, loading = false }: SeriesHeaderPr
     color: '#CCCCCC',
     lineHeight: 1.6,
     maxWidth: '800px',
-  }
+  };
 
   return (
     <header style={headerStyle}>
@@ -56,5 +59,5 @@ export default function SeriesHeader({ series, loading = false }: SeriesHeaderPr
         </>
       )}
     </header>
-  )
+  );
 }

@@ -1,7 +1,7 @@
 interface SkeletonCardProps {
-  variant?: 'blog' | 'series' | 'post'
-  isSmallScreen?: boolean
-  className?: string
+  variant?: 'blog' | 'series' | 'post';
+  isSmallScreen?: boolean;
+  className?: string;
 }
 
 export default function SkeletonCard({
@@ -18,7 +18,7 @@ export default function SkeletonCard({
     background: 'linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%)',
     backgroundSize: '200% 100%',
     animation: 'blogShimmer 1.5s ease-in-out infinite',
-  }
+  };
 
   if (variant === 'blog') {
     // Match BlogCard dimensions exactly
@@ -33,7 +33,7 @@ export default function SkeletonCard({
       aspectRatio: isSmallScreen ? '160 / 200' : '200 / 260',
       width: 'auto',
       flexShrink: 0,
-    }
+    };
 
     const imageAreaStyle: React.CSSProperties = {
       width: '100%',
@@ -41,7 +41,7 @@ export default function SkeletonCard({
       backgroundColor: '#3E454C',
       position: 'relative',
       overflow: 'hidden',
-    }
+    };
 
     const titleBarStyle: React.CSSProperties = {
       backgroundColor: '#1A1D21',
@@ -51,7 +51,7 @@ export default function SkeletonCard({
       flexDirection: 'column',
       justifyContent: 'flex-start',
       gap: '8px',
-    }
+    };
 
     const titleSkeletonStyle: React.CSSProperties = {
       width: '90%',
@@ -60,7 +60,7 @@ export default function SkeletonCard({
       borderRadius: '4px',
       position: 'relative',
       overflow: 'hidden',
-    }
+    };
 
     const metadataSkeletonStyle: React.CSSProperties = {
       width: '60%',
@@ -69,7 +69,7 @@ export default function SkeletonCard({
       borderRadius: '4px',
       position: 'relative',
       overflow: 'hidden',
-    }
+    };
 
     return (
       <div style={cardStyle} className={className}>
@@ -85,7 +85,7 @@ export default function SkeletonCard({
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (variant === 'series') {
@@ -101,21 +101,48 @@ export default function SkeletonCard({
       gap: '12px',
       minWidth: '280px',
       maxWidth: '320px',
-    }
+    };
 
     return (
       <div style={cardStyle} className={className}>
-        <div style={{ width: '80%', height: '20px', backgroundColor: '#3E454C', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+        <div
+          style={{
+            width: '80%',
+            height: '20px',
+            backgroundColor: '#3E454C',
+            borderRadius: '4px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
           <div style={shimmerStyle} />
         </div>
-        <div style={{ width: '100%', height: '14px', backgroundColor: '#3E454C', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+        <div
+          style={{
+            width: '100%',
+            height: '14px',
+            backgroundColor: '#3E454C',
+            borderRadius: '4px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
           <div style={shimmerStyle} />
         </div>
-        <div style={{ width: '60%', height: '14px', backgroundColor: '#3E454C', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+        <div
+          style={{
+            width: '60%',
+            height: '14px',
+            backgroundColor: '#3E454C',
+            borderRadius: '4px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
           <div style={shimmerStyle} />
         </div>
       </div>
-    )
+    );
   }
 
   // Post variant
@@ -129,22 +156,58 @@ export default function SkeletonCard({
     padding: '16px',
     gap: '12px',
     flex: 1,
-  }
+  };
 
   return (
     <div style={cardStyle} className={className}>
-      <div style={{ width: '85%', height: '18px', backgroundColor: '#3E454C', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+      <div
+        style={{
+          width: '85%',
+          height: '18px',
+          backgroundColor: '#3E454C',
+          borderRadius: '4px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
         <div style={shimmerStyle} />
       </div>
-      <div style={{ width: '50%', height: '12px', backgroundColor: '#3E454C', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+      <div
+        style={{
+          width: '50%',
+          height: '12px',
+          backgroundColor: '#3E454C',
+          borderRadius: '4px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
         <div style={shimmerStyle} />
       </div>
-      <div style={{ width: '100%', height: '14px', backgroundColor: '#3E454C', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+      <div
+        style={{
+          width: '100%',
+          height: '14px',
+          backgroundColor: '#3E454C',
+          borderRadius: '4px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
         <div style={shimmerStyle} />
       </div>
-      <div style={{ width: '90%', height: '14px', backgroundColor: '#3E454C', borderRadius: '4px', position: 'relative', overflow: 'hidden' }}>
+      <div
+        style={{
+          width: '90%',
+          height: '14px',
+          backgroundColor: '#3E454C',
+          borderRadius: '4px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
         <div style={shimmerStyle} />
       </div>
     </div>
-  )
+  );
 }

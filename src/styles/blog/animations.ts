@@ -22,9 +22,11 @@ export const TRANSITIONS = {
 
   // Common combinations
   cardFlip: 'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
-  cardExpand: 'width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
+  cardExpand:
+    'width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
   marqueeExpand: 'height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
-  navDrop: 'background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+  navDrop:
+    'background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
   opacity: 'opacity 0.2s ease',
   color: 'color 0.3s ease',
 } as const;

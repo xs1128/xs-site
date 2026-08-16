@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { createClient } from "@/lib/blog/supabase/client";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/blog/supabase/client';
 
 interface Series {
   id: number;
@@ -10,6 +10,16 @@ interface Series {
   title: string;
   description: string | null;
   postCount: number;
+}
+
+// Shape of the nested select below, which the generated Database types
+// don't describe.
+interface SeriesRowWithPosts {
+  id: number;
+  slug: string;
+  title: string;
+  description: string | null;
+  series_posts?: { posts: { published_at: string | null } | null }[] | null;
 }
 
 interface SeriesGridProps {
@@ -26,27 +36,31 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
       const supabase = createClient();
       const { data, error } = await supabase
         .from('series')
-        .select(`
+        .select(
+          `
           id,
           slug,
           title,
           description,
           series_posts ( posts ( published_at ) )
-        `)
+        `,
+        )
         .order('created_at', { ascending: false });
 
       if (error) {
         console.error('Error fetching series:', error);
       } else if (data) {
         setSeries(
-          data.map((s: any) => ({
+          (data as SeriesRowWithPosts[]).map((s) => ({
             id: s.id,
             slug: s.slug,
             title: s.title,
             description: s.description,
             // Match the series page, which lists published posts only
-            postCount: (s.series_posts ?? []).filter((sp: any) => sp.posts?.published_at).length,
-          }))
+            postCount: (s.series_posts ?? []).filter(
+              (sp) => sp.posts?.published_at,
+            ).length,
+          })),
         );
       }
       setLoading(false);
@@ -58,21 +72,21 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
   const scrollAreaStyle: React.CSSProperties = {
     flex: 1,
     minHeight: 0,
-    overflowY: "auto",
-    overscrollBehavior: "contain",
+    overflowY: 'auto',
+    overscrollBehavior: 'contain',
     maskImage:
-      "linear-gradient(to bottom, #000 calc(100% - clamp(12px, 2vh, 24px)), transparent 100%)",
+      'linear-gradient(to bottom, #000 calc(100% - clamp(12px, 2vh, 24px)), transparent 100%)',
     WebkitMaskImage:
-      "linear-gradient(to bottom, #000 calc(100% - clamp(12px, 2vh, 24px)), transparent 100%)",
+      'linear-gradient(to bottom, #000 calc(100% - clamp(12px, 2vh, 24px)), transparent 100%)',
   };
 
   const messageStyle: React.CSSProperties = {
-    color: "#8A929B",
-    padding: "clamp(16px, 3vh, 28px) clamp(16px, 3vw, 28px)",
+    color: '#8A929B',
+    padding: 'clamp(16px, 3vh, 28px) clamp(16px, 3vw, 28px)',
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(12px, 1.5vw, 15px)",
-    letterSpacing: "0.04em",
-    textTransform: "uppercase",
+    fontSize: 'clamp(12px, 1.5vw, 15px)',
+    letterSpacing: '0.04em',
+    textTransform: 'uppercase',
   };
 
   const styles = `
@@ -201,13 +215,24 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
   `;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 0 }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        minHeight: 0,
+      }}
+    >
       <style>{styles}</style>
       <div style={scrollAreaStyle} className="series-scroll">
         {loading ? (
           <div className="series-list">
             {Array.from({ length: isSmallScreen ? 3 : 5 }).map((_, i) => (
-              <div key={i} className="series-skeleton-row" style={{ animationDelay: `${i * 0.12}s` }} />
+              <div
+                key={i}
+                className="series-skeleton-row"
+                style={{ animationDelay: `${i * 0.12}s` }}
+              />
             ))}
           </div>
         ) : series.length === 0 ? (
@@ -219,16 +244,18 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
                 key={s.id}
                 className="series-row"
                 style={{ animationDelay: `${Math.min(i, 11) * 0.05}s` }}
-                onClick={() => router.push(`/series/${s.slug}`)}
+                onClick={() => router.push(`/blog/series/${s.slug}`)}
               >
-                <span className="series-num">{String(i + 1).padStart(2, "0")}</span>
+                <span className="series-num">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
                 <span className="series-body">
                   <span className="series-name">{s.title}</span>
                   <span className="series-sub">
                     <span className="series-count">
-                      {s.postCount} {s.postCount === 1 ? "post" : "posts"}
+                      {s.postCount} {s.postCount === 1 ? 'post' : 'posts'}
                     </span>
-                    {s.description ? ` — ${s.description}` : ""}
+                    {s.description ? ` — ${s.description}` : ''}
                   </span>
                 </span>
               </button>

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, useState, useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { createClient } from "@/lib/blog/supabase/client";
-import type { Post } from "@/types/post";
-import BlogCard from "./BlogCard";
-import { SkeletonCard } from "@/components/blog/skeleton";
+import { useEffect, useState, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { createClient } from '@/lib/blog/supabase/client';
+import type { Post } from '@/types/post';
+import BlogCard from './BlogCard';
+import { SkeletonCard } from '@/components/blog/skeleton';
 
 interface RecentBlogsGridProps {
   isExpanded?: boolean;
@@ -15,14 +15,14 @@ interface RecentBlogsGridProps {
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
 
 export default function RecentBlogsGrid({
   isExpanded = false,
-  isSmallScreen = false
+  isSmallScreen = false,
 }: RecentBlogsGridProps) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,7 +41,7 @@ export default function RecentBlogsGrid({
         .limit(12);
 
       if (data) {
-        const transformedPosts: Post[] = data.map(post => ({
+        const transformedPosts: Post[] = data.map((post) => ({
           id: post.id,
           title: post.title,
           date: formatDate(post.created_at),
@@ -65,19 +65,19 @@ export default function RecentBlogsGrid({
     if (container) {
       setCanScrollLeft(container.scrollLeft > 0);
       setCanScrollRight(
-        container.scrollLeft < container.scrollWidth - container.clientWidth
+        container.scrollLeft < container.scrollWidth - container.clientWidth,
       );
     }
   };
 
-  const scroll = (direction: "left" | "right") => {
+  const scroll = (direction: 'left' | 'right') => {
     const container = scrollContainerRef.current;
     if (container) {
       const cardWidth = isSmallScreen ? 180 : 280;
       const scrollAmount = cardWidth;
       container.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth"
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth',
       });
     }
   };
@@ -85,91 +85,91 @@ export default function RecentBlogsGrid({
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (container) {
-      container.addEventListener("scroll", checkScroll);
+      container.addEventListener('scroll', checkScroll);
       checkScroll();
-      return () => container.removeEventListener("scroll", checkScroll);
+      return () => container.removeEventListener('scroll', checkScroll);
     }
   }, [posts]);
 
   const containerStyle: React.CSSProperties = {
-    flex: "0 0 auto",
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden",
+    flex: '0 0 auto',
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
     minHeight: 0,
-    height: isSmallScreen ? "min(52%, 300px)" : "48%",
+    height: isSmallScreen ? 'min(52%, 300px)' : '48%',
   };
 
   const headerStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(20px, 3vw, 28px)",
+    fontSize: 'clamp(20px, 3vw, 28px)',
     fontWeight: 700,
-    color: "#FFFFFF",
-    paddingLeft: "clamp(16px, 3vw, 24px)",
-    paddingRight: "clamp(6px, 1vh, 12px)",
-    paddingTop: "clamp(6px, 1vh, 12px)",
-    paddingBottom: "clamp(6px, 1vh, 12px)",
-    margin: "0",
-    textTransform: "uppercase",
-    letterSpacing: "0.05em",
-    borderTop: "1px solid rgba(255, 255, 255, 0.2)",
-    borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
+    color: '#FFFFFF',
+    paddingLeft: 'clamp(16px, 3vw, 24px)',
+    paddingRight: 'clamp(6px, 1vh, 12px)',
+    paddingTop: 'clamp(6px, 1vh, 12px)',
+    paddingBottom: 'clamp(6px, 1vh, 12px)',
+    margin: '0',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
     flexShrink: 0,
   };
 
   const carouselWrapperStyle: React.CSSProperties = {
-    position: "relative",
+    position: 'relative',
     flex: 1,
-    display: "flex",
-    overflow: "hidden",
+    display: 'flex',
+    overflow: 'hidden',
     minHeight: 0,
   };
 
   const carouselStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "row",
-    gap: "clamp(12px, 2vh, 24px)",
-    paddingLeft: "clamp(12px, 2vh, 24px)",
-    paddingRight: "clamp(12px, 2vh, 24px)",
-    paddingTop: "clamp(10px, 2.5vh, 32px)",
-    paddingBottom: "clamp(10px, 2.5vh, 32px)",
-    overflowX: "auto",
-    overflowY: "hidden",
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 'clamp(12px, 2vh, 24px)',
+    paddingLeft: 'clamp(12px, 2vh, 24px)',
+    paddingRight: 'clamp(12px, 2vh, 24px)',
+    paddingTop: 'clamp(10px, 2.5vh, 32px)',
+    paddingBottom: 'clamp(10px, 2.5vh, 32px)',
+    overflowX: 'auto',
+    overflowY: 'hidden',
     flex: 1,
-    alignItems: "center",
-    scrollBehavior: "smooth",
-    scrollbarWidth: "none",
-    msOverflowStyle: "none",
+    alignItems: 'center',
+    scrollBehavior: 'smooth',
+    scrollbarWidth: 'none',
+    msOverflowStyle: 'none',
   } as React.CSSProperties;
 
   const arrowButtonStyle: React.CSSProperties = {
-    position: "absolute",
-    top: "50%",
-    transform: "translateY(-50%)",
-    backgroundColor: "#363D44",
-    border: "1px solid rgba(255, 255, 255, 0.2)",
-    borderRadius: "50%",
-    width: "clamp(32px, 5vw, 48px)",
-    height: "clamp(32px, 5vw, 48px)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    cursor: "pointer",
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    backgroundColor: '#363D44',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '50%',
+    width: 'clamp(32px, 5vw, 48px)',
+    height: 'clamp(32px, 5vw, 48px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
     zIndex: 10,
-    transition: "background-color 0.2s ease, border-color 0.2s ease",
-    color: "#FFFFFF",
-    fontSize: "clamp(16px, 2vw, 24px)",
-    fontWeight: "bold",
-    userSelect: "none",
+    transition: 'background-color 0.2s ease, border-color 0.2s ease',
+    color: '#FFFFFF',
+    fontSize: 'clamp(16px, 2vw, 24px)',
+    fontWeight: 'bold',
+    userSelect: 'none',
   };
 
   const emptyStyle: React.CSSProperties = {
     fontFamily: "'Hubot Sans', sans-serif",
-    fontSize: "clamp(10px, 1.3vw, 14px)",
+    fontSize: 'clamp(10px, 1.3vw, 14px)',
     fontWeight: 400,
-    color: "#666666",
-    textAlign: "center",
-    padding: "clamp(20px, 3vh, 40px)",
+    color: '#666666',
+    textAlign: 'center',
+    padding: 'clamp(20px, 3vh, 40px)',
   };
 
   if (loading) {
@@ -179,7 +179,11 @@ export default function RecentBlogsGrid({
         <div style={carouselWrapperStyle}>
           <div style={carouselStyle}>
             {[...Array(4)].map((_, i) => (
-              <SkeletonCard key={i} variant="blog" isSmallScreen={isSmallScreen} />
+              <SkeletonCard
+                key={i}
+                variant="blog"
+                isSmallScreen={isSmallScreen}
+              />
             ))}
           </div>
         </div>
@@ -195,25 +199,22 @@ export default function RecentBlogsGrid({
           <button
             style={{
               ...arrowButtonStyle,
-              left: "clamp(8px, 1vh, 16px)",
+              left: 'clamp(8px, 1vh, 16px)',
             }}
-            onClick={() => scroll("left")}
+            onClick={() => scroll('left')}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#E5532C";
-              e.currentTarget.style.borderColor = "#E5532C";
+              e.currentTarget.style.backgroundColor = '#E5532C';
+              e.currentTarget.style.borderColor = '#E5532C';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#363D44";
-              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.backgroundColor = '#363D44';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
             }}
           >
             <ChevronLeft size="1em" strokeWidth={2.5} />
           </button>
         )}
-        <div
-          ref={scrollContainerRef}
-          style={carouselStyle}
-        >
+        <div ref={scrollContainerRef} style={carouselStyle}>
           {posts.length === 0 ? (
             <p style={emptyStyle}>No recent posts yet</p>
           ) : (
@@ -230,16 +231,16 @@ export default function RecentBlogsGrid({
           <button
             style={{
               ...arrowButtonStyle,
-              right: "clamp(8px, 1vh, 16px)",
+              right: 'clamp(8px, 1vh, 16px)',
             }}
-            onClick={() => scroll("right")}
+            onClick={() => scroll('right')}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#E5532C";
-              e.currentTarget.style.borderColor = "#E5532C";
+              e.currentTarget.style.backgroundColor = '#E5532C';
+              e.currentTarget.style.borderColor = '#E5532C';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#363D44";
-              e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.2)";
+              e.currentTarget.style.backgroundColor = '#363D44';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
             }}
           >
             <ChevronRight size="1em" strokeWidth={2.5} />

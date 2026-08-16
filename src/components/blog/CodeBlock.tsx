@@ -1,27 +1,27 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { FONTS, clamp, spacing } from '@/styles/blog/typography'
+import { useState } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { FONTS, clamp, spacing } from '@/styles/blog/typography';
 
 interface CodeBlockProps {
-  language: string
-  code: string
+  language: string;
+  code: string;
 }
 
 export default function CodeBlock({ language, code }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(code)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      await navigator.clipboard.writeText(code);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy code:', err)
+      console.error('Failed to copy code:', err);
     }
-  }
+  };
 
   const containerStyle: React.CSSProperties = {
     display: 'flex',
@@ -30,7 +30,7 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
     borderRadius: '8px',
     overflow: 'hidden',
     backgroundColor: '#1E1E1E',
-  }
+  };
 
   const headerStyle: React.CSSProperties = {
     display: 'flex',
@@ -39,7 +39,7 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
     padding: '8px 16px',
     backgroundColor: '#252526',
     borderBottom: '1px solid #3E3E42',
-  }
+  };
 
   const languageStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
@@ -48,7 +48,7 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
     textTransform: 'uppercase' as const,
     fontWeight: 600,
     letterSpacing: '0.05em',
-  }
+  };
 
   const copyButtonStyle: React.CSSProperties = {
     display: 'flex',
@@ -63,12 +63,12 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
     padding: '4px 8px',
     borderRadius: '4px',
     transition: 'all 0.2s ease',
-  }
+  };
 
   const copyIconStyle: React.CSSProperties = {
     width: '14px',
     height: '14px',
-  }
+  };
 
   return (
     <div style={containerStyle}>
@@ -80,11 +80,11 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
           onClick={handleCopy}
           onMouseEnter={(e) => {
             if (!copied) {
-              e.currentTarget.style.backgroundColor = '#3E3E42'
+              e.currentTarget.style.backgroundColor = '#3E3E42';
             }
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent'
+            e.currentTarget.style.backgroundColor = 'transparent';
           }}
         >
           {copied ? (
@@ -139,5 +139,5 @@ export default function CodeBlock({ language, code }: CodeBlockProps) {
         {code}
       </SyntaxHighlighter>
     </div>
-  )
+  );
 }

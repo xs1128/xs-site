@@ -1,18 +1,18 @@
-import { FONTS, clamp, spacing } from '@/styles/blog/typography'
-import { colors } from '@/styles/blog/colors'
-import type { Post } from '@/types/post'
-import { formatDate, formatReadTime } from '@/lib/blog/utils/post'
-import { SkeletonText } from '@/components/blog/skeleton'
+import { FONTS, clamp, spacing } from '@/styles/blog/typography';
+import { colors } from '@/styles/blog/colors';
+import type { Post } from '@/types/post';
+import { formatDate, formatReadTime } from '@/lib/blog/utils/post';
+import { SkeletonText } from '@/components/blog/skeleton';
 
 interface PostHeaderProps {
-  post: Post
-  loading?: boolean
+  post: Post;
+  loading?: boolean;
 }
 
 export default function PostHeader({ post, loading = false }: PostHeaderProps) {
   const containerStyle: React.CSSProperties = {
     marginBottom: spacing.lg,
-  }
+  };
 
   const titleStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
@@ -24,7 +24,7 @@ export default function PostHeader({ post, loading = false }: PostHeaderProps) {
     marginBottom: spacing.lg,
     lineHeight: 1.2,
     textAlign: 'left' as const,
-  }
+  };
 
   const metaContainerStyle: React.CSSProperties = {
     display: 'flex',
@@ -33,19 +33,19 @@ export default function PostHeader({ post, loading = false }: PostHeaderProps) {
     marginBottom: spacing.md,
     paddingBottom: spacing.md,
     borderBottom: `1px solid ${colors.border}`,
-  }
+  };
 
   const metaLeftStyle: React.CSSProperties = {
     display: 'flex',
     gap: spacing.md,
     alignItems: 'center',
     flexWrap: 'wrap' as const,
-  }
+  };
 
   const metaRightStyle: React.CSSProperties = {
     display: 'flex',
     alignItems: 'center',
-  }
+  };
 
   const metaItemStyle: React.CSSProperties = {
     display: 'flex',
@@ -54,14 +54,14 @@ export default function PostHeader({ post, loading = false }: PostHeaderProps) {
     fontFamily: FONTS.primary,
     fontSize: clamp.sm,
     color: '#999999',
-  }
+  };
 
   const authorStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
     fontSize: clamp.sm,
     color: '#999999',
     fontWeight: 500,
-  }
+  };
 
   return (
     <div style={containerStyle}>
@@ -94,5 +94,5 @@ export default function PostHeader({ post, loading = false }: PostHeaderProps) {
         </>
       )}
     </div>
-  )
+  );
 }

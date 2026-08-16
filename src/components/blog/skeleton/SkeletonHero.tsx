@@ -1,9 +1,9 @@
-import { spacing } from '@/styles/blog/typography'
+import { spacing } from '@/styles/blog/typography';
 
 interface SkeletonHeroProps {
-  width?: string | number
-  height?: string | number
-  className?: string
+  width?: string | number;
+  height?: string | number;
+  className?: string;
 }
 
 export default function SkeletonHero({
@@ -20,7 +20,7 @@ export default function SkeletonHero({
     borderRadius: '12px',
     overflow: 'hidden',
     backgroundColor: '#3E454C',
-  }
+  };
 
   const shimmerStyle: React.CSSProperties = {
     position: 'absolute',
@@ -31,11 +31,11 @@ export default function SkeletonHero({
     background: 'linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%)',
     backgroundSize: '200% 100%',
     animation: 'blogShimmer 1.5s ease-in-out infinite',
-  }
+  };
 
   return (
     <div style={containerStyle} className={className}>
       <div style={shimmerStyle} />
     </div>
-  )
+  );
 }

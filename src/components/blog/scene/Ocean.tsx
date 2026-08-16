@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
-import { Color, MeshPhongMaterial, Vector2 } from "three";
-import { createWaterNormal } from "./createWaterNormal";
+import { useEffect, useMemo, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { Color, MeshPhongMaterial, Vector2 } from 'three';
+import { createWaterNormal } from './createWaterNormal';
 
 const WAVE_GLSL = /* glsl */ `
 uniform float uTime;
@@ -72,12 +72,15 @@ export default function Ocean({ daylight, isMobile = false }: OceanProps) {
     mat.onBeforeCompile = (shader) => {
       shader.uniforms.uTime = timeUniform.current;
       shader.vertexShader = shader.vertexShader
-        .replace("#include <common>", `#include <common>\n${WAVE_GLSL}`)
+        .replace('#include <common>', `#include <common>\n${WAVE_GLSL}`)
         .replace(
-          "#include <beginnormal_vertex>",
-          "vec3 waveNormal;\nvec3 waveOffset = gerstner(position.xy, waveNormal);\nvec3 objectNormal = waveNormal;"
+          '#include <beginnormal_vertex>',
+          'vec3 waveNormal;\nvec3 waveOffset = gerstner(position.xy, waveNormal);\nvec3 objectNormal = waveNormal;',
         )
-        .replace("#include <begin_vertex>", "vec3 transformed = position + waveOffset;");
+        .replace(
+          '#include <begin_vertex>',
+          'vec3 transformed = position + waveOffset;',
+        );
     };
 
     return mat;
@@ -91,8 +94,10 @@ export default function Ocean({ daylight, isMobile = false }: OceanProps) {
   }, [material, normalMap]);
 
   useEffect(() => {
-    material.color.set("#27435F").lerp(new Color("#67B3CE"), daylight);
-    material.specular.set("#4A5A6E").lerp(new Color("#D8E8F4"), 0.3 + daylight * 0.7);
+    material.color.set('#27435F').lerp(new Color('#67B3CE'), daylight);
+    material.specular
+      .set('#4A5A6E')
+      .lerp(new Color('#D8E8F4'), 0.3 + daylight * 0.7);
   }, [material, daylight]);
 
   useFrame((state, delta) => {
@@ -105,7 +110,11 @@ export default function Ocean({ daylight, isMobile = false }: OceanProps) {
   const segments = isMobile ? 72 : 128;
 
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.6, 0]} material={material}>
+    <mesh
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, -2.6, 0]}
+      material={material}
+    >
       <planeGeometry args={[420, 420, segments, segments]} />
     </mesh>
   );

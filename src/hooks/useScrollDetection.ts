@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type RefObject } from 'react'
+import { useState, useEffect, useRef, type RefObject } from 'react';
 
 // Easing factor for the reading-progress lerp. Each frame the displayed value
 // moves this fraction of the remaining distance to the target:
@@ -7,11 +7,11 @@ import { useState, useEffect, useRef, type RefObject } from 'react'
 // scroll deltas (so the bar doesn't feel jumpy), but high enough that it visibly
 // converges within a few frames (~no perceptible lag). Higher values feel snappy
 // but jittery; lower values feel smooth but laggy.
-const PROGRESS_SMOOTHING = 0.15
+const PROGRESS_SMOOTHING = 0.15;
 
 // Stop the easing loop once we're within this many percent of the target, so we
 // don't burn frames asymptotically chasing a value that's visually settled.
-const PROGRESS_EPSILON = 0.1
+const PROGRESS_EPSILON = 0.1;
 
 // Fraction of the viewport height by which we shift the progress START anchor
 // UP, so the bar begins filling *before* the article top reaches the viewport
@@ -23,7 +23,7 @@ const PROGRESS_EPSILON = 0.1
 // value) so it scales with screen size; tune between ~0.4 (later) and ~0.8
 // (earlier). The END anchor (article fully read) is left untouched, so the bar
 // still reaches exactly 100% at the end of the article content.
-const PROGRESS_START_OFFSET_VH = 0.5
+const PROGRESS_START_OFFSET_VH = 0.5;
 
 /**
  * Hook for tracking reading progress through a target element.
@@ -52,141 +52,141 @@ const PROGRESS_START_OFFSET_VH = 0.5
  */
 export function useScrollProgress(
   targetRef: RefObject<HTMLElement | null>,
-  reducedMotion = false
+  reducedMotion = false,
 ) {
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const tickingRef = useRef(false)
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const tickingRef = useRef(false);
   // Latest measured target (0..100). Written by the scroll handler, read by the
   // easing loop. A ref so updates don't trigger renders; only the loop does.
-  const targetProgressRef = useRef(0)
+  const targetProgressRef = useRef(0);
   // Current displayed value, mirrored in a ref so the easing loop can read it
   // without depending on the state value (avoids stale closures / restarts).
-  const displayedRef = useRef(0)
+  const displayedRef = useRef(0);
   // Active easing-loop rAF id, or null when no loop is running.
-  const easeRafRef = useRef<number | null>(null)
+  const easeRafRef = useRef<number | null>(null);
   // Pending throttle-rAF id scheduled by onScroll, or null when none is pending.
-  const throttleRafRef = useRef<number | null>(null)
+  const throttleRafRef = useRef<number | null>(null);
 
   useEffect(() => {
     function setDisplayed(value: number) {
-      displayedRef.current = value
-      setScrollProgress(value)
+      displayedRef.current = value;
+      setScrollProgress(value);
     }
 
     function ease() {
-      const target = targetProgressRef.current
-      const displayed = displayedRef.current
-      const next = displayed + (target - displayed) * PROGRESS_SMOOTHING
+      const target = targetProgressRef.current;
+      const displayed = displayedRef.current;
+      const next = displayed + (target - displayed) * PROGRESS_SMOOTHING;
 
       // Intentionally tests `next` (not `displayed`) so the final written value
       // snaps cleanly to target. Keep this when refactoring or convergence breaks.
       if (Math.abs(target - next) <= PROGRESS_EPSILON) {
         // Close enough: snap to target and stop the loop to save frames.
-        setDisplayed(target)
-        easeRafRef.current = null
-        return
+        setDisplayed(target);
+        easeRafRef.current = null;
+        return;
       }
 
-      setDisplayed(next)
-      easeRafRef.current = requestAnimationFrame(ease)
+      setDisplayed(next);
+      easeRafRef.current = requestAnimationFrame(ease);
     }
 
     function startEasing() {
       if (reducedMotion) {
         // No animation: snap straight to the latest target.
         if (easeRafRef.current !== null) {
-          cancelAnimationFrame(easeRafRef.current)
-          easeRafRef.current = null
+          cancelAnimationFrame(easeRafRef.current);
+          easeRafRef.current = null;
         }
-        setDisplayed(targetProgressRef.current)
-        return
+        setDisplayed(targetProgressRef.current);
+        return;
       }
       // One loop at a time; if already running it will pick up the new target.
       if (easeRafRef.current === null) {
-        easeRafRef.current = requestAnimationFrame(ease)
+        easeRafRef.current = requestAnimationFrame(ease);
       }
     }
 
     function updateProgress() {
-      tickingRef.current = false
+      tickingRef.current = false;
 
-      const el = targetRef.current
+      const el = targetRef.current;
       if (!el) {
-        targetProgressRef.current = 0
-        startEasing()
-        return
+        targetProgressRef.current = 0;
+        startEasing();
+        return;
       }
 
-      const viewportHeight = window.innerHeight
-      const rect = el.getBoundingClientRect()
+      const viewportHeight = window.innerHeight;
+      const rect = el.getBoundingClientRect();
       // Article top/bottom in document coordinates.
-      const articleTop = rect.top + window.scrollY
-      const articleBottom = articleTop + rect.height
+      const articleTop = rect.top + window.scrollY;
+      const articleBottom = articleTop + rect.height;
 
       // Shift the START anchor up by a fraction of the viewport so progress
       // begins accruing before the article top reaches the viewport top. Clamp
       // at 0 so we never anchor above the document start.
-      const startOffset = viewportHeight * PROGRESS_START_OFFSET_VH
-      const effectiveStart = Math.max(0, articleTop - startOffset)
+      const startOffset = viewportHeight * PROGRESS_START_OFFSET_VH;
+      const effectiveStart = Math.max(0, articleTop - startOffset);
 
       // The scrollable span over which we read the article: from the (earlier)
       // effective start until the article bottom reaches the viewport bottom.
       // Adding the offset to the old span keeps this strictly positive whenever
       // the old span was non-negative, so there's no new zero-divide path.
-      const trackable = articleBottom - viewportHeight - effectiveStart
+      const trackable = articleBottom - viewportHeight - effectiveStart;
       if (trackable <= 0) {
         // Article fits within (or is shorter than) the viewport: nothing to
         // track. Treat as fully read once we're at/past its top.
-        targetProgressRef.current = window.scrollY >= articleTop ? 100 : 0
-        startEasing()
-        return
+        targetProgressRef.current = window.scrollY >= articleTop ? 100 : 0;
+        startEasing();
+        return;
       }
 
-      const scrolledIntoArticle = window.scrollY - effectiveStart
-      const progress = (scrolledIntoArticle / trackable) * 100
-      const clamped = Math.min(100, Math.max(0, progress))
+      const scrolledIntoArticle = window.scrollY - effectiveStart;
+      const progress = (scrolledIntoArticle / trackable) * 100;
+      const clamped = Math.min(100, Math.max(0, progress));
       // NaN guard: ignore bogus measurements rather than poisoning the lerp.
-      if (Number.isNaN(clamped)) return
-      targetProgressRef.current = clamped
-      startEasing()
+      if (Number.isNaN(clamped)) return;
+      targetProgressRef.current = clamped;
+      startEasing();
     }
 
     function onScroll() {
       if (!tickingRef.current) {
-        tickingRef.current = true
-        throttleRafRef.current = requestAnimationFrame(updateProgress)
+        tickingRef.current = true;
+        throttleRafRef.current = requestAnimationFrame(updateProgress);
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll, { passive: true })
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
 
     // Recompute when the article element reflows (late images/fonts).
-    let observer: ResizeObserver | null = null
+    let observer: ResizeObserver | null = null;
     if (typeof ResizeObserver !== 'undefined') {
-      observer = new ResizeObserver(onScroll)
-      if (targetRef.current) observer.observe(targetRef.current)
-      observer.observe(document.body)
+      observer = new ResizeObserver(onScroll);
+      if (targetRef.current) observer.observe(targetRef.current);
+      observer.observe(document.body);
     }
 
-    onScroll()
+    onScroll();
 
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (observer) observer.disconnect()
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (observer) observer.disconnect();
       if (easeRafRef.current !== null) {
-        cancelAnimationFrame(easeRafRef.current)
-        easeRafRef.current = null
+        cancelAnimationFrame(easeRafRef.current);
+        easeRafRef.current = null;
       }
       if (throttleRafRef.current !== null) {
-        cancelAnimationFrame(throttleRafRef.current)
-        throttleRafRef.current = null
+        cancelAnimationFrame(throttleRafRef.current);
+        throttleRafRef.current = null;
       }
-    }
-  }, [targetRef, reducedMotion])
+    };
+  }, [targetRef, reducedMotion]);
 
-  return scrollProgress
+  return scrollProgress;
 }
 
 /**
@@ -194,31 +194,31 @@ export function useScrollProgress(
  * Extracted from post-detail-client.tsx
  */
 export function useFooterVisibility() {
-  const [footerVisible, setFooterVisible] = useState(false)
-  const tickingRef = useRef(false)
+  const [footerVisible, setFooterVisible] = useState(false);
+  const tickingRef = useRef(false);
 
   useEffect(() => {
     // Cache the footer node once instead of querying it every frame.
-    const footer = document.querySelector('footer')
+    const footer = document.querySelector('footer');
 
     const handleScroll = () => {
       if (!tickingRef.current) {
-        tickingRef.current = true
+        tickingRef.current = true;
         requestAnimationFrame(() => {
-          tickingRef.current = false
-          if (!footer) return
+          tickingRef.current = false;
+          if (!footer) return;
 
-          const footerRect = footer.getBoundingClientRect()
-          setFooterVisible(footerRect.top < window.innerHeight)
-        })
+          const footerRect = footer.getBoundingClientRect();
+          setFooterVisible(footerRect.top < window.innerHeight);
+        });
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  return footerVisible
+  return footerVisible;
 }

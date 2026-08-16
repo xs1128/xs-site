@@ -1,33 +1,36 @@
-'use client'
+'use client';
 
-import { useState, useRef, useEffect } from 'react'
-import { createClient } from '@/lib/blog/supabase/client'
-import type { Heading, Post, PostLink, SeriesDetail } from '@/types/post'
-import BlogPageHeader from '@/components/blog/BlogPageHeader'
-import ReadingProgressBar from '@/components/blog/ReadingProgressBar'
-import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs'
-import PostHeader from '@/components/blog/PostHeader'
-import PostHero from '@/components/blog/PostHero'
-import PostContent from '@/components/blog/PostContent'
-import TableOfContents from '@/components/blog/TableOfContents'
-import TagList from '@/components/blog/TagList'
-import OtherPosts from '@/components/blog/OtherPosts'
-import PostNavigation from '@/components/blog/PostNavigation'
-import FullScreenNav from '@/components/blog/ui/FullScreenNav'
-import { SkeletonHero } from '@/components/blog/skeleton'
-import { useIsMobile } from '@/hooks/useBreakpoint'
-import { useScrollProgress, useFooterVisibility } from '@/hooks/useScrollDetection'
-import { useReducedMotion } from '@/hooks/useReducedMotion'
-import { spacing } from '@/styles/blog/typography'
-import { colors } from '@/styles/blog/colors'
+import { useState, useRef, useEffect } from 'react';
+import { createClient } from '@/lib/blog/supabase/client';
+import type { Heading, Post, PostLink, SeriesDetail } from '@/types/post';
+import BlogPageHeader from '@/components/blog/BlogPageHeader';
+import ReadingProgressBar from '@/components/blog/ReadingProgressBar';
+import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs';
+import PostHeader from '@/components/blog/PostHeader';
+import PostHero from '@/components/blog/PostHero';
+import PostContent from '@/components/blog/PostContent';
+import TableOfContents from '@/components/blog/TableOfContents';
+import TagList from '@/components/blog/TagList';
+import OtherPosts from '@/components/blog/OtherPosts';
+import PostNavigation from '@/components/blog/PostNavigation';
+import FullScreenNav from '@/components/blog/ui/FullScreenNav';
+import { SkeletonHero } from '@/components/blog/skeleton';
+import { useIsMobile } from '@/hooks/useBreakpoint';
+import {
+  useScrollProgress,
+  useFooterVisibility,
+} from '@/hooks/useScrollDetection';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { spacing } from '@/styles/blog/typography';
+import { colors } from '@/styles/blog/colors';
 
 interface PostDetailClientProps {
-  post: Post
-  seriesData: SeriesDetail[]
-  headings: Heading[]
-  relatedPosts: Post[]
-  prevPost?: PostLink | null
-  nextPost?: PostLink | null
+  post: Post;
+  seriesData: SeriesDetail[];
+  headings: Heading[];
+  relatedPosts: Post[];
+  prevPost?: PostLink | null;
+  nextPost?: PostLink | null;
 }
 
 export default function PostDetailClient({
@@ -39,30 +42,30 @@ export default function PostDetailClient({
   nextPost = null,
 }: PostDetailClientProps) {
   // Check if we're in a loading state (empty post object)
-  const isLoading = !post || !post.id
+  const isLoading = !post || !post.id;
 
-  const [isNavOpen, setIsNavOpen] = useState(false)
-  const articleRef = useRef<HTMLDivElement>(null)
-  const isMobile = useIsMobile()
-  const footerVisible = useFooterVisibility()
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const articleRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const footerVisible = useFooterVisibility();
 
-  const reducedMotion = useReducedMotion()
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
-    if (isLoading || !post?.slug) return
+    if (isLoading || !post?.slug) return;
 
-    const key = `post-view:${post.slug}`
-    if (sessionStorage.getItem(key)) return
-    sessionStorage.setItem(key, '1')
+    const key = `post-view:${post.slug}`;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, '1');
 
     createClient()
       .rpc('increment_post_view', { p_slug: post.slug })
-      .then(() => {})
-  }, [isLoading, post?.slug])
+      .then(() => {});
+  }, [isLoading, post?.slug]);
 
   // Already-smoothed via frame-based lerp inside the hook (skips easing when
   // reduced motion is preferred), so the bar reads this value directly.
-  const scrollProgress = useScrollProgress(articleRef, reducedMotion)
+  const scrollProgress = useScrollProgress(articleRef, reducedMotion);
 
   const pageContainerStyle: React.CSSProperties = {
     display: 'flex',
@@ -74,7 +77,7 @@ export default function PostDetailClient({
     // Horizontal overflow is contained by children (code blocks, tables, wrap).
     width: '100%',
     position: 'relative',
-  }
+  };
 
   const contentContainerStyle: React.CSSProperties = {
     display: 'flex',
@@ -86,7 +89,7 @@ export default function PostDetailClient({
     // Intentionally no overflowX: keep the window as the single scroll root so
     // position: sticky on the sidebar works. The main column uses minWidth: 0
     // so wide children stay contained instead of forcing horizontal scroll.
-  }
+  };
 
   const contentStyle: React.CSSProperties = {
     flex: 1,
@@ -95,17 +98,22 @@ export default function PostDetailClient({
     // Allow this flex item to shrink below its content width so wide code
     // blocks/tables scroll internally instead of widening the page.
     minWidth: 0,
-  }
+  };
 
   // Series level lets readers jump to sibling posts; omitted for standalone posts.
-  const parentSeries = seriesData?.[0]
+  const parentSeries = seriesData?.[0];
   const breadcrumbs: Crumb[] = [
-    { label: 'All Posts', href: '/?expanded=true' },
+    { label: 'All Posts', href: '/blog?expanded=true' },
     ...(parentSeries
-      ? [{ label: parentSeries.title, href: `/series/${parentSeries.slug}` }]
+      ? [
+          {
+            label: parentSeries.title,
+            href: `/blog/series/${parentSeries.slug}`,
+          },
+        ]
       : []),
     { label: post.title },
-  ]
+  ];
 
   return (
     <>
@@ -118,60 +126,59 @@ export default function PostDetailClient({
         {/* Full-width Header */}
         <BlogPageHeader onMenuClick={() => setIsNavOpen(true)} />
 
-      {/* Content Container */}
-      <div className="post-layout" style={contentContainerStyle}>
-        {/* CSS hides this under 768px; unmounting also drops the TOC's
+        {/* Content Container */}
+        <div className="post-layout" style={contentContainerStyle}>
+          {/* CSS hides this under 768px; unmounting also drops the TOC's
             scroll listener on mobile. */}
-        {!isMobile && (
-          <aside className="post-sidebar">
-            <TableOfContents headings={headings} loading={isLoading} />
-            <OtherPosts posts={relatedPosts} loading={isLoading} />
-          </aside>
-        )}
+          {!isMobile && (
+            <aside className="post-sidebar">
+              <TableOfContents headings={headings} loading={isLoading} />
+              <OtherPosts posts={relatedPosts} loading={isLoading} />
+            </aside>
+          )}
 
-        {/* Main Content */}
-        <main style={contentStyle}>
-          <div className="post-main">
-            {!isLoading && <Breadcrumbs items={breadcrumbs} />}
+          {/* Main Content */}
+          <main style={contentStyle}>
+            <div className="post-main">
+              {!isLoading && <Breadcrumbs items={breadcrumbs} />}
 
-            <PostHeader post={post} loading={isLoading} />
+              <PostHeader post={post} loading={isLoading} />
 
-            {isLoading ? (
-              <SkeletonHero />
-            ) : post.featured_image ? (
-              <PostHero imageUrl={post.featured_image} alt={post.title} />
-            ) : null}
+              {isLoading ? (
+                <SkeletonHero />
+              ) : post.featured_image ? (
+                <PostHero imageUrl={post.featured_image} alt={post.title} />
+              ) : null}
 
-            {post.content && (
-              <div ref={articleRef}>
-                <PostContent content={post.content} headings={headings} />
-              </div>
-            )}
+              {post.content && (
+                <div ref={articleRef}>
+                  <PostContent content={post.content} headings={headings} />
+                </div>
+              )}
 
-            <div style={{
-              width: '100%',
-              height: '1px',
-              backgroundColor: colors.border,
-              margin: `${spacing.lg} 0`,
-            }} />
+              <div
+                style={{
+                  width: '100%',
+                  height: '1px',
+                  backgroundColor: colors.border,
+                  margin: `${spacing.lg} 0`,
+                }}
+              />
 
-            <TagList tags={post.tags || []} loading={isLoading} />
+              <TagList tags={post.tags || []} loading={isLoading} />
 
-            <PostNavigation
-              prevPost={prevPost}
-              nextPost={nextPost}
-              seriesTitle={parentSeries?.title}
-            />
-          </div>
-        </main>
+              <PostNavigation
+                prevPost={prevPost}
+                nextPost={nextPost}
+                seriesTitle={parentSeries?.title}
+              />
+            </div>
+          </main>
+        </div>
+
+        {/* Full-Screen Navigation */}
+        <FullScreenNav isOpen={isNavOpen} onClose={() => setIsNavOpen(false)} />
       </div>
-
-      {/* Full-Screen Navigation */}
-      <FullScreenNav
-        isOpen={isNavOpen}
-        onClose={() => setIsNavOpen(false)}
-      />
-    </div>
     </>
-  )
+  );
 }

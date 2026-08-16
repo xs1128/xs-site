@@ -1,9 +1,9 @@
 interface SkeletonElementProps {
-  width?: string | number
-  height?: string | number
-  variant?: 'text' | 'circular' | 'rectangular'
-  className?: string
-  style?: React.CSSProperties
+  width?: string | number;
+  height?: string | number;
+  variant?: 'text' | 'circular' | 'rectangular';
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export default function SkeletonElement({
@@ -17,11 +17,12 @@ export default function SkeletonElement({
     width,
     height,
     backgroundColor: '#3E454C',
-    borderRadius: variant === 'circular' ? '50%' : variant === 'text' ? '4px' : '4px',
+    borderRadius:
+      variant === 'circular' ? '50%' : variant === 'text' ? '4px' : '4px',
     overflow: 'hidden',
     position: 'relative',
     ...style,
-  }
+  };
 
   const shimmerStyle: React.CSSProperties = {
     position: 'absolute',
@@ -32,11 +33,11 @@ export default function SkeletonElement({
     background: 'linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%)',
     backgroundSize: '200% 100%',
     animation: 'blogShimmer 1.5s ease-in-out infinite',
-  }
+  };
 
   return (
     <div style={baseStyle} className={`skeleton-element ${className}`}>
       <div style={shimmerStyle} />
     </div>
-  )
+  );
 }

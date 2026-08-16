@@ -1,9 +1,9 @@
-import type { Metadata, Viewport } from "next";
-import Script from "next/script";
-import { siteConfig, blogUrl } from "@/lib/blog/seo";
-import "@/styles/blog-globals.css";
-import "@/styles/blog.css";
-import Footer from "@/components/blog/ui/Footer";
+import type { Metadata, Viewport } from 'next';
+import Script from 'next/script';
+import { siteConfig, blogUrl } from '@/lib/blog/seo';
+import '@/styles/blog-globals.css';
+import '@/styles/blog.css';
+import Footer from '@/components/blog/ui/Footer';
 
 // Unset means no script, so dev and previews stay out of the stats.
 const goatCounterCode = process.env.NEXT_PUBLIC_GOATCOUNTER_CODE;
@@ -16,29 +16,36 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   applicationName: siteConfig.name,
   authors: [{ name: siteConfig.author }],
-  manifest: "/blog/site.webmanifest",
+  manifest: '/blog/site.webmanifest',
   icons: {
     icon: [
-      { url: "/blog/favicon.ico", sizes: "any" },
-      { url: "/blog/favicon-16x16.png", type: "image/png", sizes: "16x16" },
-      { url: "/blog/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: '/blog/favicon.ico', sizes: 'any' },
+      { url: '/blog/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+      { url: '/blog/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
     ],
-    apple: [{ url: "/blog/apple-touch-icon.png", sizes: "180x180" }],
+    apple: [{ url: '/blog/apple-touch-icon.png', sizes: '180x180' }],
   },
   alternates: {
-    canonical: blogUrl("/"),
+    canonical: blogUrl('/'),
   },
   openGraph: {
-    type: "website",
+    type: 'website',
     locale: siteConfig.locale,
-    url: blogUrl("/"),
+    url: blogUrl('/'),
     siteName: siteConfig.name,
     title: siteConfig.title,
     description: siteConfig.description,
-    images: [{ url: siteConfig.ogImage, width: 1200, height: 630, alt: siteConfig.name }],
+    images: [
+      {
+        url: siteConfig.ogImage,
+        width: 1200,
+        height: 630,
+        alt: siteConfig.name,
+      },
+    ],
   },
   twitter: {
-    card: "summary_large_image",
+    card: 'summary_large_image',
     title: siteConfig.title,
     description: siteConfig.description,
     images: [siteConfig.ogImage],
@@ -49,14 +56,14 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F2E9D8",
+  themeColor: '#F2E9D8',
 };
 
 export default function BlogLayout({

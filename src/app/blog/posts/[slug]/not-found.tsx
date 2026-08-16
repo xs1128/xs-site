@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { FONTS, clamp, spacing } from '@/styles/blog/typography'
-import { colors } from '@/styles/blog/colors'
-import { TRANSITIONS } from '@/styles/blog/animations'
+import Link from 'next/link';
+import { FONTS, clamp, spacing } from '@/styles/blog/typography';
+import { colors } from '@/styles/blog/colors';
+import { TRANSITIONS } from '@/styles/blog/animations';
 
 export default function NotFound() {
   const containerStyle: React.CSSProperties = {
@@ -14,7 +14,7 @@ export default function NotFound() {
     minHeight: '60vh',
     textAlign: 'center',
     padding: spacing.lg,
-  }
+  };
 
   const titleStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
@@ -22,7 +22,7 @@ export default function NotFound() {
     fontWeight: 700,
     color: colors.text,
     marginBottom: spacing.md,
-  }
+  };
 
   const messageStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
@@ -30,7 +30,7 @@ export default function NotFound() {
     color: '#666666',
     marginBottom: spacing.lg,
     maxWidth: '500px',
-  }
+  };
 
   const buttonStyle: React.CSSProperties = {
     fontFamily: FONTS.primary,
@@ -42,26 +42,27 @@ export default function NotFound() {
     borderRadius: '4px',
     textDecoration: 'none',
     transition: TRANSITIONS.fast('background-color'),
-  }
+  };
 
   return (
     <div style={containerStyle}>
       <h1 style={titleStyle}>404 - Post Not Found</h1>
       <p style={messageStyle}>
-        The post you&apos;re looking for doesn&apos;t exist or hasn&apos;t been published yet.
+        The post you&apos;re looking for doesn&apos;t exist or hasn&apos;t been
+        published yet.
       </p>
       <Link
-        href="/"
+        href="/blog"
         style={buttonStyle}
         onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = '#CC4420'
+          e.currentTarget.style.backgroundColor = '#CC4420';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = colors.accent
+          e.currentTarget.style.backgroundColor = colors.accent;
         }}
       >
         Go Home
       </Link>
     </div>
-  )
+  );
 }

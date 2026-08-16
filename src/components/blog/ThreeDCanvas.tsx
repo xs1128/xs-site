@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { Canvas } from "@react-three/fiber";
-import { Waves, Sparkles, Maximize2, X } from "lucide-react";
-import { useIsMobile } from "@/hooks/useBreakpoint";
-import { colors } from "@/styles/blog/colors";
-import Tooltip from "@/components/blog/ui/Tooltip";
-import InteractiveScene from "./scene/InteractiveScene";
-import ThreeDAssetPlaceholder from "./ThreeDAssetPlaceholder";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { Canvas } from '@react-three/fiber';
+import { Waves, Sparkles, Maximize2, X } from 'lucide-react';
+import { useIsMobile } from '@/hooks/useBreakpoint';
+import { colors } from '@/styles/blog/colors';
+import Tooltip from '@/components/blog/ui/Tooltip';
+import InteractiveScene from './scene/InteractiveScene';
+import ThreeDAssetPlaceholder from './ThreeDAssetPlaceholder';
 
-const RICH_SCENE_KEY = "blog:rich-scene";
+const RICH_SCENE_KEY = 'blog:rich-scene';
 const OVERLAY_Z = 10100;
 const EXIT_MS = 200;
 const READY_TIMEOUT_MS = 8000;
@@ -134,9 +134,9 @@ const OVERLAY_CSS = `
 
 function iconButtonStyle(isDark: boolean): React.CSSProperties {
   return {
-    border: `1px solid ${isDark ? "rgba(255,255,255,0.45)" : "rgba(42,47,53,0.25)"}`,
-    backgroundColor: isDark ? "rgba(20,28,42,0.45)" : "rgba(255,255,255,0.55)",
-    color: isDark ? "#FFFFFF" : "#2A2F35",
+    border: `1px solid ${isDark ? 'rgba(255,255,255,0.45)' : 'rgba(42,47,53,0.25)'}`,
+    backgroundColor: isDark ? 'rgba(20,28,42,0.45)' : 'rgba(255,255,255,0.55)',
+    color: isDark ? '#FFFFFF' : '#2A2F35',
   };
 }
 
@@ -171,16 +171,24 @@ function SceneCanvas({
 
   return (
     <div className="scene-stage">
-      <div className="scene-canvas-fade" data-ready={isShowing} data-busy={busy}>
+      <div
+        className="scene-canvas-fade"
+        data-ready={isShowing}
+        data-busy={busy}
+      >
         <Canvas
           camera={{
-            position: (isMobile ? [0, 0, 5] : [0, 0, 4]) as [number, number, number],
+            position: (isMobile ? [0, 0, 5] : [0, 0, 4]) as [
+              number,
+              number,
+              number,
+            ],
             fov: 50,
           }}
-          style={{ width: "100%", height: "100%", display: "block" }}
+          style={{ width: '100%', height: '100%', display: 'block' }}
           resize={{ offsetSize: true }}
           dpr={[1, isMobile ? 1.5 : 2]}
-          frameloop={active && !busy ? "always" : "never"}
+          frameloop={active && !busy ? 'always' : 'never'}
           gl={{ toneMappingExposure: rich ? 0.62 : 1 }}
         >
           <InteractiveScene
@@ -197,7 +205,11 @@ function SceneCanvas({
   );
 }
 
-export default function ThreeDCanvas({ isResizing = false }: { isResizing?: boolean }) {
+export default function ThreeDCanvas({
+  isResizing = false,
+}: {
+  isResizing?: boolean;
+}) {
   const isMobile = useIsMobile();
   const containerRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -206,22 +218,26 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
   const [isMounted, setIsMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isRich, setIsRich] = useState(
-    () => typeof window === "undefined" || window.localStorage.getItem(RICH_SCENE_KEY) !== "off"
+    () =>
+      typeof window === 'undefined' ||
+      window.localStorage.getItem(RICH_SCENE_KEY) !== 'off',
   );
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
-    const observer = new IntersectionObserver(([entry]) => setIsOnscreen(entry.isIntersecting));
+    const observer = new IntersectionObserver(([entry]) =>
+      setIsOnscreen(entry.isIntersecting),
+    );
     observer.observe(container);
 
     const onVisibilityChange = () => setIsPageVisible(!document.hidden);
-    document.addEventListener("visibilitychange", onVisibilityChange);
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     return () => {
       observer.disconnect();
-      document.removeEventListener("visibilitychange", onVisibilityChange);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, []);
 
@@ -246,16 +262,16 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
     if (!isMounted) return;
 
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow = 'hidden';
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+      if (event.key === 'Escape') close();
     };
-    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener('keydown', onKeyDown);
 
     return () => {
       document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener('keydown', onKeyDown);
     };
   }, [isMounted, close]);
 
@@ -268,35 +284,35 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
   const toggleRich = () => {
     setIsRich((previous) => {
       const next = !previous;
-      window.localStorage.setItem(RICH_SCENE_KEY, next ? "on" : "off");
+      window.localStorage.setItem(RICH_SCENE_KEY, next ? 'on' : 'off');
       return next;
     });
   };
 
   const containerStyle: React.CSSProperties = {
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden",
+    display: 'flex',
+    flexDirection: 'column',
+    overflow: 'hidden',
     minHeight: 0,
-    border: "1px solid rgba(0, 0, 0, 0.22)",
+    border: '1px solid rgba(0, 0, 0, 0.22)',
     margin: 0,
     backgroundColor: colors.background,
-    position: "relative",
+    position: 'relative',
   };
 
   const controlsStyle: React.CSSProperties = {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
     zIndex: 5,
-    display: "flex",
-    gap: "8px",
+    display: 'flex',
+    gap: '8px',
   };
 
   const richButton = (
     <Tooltip
-      label={isRich ? "Animated background: on" : "Animated background: off"}
+      label={isRich ? 'Animated background: on' : 'Animated background: off'}
       placement="bottom"
     >
       <button
@@ -305,7 +321,11 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
         onClick={toggleRich}
         style={iconButtonStyle(isRich)}
         aria-pressed={isRich}
-        aria-label={isRich ? "Turn off the animated background" : "Turn on the animated background"}
+        aria-label={
+          isRich
+            ? 'Turn off the animated background'
+            : 'Turn on the animated background'
+        }
       >
         {isRich ? <Waves size={18} /> : <Sparkles size={18} />}
       </button>
@@ -335,7 +355,7 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
         </div>
 
         <SceneCanvas
-          key={isRich ? "rich" : "plain"}
+          key={isRich ? 'rich' : 'plain'}
           isMobile={isMobile}
           rich={isRich}
           active={isOnscreen && isPageVisible && !isMounted}
@@ -360,7 +380,7 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
               data-closing={!isOpen}
               onClick={(event) => event.stopPropagation()}
             >
-              <div style={{ ...controlsStyle, top: "12px", right: "12px" }}>
+              <div style={{ ...controlsStyle, top: '12px', right: '12px' }}>
                 {richButton}
                 <Tooltip label="Close" placement="bottom">
                   <button
@@ -376,14 +396,14 @@ export default function ThreeDCanvas({ isResizing = false }: { isResizing?: bool
                 </Tooltip>
               </div>
               <SceneCanvas
-                key={isRich ? "rich" : "plain"}
+                key={isRich ? 'rich' : 'plain'}
                 isMobile={isMobile}
                 rich={isRich}
                 active={isPageVisible}
               />
             </div>
           </div>,
-          document.body
+          document.body,
         )}
     </>
   );

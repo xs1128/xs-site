@@ -1,5 +1,5 @@
-export { default as SkeletonElement } from './SkeletonElement'
-export { default as SkeletonText } from './SkeletonText'
-export { default as SkeletonHero } from './SkeletonHero'
-export { default as SkeletonCard } from './SkeletonCard'
-export { default as SkeletonList } from './SkeletonList'
+export { default as SkeletonElement } from './SkeletonElement';
+export { default as SkeletonText } from './SkeletonText';
+export { default as SkeletonHero } from './SkeletonHero';
+export { default as SkeletonCard } from './SkeletonCard';
+export { default as SkeletonList } from './SkeletonList';

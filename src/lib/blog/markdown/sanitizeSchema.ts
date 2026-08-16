@@ -1,5 +1,5 @@
-import { defaultSchema } from 'rehype-sanitize'
-import type { Options as SanitizeSchema } from 'rehype-sanitize'
+import { defaultSchema } from 'rehype-sanitize';
+import type { Options as SanitizeSchema } from 'rehype-sanitize';
 
 /**
  * !!! KEEP IN SYNC !!!
@@ -30,13 +30,24 @@ export const markdownSanitizeSchema: SanitizeSchema = {
     ...defaultSchema.attributes,
     // Allow language-* class names on code/pre so syntax highlighting works,
     // plus className passthrough on the common formatting elements.
-    code: [...(defaultSchema.attributes?.code || []), ['className', /^language-./]],
-    pre: [...(defaultSchema.attributes?.pre || []), ['className', /^language-./]],
+    code: [
+      ...(defaultSchema.attributes?.code || []),
+      ['className', /^language-./],
+    ],
+    pre: [
+      ...(defaultSchema.attributes?.pre || []),
+      ['className', /^language-./],
+    ],
     span: [...(defaultSchema.attributes?.span || []), 'className'],
     // Links: keep default (href/title) and allow new-tab attributes.
     a: [...(defaultSchema.attributes?.a || []), 'target', 'rel'],
     // GFM task-list checkboxes.
-    input: [...(defaultSchema.attributes?.input || []), 'type', 'checked', 'disabled'],
+    input: [
+      ...(defaultSchema.attributes?.input || []),
+      'type',
+      'checked',
+      'disabled',
+    ],
     // Heading anchor ids (used by the public blog's table-of-contents).
     h1: [...(defaultSchema.attributes?.h1 || []), 'id'],
     h2: [...(defaultSchema.attributes?.h2 || []), 'id'],
@@ -52,4 +63,4 @@ export const markdownSanitizeSchema: SanitizeSchema = {
     'span',
     'div',
   ],
-}
+};

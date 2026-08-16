@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { createClient } from "@/lib/blog/supabase/client";
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/blog/supabase/client';
 
 export interface TerminalStats {
   postCount: number;
@@ -32,7 +32,7 @@ export function useTerminalStats() {
   const [stats, setStats] = useState<TerminalStats>({
     postCount: 0,
     seriesCount: 0,
-    lastUpdate: "LOADING...",
+    lastUpdate: 'LOADING...',
     pictureCount: 0,
     totalViews: null,
     isLoading: true,
@@ -71,14 +71,16 @@ export function useTerminalStats() {
         const totalViews = await fetchTotalViews();
 
         // Format last update date
-        let lastUpdateText = "NO POSTS";
+        let lastUpdateText = 'NO POSTS';
         if (latestPost?.published_at) {
           const date = new Date(latestPost.published_at);
-          lastUpdateText = date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          }).toUpperCase();
+          lastUpdateText = date
+            .toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+            })
+            .toUpperCase();
         }
 
         setStats({
@@ -91,7 +93,7 @@ export function useTerminalStats() {
         });
       } catch (error) {
         console.error('Error fetching terminal stats:', error);
-        setStats(prev => ({ ...prev, isLoading: false }));
+        setStats((prev) => ({ ...prev, isLoading: false }));
       }
     }
 

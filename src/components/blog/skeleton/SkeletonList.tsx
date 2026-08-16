@@ -1,9 +1,9 @@
-import { spacing } from '@/styles/blog/typography'
+import { spacing } from '@/styles/blog/typography';
 
 interface SkeletonListProps {
-  items?: number
-  variant?: 'heading' | 'post' | 'tag'
-  className?: string
+  items?: number;
+  variant?: 'heading' | 'post' | 'tag';
+  className?: string;
 }
 
 export default function SkeletonList({
@@ -20,7 +20,7 @@ export default function SkeletonList({
     background: 'linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%)',
     backgroundSize: '200% 100%',
     animation: 'blogShimmer 1.5s ease-in-out infinite',
-  }
+  };
 
   if (variant === 'tag') {
     // Tag pills
@@ -28,7 +28,7 @@ export default function SkeletonList({
       display: 'flex',
       flexWrap: 'wrap',
       gap: spacing.sm,
-    }
+    };
 
     const tagStyle: React.CSSProperties = {
       height: '32px',
@@ -38,7 +38,7 @@ export default function SkeletonList({
       backgroundColor: '#3E454C',
       position: 'relative',
       overflow: 'hidden',
-    }
+    };
 
     return (
       <div style={containerStyle} className={className}>
@@ -48,7 +48,7 @@ export default function SkeletonList({
           </div>
         ))}
       </div>
-    )
+    );
   }
 
   if (variant === 'heading') {
@@ -57,7 +57,7 @@ export default function SkeletonList({
       display: 'flex',
       flexDirection: 'column',
       gap: spacing.sm,
-    }
+    };
 
     const headingStyle = (level: number): React.CSSProperties => ({
       height: '14px',
@@ -67,7 +67,7 @@ export default function SkeletonList({
       width: level === 0 ? '90%' : '75%',
       position: 'relative',
       overflow: 'hidden',
-    })
+    });
 
     return (
       <div style={containerStyle} className={className}>
@@ -77,7 +77,7 @@ export default function SkeletonList({
           </div>
         ))}
       </div>
-    )
+    );
   }
 
   // Post variant (for related posts, series posts)
@@ -85,7 +85,7 @@ export default function SkeletonList({
     display: 'flex',
     flexDirection: 'column',
     gap: spacing.md,
-  }
+  };
 
   const itemStyle: React.CSSProperties = {
     padding: spacing.md,
@@ -95,7 +95,7 @@ export default function SkeletonList({
     display: 'flex',
     flexDirection: 'column',
     gap: spacing.sm,
-  }
+  };
 
   const titleStyle: React.CSSProperties = {
     width: '85%',
@@ -104,7 +104,7 @@ export default function SkeletonList({
     borderRadius: '4px',
     position: 'relative',
     overflow: 'hidden',
-  }
+  };
 
   const metaStyle: React.CSSProperties = {
     width: '50%',
@@ -113,7 +113,7 @@ export default function SkeletonList({
     borderRadius: '4px',
     position: 'relative',
     overflow: 'hidden',
-  }
+  };
 
   return (
     <div style={containerStyle} className={className}>
@@ -128,5 +128,5 @@ export default function SkeletonList({
         </div>
       ))}
     </div>
-  )
+  );
 }

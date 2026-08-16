@@ -71,7 +71,7 @@ export function createFaceTexture(config: FaceTextConfig): THREE.CanvasTexture {
  * Disposes an array of textures to prevent memory leaks
  */
 export function disposeTextures(textures: THREE.CanvasTexture[]): void {
-  textures.forEach(texture => {
+  textures.forEach((texture) => {
     texture.dispose();
   });
 }

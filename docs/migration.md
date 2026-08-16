@@ -34,7 +34,7 @@ Neither Vercel's nor Next.js' docs mention this. On Hobby the allowance is
 100 GB/month, and the blog ships three.js.
 
 **3. Preview deployments are fiction.** The rewrite destination is hardcoded to
-production. Every `site` preview branch renders the *production* blog, and no
+production. Every `site` preview branch renders the _production_ blog, and no
 `blog` preview is ever reachable under `www`. There is no commit pairing between
 the two projects, so a change spanning both cannot be reviewed before it is
 live. Parameterising the destination URL does not fix this: preview URLs carry
@@ -92,7 +92,7 @@ user bytes.
    merge rather than being flattened into one commit.
 
 2. Move `blog/src/app/{page,home-client,posts,series,api}` to
-   `site/src/app/blog/`. Blog's `layout.tsx` becomes a *nested* layout at
+   `site/src/app/blog/`. Blog's `layout.tsx` becomes a _nested_ layout at
    `src/app/blog/layout.tsx`, not a second root layout.
 
 3. Namespace blog's CSS. Scope the six colliding custom properties and the

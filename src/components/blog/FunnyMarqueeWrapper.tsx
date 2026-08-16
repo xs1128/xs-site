@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/blog/supabase/client";
-import FunnyMarquee from "./FunnyMarquee";
-import type { FunnyPicture } from "@/types/post";
-import { SkeletonText } from "@/components/blog/skeleton";
+import { useEffect, useState } from 'react';
+import { createClient } from '@/lib/blog/supabase/client';
+import FunnyMarquee from './FunnyMarquee';
+import type { FunnyPicture } from '@/types/post';
+import { SkeletonText } from '@/components/blog/skeleton';
 
 interface FunnyMarqueeWrapperProps {
   isCollapsed?: boolean;
@@ -31,16 +31,18 @@ export default function FunnyMarqueeWrapper({
         .limit(12);
 
       if (data) {
-        const transformedPictures: FunnyPicture[] = data.map(picture => ({
+        const transformedPictures: FunnyPicture[] = data.map((picture) => ({
           id: picture.id,
           image: picture.url || '',
           title: picture.caption || '',
           location: picture.location || '',
-          date: picture.date_taken ? new Date(picture.date_taken).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-          }) : ''
+          date: picture.date_taken
+            ? new Date(picture.date_taken).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })
+            : '',
         }));
         setPictures(transformedPictures);
       }
@@ -52,7 +54,14 @@ export default function FunnyMarqueeWrapper({
 
   if (loading) {
     return (
-      <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <div
+        style={{
+          padding: '20px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+        }}
+      >
         <SkeletonText lines={2} width="100%" />
         <SkeletonText lines={1} width="60%" />
       </div>

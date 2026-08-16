@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { colors } from "@/styles/blog/colors";
+import { colors } from '@/styles/blog/colors';
 
-const SPINNER_FRAMES = ["|", "/", "-", "\\"];
+const SPINNER_FRAMES = ['|', '/', '-', '\\'];
 const SPIN_CYCLE_MS = 640;
 const EDGE_CYCLE_MS = 1600;
-const INK = "rgba(30, 38, 48, ";
+const INK = 'rgba(30, 38, 48, ';
 
 const SKELETON_CSS = `
 @keyframes scene-skeleton-spin {
@@ -65,36 +65,36 @@ export default function ThreeDAssetPlaceholder({
   isMobile = false,
 }: ThreeDAssetPlaceholderProps) {
   const lineStyle: React.CSSProperties = {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
     fontFamily: "'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace",
-    fontSize: isMobile ? "11px" : "13px",
-    letterSpacing: "0.04em",
+    fontSize: isMobile ? '11px' : '13px',
+    letterSpacing: '0.04em',
     lineHeight: 2,
-    whiteSpace: "nowrap",
+    whiteSpace: 'nowrap',
   };
 
   const gutterStyle: React.CSSProperties = {
-    position: "relative",
+    position: 'relative',
     flexShrink: 0,
-    width: "1.1em",
-    height: "1.1em",
+    width: '1.1em',
+    height: '1.1em',
   };
 
   return (
     <div
       aria-hidden="true"
       style={{
-        position: "absolute",
+        position: 'absolute',
         inset: 0,
-        overflow: "hidden",
+        overflow: 'hidden',
         backgroundColor: colors.background,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: isMobile ? "18px" : "24px",
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: isMobile ? '18px' : '24px',
       }}
     >
       <style>{SKELETON_CSS}</style>
@@ -126,7 +126,9 @@ export default function ThreeDAssetPlaceholder({
               <span
                 key={frame}
                 className="scene-skeleton-spin"
-                style={{ animationDelay: `${(index * SPIN_CYCLE_MS) / SPINNER_FRAMES.length}ms` }}
+                style={{
+                  animationDelay: `${(index * SPIN_CYCLE_MS) / SPINNER_FRAMES.length}ms`,
+                }}
               >
                 {frame}
               </span>
