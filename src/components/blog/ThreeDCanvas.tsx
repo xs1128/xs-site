@@ -25,7 +25,7 @@ const OVERLAY_CSS = `
   align-items: center;
   justify-content: center;
   background-color: rgba(18, 22, 28, 0);
-  transition: background-color 320ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: background-color 320ms var(--ease-out-quint);
 }
 .scene-overlay[data-open="true"] {
   background-color: rgba(18, 22, 28, 0.55);
@@ -48,8 +48,8 @@ const OVERLAY_CSS = `
   transform: scale(0.96);
   opacity: 0;
   transition:
-    transform 320ms cubic-bezier(0.23, 1, 0.32, 1),
-    opacity 320ms cubic-bezier(0.23, 1, 0.32, 1);
+    transform 320ms var(--ease-out-quint),
+    opacity 320ms var(--ease-out-quint);
 }
 .scene-panel[data-open="true"] {
   transform: scale(1);
@@ -72,8 +72,8 @@ const OVERLAY_CSS = `
   opacity: 0;
   filter: blur(10px);
   transition:
-    opacity 480ms cubic-bezier(0.23, 1, 0.32, 1),
-    filter 480ms cubic-bezier(0.23, 1, 0.32, 1);
+    opacity 480ms var(--ease-out-quint),
+    filter 480ms var(--ease-out-quint);
 }
 .scene-canvas-fade[data-ready="true"] {
   opacity: 1;
@@ -90,7 +90,7 @@ const OVERLAY_CSS = `
   overflow: hidden;
   pointer-events: none;
   opacity: 1;
-  transition: opacity 380ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: opacity 380ms var(--ease-out-quint);
 }
 .scene-skeleton[data-ready="true"] {
   opacity: 0;
@@ -107,7 +107,7 @@ const OVERLAY_CSS = `
   cursor: pointer;
   backdrop-filter: blur(6px);
   transition:
-    transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 160ms var(--ease-out-quint),
     background-color 200ms ease,
     color 200ms ease,
     border-color 200ms ease;

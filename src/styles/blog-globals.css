@@ -4,7 +4,7 @@
 
 html:has(.blog-root) {
   scroll-behavior: smooth;
-  background-color: #f2e9d8;
+  background-color: var(--color-landing-bg);
 }
 
 /* 100% not 100vw: vw counts the classic scrollbar's width, so it overflows by ~15px */
@@ -29,8 +29,8 @@ body:has(.blog-root) {
 .blog-root {
   font-family: var(--font-primary);
   font-weight: 400;
-  color: #2a2f35;
-  background-color: #f2e9d8;
+  color: var(--color-text-on-light);
+  background-color: var(--color-landing-bg);
   min-height: 100vh;
 }
 
@@ -55,7 +55,7 @@ body:has(.blog-root) {
 }
 
 .blog-root a {
-  color: #e5532c;
+  color: var(--color-accent-on-light);
   text-decoration: none;
 }
 
@@ -129,32 +129,23 @@ body:has(.blog-root) {
 
 /* ========================================
    CSS CUSTOM PROPERTIES
-   ======================================== */
+   ========================================
+   Aliases onto globals.css :root. Colours, fonts, and transitions are the
+   site's — only these blog-local names are declared here. */
 .blog-root {
-  /* Colors */
-  --color-background: #f2e9d8;
-  --color-text: #2a2f35;
-  --color-accent: #e5532c;
-  --color-dark-background: #2a2f35;
-  --color-dark-text: #f2e9d8;
-  --color-nav-background: #363d44;
-  --color-card: #e4d9c2;
-  --color-border: #d6cbb3;
-
-  /* --font-primary is inverted vs site: Hubot Sans here, Roboto Mono there. */
-  --font-primary: var(--font-hubot-sans), sans-serif;
-  --font-mono: var(--font-roboto-mono), monospace;
+  --color-background: var(--color-landing-bg);
+  --color-text: var(--color-text-on-light);
+  --color-dark-background: var(--color-about-bg);
+  --color-dark-text: var(--color-text-on-dark);
+  --color-nav-background: var(--color-nav-bg);
+  --color-card: var(--color-card-bg);
+  --font-mono: var(--font-primary);
 
   /* Spacing */
   --spacing-xs: clamp(4px, 1vh, 8px);
   --spacing-sm: clamp(8px, 1.5vh, 16px);
   --spacing-md: clamp(12px, 2vh, 24px);
   --spacing-lg: clamp(20px, 3vh, 40px);
-
-  /* Transitions */
-  --transition-fast: 0.3s ease;
-  --transition-medium: 0.4s ease;
-  --transition-slow: 0.6s ease;
 }
 
 /* ========================================
@@ -397,16 +388,16 @@ body:has(.blog-root) {
   animation: fadeIn 0.3s ease;
 }
 .animate-slide-in {
-  animation: blogSlideInRight 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: blogSlideInRight 0.9s var(--ease-out-expo);
 }
 
 /* Navigation animations */
 .blog-nav-item-opening {
-  animation: blogFadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation: blogFadeInSlide 0.9s var(--ease-out-expo) backwards;
 }
 
 .blog-nav-item-closing {
-  animation: blogFadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: blogFadeOutSlide 0.6s var(--ease-out-expo) forwards;
 }
 
 .blog-hamburger-fading {
@@ -425,7 +416,7 @@ body:has(.blog-root) {
   right: auto;
   top: 0;
   bottom: 0;
-  color: #e5532c;
+  color: var(--color-accent);
   background-color: inherit;
   font-family: inherit;
   font-size: inherit;
@@ -437,7 +428,7 @@ body:has(.blog-root) {
   margin: inherit;
   clip-path: inset(0 100% 0 0);
   pointer-events: none;
-  transition: clip-path 0.7s cubic-bezier(0.6, 0, 0.4, 1);
+  transition: clip-path 0.7s var(--ease-in-out-soft);
   z-index: 1;
   width: fit-content;
 }
@@ -487,7 +478,7 @@ body:has(.blog-root) {
   border-radius: 6px;
   background-color: #2a2f35;
   color: #f2e9d8;
-  font-family: var(--font-hubot-sans), sans-serif;
+  font-family: var(--font-roboto-mono), monospace;
   font-size: clamp(10px, 1.2vw, 12px);
   font-weight: 500;
   line-height: 1.35;
@@ -499,7 +490,7 @@ body:has(.blog-root) {
   transform: scale(0.96);
   transition:
     opacity 140ms ease,
-    transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+    transform 140ms var(--ease-out-quint);
 }
 
 .blog-tooltip[data-ready='true'] {

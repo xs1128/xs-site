@@ -68,10 +68,10 @@ function useNavAnimations() {
         }
       }
       .blog-nav-item-opening {
-        animation: blogFadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        animation: blogFadeInSlide 0.9s var(--ease-out-expo) backwards;
       }
       .blog-nav-item-closing {
-        animation: blogFadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: blogFadeOutSlide 0.6s var(--ease-out-expo) forwards;
       }
       .blog-hamburger-fading {
         animation: blogHamburgerFadeOut 0.3s ease forwards;
@@ -100,7 +100,7 @@ function useNavAnimations() {
         margin: inherit;
         clip-path: inset(0 100% 0 0);
         pointer-events: none;
-        transition: clip-path 0.7s cubic-bezier(0.6, 0, 0.4, 1);
+        transition: clip-path 0.7s var(--ease-in-out-soft);
         z-index: 1;
         width: fit-content;
       }
@@ -109,7 +109,7 @@ function useNavAnimations() {
         z-index: 0;
       }
       .nav-item svg {
-        transition: stroke 0.3s cubic-bezier(0.6, 0, 0.4, 1);
+        transition: stroke 0.3s var(--ease-in-out-soft);
         transition-delay: 0.7s;
         position: relative;
         z-index: 2;
@@ -185,8 +185,8 @@ function FullScreenNav({
         alignItems: 'center',
         justifyContent: 'center',
         animation: isClosing
-          ? 'blogSlideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)'
-          : 'blogSlideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+          ? 'blogSlideOutRight 0.8s var(--ease-out-expo)'
+          : 'blogSlideInRight 0.8s var(--ease-out-expo)',
         pointerEvents: isClosing ? 'none' : 'auto',
         willChange: isClosing ? 'transform, opacity' : 'auto',
         contain: 'strict',
@@ -219,7 +219,7 @@ function FullScreenNav({
             style={{
               borderRight: `1px solid ${colors.border}`,
               color: colors.darkText,
-              fontFamily: 'Roboto Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: isSmallScreen ? '32px' : '48px',
               fontWeight: 500,
               padding: isSmallScreen ? '0.5vh 1vw' : '0.5vh 1vw',
@@ -258,7 +258,7 @@ function FullScreenNav({
                 cursor: 'pointer',
                 padding: '0',
                 lineHeight: 0.85,
-                fontFamily: 'Roboto Mono, monospace',
+                fontFamily: 'var(--font-mono)',
                 fontWeight: 500,
                 display: 'flex',
               }}
@@ -286,7 +286,7 @@ function FullScreenNav({
             color: colors.darkText,
             fontSize: isSmallScreen ? '14.5vw' : '10.5vw',
             fontWeight: 700,
-            fontFamily: 'Roboto Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             cursor: 'pointer',
             textAlign: 'left',
             padding: '0.5vh 3vw 0.5vh 1vw',
@@ -335,7 +335,7 @@ function FullScreenNav({
             color: colors.darkText,
             fontSize: isSmallScreen ? '14.5vw' : '10.5vw',
             fontWeight: 700,
-            fontFamily: 'Roboto Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             cursor: 'pointer',
             textAlign: 'left',
             padding: '0.5vh 3vw 0.5vh 1vw',
@@ -507,7 +507,7 @@ export default function HomePageClient({
     overflowX: 'hidden',
     borderRadius: isExpanded ? '0' : '12px',
     transition: transition(
-      'width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
+      'width 0.8s ease, height 0.8s ease, border-radius 0.8s ease',
     ),
     willChange: isAnimating ? 'width, height, border-radius' : 'auto',
   };
@@ -523,7 +523,7 @@ export default function HomePageClient({
     width: '100%',
     height: '100%',
     borderRadius: '0px',
-    transition: transition('transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)'),
+    transition: transition('transform 0.8s ease'),
   };
 
   const navStyle: React.CSSProperties = {
@@ -541,7 +541,7 @@ export default function HomePageClient({
     backgroundColor: isExpanded ? colors.background : 'transparent', // Use vintage yellow from color scheme
     transition: transition(
       isExpanded
-        ? 'background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s'
+        ? 'background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s var(--ease-out-back) 0.8s'
         : 'background-color 0.8s ease, padding 0.8s ease, opacity 0.2s ease',
     ),
     opacity: navDroppedIn ? 1 : isSwapped ? 0 : isAtTop ? 1 : 0,
@@ -566,14 +566,14 @@ export default function HomePageClient({
   };
 
   const backButtonTextStyle: React.CSSProperties = {
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: '#2A2F35',
     textDecoration: 'none',
     cursor: 'pointer',
     transition: transition(
-      'opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+      'opacity 0.2s ease, color 0.3s ease, transform 0.4s var(--ease-out-back) 0.8s',
     ),
     display: 'flex',
     alignItems: 'center',
@@ -589,14 +589,14 @@ export default function HomePageClient({
   };
 
   const brandStyle: React.CSSProperties = {
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: '#2A2F35',
     letterSpacing: '0.05em',
     opacity: !isSwapped || navDroppedIn ? 1 : 0,
     transition: transition(
-      'opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+      'opacity 0.2s ease, color 0.3s ease, transform 0.4s var(--ease-out-back) 0.8s',
     ),
     pointerEvents: navDroppedIn
       ? 'auto'
@@ -614,14 +614,14 @@ export default function HomePageClient({
   };
 
   const menuLinkStyle: React.CSSProperties = {
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: '#2A2F35',
     textDecoration: 'none',
     cursor: 'pointer',
     transition: transition(
-      'color 0.3s ease, opacity 0.2s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+      'color 0.3s ease, opacity 0.2s ease, transform 0.4s var(--ease-out-back) 0.8s',
     ),
     opacity: !isSwapped || navDroppedIn ? 1 : 0,
     pointerEvents: navDroppedIn
@@ -676,7 +676,7 @@ export default function HomePageClient({
     transform: isSwapped ? 'translateY(-100%)' : 'translateY(0)',
     backgroundColor: '#FFFFFF',
     zIndex: 1,
-    transition: transition('transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)'),
+    transition: transition('transform 0.8s ease'),
     willChange: isAnimating ? 'transform' : 'auto',
   };
 
@@ -694,7 +694,7 @@ export default function HomePageClient({
     paddingTop: isExpanded ? 'var(--nav-h, 64px)' : '0',
     transform: isSwapped ? 'translateY(0)' : 'translateY(100%)',
     transition: transition(
-      'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), grid-template-columns 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
+      'transform 0.8s ease, grid-template-columns 0.4s ease',
     ),
     willChange:
       isAnimating || isMarqueeResizing
@@ -720,7 +720,7 @@ export default function HomePageClient({
   };
 
   const tapAreaTextStyle: React.CSSProperties = {
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(10px, 1.5vw, 14px)',
     fontWeight: 600,
     color: '#E5532C',
@@ -750,7 +750,7 @@ export default function HomePageClient({
   };
 
   const headlineStyle: React.CSSProperties = {
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(2rem, 5vw, 3.5rem)',
     fontWeight: 700,
     color: '#E5532C',

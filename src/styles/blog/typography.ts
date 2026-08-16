@@ -1,7 +1,7 @@
 // Shared typography and text styles
 export const FONTS = {
-  primary: "'Hubot Sans', sans-serif",
-  mono: "'Roboto Mono', monospace",
+  primary: 'var(--font-primary)',
+  mono: 'var(--font-mono)',
 } as const;
 
 export const TEXT_STYLES = {

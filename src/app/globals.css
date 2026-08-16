@@ -1,19 +1,19 @@
 :root {
   /* Color Palette - Vintage Poster Warm Vermillion Edition */
-  --color-landing-bg: #fbf9f4; /* Cream sand */
+  --color-landing-bg: #f2e9d8; /* Warm sand */
   --color-about-bg: #2a2f35; /* Dark charcoal */
   --color-nav-bg: #363d44; /* Dark gray */
   --color-nav-panel: #444c55; /* Medium gray */
-  --color-text-on-dark: #fbf9f4; /* Cream sand */
+  --color-text-on-dark: #f2e9d8; /* Warm sand */
   --color-text-on-light: #2a2f35; /* Dark charcoal */
   --color-accent: #e5532c; /* Warm vermilion - large text & UI only */
   --color-accent-hover: #d64626; /* Darker vermilion */
-  --color-accent-on-light: #c4421f; /* AA-safe accent text on cream (4.8:1) */
+  --color-accent-on-light: #b73e1d; /* AA-safe accent text on sand (4.7:1) */
   --color-accent-on-dark: #e87a4d; /* AA-safe accent text on charcoal (4.8:1) */
   --color-terracotta: #e87a4d; /* Terracotta orange */
-  --color-card-bg: #f0ede5; /* Slightly darker cream */
-  --color-border: #e5e0d5; /* Muted sand */
-  --color-dropdown-hover: #ebe6dd; /* Light hover color */
+  --color-card-bg: #e4d9c2; /* Slightly darker sand */
+  --color-border: #d6cbb3; /* Muted sand */
+  --color-dropdown-hover: #e9dfca; /* Light hover color */
   --color-white: #ffffff;
 
   /* Typography */
@@ -34,6 +34,9 @@
   /* Transitions */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out-soft: cubic-bezier(0.6, 0, 0.4, 1);
+  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
   --transition-fast: 0.2s ease;
   --transition-medium: 0.3s ease;
   --transition-slow: 0.8s var(--ease-out-expo);

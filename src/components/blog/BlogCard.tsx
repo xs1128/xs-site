@@ -52,7 +52,7 @@ export default function BlogCard({
   };
 
   const titleStyle: React.CSSProperties = {
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(9px, 5.4cqh, 14px)',
     fontWeight: 700,
     color: '#FFFFFF',
@@ -70,7 +70,7 @@ export default function BlogCard({
   };
 
   const metadataStyle: React.CSSProperties = {
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(7px, 4.2cqh, 11px)',
     fontWeight: 400,
     color: '#CCCCCC',

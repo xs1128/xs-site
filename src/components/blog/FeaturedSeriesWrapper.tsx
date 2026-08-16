@@ -124,7 +124,7 @@ export default function FeaturedSeriesWrapper() {
     };
 
     const headerStyle: React.CSSProperties = {
-      fontFamily: "'Hubot Sans', sans-serif",
+      fontFamily: 'var(--font-primary)',
       fontSize: 'clamp(20px, 3vw, 28px)',
       fontWeight: 700,
       color: '#FFFFFF',

@@ -1,8 +1,8 @@
 // Shared animation timing functions and durations
 export const TIMING = {
   // Cubic bezier easing functions
-  smooth: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
-  bouncy: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+  smooth: 'ease',
+  bouncy: 'var(--ease-out-back)',
 
   // Duration presets
   instant: '0.2s ease',
@@ -21,12 +21,11 @@ export const TRANSITIONS = {
   slower: (property: string) => `${property} ${TIMING.slower}`,
 
   // Common combinations
-  cardFlip: 'transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
-  cardExpand:
-    'width 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), height 0.8s cubic-bezier(0.25, 0.1, 0.25, 1), border-radius 0.8s cubic-bezier(0.25, 0.1, 0.25, 1)',
-  marqueeExpand: 'height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)',
+  cardFlip: 'transform 0.8s ease',
+  cardExpand: 'width 0.8s ease, height 0.8s ease, border-radius 0.8s ease',
+  marqueeExpand: 'height 0.4s ease',
   navDrop:
-    'background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+    'background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s var(--ease-out-back) 0.8s',
   opacity: 'opacity 0.2s ease',
   color: 'color 0.3s ease',
 } as const;

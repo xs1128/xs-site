@@ -51,10 +51,10 @@ function useNavAnimations() {
         }
       }
       .blog-nav-item-opening {
-        animation: blogFadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+        animation: blogFadeInSlide 0.9s var(--ease-out-expo) backwards;
       }
       .blog-nav-item-closing {
-        animation: blogFadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation: blogFadeOutSlide 0.6s var(--ease-out-expo) forwards;
       }
       /* Text fill animation for navigation buttons */
       .nav-item {
@@ -80,7 +80,7 @@ function useNavAnimations() {
         margin: inherit;
         clip-path: inset(0 100% 0 0);
         pointer-events: none;
-        transition: clip-path 0.7s cubic-bezier(0.6, 0, 0.4, 1);
+        transition: clip-path 0.7s var(--ease-in-out-soft);
         z-index: 1;
         width: fit-content;
       }
@@ -89,7 +89,7 @@ function useNavAnimations() {
         z-index: 0;
       }
       .nav-item svg {
-        transition: stroke 0.3s cubic-bezier(0.6, 0, 0.4, 1);
+        transition: stroke 0.3s var(--ease-in-out-soft);
         transition-delay: 0.7s;
         position: relative;
         z-index: 2;
@@ -174,8 +174,8 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
         alignItems: 'center',
         justifyContent: 'center',
         animation: isClosing
-          ? 'blogSlideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)'
-          : 'blogSlideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+          ? 'blogSlideOutRight 0.8s var(--ease-out-expo)'
+          : 'blogSlideInRight 0.8s var(--ease-out-expo)',
         pointerEvents: isClosing ? 'none' : 'auto',
         willChange: isClosing ? 'transform, opacity' : 'auto',
         contain: 'strict',
@@ -208,7 +208,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             style={{
               borderRight: `1px solid ${colors.border}`,
               color: colors.darkText,
-              fontFamily: 'Roboto Mono, monospace',
+              fontFamily: 'var(--font-mono)',
               fontSize: isSmallScreen ? '32px' : '48px',
               fontWeight: 500,
               padding: isSmallScreen ? '0.5vh 1vw' : '0.5vh 1vw',
@@ -249,7 +249,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
                   cursor: 'pointer',
                   padding: '0',
                   lineHeight: 0.85,
-                  fontFamily: 'Roboto Mono, monospace',
+                  fontFamily: 'var(--font-mono)',
                   fontWeight: 500,
                   display: 'flex',
                 }}
@@ -278,7 +278,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             color: colors.darkText,
             fontSize: isSmallScreen ? '14.5vw' : '10.5vw',
             fontWeight: 700,
-            fontFamily: 'Roboto Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             cursor: 'pointer',
             textAlign: 'left',
             padding: '0.5vh 3vw 0.5vh 1vw',
@@ -327,7 +327,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             color: colors.darkText,
             fontSize: isSmallScreen ? '14.5vw' : '10.5vw',
             fontWeight: 700,
-            fontFamily: 'Roboto Mono, monospace',
+            fontFamily: 'var(--font-mono)',
             cursor: 'pointer',
             textAlign: 'left',
             padding: '0.5vh 3vw 0.5vh 1vw',

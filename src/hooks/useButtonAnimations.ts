@@ -53,7 +53,7 @@ export function useButtonAnimations() {
         margin: inherit;
         clip-path: inset(0 100% 0 0);
         pointer-events: none;
-        transition: clip-path 0.7s cubic-bezier(0.6, 0, 0.4, 1);
+        transition: clip-path 0.7s var(--ease-in-out-soft);
         z-index: 1;
       }
       .btn-text-fill > span {
@@ -89,7 +89,7 @@ export function useButtonAnimations() {
         margin: inherit;
         clip-path: inset(0 100% 0 0);
         pointer-events: none;
-        transition: clip-path 0.7s cubic-bezier(0.6, 0, 0.4, 1);
+        transition: clip-path 0.7s var(--ease-in-out-soft);
         z-index: 1;
       }
       .btn-both > span {

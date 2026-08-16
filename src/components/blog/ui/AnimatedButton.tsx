@@ -61,7 +61,7 @@ export default function AnimatedButton({
     display: 'inline-flex',
     alignItems: 'center',
     gap: 'clamp(4px, 0.5vw, 8px)',
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(18px, 2.5vw, 24px)',
     fontWeight: 700,
     color: '#2A2F35',
@@ -71,7 +71,7 @@ export default function AnimatedButton({
     padding: isMenuButton ? '12px 20px' : '0',
     borderRadius: isMenuButton ? '8px' : isDropdownItem ? '0' : '4px',
     transition:
-      'opacity 0.2s ease, color 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s',
+      'opacity 0.2s ease, color 0.3s ease, transform 0.4s var(--ease-out-back) 0.8s',
     textDecoration: 'none',
     WebkitTapHighlightColor: 'transparent',
     overflow:

@@ -31,8 +31,12 @@ export function createFaceTexture(config: FaceTextConfig): THREE.CanvasTexture {
 
   ctx.shadowColor = '#00FF00';
 
-  // Configure font settings
-  const fontFamily = "'Roboto Mono', monospace";
+  // Canvas takes a real family name, not a CSS var, and next/font's family is
+  // hashed at build time — so resolve the token instead of naming the face.
+  const fontFamily =
+    getComputedStyle(document.documentElement)
+      .getPropertyValue('--font-roboto-mono')
+      .trim() || 'monospace';
 
   ctx.fillStyle = '#00FF00';
   ctx.textAlign = 'center';

@@ -83,7 +83,7 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
   const messageStyle: React.CSSProperties = {
     color: '#8A929B',
     padding: 'clamp(16px, 3vh, 28px) clamp(16px, 3vw, 28px)',
-    fontFamily: "'Hubot Sans', sans-serif",
+    fontFamily: 'var(--font-primary)',
     fontSize: 'clamp(12px, 1.5vw, 15px)',
     letterSpacing: '0.04em',
     textTransform: 'uppercase',
@@ -119,9 +119,9 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
       border: 0;
       text-align: left;
       cursor: pointer;
-      font-family: 'Hubot Sans', sans-serif;
-      transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
-      animation: series-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+      font-family: var(--font-primary);
+      transition: transform 0.26s var(--ease-out-quart);
+      animation: series-in 0.45s var(--ease-out-quart) backwards;
     }
     .series-row:hover,
     .series-row:focus-visible { transform: translateX(clamp(4px, 0.8vw, 10px)); outline: none; }
@@ -167,7 +167,7 @@ export default function SeriesGrid({ isSmallScreen = false }: SeriesGridProps) {
       background: #E5532C;
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      transition: transform 0.28s var(--ease-out-quart);
     }
     .series-row:hover .series-name,
     .series-row:focus-visible .series-name { color: #E5532C; }
