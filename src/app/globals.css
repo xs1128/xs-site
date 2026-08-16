@@ -17,14 +17,11 @@
   --color-white: #ffffff;
   --color-muted: #666666; /* Secondary text on sand */
 
-  /* Typography. Named by role, not by face — the site sets body in Roboto Mono
-     and reserves Hubot Sans for display, while .blog-root rebinds --font-body
-     to Hubot Sans and adds --font-code. Read the role, not the family. */
+  /* Named by role, not face — .blog-root rebinds --font-body to Hubot Sans */
   --font-body: var(--font-roboto-mono), monospace;
   --font-display: var(--font-hubot-sans), sans-serif;
 
-  /* Type scale. Single source for both CSS files and the blog's inline
-     styles (src/styles/blog/typography.ts reads these). */
+  /* Type and spacing scales. Also read by styles/blog/typography.ts */
   --text-xs: clamp(10px, 1.2vw, 12px);
   --text-sm: clamp(11px, 1.5vw, 14px);
   --text-base: clamp(15px, 1.8vw, 18px);
@@ -33,7 +30,6 @@
   --text-2xl: clamp(24px, 3vw, 32px);
   --text-3xl: clamp(2rem, 5vw, 3.5rem);
 
-  /* Spacing scale. Same deal — typography.ts mirrors these names. */
   --spacing-xs: clamp(4px, 1vh, 8px);
   --spacing-sm: clamp(8px, 1.5vh, 16px);
   --spacing-md: clamp(12px, 2vh, 24px);

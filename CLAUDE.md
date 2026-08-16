@@ -5,7 +5,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 ## CSS
 
 - New styles go in the matching `src/styles/` file, not `globals.css`. Custom properties go in `globals.css` `:root` only.
-- Every CSS file must be imported in `src/app/layout.tsx` — a new file under `src/styles/` does nothing until it is. The two blog sheets are the exception: `blog-globals.css` and `blog.css` are imported by `src/app/blog/layout.tsx` so they only load on `/blog/*`.
+- Every CSS file must be imported in `src/app/layout.tsx` — a new file under `src/styles/` does nothing until it is. `blog.css` is the exception: the blog's only sheet, imported by `src/app/blog/layout.tsx`, so it loads on `/blog/*` alone.
 - Breakpoint is 640px everywhere (`--breakpoint-small`, media queries, `useIsSmallScreen`).
 - Keep hover styles inside `@media (hover: hover)` — otherwise touch devices get stuck states.
 - Reduced motion is handled by one catch-all block at the end of `animations.css`. Don't add per-file `prefers-reduced-motion` blocks. It can't reach JS-driven motion, so anything animating from JS checks `matchMedia('(prefers-reduced-motion: reduce)')` itself — `useScrollParallax`, `useCursorGlow`, `lib/utils.ts`.
@@ -13,9 +13,9 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - `:focus-visible` is styled globally. No `outline: none` without a replacement indicator.
 - **`--color-accent` fails WCAG AA as small text** (3.11:1 sand, 3.60:1 charcoal) — large/bold text and UI chrome only. Body text and links use `--color-accent-on-light` / `--color-accent-on-dark`.
 - Palette — read it from `globals.css` `:root`, don't recall hex values from memory: `--color-landing-bg #f2e9d8`, `--color-about-bg #2A2F35`, `--color-nav-bg #363D44`, `--color-nav-panel #444C55`, `--color-text-on-dark #f2e9d8`, `--color-text-on-light #2A2F35`, `--color-accent #E5532C`, `--color-accent-hover #D64626`, `--color-accent-on-light #b73e1d`, `--color-accent-on-dark #e87a4d`, `--color-terracotta #e87a4d`, `--color-card-bg #e4d9c2`, `--color-border #d6cbb3`, `--color-dropdown-hover #e9dfca`, `--color-muted #666666`.
-- The blog segment shares this palette. `src/styles/blog-globals.css` only aliases blog-local names (`--color-background`, `--color-card`, …) onto these; it declares no colours of its own.
+- The blog segment shares this palette. `src/styles/blog.css` only aliases blog-local names (`--color-background`, `--color-card`, …) onto these; it declares no colours of its own.
 - Blog components style through inline `style={{}}`, so their colours are `'var(--color-…)'` strings, not hexes — the vars resolve on `.blog-root`. Alpha variants use `color-mix(in srgb, var(--color-accent) N%, transparent)`; a hex with an alpha suffix can't take a var.
-- `blog-globals.css` sets link colour with `.blog-root a` — specificity (0,1,1), which beats any bare class. Blog rules that recolour an anchor (`.footer-link`, …) need the `.blog-root` prefix to win.
+- `blog.css` sets link colour with `.blog-root a` — specificity (0,1,1), which beats any bare class. Blog rules that recolour an anchor (`.footer-link`, …) need the `.blog-root` prefix to win.
 - `src/styles/blog/colors.ts` is **WebGL only** — three.js materials need a literal, so `accent` and `background` are re-stated there. Nothing in the DOM may import it; keep the two values equal to `globals.css`.
 
 ## Components

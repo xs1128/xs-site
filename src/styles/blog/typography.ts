@@ -1,15 +1,11 @@
-/* Both names are surface-relative: on .blog-root --font-body resolves to Hubot
-   Sans and --font-code to Roboto Mono, the inverse of the site's roles. */
+/* Handles for inline styles, which can't read a stylesheet. Values live in
+   app/globals.css :root. Never parse these as numbers. */
+
 export const FONTS = {
   body: 'var(--font-body)',
   code: 'var(--font-code)',
 } as const;
 
-/* The scales themselves live in app/globals.css :root — these are handles for
-   inline styles, which can't read a stylesheet. Values belong there, not here.
-   Only valid inside a rendered document; never parse these as numbers. */
-
-// Responsive font size helpers
 export const clamp = {
   xs: 'var(--text-xs)',
   sm: 'var(--text-sm)',
@@ -20,7 +16,6 @@ export const clamp = {
   '3xl': 'var(--text-3xl)',
 } as const;
 
-// Shared spacing helpers
 export const spacing = {
   xs: 'var(--spacing-xs)',
   sm: 'var(--spacing-sm)',

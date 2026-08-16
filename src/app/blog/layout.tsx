@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { siteConfig, blogUrl } from '@/lib/blog/seo';
-import '@/styles/blog-globals.css';
 import '@/styles/blog.css';
 import Footer from '@/components/blog/ui/Footer';
 import { hubotSansBlog, robotoMonoBlog } from '@/fonts';

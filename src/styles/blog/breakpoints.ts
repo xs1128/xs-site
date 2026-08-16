@@ -9,5 +9,4 @@ export const breakpoints = {
   xl: '1280px', // Extra large screens (desktops)
 } as const;
 
-/* Consumed only by useBreakpoint, which feeds matchMedia. There is no `media`
-   helper emitting `@media` strings — inline styles can't take an at-rule. */
+/* Consumed only by useBreakpoint, which feeds matchMedia. */
