@@ -484,6 +484,20 @@
   margin-bottom: clamp(12px, 2vh, 24px);
 }
 
+/* .blog-root *::before in blog-globals.css ties with navigation.css's
+   .nav-item::before and loads later, zeroing the padding the fill text needs
+   to sit under the label. Re-inherit it at a specificity that wins. */
+.blog-root .nav-item::before {
+  padding: inherit;
+  padding-right: 0;
+  margin: inherit;
+}
+
+.blog-root .close-button {
+  color: var(--color-dark-text);
+  transition: color 0.3s var(--ease-in-out-soft);
+}
+
 @media (hover: hover) {
   .blog-root .close-button:hover {
     color: var(--color-accent);

@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
-import Tooltip from '@/components/blog/ui/Tooltip';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 
@@ -123,32 +122,29 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
               marginBottom: '0',
             }}
           >
-            <Tooltip label="Close menu" placement="bottom">
-              <button
-                onClick={handleClose}
-                className="close-button"
-                aria-label="Close menu"
-                style={{
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  color: 'var(--color-dark-text)',
-                  fontSize: isSmallScreen ? '48px' : '64px',
-                  cursor: 'pointer',
-                  padding: '0',
-                  lineHeight: 0.85,
-                  fontFamily: 'var(--font-mono)',
-                  fontWeight: 500,
-                  display: 'flex',
-                }}
-              >
-                <X
-                  viewBox="5 5 14 14"
-                  style={{ width: '0.62em', height: '0.62em' }}
-                  strokeWidth={2}
-                  strokeLinecap="butt"
-                />
-              </button>
-            </Tooltip>
+            <button
+              onClick={handleClose}
+              className="close-button"
+              aria-label="Close menu"
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                fontSize: isSmallScreen ? '48px' : '64px',
+                cursor: 'pointer',
+                padding: '0',
+                lineHeight: 0.85,
+                fontFamily: 'var(--font-mono)',
+                fontWeight: 500,
+                display: 'flex',
+              }}
+            >
+              <X
+                viewBox="5 5 14 14"
+                style={{ width: '0.62em', height: '0.62em' }}
+                strokeWidth={2}
+                strokeLinecap="butt"
+              />
+            </button>
           </div>
         </div>
 
