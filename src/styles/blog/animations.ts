@@ -29,13 +29,3 @@ export const TRANSITIONS = {
   opacity: 'opacity 0.2s ease',
   color: 'color 0.3s ease',
 } as const;
-
-// Transform values
-export const TRANSFORMS = {
-  translateY0: 'translateY(0)',
-  translateY10: 'translateY(10px)',
-  translateYNegative20: 'translateY(-20px)',
-  translateX0: 'translateX(0)',
-  translateXNegative50: 'translateX(-50%)',
-  scale1: 'scale(1)',
-} as const;

@@ -92,7 +92,7 @@ body:has(.blog-root) {
 /* Paragraph spacing. Kept in CSS (not an inline style) so the
    .markdown-blockquote > p rules below can override it via normal specificity. */
 .markdown-paragraph {
-  margin-bottom: clamp(12px, 2vh, 24px);
+  margin-bottom: var(--spacing-md);
 }
 
 /* Blockquote panel: strip inner paragraph margins so the blockquote's own
@@ -144,12 +144,6 @@ body:has(.blog-root) {
      for code. Own faces so 700 is a real cut, not synthesised. */
   --font-primary: var(--font-blog-sans), sans-serif;
   --font-mono: var(--font-blog-mono), monospace;
-
-  /* Spacing */
-  --spacing-xs: clamp(4px, 1vh, 8px);
-  --spacing-sm: clamp(8px, 1.5vh, 16px);
-  --spacing-md: clamp(12px, 2vh, 24px);
-  --spacing-lg: clamp(20px, 3vh, 40px);
 }
 
 /* ========================================
@@ -374,7 +368,7 @@ body:has(.blog-root) {
   background-color: #2a2f35;
   color: #f2e9d8;
   font-family: var(--font-blog-sans), sans-serif;
-  font-size: clamp(10px, 1.2vw, 12px);
+  font-size: var(--text-xs);
   font-weight: 500;
   line-height: 1.35;
   text-align: center;

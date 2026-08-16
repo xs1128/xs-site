@@ -21,6 +21,22 @@
   --font-primary: var(--font-roboto-mono), monospace;
   --font-secondary: var(--font-hubot-sans), sans-serif;
 
+  /* Type scale. Single source for both CSS files and the blog's inline
+     styles (src/styles/blog/typography.ts reads these). */
+  --text-xs: clamp(10px, 1.2vw, 12px);
+  --text-sm: clamp(11px, 1.5vw, 14px);
+  --text-base: clamp(15px, 1.8vw, 18px);
+  --text-lg: clamp(14px, 2vw, 20px);
+  --text-xl: clamp(18px, 2.5vw, 24px);
+  --text-2xl: clamp(24px, 3vw, 32px);
+  --text-3xl: clamp(2rem, 5vw, 3.5rem);
+
+  /* Spacing scale. Same deal — typography.ts mirrors these names. */
+  --spacing-xs: clamp(4px, 1vh, 8px);
+  --spacing-sm: clamp(8px, 1.5vh, 16px);
+  --spacing-md: clamp(12px, 2vh, 24px);
+  --spacing-lg: clamp(20px, 3vh, 40px);
+
   /* Spacing */
   --spacing-section-padding-desktop: 4vh 5vw;
   --spacing-section-padding-mobile: 3vh 4vw;

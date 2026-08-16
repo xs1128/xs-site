@@ -340,7 +340,7 @@
 
 .expertise-card__title {
   margin: 0;
-  font-size: clamp(18px, 2.5vw, 24px);
+  font-size: var(--text-xl);
   font-weight: 700;
   color: var(--color-text-on-light);
   font-family: var(--font-secondary);
