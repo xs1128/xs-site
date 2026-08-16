@@ -31,7 +31,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
   const imageAreaStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
-    flex: "1 1 72%",
+    flex: "1 1 auto",
     minHeight: 0,
     backgroundColor: "#FFFFFF",
   };
@@ -40,12 +40,10 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
     backgroundColor: "#1A1D21",
     padding: "clamp(6px, 4.5cqh, 20px) clamp(8px, 4.5cqh, 20px)",
     textAlign: "left",
-    flex: "0 0 auto",
-    minHeight: "28%", // grows past 28% for long titles rather than clipping them
-    maxHeight: "55%",
+    flex: "0 0 36%",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     overflow: "hidden",
     gap: "0"
   };
@@ -63,7 +61,7 @@ export default function BlogCard({ post, isSmallScreen = false }: BlogCardProps)
     hyphens: "auto",
     display: "-webkit-box",
     WebkitBoxOrient: "vertical",
-    WebkitLineClamp: 5,
+    WebkitLineClamp: 3,
     overflow: "hidden",
     minHeight: 0,
   };

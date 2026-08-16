@@ -37,7 +37,7 @@ export default function SkeletonCard({
 
     const imageAreaStyle: React.CSSProperties = {
       width: '100%',
-      height: '60%',
+      height: '64%',
       backgroundColor: '#3E454C',
       position: 'relative',
       overflow: 'hidden',
