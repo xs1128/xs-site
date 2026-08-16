@@ -34,5 +34,10 @@ jobs:
       - name: Test
         run: npm test
 
+      # Both blog dynamic routes call generateStaticParams, so the build talks
+      # to Supabase. Without these the build fails collecting page data.
       - name: Build
         run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
