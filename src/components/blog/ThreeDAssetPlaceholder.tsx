@@ -1,7 +1,5 @@
 'use client';
 
-import { colors } from '@/styles/blog/colors';
-
 const SPINNER_FRAMES = ['|', '/', '-', '\\'];
 const SPIN_CYCLE_MS = 640;
 const EDGE_CYCLE_MS = 1600;
@@ -89,7 +87,7 @@ export default function ThreeDAssetPlaceholder({
         position: 'absolute',
         inset: 0,
         overflow: 'hidden',
-        backgroundColor: colors.background,
+        backgroundColor: 'var(--color-background)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

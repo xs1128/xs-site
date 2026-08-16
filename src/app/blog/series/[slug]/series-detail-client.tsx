@@ -8,7 +8,6 @@ import SeriesPostList from '@/components/blog/SeriesPostList';
 import FullScreenNav from '@/components/blog/ui/FullScreenNav';
 import { useIsMobile } from '@/hooks/useBreakpoint';
 import { spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 
 interface SeriesDetailClientProps {
   series: SeriesDetail;
@@ -24,7 +23,7 @@ export default function SeriesDetailClient({
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
-    backgroundColor: colors.darkBackground,
+    backgroundColor: 'var(--color-dark-background)',
     width: '100%',
     position: 'relative',
   };

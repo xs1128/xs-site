@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { Fragment } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import { TRANSITIONS } from '@/styles/blog/animations';
 
 export interface Crumb {
@@ -44,7 +43,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   };
 
   const currentStyle: React.CSSProperties = {
-    color: colors.accent,
+    color: 'var(--color-accent)',
     fontWeight: 600,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
@@ -53,7 +52,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
   };
 
   const separatorStyle: React.CSSProperties = {
-    color: colors.navText,
+    color: 'var(--color-muted)',
     display: 'inline-flex',
     userSelect: 'none',
   };
@@ -69,7 +68,7 @@ export default function Breadcrumbs({ items }: BreadcrumbsProps) {
                 href={item.href}
                 style={linkStyle}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = colors.darkText;
+                  e.currentTarget.style.color = 'var(--color-dark-text)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.color = '#999999';

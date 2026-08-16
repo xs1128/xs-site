@@ -1,5 +1,4 @@
 import { FONTS, clamp } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 
 export default function SeriesPostCardSkeleton() {
   const cardStyle: React.CSSProperties = {

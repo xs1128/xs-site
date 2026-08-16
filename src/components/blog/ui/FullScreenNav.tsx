@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
-import { colors } from '@/styles/blog/colors';
 import Tooltip from '@/components/blog/ui/Tooltip';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
@@ -60,7 +59,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: colors.navBackground,
+        backgroundColor: 'var(--color-nav-background)',
         zIndex: 10000,
         display: 'flex',
         flexDirection: 'column',
@@ -86,8 +85,8 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
       >
         <div
           style={{
-            border: `1px solid ${colors.border}`,
-            backgroundColor: colors.navButtonPanel,
+            border: `1px solid var(--color-border)`,
+            backgroundColor: 'var(--color-nav-panel)',
             width: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -96,8 +95,8 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
         >
           <div
             style={{
-              borderRight: `1px solid ${colors.border}`,
-              color: colors.darkText,
+              borderRight: `1px solid var(--color-border)`,
+              color: 'var(--color-dark-text)',
               fontFamily: 'var(--font-mono)',
               fontSize: isSmallScreen ? '32px' : '48px',
               fontWeight: 500,
@@ -111,7 +110,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
 
           <div
             style={{
-              borderLeft: `1px solid ${colors.border}`,
+              borderLeft: `1px solid var(--color-border)`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -132,7 +131,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
                 style={{
                   backgroundColor: 'transparent',
                   border: 'none',
-                  color: colors.darkText,
+                  color: 'var(--color-dark-text)',
                   fontSize: isSmallScreen ? '48px' : '64px',
                   cursor: 'pointer',
                   padding: '0',
@@ -163,9 +162,9 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             className={`nav-item ${isClosing ? 'nav-item-closing' : 'nav-item-opening'}`}
             data-text={label}
             style={{
-              backgroundColor: colors.navButtonPanel,
-              border: `1px solid ${colors.border}`,
-              color: colors.darkText,
+              backgroundColor: 'var(--color-nav-panel)',
+              border: `1px solid var(--color-border)`,
+              color: 'var(--color-dark-text)',
               fontSize: isSmallScreen ? '14.5vw' : '10.5vw',
               fontWeight: 700,
               fontFamily: 'var(--font-mono)',

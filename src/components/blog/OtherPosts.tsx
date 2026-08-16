@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import type { Post } from '@/types/post';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import { TRANSITIONS, TIMING } from '@/styles/blog/animations';
 import { SkeletonList } from '@/components/blog/skeleton';
 
@@ -47,7 +46,7 @@ function PostItem({ post }: { post: Post }) {
     : active
       ? 'translateX(4px)'
       : 'translateX(0)';
-  const barColor = active ? colors.accent : BAR_REST;
+  const barColor = active ? 'var(--color-accent)' : BAR_REST;
 
   const linkStyle: React.CSSProperties = {
     display: 'flex',
@@ -65,7 +64,7 @@ function PostItem({ post }: { post: Post }) {
     fontFamily: FONTS.primary,
     fontSize: clamp.sm,
     lineHeight: 1.5,
-    color: active ? colors.accent : TITLE_REST,
+    color: active ? 'var(--color-accent)' : TITLE_REST,
     transition: `color ${TIMING.slower} ${TIMING.smooth}`,
     display: '-webkit-box',
     WebkitLineClamp: 2,
@@ -139,14 +138,14 @@ export default function OtherPosts({
   };
 
   // Mono accent eyebrow, a recommendation signal. Kept as a real <h3> for the
-  // heading outline. (The old heading used colors.text, invisible on the dark bg.)
+  // heading outline. (The old heading used --color-text, invisible on the dark bg.)
   const headingStyle: React.CSSProperties = {
     fontFamily: FONTS.mono,
     fontSize: clamp.xs,
     fontWeight: 600,
     letterSpacing: '0.12em',
     textTransform: 'uppercase',
-    color: colors.accent,
+    color: 'var(--color-accent)',
     marginBottom: spacing.sm,
   };
 
@@ -216,7 +215,7 @@ export default function OtherPosts({
           aria-controls="related-reads-list"
           onClick={() => setExpanded((prev) => !prev)}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = colors.accent;
+            e.currentTarget.style.color = 'var(--color-accent)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.color = META_COLOR;

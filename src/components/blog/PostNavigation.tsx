@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { PostLink } from '@/types/post';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import { TRANSITIONS } from '@/styles/blog/animations';
 
 interface PostNavigationProps {
@@ -26,7 +25,7 @@ export default function PostNavigation({
     gap: spacing.md,
     marginTop: spacing.lg,
     paddingTop: spacing.lg,
-    borderTop: `1px solid ${colors.border}`,
+    borderTop: `1px solid var(--color-border)`,
   };
 
   const navItemStyle: React.CSSProperties = {
@@ -48,7 +47,7 @@ export default function PostNavigation({
     fontFamily: FONTS.primary,
     fontSize: clamp.base,
     fontWeight: 600,
-    color: colors.accent,
+    color: 'var(--color-accent)',
     textDecoration: 'none',
     transition: TRANSITIONS.fast('color'),
   };
@@ -78,7 +77,7 @@ export default function PostNavigation({
               e.currentTarget.style.color = '#CC4420';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = colors.accent;
+              e.currentTarget.style.color = 'var(--color-accent)';
             }}
           >
             <ArrowLeft
@@ -103,7 +102,7 @@ export default function PostNavigation({
               e.currentTarget.style.color = '#CC4420';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.color = colors.accent;
+              e.currentTarget.style.color = 'var(--color-accent)';
             }}
           >
             {nextPost.title}{' '}

@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import type { Heading } from '@/types/post';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import { TIMING } from '@/styles/blog/animations';
 import { SkeletonList } from '@/components/blog/skeleton';
 
@@ -119,7 +118,7 @@ export default function TableOfContents({
     fontFamily: FONTS.primary,
     fontSize: clamp.base,
     fontWeight: 700,
-    color: colors.darkText,
+    color: 'var(--color-dark-text)',
     marginTop: spacing.lg,
     marginBottom: spacing.sm,
     textTransform: 'uppercase',
@@ -140,13 +139,17 @@ export default function TableOfContents({
     fontFamily: FONTS.primary,
     fontSize: clamp.sm,
     fontWeight: isActive ? 600 : 400,
-    color: isActive ? colors.accent : isHovered ? colors.darkText : '#999999',
+    color: isActive
+      ? 'var(--color-accent)'
+      : isHovered
+        ? 'var(--color-dark-text)'
+        : '#999999',
     cursor: 'pointer',
     padding: `${spacing.xs} 0`,
     paddingLeft: getIndentPadding(level),
     transform: isHovered ? 'translateX(4px)' : 'translateX(0)',
     transition: `color ${TIMING.slower} ${TIMING.smooth}, transform ${TIMING.fast} ${TIMING.smooth}`,
-    borderLeft: level > 1 ? `1px solid ${colors.border}` : 'none',
+    borderLeft: level > 1 ? `1px solid var(--color-border)` : 'none',
   });
 
   // Loading sentinel (empty post during Suspense) shows skeletons.

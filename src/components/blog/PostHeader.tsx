@@ -1,5 +1,4 @@
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import type { Post } from '@/types/post';
 import { formatDate, formatReadTime } from '@/lib/blog/utils/post';
 import { SkeletonText } from '@/components/blog/skeleton';
@@ -32,7 +31,7 @@ export default function PostHeader({ post, loading = false }: PostHeaderProps) {
     alignItems: 'center',
     marginBottom: spacing.md,
     paddingBottom: spacing.md,
-    borderBottom: `1px solid ${colors.border}`,
+    borderBottom: `1px solid var(--color-border)`,
   };
 
   const metaLeftStyle: React.CSSProperties = {

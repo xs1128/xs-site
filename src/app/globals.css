@@ -15,6 +15,7 @@
   --color-border: #d6cbb3; /* Muted sand */
   --color-dropdown-hover: #e9dfca; /* Light hover color */
   --color-white: #ffffff;
+  --color-muted: #666666; /* Secondary text on sand */
 
   /* Typography */
   --font-primary: var(--font-roboto-mono), monospace;

@@ -5,7 +5,6 @@ import { createPortal } from 'react-dom';
 import { Canvas } from '@react-three/fiber';
 import { Waves, Sparkles, Maximize2, X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/useBreakpoint';
-import { colors } from '@/styles/blog/colors';
 import Tooltip from '@/components/blog/ui/Tooltip';
 import InteractiveScene from './scene/InteractiveScene';
 import ThreeDAssetPlaceholder from './ThreeDAssetPlaceholder';
@@ -42,7 +41,7 @@ const OVERLAY_CSS = `
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background-color: ${colors.background};
+  background-color: var(--color-background);
   border: 1px solid rgba(0, 0, 0, 0.25);
   transform-origin: center;
   transform: scale(0.96);
@@ -297,7 +296,7 @@ export default function ThreeDCanvas({
     minHeight: 0,
     border: '1px solid rgba(0, 0, 0, 0.22)',
     margin: 0,
-    backgroundColor: colors.background,
+    backgroundColor: 'var(--color-background)',
     position: 'relative',
   };
 

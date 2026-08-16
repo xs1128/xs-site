@@ -1,13 +1,8 @@
 'use client';
 
-import { colors } from '@/styles/blog/colors';
-
-// Translucent variants of the brand accent (colors.accent === '#E5532C').
-// colors.ts exposes the accent only as an opaque hex with no alpha helper, so
-// the alpha forms are spelled out here as named constants rather than left as
-// bare magic values inline. Keep these in sync with colors.accent.
-const TRACK_BG = 'rgba(229, 83, 44, 0.2)'; // colors.accent @ 0.2 alpha
-const GLOW = '0 0 10px rgba(229, 83, 44, 0.5)'; // colors.accent @ 0.5 alpha
+const TRACK_BG = 'color-mix(in srgb, var(--color-accent) 20%, transparent)';
+const GLOW =
+  '0 0 10px color-mix(in srgb, var(--color-accent) 50%, transparent)';
 
 interface ReadingProgressBarProps {
   /** Smoothed reading progress, 0..100. */
@@ -56,7 +51,7 @@ export default function ReadingProgressBar({
           width: '100%',
           transformOrigin: 'left',
           transform: `scaleX(${progress / 100})`,
-          backgroundColor: colors.accent,
+          backgroundColor: 'var(--color-accent)',
           // No CSS transition: the rAF lerp in useScrollProgress already
           // smooths the value. A transition here would double-smooth and
           // reintroduce the very lag we're removing.

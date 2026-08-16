@@ -6,137 +6,13 @@ import FunnyMarqueeWrapper from '@/components/blog/FunnyMarqueeWrapper';
 import RecentBlogsGrid from '@/components/blog/RecentBlogsGrid';
 import BlogExpandedContent from '@/components/blog/BlogExpandedContent';
 import AnimatedButton from '@/components/blog/ui/AnimatedButton';
-import { ArrowUp, ArrowDown, ArrowUpRight, X } from 'lucide-react';
-import { colors } from '@/styles/blog/colors';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import FullScreenNav from '@/components/blog/ui/FullScreenNav';
 
 const useBeforePaintEffect =
   typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 const MARQUEE_RESIZE_MS = 620;
-
-// Custom hook for navigation animations
-function useNavAnimations() {
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @keyframes blogSlideInRight {
-        0% {
-          opacity: 0;
-          transform: translateX(100%);
-        }
-        100% {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-      @keyframes blogSlideOutRight {
-        0% {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        100% {
-          opacity: 0;
-          transform: translateX(100%);
-        }
-      }
-      @keyframes blogFadeInSlide {
-        0% {
-          opacity: 0;
-          transform: translateX(50px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-      @keyframes blogFadeOutSlide {
-        0% {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        100% {
-          opacity: 0;
-          transform: translateX(50px);
-        }
-      }
-      @keyframes blogHamburgerFadeOut {
-        0% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0;
-        }
-      }
-      .blog-nav-item-opening {
-        animation: blogFadeInSlide 0.9s var(--ease-out-expo) backwards;
-      }
-      .blog-nav-item-closing {
-        animation: blogFadeOutSlide 0.6s var(--ease-out-expo) forwards;
-      }
-      .blog-hamburger-fading {
-        animation: blogHamburgerFadeOut 0.3s ease forwards;
-      }
-      /* Text fill animation for navigation buttons */
-      .nav-item {
-        position: relative;
-      }
-      .nav-item::before {
-        content: attr(data-text);
-        position: absolute;
-        left: 0;
-        right: auto;
-        top: 0;
-        bottom: 0;
-        color: #E5532C;
-        background-color: inherit;
-        font-family: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        line-height: inherit;
-        letter-spacing: inherit;
-        text-align: inherit;
-        padding: inherit;
-        padding-right: 0;
-        margin: inherit;
-        clip-path: inset(0 100% 0 0);
-        pointer-events: none;
-        transition: clip-path 0.7s var(--ease-in-out-soft);
-        z-index: 1;
-        width: fit-content;
-      }
-      .nav-item > span {
-        position: relative;
-        z-index: 0;
-      }
-      .nav-item svg {
-        transition: stroke 0.3s var(--ease-in-out-soft);
-        transition-delay: 0.7s;
-        position: relative;
-        z-index: 2;
-      }
-      @media (hover: hover) {
-        .nav-item:hover {
-          transform: translateX(20px);
-        }
-        .nav-item:hover::before {
-          clip-path: inset(0 0 0 0);
-        }
-        .nav-item:hover svg {
-          stroke: #E5532C;
-        }
-        .close-button:hover {
-          color: #E5532C !important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-}
-
 
 export default function HomePageClient({
   heroImageUrl,
@@ -145,7 +21,6 @@ export default function HomePageClient({
   heroImageUrl: string;
   heroBlurDataURL: string | null;
 }) {
-  useNavAnimations();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isSwapped, setIsSwapped] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -301,7 +176,7 @@ export default function HomePageClient({
       ? 'clamp(10px, 1.5vh, 20px) clamp(30px, 5vw, 60px)'
       : 'clamp(20px, 3vh, 40px) clamp(30px, 5vw, 60px)',
     zIndex: 9999,
-    backgroundColor: isExpanded ? colors.background : 'transparent', // Use vintage yellow from color scheme
+    backgroundColor: isExpanded ? 'var(--color-background)' : 'transparent', // Use vintage yellow from color scheme
     transition: transition(
       isExpanded
         ? 'background-color 0.3s ease 0.8s, padding 0.3s ease 0.8s, transform 0.4s var(--ease-out-back) 0.8s'

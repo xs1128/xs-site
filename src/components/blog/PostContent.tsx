@@ -8,7 +8,6 @@ import rehypeSanitize from 'rehype-sanitize';
 import { markdownSanitizeSchema } from '@/lib/blog/markdown/sanitizeSchema';
 import CodeBlock from './CodeBlock';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import { TRANSITIONS } from '@/styles/blog/animations';
 import { slugifyHeading } from '@/lib/blog/utils/post';
 import type { Heading } from '@/types/post';
@@ -131,7 +130,7 @@ const headingStyles = {
 const paragraphStyle: React.CSSProperties = {};
 
 const linkStyle: React.CSSProperties = {
-  color: colors.accent,
+  color: 'var(--color-accent)',
   textDecoration: 'none',
   transition: TRANSITIONS.fast('color'),
   cursor: 'pointer',
@@ -139,7 +138,7 @@ const linkStyle: React.CSSProperties = {
 };
 
 const blockquoteStyle: React.CSSProperties = {
-  borderLeft: `4px solid ${colors.accent}`,
+  borderLeft: `4px solid var(--color-accent)`,
   // Slightly lighter than the dark slate page bg (#2A2F35) so the quote reads as a set-apart panel
   backgroundColor: '#353B42',
   borderRadius: '0 6px 6px 0',
@@ -148,7 +147,7 @@ const blockquoteStyle: React.CSSProperties = {
   marginRight: 0,
   marginBottom: spacing.md,
   fontStyle: 'italic',
-  // Quote text: neutral light grey, readable on the panel. Alternatives: #C9C4B8 (cream), #F0A085 (accent-tinted), #D6CBB3 (colors.border)
+  // Quote text: neutral light grey, readable on the panel. Alternatives: #C9C4B8 (cream), #F0A085 (accent-tinted), #D6CBB3 (--color-border)
   color: '#B8BCC2',
 };
 
@@ -169,7 +168,7 @@ const tableStyle: React.CSSProperties = {
 };
 
 const tableCellStyle: React.CSSProperties = {
-  border: `1px solid ${colors.border}`,
+  border: `1px solid var(--color-border)`,
   padding: '8px 12px',
 };
 
@@ -353,7 +352,7 @@ const PostContentComponent = ({ content, headings }: PostContentProps) => {
       tbody: ({ children }) => <tbody>{children}</tbody>,
       tr: ({ children }) => <tr>{children}</tr>,
       th: ({ children }) => (
-        <th style={{ ...tableCellStyle, backgroundColor: colors.card }}>
+        <th style={{ ...tableCellStyle, backgroundColor: 'var(--color-card)' }}>
           {children}
         </th>
       ),

@@ -1,7 +1,6 @@
 'use client';
 
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import { SkeletonList } from '@/components/blog/skeleton';
 
 interface TagListProps {
@@ -27,11 +26,12 @@ export default function TagList({ tags, loading = false }: TagListProps) {
     fontFamily: FONTS.primary,
     fontSize: clamp.xs,
     fontWeight: 500,
-    color: colors.accent,
-    backgroundColor: `${colors.accent}15`,
+    color: 'var(--color-accent)',
+    backgroundColor: 'color-mix(in srgb, var(--color-accent) 8%, transparent)',
     padding: '6px 12px',
     borderRadius: '20px',
-    border: `1px solid ${colors.accent}40`,
+    border:
+      '1px solid color-mix(in srgb, var(--color-accent) 25%, transparent)',
   };
 
   return (

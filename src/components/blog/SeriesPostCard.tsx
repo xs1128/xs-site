@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import type { SeriesPost } from '@/types/post';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import { TRANSITIONS } from '@/styles/blog/animations';
 import { useState, useEffect } from 'react';
 
@@ -113,7 +112,7 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
           font-family: ${FONTS.primary};
           font-size: ${clamp.lg};
           font-weight: 700;
-          color: ${colors.darkText};
+          color: var(--color-dark-text);
           margin-bottom: clamp(12px, 2vh, 16px);
         }
         .meta {
@@ -141,7 +140,7 @@ export default function SeriesPostCard({ post }: SeriesPostCardProps) {
           onMouseEnter={(e) => {
             const card = e.currentTarget;
             card.style.transform = 'translateY(-2px)';
-            card.style.borderColor = colors.accent;
+            card.style.borderColor = 'var(--color-accent)';
           }}
           onMouseLeave={(e) => {
             const card = e.currentTarget;

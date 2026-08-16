@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import { TRANSITIONS } from '@/styles/blog/animations';
 
 export default function NotFound() {
@@ -20,7 +19,7 @@ export default function NotFound() {
     fontFamily: FONTS.primary,
     fontSize: clamp['3xl'],
     fontWeight: 700,
-    color: colors.text,
+    color: 'var(--color-text)',
     marginBottom: spacing.md,
   };
 
@@ -37,7 +36,7 @@ export default function NotFound() {
     fontSize: clamp.base,
     fontWeight: 600,
     color: '#FFFFFF',
-    backgroundColor: colors.accent,
+    backgroundColor: 'var(--color-accent)',
     padding: '12px 24px',
     borderRadius: '4px',
     textDecoration: 'none',
@@ -57,7 +56,7 @@ export default function NotFound() {
           e.currentTarget.style.backgroundColor = '#CC4420';
         }}
         onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = colors.accent;
+          e.currentTarget.style.backgroundColor = 'var(--color-accent)';
         }}
       >
         Go Home

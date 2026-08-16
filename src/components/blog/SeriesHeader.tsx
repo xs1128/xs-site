@@ -1,6 +1,5 @@
 import type { SeriesDetail } from '@/types/post';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 import Breadcrumbs, { type Crumb } from '@/components/blog/Breadcrumbs';
 import { SkeletonText } from '@/components/blog/skeleton';
 
@@ -29,7 +28,7 @@ export default function SeriesHeader({
     fontFamily: FONTS.primary,
     fontSize: clamp['2xl'],
     fontWeight: 700,
-    color: colors.darkText,
+    color: 'var(--color-dark-text)',
     marginBottom: spacing.md,
     lineHeight: 1.2,
   };

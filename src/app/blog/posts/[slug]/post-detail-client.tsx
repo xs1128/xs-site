@@ -22,7 +22,6 @@ import {
 } from '@/hooks/useScrollDetection';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { spacing } from '@/styles/blog/typography';
-import { colors } from '@/styles/blog/colors';
 
 interface PostDetailClientProps {
   post: Post;
@@ -71,7 +70,7 @@ export default function PostDetailClient({
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
-    backgroundColor: colors.darkBackground,
+    backgroundColor: 'var(--color-dark-background)',
     // No overflow here: any non-visible overflow makes this a scroll container,
     // which caps window scroll and breaks the sticky TOC + scroll tracking.
     // Horizontal overflow is contained by children (code blocks, tables, wrap).
@@ -160,7 +159,7 @@ export default function PostDetailClient({
                 style={{
                   width: '100%',
                   height: '1px',
-                  backgroundColor: colors.border,
+                  backgroundColor: 'var(--color-border)',
                   margin: `${spacing.lg} 0`,
                 }}
               />
