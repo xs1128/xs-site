@@ -41,7 +41,7 @@ const OVERLAY_CSS = `
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-background);
+  background-color: var(--color-background, var(--color-landing-bg));
   border: 1px solid rgba(0, 0, 0, 0.25);
   transform-origin: center;
   transform: scale(0.96);

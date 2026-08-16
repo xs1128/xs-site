@@ -87,7 +87,7 @@ export default function ThreeDAssetPlaceholder({
         position: 'absolute',
         inset: 0,
         overflow: 'hidden',
-        backgroundColor: 'var(--color-background)',
+        backgroundColor: 'var(--color-background, var(--color-landing-bg))',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
