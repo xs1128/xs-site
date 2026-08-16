@@ -12,15 +12,16 @@ Fetches post data:
 
 ```typescript
 // Fetches post with series, headings, and related posts
-const post = await getPostBySlug(params.slug)
-const seriesData = await getSeriesForPost(post.id)
-const headings = extractHeadings(post.content)
-const relatedPosts = await getRelatedPosts(post.id)
+const post = await getPostBySlug(params.slug);
+const seriesData = await getSeriesForPost(post.id);
+const headings = extractHeadings(post.content);
+const relatedPosts = await getRelatedPosts(post.id);
 ```
 
 ### `src/app/posts/[slug]/post-detail-client.tsx` - Client Component
 
 Handles interactivity:
+
 - Reading progress bar (bottom of screen)
 - Scroll-based footer detection
 - Series navigation (previous/next)
@@ -29,6 +30,7 @@ Handles interactivity:
 ### `src/components/blog/PostContent.tsx` - Markdown Renderer
 
 Features:
+
 - `react-markdown` with `remark-gfm`
 - Syntax highlighting via custom `CodeBlock` component
 - Automatic heading ID generation
@@ -41,6 +43,7 @@ Features:
 **Location**: `src/components/blog/TableOfContents.tsx`
 
 Features:
+
 - Auto-generated from markdown headings
 - Scroll-based active state tracking
 - Smooth scroll to section on click
@@ -51,6 +54,7 @@ Features:
 **Location**: `src/components/blog/PostNavigation.tsx`
 
 Features:
+
 - Previous/next post links
 - Series-aware navigation
 - Automatic calculation based on series posts
@@ -66,6 +70,7 @@ Series detail pages at `/series/[slug]` display all posts belonging to a series 
 **Location**: `src/app/series/[slug]/`
 
 **Server Component** (`page.tsx`):
+
 ```typescript
 const seriesData = await getSeriesBySlug(slug)
 if (!seriesData) {
@@ -75,6 +80,7 @@ return <SeriesDetailClient series={seriesData} />
 ```
 
 **Client Component** (`series-detail-client.tsx`):
+
 - Displays series header (title, description, back button)
 - Renders post list with loading state
 - Full-screen navigation integration
@@ -84,6 +90,7 @@ return <SeriesDetailClient series={seriesData} />
 **Location**: `src/components/blog/SeriesPostCard.tsx`
 
 Features:
+
 - Hero image display with `background-size: cover`
 - Responsive layout: image left (desktop) / image top (mobile)
 - Orange border on hover with lift animation
@@ -91,11 +98,13 @@ Features:
 - Skeleton loading while image loads
 
 **Desktop Layout**:
+
 - Image on left (180-280px wide), stretches to full card height
 - Text content on right, vertically centered
 - Horizontal flex layout
 
 **Mobile Layout**:
+
 - Image on top, full width (160-220px high)
 - Text content below
 - Vertical flex layout
@@ -105,24 +114,28 @@ Features:
 **Location**: `src/components/blog/SeriesPostList.tsx`
 
 Features:
+
 - Preloads all featured images before displaying cards
 - Shows skeleton cards during loading (min 500ms)
 - Handles image load errors gracefully
 - Responsive gap between cards (24-40px)
 
 **Loading State**:
+
 ```typescript
-const [allImagesLoaded, setAllImagesLoaded] = useState(false)
+const [allImagesLoaded, setAllImagesLoaded] = useState(false);
 
 useEffect(() => {
-  const postsWithImages = posts.filter(post => post.featured_image)
+  const postsWithImages = posts.filter((post) => post.featured_image);
   // Load all images, then show cards
-  postsWithImages.forEach(post => {
-    const img = new Image()
-    img.src = post.featured_image
-    img.onload = () => { /* track loaded count */ }
-  })
-}, [posts])
+  postsWithImages.forEach((post) => {
+    const img = new Image();
+    img.src = post.featured_image;
+    img.onload = () => {
+      /* track loaded count */
+    };
+  });
+}, [posts]);
 ```
 
 ### Syntax Highlighting
@@ -130,6 +143,7 @@ useEffect(() => {
 **Location**: `src/components/blog/CodeBlock.tsx`
 
 Features:
+
 - Uses custom tokenizer for code detection
 - Responsive font sizing
 - Copy button functionality
@@ -141,18 +155,18 @@ Located in `post-detail-client.tsx`:
 
 ```typescript
 // Calculate reading progress
-const [scrollProgress, setScrollProgress] = useState(0)
+const [scrollProgress, setScrollProgress] = useState(0);
 
 useEffect(() => {
   function updateProgress() {
-    const windowHeight = window.innerHeight
-    const documentHeight = document.documentElement.scrollHeight - windowHeight
-    const scrolled = window.scrollY
-    const progress = (scrolled / documentHeight) * 100
-    setScrollProgress(Math.min(100, Math.max(0, progress)))
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight - windowHeight;
+    const scrolled = window.scrollY;
+    const progress = (scrolled / documentHeight) * 100;
+    setScrollProgress(Math.min(100, Math.max(0, progress)));
   }
   // ... update on scroll
-}, [])
+}, []);
 ```
 
 Displays as orange progress bar at bottom of screen, sticks above footer when visible.
@@ -169,12 +183,16 @@ The blog implements comprehensive skeleton screens with shimmer loading animatio
 
 ```css
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton-shimmer {
-  background: linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%);
+  background: linear-gradient(90deg, #3e454c 0%, #4a535c 50%, #3e454c 100%);
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -294,10 +312,12 @@ if (loading) {
 ### Design System
 
 **Colors** (matching dark theme):
+
 - Base skeleton: `#3E454C` (lighter than `#2A2F35` background)
 - Shimmer highlight: `#4A535C` (gradient wave peak)
 
 **Animation**:
+
 - Duration: 1.5s ease-in-out infinite
 - Gradient wave moves left to right
 - 60fps target for smooth performance

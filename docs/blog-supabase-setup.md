@@ -12,6 +12,7 @@
 ### Tables
 
 **posts**:
+
 - `id` (primary key)
 - `title` (text)
 - `slug` (text, unique)
@@ -22,6 +23,7 @@
 - `updated_at` (timestamp)
 
 **series**:
+
 - `id` (primary key)
 - `title` (text)
 - `slug` (text, unique)
@@ -30,12 +32,14 @@
 - `updated_at` (timestamp)
 
 **series_posts** (junction table):
+
 - `id` (primary key)
 - `series_id` (foreign key → series.id)
 - `post_id` (foreign key → posts.id)
 - `order_column` (integer, nullable)
 
 **pictures**:
+
 - `id` (primary key)
 - `url` (text)
 - `caption` (text, nullable)
@@ -44,6 +48,7 @@
 - `order_column` (integer, nullable)
 
 **site_settings**:
+
 - `id` (primary key)
 - `key` (text, unique) - Setting identifier
 - `value` (text, nullable) - Setting value
@@ -140,6 +145,7 @@ ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 ### Create RLS Policies
 
 **Posts Table**:
+
 ```sql
 CREATE POLICY "Authenticated users can view posts"
 ON posts FOR SELECT TO authenticated USING (true);
@@ -155,6 +161,7 @@ ON posts FOR DELETE TO authenticated USING (true);
 ```
 
 **Series Table**:
+
 ```sql
 CREATE POLICY "Authenticated users can view series"
 ON series FOR SELECT TO authenticated USING (true);
@@ -170,6 +177,7 @@ ON series FOR DELETE TO authenticated USING (true);
 ```
 
 **Series Posts Junction Table**:
+
 ```sql
 CREATE POLICY "Authenticated users can view series_posts"
 ON series_posts FOR SELECT TO authenticated USING (true);
@@ -185,6 +193,7 @@ ON series_posts FOR DELETE TO authenticated USING (true);
 ```
 
 **Pictures Table**:
+
 ```sql
 CREATE POLICY "Authenticated users can view pictures"
 ON pictures FOR SELECT TO authenticated USING (true);
@@ -200,6 +209,7 @@ ON pictures FOR DELETE TO authenticated USING (true);
 ```
 
 **Site Settings Table**:
+
 ```sql
 -- Authenticated users can modify settings
 CREATE POLICY "Authenticated users can view site settings"
@@ -269,6 +279,7 @@ In **Supabase Dashboard → Authentication → Users**:
 3. Set "Auto Confirm User" to true
 
 Or use SQL:
+
 ```sql
 -- This will create a user - they'll need to reset password
 INSERT INTO auth.users (email, email_confirmed_at)
@@ -300,12 +311,14 @@ ORDER BY view_count DESC;
 ## Verify Setup
 
 1. **Database tables exist**:
+
    ```sql
    SELECT table_name FROM information_schema.tables
    WHERE table_schema = 'public';
    ```
 
 2. **RLS policies enabled**:
+
    ```sql
    SELECT tablename, policyname
    FROM pg_policies

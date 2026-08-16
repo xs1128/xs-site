@@ -3,24 +3,22 @@
 ## Client-Side (Browser)
 
 ```typescript
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client';
 
-const supabase = createClient()
+const supabase = createClient();
 const { data, error } = await supabase
   .from('posts')
   .select('*')
-  .eq('published', true)
+  .eq('published', true);
 ```
 
 ## Server-Side (Server Components)
 
 ```typescript
-import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server';
 
-const supabase = createClient()
-const { data, error } = await supabase
-  .from('posts')
-  .select('*')
+const supabase = createClient();
+const { data, error } = await supabase.from('posts').select('*');
 ```
 
 ## CRUD Operations
@@ -36,7 +34,7 @@ import {
   deletePost,
   getPostById,
   getAllPosts,
-} from '@/lib/supabase/mutations'
+} from '@/lib/supabase/mutations';
 
 // Create post with series relationships
 const { data: postData } = await createPost({
@@ -45,10 +43,10 @@ const { data: postData } = await createPost({
   content: 'Post content',
   excerpt: 'Summary',
   published_at: new Date().toISOString(),
-})
+});
 
 // Save series relationships
-await savePostSeries(postData.id, [1, 2, 3])
+await savePostSeries(postData.id, [1, 2, 3]);
 ```
 
 ### Series
@@ -60,14 +58,14 @@ import {
   deleteSeries,
   getSeriesById,
   getAllSeries,
-} from '@/lib/supabase/mutations'
+} from '@/lib/supabase/mutations';
 
 // Create series
 const { data } = await createSeries({
   title: 'My Series',
   slug: 'my-series',
   description: 'Series description',
-})
+});
 ```
 
 ### Series-Post Relationships
@@ -78,16 +76,16 @@ import {
   savePostSeries,
   addPostToSeries,
   removePostFromSeries,
-} from '@/lib/supabase/mutations'
+} from '@/lib/supabase/mutations';
 
 // Get all series for a post
-const { data: postSeries } = await getSeriesForPost(postId)
+const { data: postSeries } = await getSeriesForPost(postId);
 
 // Save/update post's series (replaces existing)
-await savePostSeries(postId, [1, 2, 3])
+await savePostSeries(postId, [1, 2, 3]);
 
 // Add post to specific series
-await addPostToSeries(seriesId, postId, 0)
+await addPostToSeries(seriesId, postId, 0);
 ```
 
 ## Site Settings Management
@@ -99,6 +97,7 @@ Site-wide configuration settings are stored in the `site_settings` table as key-
 ### Table Schema
 
 **site_settings**:
+
 - `id` (primary key)
 - `key` (text, unique) - Setting identifier (e.g., 'hero_image_url')
 - `value` (text, nullable) - Setting value
@@ -112,35 +111,35 @@ Site-wide configuration settings are stored in the `site_settings` table as key-
 
 ```typescript
 // Get any site setting by key
-const url = await getSiteSetting('hero_image_url')
+const url = await getSiteSetting('hero_image_url');
 
 // Get hero image URL specifically (with fallback)
-const heroUrl = await getHeroImageUrl()
+const heroUrl = await getHeroImageUrl();
 
 // Get avatar URL specifically (with fallback)
-const avatarUrl = await getAvatarUrl()
+const avatarUrl = await getAvatarUrl();
 
 // Update or create a site setting
-await updateSiteSetting('logo_url', 'https://...', 'Site logo')
+await updateSiteSetting('logo_url', 'https://...', 'Site logo');
 
 // Update hero image URL
-await updateHeroImageUrl('https://supabase.storage/...')
+await updateHeroImageUrl('https://supabase.storage/...');
 
 // Update avatar URL
-await updateAvatarUrl('https://supabase.storage/...')
+await updateAvatarUrl('https://supabase.storage/...');
 ```
 
 ### Usage Pattern
 
 ```typescript
 // Fetch setting
-const value = await getSiteSetting('setting_key')
+const value = await getSiteSetting('setting_key');
 
 // Fallback if setting doesn't exist
-return value || 'default_value'
+return value || 'default_value';
 
 // Update setting (upsert - creates if doesn't exist)
-await updateSiteSetting('key', 'value', 'Optional description')
+await updateSiteSetting('key', 'value', 'Optional description');
 ```
 
 ## Hero Image Feature
@@ -163,57 +162,62 @@ The hero image on the landing page is dynamically loaded from the database. Admi
 ### Files Involved
 
 **Backend**:
+
 - `src/lib/supabase/settings.ts` - Get/update hero URL
 - `src/lib/supabase/storage.ts` - Image upload to Supabase Storage
 
 **Admin UI**:
+
 - `src/app/admin/hero/page.tsx` - Hero image upload interface
 
 **Frontend**:
+
 - `src/app/page.tsx` - Landing page with dynamic hero image
 
 ### Implementation Details
 
 **Admin Upload Page** (`src/app/admin/hero/page.tsx`):
+
 ```typescript
 // Load current hero image
 useEffect(() => {
   async function loadHeroImage() {
-    const url = await getHeroImageUrl()
-    setCurrentHeroUrl(url)
+    const url = await getHeroImageUrl();
+    setCurrentHeroUrl(url);
   }
-  loadHeroImage()
-}, [])
+  loadHeroImage();
+}, []);
 
 // Handle upload
 async function handleSubmit(e: React.FormEvent) {
   // Upload to Supabase Storage
-  const { url, error } = await uploadImage(file)
+  const { url, error } = await uploadImage(file);
 
   // Save URL to database
-  await updateHeroImageUrl(url)
+  await updateHeroImageUrl(url);
 
   // Update state
-  setCurrentHeroUrl(url)
+  setCurrentHeroUrl(url);
 }
 ```
 
 **Landing Page** (`src/app/page.tsx`):
-```typescript
-import { getHeroImageUrl } from "@/lib/supabase/settings"
 
-const [heroImageUrl, setHeroImageUrl] = useState('/IMG_1953.jpeg')
+```typescript
+import { getHeroImageUrl } from '@/lib/supabase/settings';
+
+const [heroImageUrl, setHeroImageUrl] = useState('/IMG_1953.jpeg');
 
 useEffect(() => {
   async function fetchHeroImage() {
-    const url = await getHeroImageUrl()
-    setHeroImageUrl(url)
+    const url = await getHeroImageUrl();
+    setHeroImageUrl(url);
   }
-  fetchHeroImage()
-}, [])
+  fetchHeroImage();
+}, []);
 
 // Use in background
-backgroundImage: `url(${heroImageUrl})`
+backgroundImage: `url(${heroImageUrl})`;
 ```
 
 ### Next.js Image Configuration

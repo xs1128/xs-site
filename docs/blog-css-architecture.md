@@ -14,13 +14,13 @@ export const breakpoints = {
   md: '768px',
   lg: '1024px',
   xl: '1280px',
-} as const
+} as const;
 
 export const media = {
   sm: `@media (min-width: ${breakpoints.sm})`,
   maxSm: `@media (max-width: ${breakpoints.sm})`,
   // ... etc
-}
+};
 ```
 
 ### `src/styles/blog.css` - Blog Component Styles
@@ -53,10 +53,10 @@ export const media = {
 
 ```typescript
 // Check if screen matches breakpoint
-const isTablet = useBreakpoint('md')
+const isTablet = useBreakpoint('md');
 
 // Convenience hook for mobile detection
-const isMobile = useIsMobile() // < 768px
+const isMobile = useIsMobile(); // < 768px
 ```
 
 Replaces all `window.innerWidth` checks with performant `matchMedia()` API.
@@ -64,14 +64,14 @@ Replaces all `window.innerWidth` checks with performant `matchMedia()` API.
 ### `src/hooks/useScrollDetection.ts` - Scroll Tracking
 
 ```typescript
-const scrollProgress = useScrollProgress() // 0-100
-const footerVisible = useFooterVisibility() // boolean
+const scrollProgress = useScrollProgress(); // 0-100
+const footerVisible = useFooterVisibility(); // boolean
 ```
 
 ### `src/hooks/useActiveHeading.ts` - TOC Active State
 
 ```typescript
-const activeId = useActiveHeading(headings)
+const activeId = useActiveHeading(headings);
 ```
 
 ## Component Refactoring Examples
@@ -82,11 +82,13 @@ const activeId = useActiveHeading(headings)
 **After**: 193 lines (54% reduction)
 
 Changes:
+
 - Removed `isWrapped` and `isVerticalStack` state
 - Uses `useIsMobile()` hook for responsive behavior
 - All inline styles moved to `blog.css` classes
 
 **Footer CSS Classes**:
+
 ```css
 .footer-top-section {
   display: flex;
@@ -109,14 +111,14 @@ Changes:
 .footer-social-button {
   width: 32px;
   height: 32px;
-  background-color: #E4D9C2;
-  color: #2A2F35;
+  background-color: #e4d9c2;
+  color: #2a2f35;
 }
 
 .footer-social-button:hover {
   transform: scale(1.1);
-  background-color: #2A2F35;
-  color: #E4D9C2;
+  background-color: #2a2f35;
+  color: #e4d9c2;
 }
 ```
 
@@ -212,22 +214,22 @@ gap: clamp(24px, 4vw, 48px);
 ### Before: Footer with Inline Styles
 
 ```typescript
-const [isVerticalStack, setIsVerticalStack] = useState(false)
+const [isVerticalStack, setIsVerticalStack] = useState(false);
 
 useEffect(() => {
   const checkVerticalStack = () => {
-    setIsVerticalStack(window.innerWidth < 550)
-  }
-  checkVerticalStack()
-  window.addEventListener('resize', checkVerticalStack)
-  return () => window.removeEventListener('resize', checkVerticalStack)
-}, [])
+    setIsVerticalStack(window.innerWidth < 550);
+  };
+  checkVerticalStack();
+  window.addEventListener('resize', checkVerticalStack);
+  return () => window.removeEventListener('resize', checkVerticalStack);
+}, []);
 
 const topSectionStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: isVerticalStack ? 'column' : 'row',
   gap: '24px',
-}
+};
 ```
 
 ### After: Footer with CSS Classes

@@ -10,8 +10,8 @@
 ## On-Demand Revalidation
 
 Pages set `revalidate = 3600`, so CMS edits can take an hour to appear.
-`POST /api/revalidate` purges every page immediately via
-`revalidatePath('/', 'layout')`.
+`POST /blog/api/revalidate` purges every blog page immediately via
+`revalidatePath('/blog', 'layout')`.
 
 Auth: `x-revalidate-secret` header must match `REVALIDATE_SECRET` (timing-safe
 compare); anything else returns 401. Body is ignored.

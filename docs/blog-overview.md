@@ -23,6 +23,7 @@ npm run build        # Build for production
 ## Environment Setup
 
 Create `.env.local` with:
+
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key

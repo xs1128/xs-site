@@ -1,7 +1,11 @@
 # Migration: fold `blog` into `site`
 
-Plan for collapsing the two-project multi-zone setup into a single Next.js
-application. Written 2026-08-16. Nothing here has been executed yet.
+Record of collapsing the two-project multi-zone setup into a single Next.js
+application. Planned and executed 2026-08-16 on the `merge-blog` branch.
+
+**Status: done, unpushed.** Steps 1-11 and 14 landed in this repo. Steps 12
+and 13 are Vercel/GitHub dashboard work and are still outstanding — see
+"Remaining" at the end.
 
 Every claim about the current state was checked against the two repos, not
 assumed. File references are accurate as of `site@65e6564` and `blog@216292c`.
@@ -221,3 +225,49 @@ specific to the choice being made.
 - [Multi-zone bandwidth double-billing](https://dev.to/matthewwilson/eliminating-additional-bandwidth-charges-for-multi-zone-sites-on-vercel-1k5a)
 - [Deployment Protection breaks multi-zone rewrites](https://community.vercel.com/t/vercel-authentication-breaks-multi-zone-rewrite-domain/42731)
 - [next.js discussion #34616](https://github.com/vercel/next.js/discussions/34616)
+
+## Remaining
+
+Everything left is dashboard work outside this repo.
+
+1. **`blog-admin` env** — point `BLOG_REVALIDATE_URL` at
+   `https://www.xsooi.com/blog/api/revalidate` and `NEXT_PUBLIC_BLOG_URL` at
+   `https://www.xsooi.com/blog`. No code change; the values are read from env.
+2. **Vercel `site` project** — add `NEXT_PUBLIC_SUPABASE_URL`,
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `REVALIDATE_SECRET`, and `VISITS_OFFSET`.
+   The build fails without the Supabase pair: both blog dynamic routes call
+   `generateStaticParams`.
+3. **Vercel `blog` project** — delete it, and either remove `blog.xsooi.com` or
+   reconfigure it as a 308 to `www.xsooi.com/blog`. Leaving it serving content
+   keeps the duplicate-content defect alive.
+4. **GitHub** — archive `xs1128/blog` once the merge is pushed.
+
+## What changed beyond the plan
+
+Four things the plan did not anticipate, all found during execution.
+
+**Thirteen internal links were silently broken.** Post, series, and breadcrumb
+links plus `SeriesGrid`'s `router.push` were root-relative and correct only
+under `basePath`. They now carry `/blog` explicitly. Neither `tsc` nor
+`next build` catches this class — it is only wrong at runtime.
+
+**Dropping `@fontsource` broke 30 font references.** `next/font/local`
+registers a hashed family name, so hardcoded `'Hubot Sans'` and `'Roboto Mono'`
+literals resolved to nothing and fell back to `sans-serif`/`monospace`. They
+reference `--font-primary` / `--font-mono` now. The canvas face texture is the
+exception: `ctx.font` cannot take a CSS var, so it reads the token at runtime.
+
+**Six `@keyframes` names collided, not just classes.** `shimmer`,
+`slideInRight`, `slideOutRight`, `fadeInSlide`, `fadeOutSlide`, and
+`hamburgerFadeOut` were defined in both codebases, several inside inline
+`<style>` blocks in TSX. Keyframe names are global, so scoping cannot fix them
+and site's `animations.css` could have won by load order on a blog page.
+
+**The palette unified toward the blog, not the site.** Site adopted the blog's
+warmer surfaces. That forced `--color-accent-on-light` from `#c4421f` to
+`#b73e1d`: the old value was tuned against `#fbf9f4` and falls to 4.20:1 on
+`#f2e9d8`, below AA.
+
+The blog also arrived with 36 `no-explicit-any` errors. Blog had no lint gate;
+site runs one in CI, so the merge inherited the debt. Typed rather than
+suppressed.

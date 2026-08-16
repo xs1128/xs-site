@@ -29,12 +29,14 @@ src/components/blog/
 **Purpose**: Wrapper component that manages layout, responsiveness, and canvas initialization.
 
 **Key Features**:
+
 - Uses `useIsMobile()` hook for responsive camera positioning
 - Maintains flex layout to fill available space
 - Handles border styling (all sides on desktop, no left border on mobile)
 - Vintage yellow background (`colors.background`)
 
 **Props**:
+
 ```typescript
 interface ThreeDCanvasProps {
   isSmallScreen?: boolean;
@@ -46,6 +48,7 @@ interface ThreeDCanvasProps {
 **Purpose**: Main 3D scene with lighting, background elements, and camera controls.
 
 **Elements**:
+
 - **Background**: Solid vintage yellow color
 - **Background Particles**: 50 floating octahedrons with gentle animations
 - **Lighting**: Multi-source setup for room effect
@@ -59,6 +62,7 @@ interface ThreeDCanvasProps {
   - No pan (disabled)
 
 **Usage**:
+
 ```tsx
 <InteractiveScene />
 ```
@@ -68,12 +72,14 @@ interface ThreeDCanvasProps {
 **Purpose**: The main 3D cube displaying blog stats on all six faces.
 
 **Features**:
+
 - Auto-rotates on Y axis when not interacting
 - Smooth rotation with `useFrame()` hook
 - Six faces with different content
 - Canvas textures created programmatically
 
 **Faces** (in order: right, left, top, bottom, front, back):
+
 1. **POSTS** - Total post count (real data)
 2. **CATEGORIES** - Series/category count (real data)
 3. **LAST UPDATE** - Most recent post date (real data)
@@ -82,6 +88,7 @@ interface ThreeDCanvasProps {
 6. **© [YEAR] / BLOG v1.0** - Copyright and version (dynamic/static)
 
 **Props**:
+
 ```typescript
 interface TerminalCubeProps {
   stats: TerminalStats;
@@ -89,6 +96,7 @@ interface TerminalCubeProps {
 ```
 
 **TerminalStats Interface**:
+
 ```typescript
 interface TerminalStats {
   postCount: number;
@@ -105,6 +113,7 @@ interface TerminalStats {
 **Purpose**: Custom hook that fetches blog statistics from Supabase.
 
 **Queries**:
+
 - Posts count from `posts` table
 - Categories count from `series` table
 - Latest post date from `posts` table
@@ -112,6 +121,7 @@ interface TerminalStats {
 - Visit total from `/blog/api/visits`, which proxies GoatCounter's `TOTAL.json`
 
 **Usage**:
+
 ```tsx
 const stats = useTerminalStats();
 // Returns: { postCount, categoryCount, lastUpdate, pictureCount, totalViews, isLoading }
@@ -122,17 +132,19 @@ const stats = useTerminalStats();
 **Purpose**: Helper function that creates HTML5 canvas textures for cube faces.
 
 **Function**:
+
 ```typescript
-function createFaceTexture(config: FaceTextConfig): THREE.CanvasTexture
+function createFaceTexture(config: FaceTextConfig): THREE.CanvasTexture;
 
 interface FaceTextConfig {
-  mainText: string;      // Top text (e.g., "POSTS")
-  valueText?: string;    // Center large text (e.g., "42")
-  subtext?: string;      // Bottom text (e.g., "BLOG v1.0")
+  mainText: string; // Top text (e.g., "POSTS")
+  valueText?: string; // Center large text (e.g., "42")
+  subtext?: string; // Bottom text (e.g., "BLOG v1.0")
 }
 ```
 
 **Style**:
+
 - Canvas size: 512x512 pixels (crisp text)
 - Background: Black (#000000)
 - Text color: Terminal green (#00FF00)
@@ -142,12 +154,14 @@ interface FaceTextConfig {
 ## Responsive Behavior
 
 ### Desktop (width ≥ 480px)
+
 - 3D canvas appears to the right of Categories section
 - Grid layout: Categories (30%), 3D Canvas (70%)
 - Left border visible
 - All borders visible (top, right, bottom, left)
 
 ### Mobile (width < 480px)
+
 - 3D canvas appears above Categories section
 - Stacked vertical layout (100% width each)
 - No left border (full width)
@@ -156,6 +170,7 @@ interface FaceTextConfig {
 ## Styling
 
 ### Colors
+
 - **Background**: `colors.background` (#F2E9D8) - vintage yellow/cream
 - **Cube faces**: Black (#000000)
 - **Text**: Terminal green (#00FF00)
@@ -163,11 +178,12 @@ interface FaceTextConfig {
 - **Borders**: rgba(0, 0, 0, 0.08)
 
 ### Border Styling
+
 ```tsx
-borderTop: "1px solid rgba(0, 0, 0, 0.08)"
-borderRight: "1px solid rgba(0, 0, 0, 0.08)"
-borderBottom: "1px solid rgba(0, 0, 0, 0.08)"
-borderLeft: isSmallScreen ? "none" : "1px solid rgba(0, 0, 0, 0.08)"
+borderTop: '1px solid rgba(0, 0, 0, 0.08)';
+borderRight: '1px solid rgba(0, 0, 0, 0.08)';
+borderBottom: '1px solid rgba(0, 0, 0, 0.08)';
+borderLeft: isSmallScreen ? 'none' : '1px solid rgba(0, 0, 0, 0.08)';
 ```
 
 ## Integration Points
@@ -177,19 +193,29 @@ borderLeft: isSmallScreen ? "none" : "1px solid rgba(0, 0, 0, 0.08)"
 The 3D canvas is integrated into `BlogExpandedContent`:
 
 ```tsx
-{/* Mobile: 3D Animation Section first, Desktop: Categories first */}
-{isSmallScreen && <ThreeDCanvas isSmallScreen={isSmallScreen} />}
+{
+  /* Mobile: 3D Animation Section first, Desktop: Categories first */
+}
+{
+  isSmallScreen && <ThreeDCanvas isSmallScreen={isSmallScreen} />;
+}
 
-{/* Featured Series Section */}
+{
+  /* Featured Series Section */
+}
 <div style={sectionStyle}>
   <h2 style={headerStyle}>Categories</h2>
   <div style={contentStyle}>
     <SeriesGrid isSmallScreen={isSmallScreen} />
   </div>
-</div>
+</div>;
 
-{/* Desktop: 3D Animation Section second */}
-{!isSmallScreen && <ThreeDCanvas isSmallScreen={isSmallScreen} />}
+{
+  /* Desktop: 3D Animation Section second */
+}
+{
+  !isSmallScreen && <ThreeDCanvas isSmallScreen={isSmallScreen} />;
+}
 ```
 
 ## Performance Considerations
@@ -214,22 +240,26 @@ The 3D canvas is integrated into `BlogExpandedContent`:
 ## Troubleshooting
 
 ### Cube Not Visible
+
 - Check browser console for WebGL errors
 - Verify Three.js dependencies are installed
 - Ensure Canvas size is not zero (flex parent with minHeight: 0)
 
 ### Text Not Appearing
+
 - Verify `useTerminalStats` is fetching data correctly
 - Check canvas texture creation (see console for errors)
 - Ensure font (Roboto Mono) is loaded
 
 ### Performance Issues
+
 - Reduce particle count (currently 50)
 - Decrease canvas texture resolution
 - Simplify lighting setup
 - Check for memory leaks (texture disposal)
 
 ### Data Not Loading
+
 - Verify Supabase connection in `useTerminalStats.ts`
 - Check table names and permissions
 - Inspect browser network tab for failed queries
@@ -237,6 +267,7 @@ The 3D canvas is integrated into `BlogExpandedContent`:
 ## Dependencies
 
 Install required packages:
+
 ```bash
 npm install three@^0.183.2 @react-three/fiber@^9.5.0 @react-three/drei@^10.7.7
 ```

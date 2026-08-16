@@ -19,9 +19,9 @@
 **Always use shared constants instead of hardcoded values**:
 
 ```typescript
-import { FONTS, clamp, spacing } from "@/styles/typography";
-import { TRANSITIONS } from "@/styles/animations";
-import { colors } from "@/styles/colors";
+import { FONTS, clamp, spacing } from '@/styles/typography';
+import { TRANSITIONS } from '@/styles/animations';
+import { colors } from '@/styles/colors';
 
 // Good
 const style = {
@@ -34,26 +34,29 @@ const style = {
 // Bad
 const style = {
   fontFamily: "'Hubot Sans', sans-serif",
-  fontSize: "clamp(12px, 1.8vw, 18px)",
-  padding: "clamp(12px, 2vh, 24px)",
-  color: "#E5532C",
+  fontSize: 'clamp(12px, 1.8vw, 18px)',
+  padding: 'clamp(12px, 2vh, 24px)',
+  color: '#E5532C',
 };
 ```
 
 ### Available Constants
 
 **`src/styles/colors.ts`**:
+
 - `colors.accent` - `#E5532C`
 - `colors.darkBackground` - `#2A2F35`
 - And all other project colors
 
 **`src/styles/typography.ts`**:
+
 - `FONTS.primary` - `'Hubot Sans', sans-serif`
 - `FONTS.mono` - `'Roboto Mono', monospace`
 - `clamp.xs` through `clamp.3xl` - Responsive font sizes
 - `spacing.xs` through `spacing.lg` - Responsive spacing
 
 **`src/styles/animations.ts`**:
+
 - `TIMING.smooth` - Smooth cubic-bezier
 - `TRANSITIONS.marqueeExpand` - Marquee hover expansion
 - `TRANSITIONS.slower(property)` - 0.8s transition helper

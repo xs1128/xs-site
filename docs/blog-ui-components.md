@@ -11,11 +11,13 @@ Responsive footer with profile section, navigation links, and social media icons
 ### Features
 
 **Responsive Behavior**:
+
 - Desktop (≥550px): Horizontal layout with 3 sections
 - Mobile (<550px): Vertical stacking with centered sections
 - Divider only shows on desktop
 
 **Sections**:
+
 1. **Profile** (27% width on desktop):
    - Avatar image (loaded from Supabase or fallback)
    - Name: "xs"
@@ -36,19 +38,20 @@ Responsive footer with profile section, navigation links, and social media icons
 
 ```typescript
 // Avatar management
-const [avatarUrl, setAvatarUrl] = useState<string>('')
+const [avatarUrl, setAvatarUrl] = useState<string>('');
 useEffect(() => {
   async function loadAvatar() {
-    const url = await getAvatarUrl()
-    setAvatarUrl(url || 'https://...default-avatar.jpeg')
+    const url = await getAvatarUrl();
+    setAvatarUrl(url || 'https://...default-avatar.jpeg');
   }
-  loadAvatar()
-}, [])
+  loadAvatar();
+}, []);
 ```
 
 ### Avatar Management
 
 Admin can upload avatar at `/admin/avatar`:
+
 - Image uploaded to Supabase Storage (`blog-images` bucket)
 - URL saved to `site_settings` table (key: `avatar_url`)
 - Fallback to default if not set
@@ -61,27 +64,28 @@ The home page uses flexbox centering (matching main site approach):
 
 ```typescript
 const containerStyle = {
-  display: "flex",
-  flexDirection: "column",
-  width: "100%",
-  alignItems: "center", // Centers content horizontally
-}
+  display: 'flex',
+  flexDirection: 'column',
+  width: '100%',
+  alignItems: 'center', // Centers content horizontally
+};
 
 const mainStyle = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center", // Centers content vertically
-  alignItems: "center", // Centers content horizontally
-  width: "100%",
-}
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center', // Centers content vertically
+  alignItems: 'center', // Centers content horizontally
+  width: '100%',
+};
 
 const cardContainerStyle = {
-  width: isExpanded ? "100vw" : "clamp(300px, 90vw, 1100px)",
+  width: isExpanded ? '100vw' : 'clamp(300px, 90vw, 1100px)',
   // Positioned absolutely with left: 50% and transform: translateX(-50%)
-}
+};
 ```
 
 **Key Changes**:
+
 - Removed `minWidth: "1000px"` constraint that caused cutoff
 - Added `alignItems: "center"` to container for proper flexbox centering
 - Card width uses `90vw` for better responsiveness
@@ -110,17 +114,19 @@ A comprehensive system of skeleton loading components with shimmer animation for
 The atomic building block for all skeleton shapes.
 
 **Props**:
+
 ```typescript
 interface SkeletonElementProps {
-  width?: string | number
-  height?: string | number
-  variant?: 'text' | 'circular' | 'rectangular'
-  className?: string
-  style?: React.CSSProperties
+  width?: string | number;
+  height?: string | number;
+  variant?: 'text' | 'circular' | 'rectangular';
+  className?: string;
+  style?: React.CSSProperties;
 }
 ```
 
 **Usage**:
+
 ```typescript
 <SkeletonElement width="100%" height={20} variant="text" />
 <SkeletonElement width={40} height={40} variant="circular" />
@@ -131,16 +137,18 @@ interface SkeletonElementProps {
 Simulates text content with multiple lines of varying widths.
 
 **Props**:
+
 ```typescript
 interface SkeletonTextProps {
-  lines?: number
-  width?: string | string[]  // Array for varying widths per line
-  height?: string
-  className?: string
+  lines?: number;
+  width?: string | string[]; // Array for varying widths per line
+  height?: string;
+  className?: string;
 }
 ```
 
 **Usage**:
+
 ```typescript
 // Uniform width
 <SkeletonText lines={3} width="100%" />
@@ -154,15 +162,17 @@ interface SkeletonTextProps {
 Large featured image placeholders.
 
 **Props**:
+
 ```typescript
 interface SkeletonHeroProps {
-  width?: string | number
-  height?: string | number
-  className?: string
+  width?: string | number;
+  height?: string | number;
+  className?: string;
 }
 ```
 
 **Usage**:
+
 ```typescript
 <SkeletonHero width="100%" height={280} />
 ```
@@ -172,20 +182,23 @@ interface SkeletonHeroProps {
 Blog/series card placeholders matching actual card dimensions.
 
 **Props**:
+
 ```typescript
 interface SkeletonCardProps {
-  variant?: 'blog' | 'series' | 'post'
-  showImage?: boolean
-  className?: string
+  variant?: 'blog' | 'series' | 'post';
+  showImage?: boolean;
+  className?: string;
 }
 ```
 
 **Variants**:
+
 - `blog`: Image area (60% height) + title bar (40%)
 - `series`: Title + description + post preview lines
 - `post`: Title + metadata + excerpt lines
 
 **Usage**:
+
 ```typescript
 <SkeletonCard variant="blog" />
 <SkeletonCard variant="series" />
@@ -196,20 +209,23 @@ interface SkeletonCardProps {
 List placeholders for TOC, related posts, tags.
 
 **Props**:
+
 ```typescript
 interface SkeletonListProps {
-  items?: number
-  variant?: 'heading' | 'post' | 'tag'
-  className?: string
+  items?: number;
+  variant?: 'heading' | 'post' | 'tag';
+  className?: string;
 }
 ```
 
 **Variants**:
+
 - `heading`: Indented heading lines (TOC)
 - `post`: Title + metadata lines (related posts)
 - `tag`: Pill-shaped tag placeholders
 
 **Usage**:
+
 ```typescript
 <SkeletonList variant="heading" items={5} />
 <SkeletonList variant="tag" items={6} />
@@ -218,6 +234,7 @@ interface SkeletonListProps {
 ### Design System
 
 **Colors**:
+
 - Base: `#3E454C`
 - Shimmer: `#4A535C`
 
