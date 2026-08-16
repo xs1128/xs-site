@@ -4,6 +4,7 @@ import { siteConfig, blogUrl } from '@/lib/blog/seo';
 import '@/styles/blog-globals.css';
 import '@/styles/blog.css';
 import Footer from '@/components/blog/ui/Footer';
+import { hubotSansBlog, robotoMonoBlog } from '@/fonts';
 
 // Unset means no script, so dev and previews stay out of the stats.
 const goatCounterCode = process.env.NEXT_PUBLIC_GOATCOUNTER_CODE;
@@ -72,7 +73,9 @@ export default function BlogLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="blog-root">
+    <div
+      className={`blog-root ${hubotSansBlog.variable} ${robotoMonoBlog.variable}`}
+    >
       {children}
       <Footer />
       {goatCounterCode && (

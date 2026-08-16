@@ -139,7 +139,11 @@ body:has(.blog-root) {
   --color-dark-text: var(--color-text-on-dark);
   --color-nav-background: var(--color-nav-bg);
   --color-card: var(--color-card-bg);
-  --font-mono: var(--font-primary);
+
+  /* Roles are inverted vs site: body and headings in Hubot Sans, Roboto Mono
+     for code. Own faces so 700 is a real cut, not synthesised. */
+  --font-primary: var(--font-blog-sans), sans-serif;
+  --font-mono: var(--font-blog-mono), monospace;
 
   /* Spacing */
   --spacing-xs: clamp(4px, 1vh, 8px);
@@ -478,7 +482,7 @@ body:has(.blog-root) {
   border-radius: 6px;
   background-color: #2a2f35;
   color: #f2e9d8;
-  font-family: var(--font-roboto-mono), monospace;
+  font-family: var(--font-blog-sans), sans-serif;
   font-size: clamp(10px, 1.2vw, 12px);
   font-weight: 500;
   line-height: 1.35;

@@ -33,10 +33,11 @@ export function createFaceTexture(config: FaceTextConfig): THREE.CanvasTexture {
 
   // Canvas takes a real family name, not a CSS var, and next/font's family is
   // hashed at build time — so resolve the token instead of naming the face.
+  // Read from .blog-root: that is where the blog's font variables are attached.
+  const scope = document.querySelector('.blog-root') ?? document.documentElement;
   const fontFamily =
-    getComputedStyle(document.documentElement)
-      .getPropertyValue('--font-roboto-mono')
-      .trim() || 'monospace';
+    getComputedStyle(scope).getPropertyValue('--font-blog-mono').trim() ||
+    'monospace';
 
   ctx.fillStyle = '#00FF00';
   ctx.textAlign = 'center';
