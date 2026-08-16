@@ -10,7 +10,7 @@ function useNavAnimations() {
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
-      @keyframes slideInRight {
+      @keyframes blogSlideInRight {
         0% {
           opacity: 0;
           transform: translateX(100%);
@@ -20,7 +20,7 @@ function useNavAnimations() {
           transform: translateX(0);
         }
       }
-      @keyframes slideOutRight {
+      @keyframes blogSlideOutRight {
         0% {
           opacity: 1;
           transform: translateX(0);
@@ -30,7 +30,7 @@ function useNavAnimations() {
           transform: translateX(100%);
         }
       }
-      @keyframes fadeInSlide {
+      @keyframes blogFadeInSlide {
         0% {
           opacity: 0;
           transform: translateX(50px);
@@ -40,7 +40,7 @@ function useNavAnimations() {
           transform: translateX(0);
         }
       }
-      @keyframes fadeOutSlide {
+      @keyframes blogFadeOutSlide {
         0% {
           opacity: 1;
           transform: translateX(0);
@@ -50,11 +50,11 @@ function useNavAnimations() {
           transform: translateX(50px);
         }
       }
-      .nav-item-opening {
-        animation: fadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      .blog-nav-item-opening {
+        animation: blogFadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
       }
-      .nav-item-closing {
-        animation: fadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      .blog-nav-item-closing {
+        animation: blogFadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
       /* Text fill animation for navigation buttons */
       .nav-item {
@@ -174,8 +174,8 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
         alignItems: "center",
         justifyContent: "center",
         animation: isClosing
-          ? "slideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)"
-          : "slideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+          ? "blogSlideOutRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)"
+          : "blogSlideInRight 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
         pointerEvents: isClosing ? "none" : "auto",
         willChange: isClosing ? "transform, opacity" : "auto",
         contain: "strict",
@@ -270,7 +270,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClose}
-          className={`nav-item ${isClosing ? "nav-item-closing" : "nav-item-opening"}`}
+          className={`blog-nav-item ${isClosing ? "blog-nav-item-closing" : "blog-nav-item-opening"}`}
           data-text="SITE"
           style={{
             backgroundColor: colors.navButtonPanel,
@@ -308,7 +308,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClose}
-          className={`nav-item ${isClosing ? "nav-item-closing" : "nav-item-opening"}`}
+          className={`blog-nav-item ${isClosing ? "blog-nav-item-closing" : "blog-nav-item-opening"}`}
           data-text="PROJECTS"
           style={{
             backgroundColor: colors.navButtonPanel,

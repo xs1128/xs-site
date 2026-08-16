@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ revalidated: false }, { status: 401 })
   }
 
-  revalidatePath('/', 'layout')
-  revalidatePath('/sitemap.xml')
+  revalidatePath('/blog', 'layout')
+  revalidatePath('/blog/sitemap.xml')
 
   return NextResponse.json({ revalidated: true })
 }

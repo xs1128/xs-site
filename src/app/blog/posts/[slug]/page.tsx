@@ -6,7 +6,7 @@ import type { Metadata } from 'next'
 import PostDetailClient from './post-detail-client'
 import type { Heading } from '@/types/post'
 import type { Post, PostLink, SeriesDetail } from '@/types/post'
-import { siteConfig, absoluteUrl } from '@/lib/blog/seo'
+import { siteConfig, absoluteUrl, blogUrl } from '@/lib/blog/seo'
 
 // ISR: posts render statically and re-validate hourly.
 export const revalidate = 3600
@@ -75,11 +75,11 @@ async function PostDataFetcher({ slug }: { slug: string }) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'All Posts', item: absoluteUrl('/?expanded=true') },
+      { '@type': 'ListItem', position: 1, name: 'All Posts', item: blogUrl('/?expanded=true') },
       ...(parentSeries
-        ? [{ '@type': 'ListItem', position: 2, name: parentSeries.title, item: absoluteUrl(`/series/${parentSeries.slug}`) }]
+        ? [{ '@type': 'ListItem', position: 2, name: parentSeries.title, item: blogUrl(`/series/${parentSeries.slug}`) }]
         : []),
-      { '@type': 'ListItem', position: parentSeries ? 3 : 2, name: post.title, item: absoluteUrl(`/posts/${slug}`) },
+      { '@type': 'ListItem', position: parentSeries ? 3 : 2, name: post.title, item: blogUrl(`/posts/${slug}`) },
     ],
   }
 
@@ -94,7 +94,7 @@ async function PostDataFetcher({ slug }: { slug: string }) {
     author: { '@type': 'Person', name: post.author_name || siteConfig.author },
     publisher: { '@type': 'Organization', name: siteConfig.name },
     keywords: (post.tags || []).join(', '),
-    mainEntityOfPage: { '@type': 'WebPage', '@id': absoluteUrl(`/posts/${slug}`) },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': blogUrl(`/posts/${slug}`) },
   }
 
   return (
@@ -158,7 +158,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Post not found' }
   }
 
-  const url = absoluteUrl(`/posts/${slug}`)
+  const url = blogUrl(`/posts/${slug}`)
   const description = post.excerpt || siteConfig.description
   const ogImage = post.featured_image || siteConfig.ogImage
 

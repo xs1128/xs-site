@@ -213,7 +213,7 @@ export default function Tooltip({ label, placement = 'top', children }: TooltipP
             ref={tipRef}
             id={id}
             role="tooltip"
-            className="tooltip"
+            className="blog-tooltip"
             data-placement={position?.placement ?? placement}
             data-ready={position !== null}
             style={{ left: position?.x ?? 0, top: position?.y ?? 0 }}

@@ -122,7 +122,6 @@ export default function AnimatedButton({
   };
 
   if (href) {
-    // Internal links (starting with "/") use Next.js Link so basePath is applied.
     if (href.startsWith('/')) {
       return (
         <Link href={href} {...buttonProps}>

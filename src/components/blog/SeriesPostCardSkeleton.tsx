@@ -43,9 +43,9 @@ export default function SeriesPostCardSkeleton() {
           inset: 0;
           background: linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%);
           background-size: 200% 100%;
-          animation: shimmer 1.5s ease-in-out infinite;
+          animation: blogShimmer 1.5s ease-in-out infinite;
         }
-        @keyframes shimmer {
+        @keyframes blogShimmer {
           0% {
             background-position: 200% 0;
           }

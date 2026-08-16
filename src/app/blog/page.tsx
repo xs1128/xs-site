@@ -1,5 +1,5 @@
 import { getHeroImage } from "@/lib/blog/hero-image";
-import { siteConfig } from "@/lib/blog/seo";
+import { siteConfig, blogUrl } from "@/lib/blog/seo";
 import HomePageClient from "./home-client";
 
 // ISR: rebuild the shell hourly so a changed hero image shows up.
@@ -9,7 +9,7 @@ const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: siteConfig.name,
-  url: siteConfig.url,
+  url: blogUrl('/'),
   description: siteConfig.description,
 };
 

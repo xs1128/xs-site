@@ -31,7 +31,7 @@ export default function SkeletonElement({
     bottom: 0,
     background: 'linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%)',
     backgroundSize: '200% 100%',
-    animation: 'shimmer 1.5s ease-in-out infinite',
+    animation: 'blogShimmer 1.5s ease-in-out infinite',
   }
 
   return (

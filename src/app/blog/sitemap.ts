@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { siteConfig, absoluteUrl } from '@/lib/blog/seo'
+import { blogUrl } from '@/lib/blog/seo'
 import { getAllPostSlugs, getAllSeriesSlugs } from '@/lib/blog/supabase/queries'
 
 // Re-crawl periodically so new posts show up. (ISR for the sitemap.)
@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: siteConfig.url,
+      url: blogUrl('/'),
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
@@ -21,14 +21,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   const postRoutes: MetadataRoute.Sitemap = (posts ?? []).map((p) => ({
-    url: absoluteUrl(`/posts/${p.slug}`),
+    url: blogUrl(`/posts/${p.slug}`),
     lastModified: new Date(p.updated_at || p.published_at || Date.now()),
     changeFrequency: 'weekly',
     priority: 0.8,
   }))
 
   const seriesRoutes: MetadataRoute.Sitemap = (series ?? []).map((s) => ({
-    url: absoluteUrl(`/series/${s.slug}`),
+    url: blogUrl(`/series/${s.slug}`),
     lastModified: new Date(s.created_at || Date.now()),
     changeFrequency: 'weekly',
     priority: 0.6,

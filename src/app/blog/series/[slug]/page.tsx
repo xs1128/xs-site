@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { getSeriesBySlug, getAllSeriesSlugs } from '@/lib/blog/supabase/queries'
 import SeriesDetailClient from './series-detail-client'
 import type { Metadata } from 'next'
-import { siteConfig, absoluteUrl } from '@/lib/blog/seo'
+import { siteConfig, absoluteUrl, blogUrl } from '@/lib/blog/seo'
 
 // ISR: series pages render statically and re-validate hourly.
 export const revalidate = 3600
@@ -29,8 +29,8 @@ export default async function SeriesPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'All Posts', item: absoluteUrl('/?expanded=true') },
-      { '@type': 'ListItem', position: 2, name: seriesData.title, item: absoluteUrl(`/series/${slug}`) },
+      { '@type': 'ListItem', position: 1, name: 'All Posts', item: blogUrl('/?expanded=true') },
+      { '@type': 'ListItem', position: 2, name: seriesData.title, item: blogUrl(`/series/${slug}`) },
     ],
   }
 
@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Series not found' }
   }
 
-  const url = absoluteUrl(`/series/${slug}`)
+  const url = blogUrl(`/series/${slug}`)
   const description = seriesData.description || siteConfig.description
 
   return {

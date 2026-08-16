@@ -12,7 +12,6 @@ export interface TerminalStats {
   isLoading: boolean;
 }
 
-// basePath is not applied to client fetches, so the proxy route needs its prefix spelled out.
 async function fetchTotalViews(): Promise<number | null> {
   try {
     const res = await fetch('/blog/api/visits');

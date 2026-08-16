@@ -1,70 +1,82 @@
-/* ========================================
-   BASE STYLES
-   ======================================== */
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+/* Scoped to .blog-root (set in app/blog/layout.tsx). Site's globals.css also
+   loads on /blog. Custom props go on .blog-root, not :root, so they win by
+   inheritance rather than a source-order tie-break. */
+
+html:has(.blog-root) {
+  scroll-behavior: smooth;
+  background-color: #F2E9D8;
 }
 
-html,
-body {
-  /* 100% not 100vw: vw counts the classic scrollbar's width, so it overflows by ~15px */
+/* 100% not 100vw: vw counts the classic scrollbar's width, so it overflows by ~15px */
+html:has(.blog-root),
+body:has(.blog-root) {
   max-width: 100%;
   width: 100%;
   position: relative;
   overscroll-behavior: none;
 }
 
-body {
-  font-family: 'Hubot Sans', sans-serif;
-  font-weight: 400;
-  color: #2A2F35;
-  background-color: #F2E9D8;
-}
-
-html {
-  scroll-behavior: smooth;
-  background-color: #F2E9D8;
-}
-
-* {
-  -webkit-overflow-scrolling: touch;
-}
-
-img, video, canvas, svg {
-  max-width: 100%;
-}
-
 /* Mobile-specific overscroll fixes */
 @media (max-width: 767px) {
-  html,
-  body {
+  html:has(.blog-root),
+  body:has(.blog-root) {
     overflow-x: hidden;
     overscroll-behavior-x: none;
     touch-action: pan-y pinch-zoom;
   }
 }
 
-.wrapgrid {
+.blog-root {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  color: #2A2F35;
+  background-color: #F2E9D8;
+  min-height: 100vh;
+}
+
+.blog-root *,
+.blog-root *::before,
+.blog-root *::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.blog-root img,
+.blog-root video,
+.blog-root canvas,
+.blog-root svg {
+  max-width: 100%;
+}
+
+.blog-root .wrapgrid {
   overflow-x: hidden;
 }
 
-a {
+.blog-root a {
   color: #E5532C;
   text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Hubot Sans', sans-serif;
+.blog-root h1,
+.blog-root h2,
+.blog-root h3,
+.blog-root h4,
+.blog-root h5,
+.blog-root h6 {
+  font-family: var(--font-primary);
   font-weight: 700;
 }
 
-code, pre, .mono {
-  font-family: 'Roboto Mono', monospace;
+.blog-root code,
+.blog-root pre,
+.blog-root .mono {
+  font-family: var(--font-mono);
 }
 
-button, .animated-button {
+.blog-root button,
+.blog-root .animated-button {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -118,7 +130,7 @@ button, .animated-button {
 /* ========================================
    CSS CUSTOM PROPERTIES
    ======================================== */
-:root {
+.blog-root {
   /* Colors */
   --color-background: #F2E9D8;
   --color-text: #2A2F35;
@@ -129,9 +141,9 @@ button, .animated-button {
   --color-card: #E4D9C2;
   --color-border: #D6CBB3;
 
-  /* Typography */
-  --font-primary: 'Hubot Sans', sans-serif;
-  --font-mono: 'Roboto Mono', monospace;
+  /* --font-primary is inverted vs site: Hubot Sans here, Roboto Mono there. */
+  --font-primary: var(--font-hubot-sans), sans-serif;
+  --font-mono: var(--font-roboto-mono), monospace;
 
   /* Spacing */
   --spacing-xs: clamp(4px, 1vh, 8px);
@@ -245,27 +257,27 @@ button, .animated-button {
   to { opacity: 1; }
 }
 
-@keyframes slideInRight {
+@keyframes blogSlideInRight {
   from { opacity: 0; transform: translateX(100%); }
   to { opacity: 1; transform: translateX(0); }
 }
 
-@keyframes slideOutRight {
+@keyframes blogSlideOutRight {
   from { opacity: 1; transform: translateX(0); }
   to { opacity: 0; transform: translateX(100%); }
 }
 
-@keyframes fadeInSlide {
+@keyframes blogFadeInSlide {
   from { opacity: 0; transform: translateX(50px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
-@keyframes fadeOutSlide {
+@keyframes blogFadeOutSlide {
   from { opacity: 1; transform: translateX(0); }
   to { opacity: 0; transform: translateX(50px); }
 }
 
-@keyframes hamburgerFadeOut {
+@keyframes blogHamburgerFadeOut {
   from { opacity: 1; }
   to { opacity: 0; }
 }
@@ -276,27 +288,27 @@ button, .animated-button {
 }
 
 .animate-fade-in { animation: fadeIn 0.3s ease; }
-.animate-slide-in { animation: slideInRight 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
+.animate-slide-in { animation: blogSlideInRight 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
 
 /* Navigation animations */
-.nav-item-opening {
-  animation: fadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+.blog-nav-item-opening {
+  animation: blogFadeInSlide 0.9s cubic-bezier(0.16, 1, 0.3, 1) backwards;
 }
 
-.nav-item-closing {
-  animation: fadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.blog-nav-item-closing {
+  animation: blogFadeOutSlide 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.hamburger-fading {
-  animation: hamburgerFadeOut 0.3s ease forwards;
+.blog-hamburger-fading {
+  animation: blogHamburgerFadeOut 0.3s ease forwards;
 }
 
 /* Text fill animation for navigation buttons */
-.nav-item {
+.blog-nav-item {
   position: relative;
 }
 
-.nav-item::before {
+.blog-nav-item::before {
   content: attr(data-text);
   position: absolute;
   left: 0;
@@ -320,13 +332,13 @@ button, .animated-button {
   width: fit-content;
 }
 
-.nav-item > span {
+.blog-nav-item > span {
   position: relative;
   z-index: 2;
 }
 
 @media (hover: hover) {
-  .nav-item:hover::before {
+  .blog-nav-item:hover::before {
     clip-path: inset(0 0 0 0);
   }
 }
@@ -355,17 +367,17 @@ button, .animated-button {
    TOOLTIP
    ======================================== */
 
-/* z-index sits above the 3D scene overlay (10100) so tooltips on the
-   fullscreen scene controls are not swallowed by it. */
-.tooltip {
+/* Portaled to document.body, so outside .blog-root: literals, not var().
+   z-index clears the 3D scene overlay (10100). */
+.blog-tooltip {
   position: fixed;
   z-index: 10200;
   max-width: 260px;
   padding: 6px 10px;
   border-radius: 6px;
-  background-color: var(--color-dark-background);
-  color: var(--color-dark-text);
-  font-family: var(--font-primary);
+  background-color: #2A2F35;
+  color: #F2E9D8;
+  font-family: var(--font-hubot-sans), sans-serif;
   font-size: clamp(10px, 1.2vw, 12px);
   font-weight: 500;
   line-height: 1.35;
@@ -380,14 +392,14 @@ button, .animated-button {
     transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.tooltip[data-ready='true'] {
+.blog-tooltip[data-ready='true'] {
   opacity: 1;
   transform: scale(1);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tooltip,
-  .tooltip[data-ready='true'] {
+  .blog-tooltip,
+  .blog-tooltip[data-ready='true'] {
     transition: none;
     transform: none;
   }
@@ -396,7 +408,7 @@ button, .animated-button {
 /* ========================================
    SKELETON SHIMMER ANIMATION
    ======================================== */
-@keyframes shimmer {
+@keyframes blogShimmer {
   0% {
     background-position: -200% 0;
   }
@@ -408,5 +420,5 @@ button, .animated-button {
 .skeleton-shimmer {
   background: linear-gradient(90deg, #3E454C 0%, #4A535C 50%, #3E454C 100%);
   background-size: 200% 100%;
-  animation: shimmer 1.5s ease-in-out infinite;
+  animation: blogShimmer 1.5s ease-in-out infinite;
 }

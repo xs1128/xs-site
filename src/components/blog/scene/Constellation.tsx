@@ -279,7 +279,7 @@ export default function Constellation({
           occlude={occluders as RefObject<Object3D>[] | undefined}
           style={{ pointerEvents: "none" }}
         >
-          <div className="tooltip" data-ready="true" style={{ position: "static" }}>
+          <div className="blog-tooltip" data-ready="true" style={{ position: "static" }}>
             {LABEL}
           </div>
         </Html>

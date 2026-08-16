@@ -1,14 +1,14 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  async rewrites() {
-    return [
-      { source: '/blog', destination: 'https://blog.xsooi.com/blog' },
+  images: {
+    remotePatterns: [
       {
-        source: '/blog/:path*',
-        destination: 'https://blog.xsooi.com/blog/:path*',
+        protocol: 'https',
+        hostname: 'fopmnlxsudpgsdpaqrzd.supabase.co',
+        pathname: '/storage/v1/object/public/**',
       },
-    ];
+    ],
   },
   async headers() {
     return [
