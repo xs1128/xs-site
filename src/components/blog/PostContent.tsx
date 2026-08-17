@@ -60,7 +60,6 @@ const containerStyle: React.CSSProperties = {
   fontWeight: 400,
   color: '#F5F5F5',
   lineHeight: 1.8,
-  textAlign: 'justify',
   overflowWrap: 'break-word',
   wordBreak: 'break-word',
 };
