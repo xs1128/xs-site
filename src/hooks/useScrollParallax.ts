@@ -1,81 +1,88 @@
-import { useState, useEffect, useRef, useCallback, RefObject } from 'react';
+import { useState, useEffect, useRef, type RefObject } from 'react';
+import { useReducedMotion } from './useReducedMotion';
 
-interface UseScrollParallaxOptions {
-  maxScrollDistance: number; // Maximum distance in pixels (e.g., 40vh)
-  triggerThreshold: number; // When to start (0 = immediate)
+// Sub-pixel moves aren't visible but still cost a render, so state only follows
+// changes larger than this.
+const MIN_OFFSET_DELTA_PX = 0.5;
+
+// Travel is spread over slightly less than one viewport, so the landing content
+// has cleared before the about section snaps in. Pairs with the theme
+// thresholds in page.tsx — move both together.
+const SCROLL_RANGE_VH = 0.9;
+
+export interface UseScrollParallaxOptions {
+  /** Peak travel, as a fraction of viewport height. */
+  maxDistanceVh: number;
+  /** Scroll distance before travel begins, as a fraction of viewport height. */
+  triggerThresholdVh?: number;
 }
 
 /**
- * Hook for implementing scroll-based parallax effect
- * Tracks scroll position within a container and calculates parallax offset
+ * Translates an element as its scroll container moves, at a fraction of the
+ * container's speed.
  *
- * @param containerRef - Reference to the scroll container
- * @param options - Configuration options for parallax behavior
- * @returns Current parallax offset in pixels
+ * Distances are fractions of the viewport rather than pixels so a resize or
+ * orientation change is picked up by the next frame. Taking pixels meant the
+ * caller had to compute them from `window.innerHeight` at render time, and
+ * since a resize re-renders nothing here, that value went stale while the
+ * hook's own viewport read stayed current.
  *
- * @example
- * const offset = useScrollParallax(containerRef, {
- *   maxScrollDistance: window.innerHeight * 0.4,  // 40vh
- *   triggerThreshold: 0  // Immediate start
- * });
+ * Returns 0 under `prefers-reduced-motion`, which is re-read for the lifetime
+ * of the component rather than latched at mount.
  */
 export function useScrollParallax(
   containerRef: RefObject<HTMLDivElement | null>,
-  options: UseScrollParallaxOptions,
+  { maxDistanceVh, triggerThresholdVh = 0 }: UseScrollParallaxOptions,
 ): number {
-  const { maxScrollDistance, triggerThreshold } = options;
   const [parallaxOffset, setParallaxOffset] = useState(0);
-  const rafRef = useRef<number | undefined>(undefined);
+  const reducedMotion = useReducedMotion();
+  // Null rather than undefined so a rAF id of 0 still reads as pending.
+  const rafRef = useRef<number | null>(null);
   const lastOffsetRef = useRef(0);
-
-  const handleScroll = useCallback(() => {
-    if (rafRef.current) return;
-
-    rafRef.current = requestAnimationFrame(() => {
-      if (!containerRef.current) return;
-
-      const scrollY = containerRef.current.scrollTop;
-      const viewportHeight = window.innerHeight;
-
-      const scrollRange = viewportHeight * 0.9;
-      const scrollProgress = Math.min(
-        Math.max((scrollY - triggerThreshold) / scrollRange, 0),
-        1,
-      );
-
-      const newOffset = scrollProgress * maxScrollDistance;
-
-      if (Math.abs(newOffset - lastOffsetRef.current) > 0.5) {
-        lastOffsetRef.current = newOffset;
-        setParallaxOffset(newOffset);
-      }
-
-      rafRef.current = undefined;
-    });
-  }, [containerRef, maxScrollDistance, triggerThreshold]);
-
-  const handleResize = useCallback(() => {
-    handleScroll();
-  }, [handleScroll]);
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!container || reducedMotion) return;
+
+    const update = () => {
+      // Cleared first: an early return below must not leave the throttle
+      // latched, or scroll updates stop for the life of the component.
+      rafRef.current = null;
+
+      const viewportHeight = window.innerHeight;
+      const scrolled =
+        container.scrollTop - triggerThresholdVh * viewportHeight;
+      const progress = Math.min(
+        Math.max(scrolled / (SCROLL_RANGE_VH * viewportHeight), 0),
+        1,
+      );
+      const offset = progress * maxDistanceVh * viewportHeight;
+
+      if (Math.abs(offset - lastOffsetRef.current) > MIN_OFFSET_DELTA_PX) {
+        lastOffsetRef.current = offset;
+        setParallaxOffset(offset);
+      }
+    };
+
+    const handleScroll = () => {
+      if (rafRef.current !== null) return;
+      rafRef.current = requestAnimationFrame(update);
+    };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleScroll, { passive: true });
 
     handleScroll();
 
     return () => {
-      if (rafRef.current) {
+      if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
       }
       container.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleScroll);
     };
-  }, [containerRef, handleScroll, handleResize]);
+  }, [containerRef, maxDistanceVh, triggerThresholdVh, reducedMotion]);
 
-  return parallaxOffset;
+  return reducedMotion ? 0 : parallaxOffset;
 }

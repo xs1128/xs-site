@@ -19,15 +19,10 @@ export function LandingButtons({
   onScrollToContact,
   containerRef,
 }: LandingButtonsProps) {
-  // Scroll-based parallax effect with delayed start
-  // Buttons start sliding up after 20vh of scroll (name starts at 0)
-  const maxScrollDistance =
-    typeof window !== 'undefined' ? window.innerHeight * 0.4 : 0;
-  const triggerThreshold =
-    typeof window !== 'undefined' ? window.innerHeight * 0.2 : 0;
+  // Same travel as the name, but held back so the name exits first.
   const parallaxOffset = useScrollParallax(containerRef, {
-    maxScrollDistance, // 40vh
-    triggerThreshold, // Start after 20vh
+    maxDistanceVh: 0.4,
+    triggerThresholdVh: 0.2,
   });
 
   const buttonStyle = {

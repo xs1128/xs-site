@@ -35,7 +35,6 @@ export function useIntersectionAnimation(
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Only set to true once when entering viewport, never back to false
           if (entry.isIntersecting && !hasAnimated.current) {
             hasAnimated.current = true;
             setIsVisible(true);

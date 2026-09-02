@@ -55,16 +55,13 @@ export function useScrollProgress(
   reducedMotion = false,
 ) {
   const [scrollProgress, setScrollProgress] = useState(0);
+  // Refs, not state: the easing loop is the only thing allowed to render, and
+  // it must read the latest target and displayed value without being restarted
+  // by a stale closure over either.
   const tickingRef = useRef(false);
-  // Latest measured target (0..100). Written by the scroll handler, read by the
-  // easing loop. A ref so updates don't trigger renders; only the loop does.
   const targetProgressRef = useRef(0);
-  // Current displayed value, mirrored in a ref so the easing loop can read it
-  // without depending on the state value (avoids stale closures / restarts).
   const displayedRef = useRef(0);
-  // Active easing-loop rAF id, or null when no loop is running.
   const easeRafRef = useRef<number | null>(null);
-  // Pending throttle-rAF id scheduled by onScroll, or null when none is pending.
   const throttleRafRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -93,7 +90,6 @@ export function useScrollProgress(
 
     function startEasing() {
       if (reducedMotion) {
-        // No animation: snap straight to the latest target.
         if (easeRafRef.current !== null) {
           cancelAnimationFrame(easeRafRef.current);
           easeRafRef.current = null;
@@ -109,6 +105,7 @@ export function useScrollProgress(
 
     function updateProgress() {
       tickingRef.current = false;
+      throttleRafRef.current = null;
 
       const el = targetRef.current;
       if (!el) {

@@ -8,7 +8,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - Every CSS file must be imported in `src/app/layout.tsx` — a new file under `src/styles/` does nothing until it is. `blog.css` is the exception: the blog's only sheet, imported by `src/app/blog/layout.tsx`, so it loads on `/blog/*` alone.
 - Breakpoint is 640px everywhere (`--breakpoint-small`, media queries, `useIsSmallScreen`).
 - Keep hover styles inside `@media (hover: hover)` — otherwise touch devices get stuck states.
-- Reduced motion is handled by one catch-all block at the end of `animations.css`. Don't add per-file `prefers-reduced-motion` blocks. It can't reach JS-driven motion, so anything animating from JS checks `matchMedia('(prefers-reduced-motion: reduce)')` itself — `useScrollParallax`, `useCursorGlow`, `lib/utils.ts`.
+- Reduced motion is handled by one catch-all block at the end of `animations.css`. Don't add per-file `prefers-reduced-motion` blocks. It can't reach JS-driven motion, so anything animating from JS checks `matchMedia('(prefers-reduced-motion: reduce)')` itself — `useScrollParallax` and `NameDisplay`'s pointer tilt via `useReducedMotion`, plus `useCursorGlow` and `lib/utils.ts` inline. Prefer the hook: it re-reads the preference, where an inline check in an effect body latches it at mount.
 - Never hand-type `cubic-bezier(...)`. Use `--ease-out-expo` / `--ease-in-out-soft` / `--ease-out-quint` / `--ease-out-quart` / `--ease-out-back`.
 - `:focus-visible` is styled globally. No `outline: none` without a replacement indicator.
 - **`--color-accent` fails WCAG AA as small text** (3.11:1 sand, 3.60:1 charcoal) — large/bold text and UI chrome only. Body text and links use `--color-accent-on-light` / `--color-accent-on-dark`.
@@ -32,6 +32,8 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 ## Behaviors
 
 - **Landing parallax** (`useScrollParallax`): bidirectional, rAF-throttled, skips sub-0.5px updates, denominator `innerHeight * 0.9`, no-op under reduced motion. `NameDisplay` slides up 40vh from scroll 0; `LandingButtons` the same but only after `innerHeight * 0.2` — name exits first, buttons follow.
+- Those distances are passed as **fractions of the viewport** (`maxDistanceVh: 0.4`, `triggerThresholdVh: 0.2`) and multiplied by a live `innerHeight` inside the hook. Don't go back to passing pixels: the callers had to compute them from `window.innerHeight` at render time, and since a resize re-renders nothing in the landing tree, the travel distance went stale while the hook's own viewport read stayed current.
+- The hook's rAF id is `number | null` and is cleared as the first statement of the frame callback. A truthiness guard treats id `0` as "no frame pending", and an early return before the clear leaves the throttle latched, which silently kills the parallax for the life of the component. `useScrollParallax.test.tsx` covers both.
 - **About entrance plays once**: `useIntersectionAnimation` latches on a `hasAnimated` ref (threshold 0.15, rootMargin -50px). `AboutSection` owns the target ref and passes `isVisible` to `AboutContent`. No replay on return from contact.
 - About section: `height: 100dvh` desktop; `height: auto` + `min-height: 100dvh` at ≤640px.
 - All 3 sections use `scroll-snap-align: start` + `scroll-snap-stop: always`; `.scroll-container` has `scroll-snap-type: y mandatory`.

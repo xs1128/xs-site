@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useScrollParallax } from '@/hooks/useScrollParallax';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 import { Tooltip } from '@/components/ui/Tooltip';
+
+// Peak tilt away from centre. Small enough to read as depth rather than as the
+// card turning.
+const MAX_TILT_DEG = 5;
 
 export interface NameDisplayProps {
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -30,32 +35,41 @@ const NameSceneContent = dynamic(
  * Scrolls up with parallax effect when scrolling to about section
  */
 export function NameDisplay({ containerRef }: NameDisplayProps) {
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
+  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
+  const reducedMotion = useReducedMotion();
 
-  // Mouse tracking for parallax tilt
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth) * 2 - 1;
-      const y = -(e.clientY / window.innerHeight) * 2 + 1;
-      setRotateX(y * 5);
-      setRotateY(x * 5);
+    if (reducedMotion) return;
+
+    let rafId: number | null = null;
+    let nextTilt = { rotateX: 0, rotateY: 0 };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const x = (event.clientX / window.innerWidth) * 2 - 1;
+      const y = -(event.clientY / window.innerHeight) * 2 + 1;
+      nextTilt = { rotateX: y * MAX_TILT_DEG, rotateY: x * MAX_TILT_DEG };
+
+      // A pointer can outpace the display, so commit at most one tilt per frame.
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        setTilt(nextTilt);
+      });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [reducedMotion]);
 
-  // Scroll-based parallax effect (with SSR safety)
-  const maxScrollDistance =
-    typeof window !== 'undefined' ? window.innerHeight * 0.4 : 0;
   const parallaxOffset = useScrollParallax(containerRef, {
-    maxScrollDistance, // 40vh
-    triggerThreshold: 0, // Immediate start
+    maxDistanceVh: 0.4,
   });
 
   const containerStyle = {
-    transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(${-parallaxOffset}px)`,
+    transform: `perspective(1000px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg) translateY(${-parallaxOffset}px)`,
   };
 
   return (
