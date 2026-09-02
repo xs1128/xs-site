@@ -9,7 +9,6 @@
   background-color: var(--color-about-bg);
   color: var(--color-text-on-dark);
   padding: var(--spacing-section-padding-desktop);
-  padding-top: 14vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -132,6 +131,7 @@
   flex: 1;
   width: 100%;
   min-height: 0;
+  padding-top: 96px;
   padding-bottom: 8rem;
   position: relative;
   z-index: 1;
@@ -169,10 +169,11 @@
   gap: 0;
   width: 100%;
   max-width: 1080px;
+  flex: 1;
+  min-height: 0;
   align-items: start;
+  align-content: center;
   padding: 0;
-  margin-top: 16px;
-  margin-bottom: 16px;
 }
 
 .about-content__cta {
@@ -215,6 +216,7 @@
 @media (max-width: 640px) {
   .about-content {
     gap: 28px;
+    padding-top: 0;
     padding-bottom: 3vh;
   }
 
@@ -230,6 +232,7 @@
   .about-content__cards {
     display: flex;
     flex-direction: column;
+    flex: none;
     gap: 0;
     padding: 0 8px;
   }
@@ -254,7 +257,7 @@
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  gap: 16px;
+  gap: 48px;
   min-width: 0;
   padding: 4px 36px;
   position: relative;
@@ -272,6 +275,7 @@
   font-weight: 500;
   line-height: 0.85;
   letter-spacing: -0.04em;
+  padding-bottom: 0.15em;
   color: var(--color-text-on-dark);
   opacity: 0.14;
   transition:
@@ -336,7 +340,7 @@
   .expertise-card {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
-    column-gap: 20px;
+    column-gap: 28px;
     row-gap: 0;
     align-items: start;
     padding: 24px 0;
@@ -353,6 +357,7 @@
     font-size: clamp(40px, 12vw, 52px);
     opacity: 0.22;
     padding-top: 2px;
+    padding-bottom: 0;
   }
 
   .expertise-card__content {

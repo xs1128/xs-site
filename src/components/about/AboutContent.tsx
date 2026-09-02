@@ -30,21 +30,21 @@ export function AboutContent({
         className={`about-content__cards ${isVisible ? 'about-content__cards--visible' : ''}`}
       >
         <ExpertiseCard
-          icon={<StaticIcon src="/icons/terminal.svg" alt="" />}
-          title="Scripting & Automation"
-          description="Streamlining operations through Python, Bash, and Linux/UNIX scripting for custom automation and system management."
+          icon={<StaticIcon src="/icons/globe.svg" alt="" />}
+          title="Full-Stack Engineering"
+          description="TypeScript and Python web apps with React, Next.js, FastAPI, and PostgreSQL."
           index={0}
         />
         <ExpertiseCard
           icon={<StaticIcon src="/icons/server.svg" alt="" />}
-          title="Server Infrastructure"
-          description="Managing self-hosted servers with Docker, Docker Compose, and Cloudflare for containerization and domain routing."
+          title="Infrastructure"
+          description="Docker Compose stacks with VPN, Cloudflare DNS, Prometheus, and Grafana."
           index={1}
         />
         <ExpertiseCard
-          icon={<StaticIcon src="/icons/globe.svg" alt="" />}
-          title="Infrastructure"
-          description="Handling domains and deployments via Cloudflare DNS and SSH for reliable hosting."
+          icon={<StaticIcon src="/icons/terminal.svg" alt="" />}
+          title="Automation"
+          description="Python and Bash for automation, GitHub Actions & Jenkins CI/CD, batch tooling, and Linux workflows."
           index={2}
         />
       </div>
