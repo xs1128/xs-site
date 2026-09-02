@@ -129,8 +129,10 @@
   flex-direction: column;
   align-items: center;
   gap: 36px;
+  flex: 1;
   width: 100%;
-  padding-bottom: 2vh;
+  min-height: 0;
+  padding-bottom: 8rem;
   position: relative;
   z-index: 1;
 }
@@ -162,17 +164,15 @@
 }
 
 .about-content__cards {
-  display: flex;
-  flex-direction: row;
-  gap: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
   width: 100%;
-  max-width: 1200px;
-  align-items: stretch;
+  max-width: 1080px;
+  align-items: start;
   padding: 0;
   margin-top: 16px;
   margin-bottom: 16px;
-  flex-wrap: wrap;
-  justify-content: center;
 }
 
 .about-content__cta {
@@ -181,7 +181,11 @@
   align-items: center;
   gap: 12px;
   cursor: pointer;
-  margin-top: -8px;
+  position: absolute;
+  bottom: 2vh;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
   max-width: 680px;
   width: 100%;
 }
@@ -224,12 +228,14 @@
   }
 
   .about-content__cards {
+    display: flex;
     flex-direction: column;
-    gap: 24px;
-    padding: 0 48px;
+    gap: 0;
+    padding: 0 8px;
   }
 
   .about-content__cta {
+    position: static;
     margin-top: 0;
   }
 
@@ -242,157 +248,116 @@
   }
 }
 
-/* Expertise Card */
+/* Numbered pillars — the index is the structure, not a badge on a card. */
 .expertise-card {
-  background-color: var(--color-landing-bg);
-  border-radius: 12px;
-  padding: 32px 32px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   gap: 16px;
-  flex: 1 1 280px;
   min-width: 0;
+  padding: 4px 36px;
   position: relative;
   z-index: 1;
-  transform: scale(1);
-  opacity: 1;
-  box-shadow:
-    0 0 0 1px transparent,
-    0 0 0 rgba(0, 0, 0, 0);
-  transition:
-    transform 0.3s var(--ease-out-expo),
-    opacity 0.3s var(--ease-out-expo),
-    box-shadow 0.4s var(--ease-out-expo);
 }
 
-/* Cursor spotlight overlay - driven by --mx/--my from CardScene */
-.expertise-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(
-    240px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(255, 255, 255, 0.12),
-    transparent 70%
-  );
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
+.expertise-card + .expertise-card {
+  border-left: 1px solid
+    color-mix(in srgb, var(--color-text-on-dark) 16%, transparent);
 }
 
-.expertise-card:hover::after {
-  opacity: 1;
-}
-
-.expertise-card:hover {
-  box-shadow:
-    0 0 0 1px rgba(229, 83, 44, 0.35),
-    0 24px 48px rgba(0, 0, 0, 0.3);
-}
-
-/* Index badge */
 .expertise-card__index {
-  position: absolute;
-  top: 14px;
-  right: 18px;
   font-family: var(--font-body);
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  color: var(--color-text-on-light);
-  opacity: 0.25;
+  font-size: clamp(56px, 7vw, 96px);
+  font-weight: 500;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--color-text-on-dark);
+  opacity: 0.14;
   transition:
-    opacity 0.3s ease,
-    color 0.3s ease,
-    transform 0.3s var(--ease-out-expo);
-  z-index: 1;
-}
-
-.expertise-card:hover .expertise-card__index {
-  color: var(--color-accent-on-light);
-  opacity: 1;
-  transform: translateY(-2px);
+    opacity 0.3s var(--ease-out-expo),
+    color 0.3s ease;
 }
 
 .expertise-card__content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  align-items: flex-start;
+  gap: 12px;
   width: 100%;
-  position: relative;
-  z-index: 1;
-}
-
-.expertise-card--hovered {
-  transform: scale(1.03);
-  opacity: 0.95;
 }
 
 .expertise-card__icon {
-  color: var(--color-accent);
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* The SVGs are drawn in near-black for the old cream cards. Invert them onto
+   the charcoal so they read as sand without a second asset. */
+.expertise-card__icon img {
+  filter: invert(1);
 }
 
 .expertise-card__title {
   margin: 0;
   font-size: var(--text-xl);
   font-weight: 700;
-  color: var(--color-text-on-light);
+  color: var(--color-text-on-dark);
   font-family: var(--font-display);
-  min-height: 2.6em;
   line-height: 1.3;
+  transition: color 0.3s ease;
 }
 
 .expertise-card__description {
   margin: 0;
-  font-size: clamp(14px, 1.8vw, 18px);
-  color: var(--color-text-on-light);
+  font-size: clamp(14px, 1.6vw, 17px);
+  color: color-mix(in srgb, var(--color-text-on-dark) 72%, transparent);
   font-family: var(--font-display);
   line-height: 1.5;
 }
 
-@media (max-width: 640px) {
-  .expertise-card {
-    padding: 20px 32px;
-    min-width: 100%;
-    flex: none;
-    height: auto;
+@media (hover: hover) {
+  .expertise-card:hover .expertise-card__index {
+    color: var(--color-accent-on-dark);
+    opacity: 0.45;
   }
 
-  .expertise-card__content {
-    gap: 12px;
+  .expertise-card:hover .expertise-card__title {
+    color: var(--color-accent-on-dark);
   }
 
-  .expertise-card--hovered {
-    transform: none !important;
-  }
-
-  /* No cursor on touch - disable spotlight and hover shadow */
-  .expertise-card::after {
-    display: none;
-  }
-
-  .expertise-card:hover {
-    box-shadow: none;
-  }
-
-  .expertise-card__index {
-    font-size: 12px;
-    top: 12px;
-    right: 14px;
+  .expertise-card:hover .expertise-card__icon img {
+    animation: iconBounce 0.6s var(--ease-out-expo);
   }
 }
 
-/* Tablet/small desktop - 2 cards per row */
-@media (min-width: 641px) and (max-width: 1050px) {
+@media (max-width: 640px) {
   .expertise-card {
-    flex: 1 1 calc(50% - 16px);
-    min-width: calc(50% - 16px);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 20px;
+    row-gap: 0;
+    align-items: start;
+    padding: 24px 0;
+  }
+
+  .expertise-card + .expertise-card {
+    border-left: none;
+    border-top: 1px solid
+      color-mix(in srgb, var(--color-text-on-dark) 16%, transparent);
+  }
+
+  .expertise-card__index {
+    grid-row: 1;
+    font-size: clamp(40px, 12vw, 52px);
+    opacity: 0.22;
+    padding-top: 2px;
+  }
+
+  .expertise-card__content {
+    grid-column: 2;
+    gap: 8px;
   }
 }
 
@@ -429,31 +394,29 @@
   transform: translateY(0);
 }
 
-.about-content__cards {
+.expertise-card {
   opacity: 0;
-  transform: scale(0.9);
+  transform: translateY(28px);
   transition:
     opacity 0.8s var(--ease-out-expo),
     transform 0.8s var(--ease-out-expo);
+}
+
+.about-content__cards--visible .expertise-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.about-content__cards--visible .expertise-card:nth-child(1) {
   transition-delay: 0.5s;
 }
 
-.about-content__cards--visible {
-  opacity: 1;
-  transform: scale(1);
+.about-content__cards--visible .expertise-card:nth-child(2) {
+  transition-delay: 0.65s;
 }
 
-/* Individual cards with stagger */
-.about-content__cards .expertise-card:nth-child(1) {
-  transition-delay: 0.6s;
-}
-
-.about-content__cards .expertise-card:nth-child(2) {
-  transition-delay: 0.75s;
-}
-
-.about-content__cards .expertise-card:nth-child(3) {
-  transition-delay: 0.9s;
+.about-content__cards--visible .expertise-card:nth-child(3) {
+  transition-delay: 0.8s;
 }
 
 .about-content__cta {
@@ -521,16 +484,7 @@
   transform: translateY(-8px);
 }
 
-/* Icon micro-interactions */
-.expertise-card__icon svg,
-.expertise-card__icon img {
-  transition: transform 0.3s var(--ease-out-expo);
-}
-
-.expertise-card:hover .expertise-card__icon svg,
-.expertise-card:hover .expertise-card__icon img {
-  animation: iconBounce 0.6s var(--ease-out-expo);
-}
+/* Icon micro-interactions live in the (hover: hover) block above. */
 
 /* CTA subtext underline slides in on hover */
 .about-content__cta-subtext {
@@ -549,7 +503,6 @@
 /* Performance optimization */
 .about-content__headline,
 .about-content__intro,
-.about-content__cards,
 .about-content__cta,
 .expertise-card {
   will-change: opacity, transform;
@@ -557,7 +510,7 @@
 
 .about-content__headline--visible,
 .about-content__intro--visible,
-.about-content__cards--visible,
-.about-content__cta--visible {
+.about-content__cta--visible,
+.about-content__cards--visible .expertise-card {
   will-change: auto;
 }

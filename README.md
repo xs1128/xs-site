@@ -10,7 +10,7 @@ Minimalist single-page landing site: scroll-snapped Landing / About / Contact se
 - **Fonts**: Roboto Mono, Hubot Sans — self-hosted latin subsets in `src/fonts/`, loaded with `next/font/local` (preloaded)
 - **Icons**: `lucide-react` (the about CTA arrow)
 - **Email**: Resend
-- **No 3D libraries**: `NameScene` and `CardScene` live under `components/3d/` but are DOM + CSS transforms, not WebGL. `three` / `@react-three/fiber` / `@react-three/drei` were uninstalled once their only consumer was removed.
+- **No 3D libraries**: `NameScene` lives under `components/3d/` but is DOM + CSS transforms, not WebGL. `three` / `@react-three/fiber` / `@react-three/drei` render the `/blog` terminal cube only.
 
 ## Development
 
@@ -57,12 +57,12 @@ Both are listed in `.env.example`. The build succeeds without either, so CI need
 - One `ScrollContainer` with `scroll-snap-type: y mandatory`; each section uses `scroll-snap-align: start` + `scroll-snap-stop: always`.
 - `page.tsx` derives theme from scroll position: `<0.9vh` landing (light), `0.9–1.9vh` about (dark), `>1.9vh` contact (light). Also tracks `isPastLanding` (hamburger only shows past landing).
 - **Landing**: name renders via `NameScene` (lazy-loaded, `next/dynamic` with `ssr:false`), with a ±5° mouse tilt and scroll parallax (name slides up 40vh from 0vh scroll; ABOUT/CONTACT buttons slide up the same 40vh but start after 20vh, creating a cascade). The old click-to-toggle name/initials feature is gone; `NameDisplay` now takes only `containerRef`.
-- **About**: one-time entrance animation via `useIntersectionAnimation` (threshold 0.15, `-50px` rootMargin), latched by a ref so it never replays. `AboutSection` owns the hook and passes `isVisible` down. Word-by-word headline. Three `ExpertiseCard`s, wrapped in `CardScene` on desktop (±8° tilt, cursor spotlight) and a plain `div` on mobile. Section-level cursor glow (desktop only). `MagneticCTA` follows the cursor at 15% intensity.
+- **About**: one-time entrance animation via `useIntersectionAnimation` (threshold 0.15, `-50px` rootMargin), latched by a ref so it never replays. `AboutSection` owns the hook and passes `isVisible` down. Word-by-word headline. Three numbered expertise pillars on the charcoal (ghost `01`–`03`, hairline dividers; stacked index+copy rows at ≤640px). Section-level cursor glow (desktop only). `MagneticCTA` follows the cursor at 15% intensity.
 - **Contact**: spinning circular text (320px / 280px expanded / 240px mobile) opens `ContactPopup` on click; success/error states, auto-closes 1.5s after success. Footer has a `mailto:hi@xsooi.com` link plus GitHub/Instagram/Facebook/LinkedIn.
 - **Nav**: `FullScreenNav` — ABOUT, CONTACT, PROJECTS (github.com/xs1128), BLOG (xsooi.com/blog); 800ms close animation; locks body scroll while open.
 - **Accessibility**: both overlays are `role="dialog"` + `aria-modal` and share `useFocusTrap` (Tab cycles inside, Escape closes, focus returns to the trigger). `:focus-visible` is styled globally. Reduced motion is honored across all CSS animations plus the JS-driven parallax and smooth scrolling.
 
-Breakpoint: 640px (`--breakpoint-small` in CSS, `BREAKPOINT = 640` inlined in `page.tsx`). About cards get an extra tier at 641–1050px, contact at 641–900px. Hover styles are gated behind `@media (hover: hover)`, and a global block in `animations.css` honors `prefers-reduced-motion: reduce`.
+Breakpoint: 640px (`--breakpoint-small` in CSS, `BREAKPOINT = 640` inlined in `page.tsx`). Contact has an extra tier at 641–900px. Hover styles are gated behind `@media (hover: hover)`, and a global block in `animations.css` honors `prefers-reduced-motion: reduce`.
 
 ## Colors
 
@@ -102,7 +102,7 @@ src/
     navigation/   FullScreenNav, HamburgerButton, AnimatedButton
     layout/       ScrollContainer
     icons/        SocialIcons, StaticIcon
-    3d/           landing/NameScene, about/CardScene
+    3d/           landing/NameScene
   hooks/          useIntersectionAnimation, useScrollParallax, useFocusTrap
   types/          index.ts
   lib/            utils.ts

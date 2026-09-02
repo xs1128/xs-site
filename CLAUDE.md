@@ -23,9 +23,8 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - Props are declared and exported from the component that takes them. `src/types/index.ts` holds only cross-file types (`ResponsiveProps`, `ContactFormData`, `FormState`, `useIntersectionAnimation`). No `*Props` there, and never in both places.
 - Theme is owned by the scroll listener in `page.tsx`. Nothing else sets it; `setIsDarkTheme` reaches no child. Scroll helpers just scroll. Don't thread a theme setter down the tree.
 - `ScrollContainer` uses `forwardRef`; `page.tsx` passes a plain ref and wires the listener in a mount-once `useEffect`. An inline callback ref leaked a listener per render — don't reintroduce it.
-- **Viewport branching is CSS by default.** No `isSmallScreen` prop, no screen-size state in `page.tsx`. `ExpertiseCard` is the only JS consumer (`useIsSmallScreen()` swaps `CardScene` for a `div`, which CSS can't do). The hook returns `false` on the server, so a JS branch costs a post-hydration flip; styling-only cases belong in a 640px media query.
-- `CardScene` / `NameScene` are DOM + CSS transforms despite living in `components/3d/`. They use no 3D libs, even though the blog installs them.
-- `CardScene` ignores every prop but `children`, so `ExpertiseCard`'s `onClick`/`className`/`index` are dropped on desktop and `expertise-card--hovered` is mobile-only. Pre-existing.
+- **Viewport branching is CSS by default.** No `isSmallScreen` prop, no screen-size state in `page.tsx`. Styling-only cases belong in a 640px media query. `useIsSmallScreen()` is for when CSS can't swap the tree (`FullScreenNav`); it returns `false` on the server, so a JS branch costs a post-hydration flip.
+- `NameScene` is DOM + CSS transforms despite living in `components/3d/`. It uses no 3D libs, even though the blog installs them.
 - `Tooltip` (`components/ui/`) clones its single child to attach a ref and handlers, and portals the tip to `document.body` (z-index 4000, above the hamburger's 3001). It returns the child untouched when `(hover: hover) and (pointer: fine)` fails, so nothing it says can be the only place that information exists. `followCursor` anchors to the pointer instead of the trigger box (keyboard focus still uses the box) and updates by writing `style.left/top` on the tip directly from a rAF callback — deliberately outside React, and the tip size is cached at open so the move handler never reads layout. Consumers: `SocialIconLink`, the footer email link, `NameDisplay` (follow).
 - Overlays (`FullScreenNav`, `ContactPopup`) use `useFocusTrap` and keep `role="dialog"` + `aria-modal="true"`. The nav passes its animated `handleClose` as dismiss so Escape plays the exit.
 
@@ -36,6 +35,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - The hook's rAF id is `number | null` and is cleared as the first statement of the frame callback. A truthiness guard treats id `0` as "no frame pending", and an early return before the clear leaves the throttle latched, which silently kills the parallax for the life of the component. `useScrollParallax.test.tsx` covers both.
 - **About entrance plays once**: `useIntersectionAnimation` latches on a `hasAnimated` ref (threshold 0.15, rootMargin -50px). `AboutSection` owns the target ref and passes `isVisible` to `AboutContent`. No replay on return from contact.
 - About section: `height: 100dvh` desktop; `height: auto` + `min-height: 100dvh` at ≤640px.
+- About expertise is **numbered pillars** on the charcoal: ghost `01`–`03` in `--font-body`, hairline column rules, no cream card chrome. At ≤640px they become index-left / copy-right rows. Don't bring back `CardScene` or the cream tiles.
 - All 3 sections use `scroll-snap-align: start` + `scroll-snap-stop: always`; `.scroll-container` has `scroll-snap-type: y mandatory`.
 - Theme thresholds in `page.tsx`: `< 0.9*vh` landing/light, `0.9–1.9*vh` about/dark, above contact/light. `isDarkTheme` only drives `HamburgerButton`.
 - The hamburger's opacity transition is asymmetric on purpose — 0.25s in (base rule), 0.5s out (`--faded`). A transition comes from the state being entered, so the base rule only affects fade-in.
@@ -46,7 +46,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 
 ## Removed — do not re-add
 
-- `BlurOverlay.tsx`, `PrismOverlay.tsx`, `overlay.css`, `ThreeCanvas.tsx`, `AnnouncementMarquee.tsx`, `MobileDropdown.tsx`, `useResponsive.ts`, `useMarquee.ts`, `marquee.css`, `public/fonts/`
+- `CardScene.tsx` — cream-card 3D tilt. About expertise is numbered pillars now.
 - `src/components/seo/BreadcrumbSchema.tsx` and the whole `seo/` dir. A one-page site has no breadcrumb trail, and its items were `#about` / `#contact` fragments, which are not pages. Earned no rich result. `Person` in `layout.tsx` is the only structured data now.
 - ~~`three`, `@react-three/fiber`, `@react-three/drei` — uninstalled~~ — reinstated by the blog merge. They render the `/blog` terminal cube only; nothing under `/` uses WebGL.
 - `NameDisplay`'s name/initials toggle and its `onToggle`/`showInitials`/`isFading`/`isSmallScreen` props; it takes only `containerRef`. Check why it was disabled before "fixing" it back.
