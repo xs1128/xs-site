@@ -39,10 +39,10 @@ repository Actions secrets:
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 The first Chromatic build establishes a baseline. Subsequent visual changes
-require review in Chromatic. The upload command uses `--exit-zero-on-changes`
-so detected differences do not fail the upload job; Chromatic's separate UI
-Tests check reports whether those differences have been accepted. Upload and
-test execution errors still fail CI. No automatic acceptance is configured.
+fail the workflow and require review in Chromatic. Accept intentional changes
+in Chromatic, then rerun the workflow to confirm the accepted baseline passes.
+Upload and test execution errors also fail CI. No automatic acceptance or
+`--exit-zero-on-changes` override is configured.
 
 ## Stable captures and coverage limits
 

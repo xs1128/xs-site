@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "test": "vitest run",
     "test:visual": "playwright test",
-    "chromatic": "chromatic --playwright --exit-zero-on-changes",
+    "chromatic": "chromatic --playwright",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
