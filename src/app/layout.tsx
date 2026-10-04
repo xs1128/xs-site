@@ -3,6 +3,7 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { robotoMono, hubotSans } from '@/fonts';
+import { siteUrl } from '@/lib/site-url';
 import './globals.css';
 import '../styles/animations.css';
 import '../styles/navigation.css';
@@ -10,8 +11,6 @@ import '../styles/about.css';
 import '../styles/contact.css';
 import '../styles/landing.css';
 import '../styles/tooltip.css';
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.xsooi.com';
 
 const canonicalUrl =
   process.env.NODE_ENV === 'production' ? siteUrl : 'http://localhost:3000';

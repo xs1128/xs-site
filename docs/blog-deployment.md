@@ -7,6 +7,41 @@
 - **Build verification**: Always test production build before deploying
 - **Storage**: Configure Supabase storage bucket for images if using file uploads
 
+## Public URLs and Security Headers
+
+`NEXT_PUBLIC_SITE_URL` is the site-root origin, shared by the portfolio and blog.
+It defaults to `https://www.xsooi.com`; `/blog` is appended by the blog helpers.
+Paths and trailing slashes in a configured value are removed, and the apex
+`xsooi.com` is normalized to `www.xsooi.com`. Production builds reject HTTP and
+localhost origins so local URLs cannot accidentally reach canonical tags,
+Open Graph metadata, JSON-LD, robots, or sitemaps.
+
+`next.config.ts` applies these headers to every route, including static assets:
+
+- `Content-Security-Policy`: restricts scripts and connections to this site and
+  the configured Supabase/analytics services; blocks framing, embedded objects,
+  inline event handlers, and production `eval`.
+- `X-Frame-Options: DENY`: framing protection for older browsers.
+- `X-Content-Type-Options: nosniff`: prevents MIME type guessing.
+- `Referrer-Policy: strict-origin-when-cross-origin`: limits cross-origin
+  referrer information to the origin.
+
+The CSP permits inline script blocks for Next.js static/ISR hydration and inline
+styles used by the UI. It is a baseline policy, not complete protection against
+script injection. A stricter nonce policy would require dynamic rendering;
+removing these allowances without changing rendering breaks the site. HTTPS
+images remain allowed for externally hosted blog images. Development also
+permits `eval` and WebSocket connections for Next.js tooling. Add any new
+analytics provider's exact origins before enabling it, and verify a production
+build in a browser after policy changes. Vercel supplies HSTS on the hosted site.
+
+Next.js is updated to 16.3.8 and Sharp to 0.35.5, including the fix for the
+[critical AVIF image optimization advisory](https://github.com/advisories/GHSA-2xp9-vwfh-vxw4).
+On 2026-10-04, `npm audit --omit=dev` reports no high or critical findings and
+four remaining moderate findings: `baseline-browser-mapping` and the
+Resend → Svix → UUID dependency chain. The full audit also flags development
+tools; those remaining dependency findings require separate review.
+
 ## On-Demand Revalidation
 
 Pages set `revalidate = 3600`, so CMS edits can take an hour to appear.
