@@ -1,9 +1,47 @@
 name: Chromatic
 
+# Include shared rendering/data helpers as well as UI code. Keep both path lists in sync.
+# Manual dispatch intentionally bypasses the filters.
 on:
   push:
     branches: [main]
+    paths:
+      - 'src/**'
+      - '!src/app/api/**'
+      - '!src/app/blog/api/**'
+      - '!src/lib/rateLimit.ts'
+      - '!src/**/*.test.*'
+      - '!src/**/*.spec.*'
+      - 'public/**'
+      - 'tests/visual/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.npmrc'
+      - 'next.config.*'
+      - 'next-env.d.ts'
+      - 'tsconfig*.json'
+      - 'playwright.config.*'
+      - 'chromatic.config.*'
+      - '.github/workflows/chromatic.yml'
   pull_request:
+    paths:
+      - 'src/**'
+      - '!src/app/api/**'
+      - '!src/app/blog/api/**'
+      - '!src/lib/rateLimit.ts'
+      - '!src/**/*.test.*'
+      - '!src/**/*.spec.*'
+      - 'public/**'
+      - 'tests/visual/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.npmrc'
+      - 'next.config.*'
+      - 'next-env.d.ts'
+      - 'tsconfig*.json'
+      - 'playwright.config.*'
+      - 'chromatic.config.*'
+      - '.github/workflows/chromatic.yml'
   workflow_dispatch:
 
 permissions:
