@@ -107,24 +107,6 @@ export function extractHeadings(content: string): Heading[] {
 }
 
 /**
- * Generate slug from title
- */
-export function generateSlug(title: string): string {
-  const slug = title
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-
-  if (!slug) {
-    throw new Error('Please enter a valid title');
-  }
-
-  return slug;
-}
-
-/**
  * Format date for display
  */
 export function formatDate(dateString: string): string {

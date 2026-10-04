@@ -8,7 +8,6 @@ import BlogCard from './BlogCard';
 import { SkeletonCard } from '@/components/blog/skeleton';
 
 interface RecentBlogsGridProps {
-  isExpanded?: boolean;
   isSmallScreen?: boolean;
 }
 
@@ -21,7 +20,6 @@ function formatDate(dateString: string): string {
 }
 
 export default function RecentBlogsGrid({
-  isExpanded = false,
   isSmallScreen = false,
 }: RecentBlogsGridProps) {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -33,7 +31,7 @@ export default function RecentBlogsGrid({
   useEffect(() => {
     async function fetchPosts() {
       const supabase = createClient();
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('posts')
         .select('*')
         .not('published_at', 'is', null)
@@ -179,11 +177,7 @@ export default function RecentBlogsGrid({
         <div style={carouselWrapperStyle}>
           <div style={carouselStyle}>
             {[...Array(4)].map((_, i) => (
-              <SkeletonCard
-                key={i}
-                variant="blog"
-                isSmallScreen={isSmallScreen}
-              />
+              <SkeletonCard key={i} isSmallScreen={isSmallScreen} />
             ))}
           </div>
         </div>

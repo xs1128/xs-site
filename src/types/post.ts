@@ -11,14 +11,6 @@ export interface Post {
   content?: string | null;
 }
 
-export interface Series {
-  id: number;
-  slug: string;
-  title: string;
-  description: string;
-  posts: Post[];
-}
-
 export interface FunnyPicture {
   id: number;
   image: string;
@@ -40,10 +32,6 @@ export interface Heading {
 
 export interface SeriesPost extends Post {
   order_in_series: number;
-}
-
-export interface PostWithSeries extends Post {
-  series?: SeriesDetail[];
 }
 
 export interface SeriesDetail {

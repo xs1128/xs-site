@@ -1,4 +1,3 @@
-import React from 'react';
 import { scrollToAbout } from '@/lib/utils';
 
 /**

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
 import { scrollToAbout, scrollToContact } from '@/lib/utils';
 import { useFocusTrap } from '@/hooks/useFocusTrap';

@@ -68,12 +68,6 @@ const scrollProgress = useScrollProgress(); // 0-100
 const footerVisible = useFooterVisibility(); // boolean
 ```
 
-### `src/hooks/useActiveHeading.ts` - TOC Active State
-
-```typescript
-const activeId = useActiveHeading(headings);
-```
-
 ## Component Refactoring Examples
 
 ### Footer (`src/components/ui/Footer.tsx`)
@@ -84,7 +78,7 @@ const activeId = useActiveHeading(headings);
 Changes:
 
 - Removed `isWrapped` and `isVerticalStack` state
-- Uses `useIsMobile()` hook for responsive behavior
+- Uses CSS media queries for responsive behavior
 - All inline styles moved to `blog.css` classes
 
 **Footer CSS Classes**:
@@ -138,7 +132,7 @@ Changes:
 
 ### TableOfContents (`src/components/blog/TableOfContents.tsx`)
 
-- Integrated `useActiveHeading()` hook for scroll tracking
+- Tracks headings directly with its scroll listener
 - Active heading highlighted with accent color
 - Smooth scroll to section on click
 

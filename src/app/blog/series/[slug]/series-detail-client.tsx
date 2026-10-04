@@ -6,8 +6,6 @@ import BlogPageHeader from '@/components/blog/BlogPageHeader';
 import SeriesHeader from '@/components/blog/SeriesHeader';
 import SeriesPostList from '@/components/blog/SeriesPostList';
 import FullScreenNav from '@/components/blog/ui/FullScreenNav';
-import { useIsMobile } from '@/hooks/useBreakpoint';
-import { spacing } from '@/styles/blog/typography';
 
 interface SeriesDetailClientProps {
   series: SeriesDetail;
@@ -17,7 +15,6 @@ export default function SeriesDetailClient({
   series,
 }: SeriesDetailClientProps) {
   const [isNavOpen, setIsNavOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   const pageContainerStyle: React.CSSProperties = {
     display: 'flex',

@@ -95,7 +95,7 @@ export function NameDisplay({ containerRef }: NameDisplayProps) {
               justifyContent: 'center',
             }}
           >
-            <NameSceneContent showInitials={false} />
+            <NameSceneContent />
           </div>
         </Tooltip>
         <h2 className="landing-section__headline">

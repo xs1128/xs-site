@@ -5,7 +5,7 @@ import {
 } from '@/lib/blog/supabase/queries';
 import SeriesDetailClient from './series-detail-client';
 import type { Metadata } from 'next';
-import { siteConfig, absoluteUrl, blogUrl } from '@/lib/blog/seo';
+import { siteConfig, blogUrl } from '@/lib/blog/seo';
 
 // ISR: series pages render statically and re-validate hourly.
 export const revalidate = 3600;

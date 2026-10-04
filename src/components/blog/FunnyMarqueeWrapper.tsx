@@ -23,7 +23,7 @@ export default function FunnyMarqueeWrapper({
   useEffect(() => {
     async function fetchPictures() {
       const supabase = createClient();
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('pictures')
         .select('*')
         .order('date_taken', { ascending: false, nullsFirst: false })

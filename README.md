@@ -112,14 +112,13 @@ public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.p
                   site.webmanifest, icons/
 ```
 
-`@/*` resolves to `./src/*` — the only alias in effect (`tsconfig.json`). `tsconfig.paths.json` defines extra per-directory aliases but nothing extends it, so it is inert.
+`@/*` resolves to `./src/*` in `tsconfig.json`.
 
 ## Known Issues
 
 - No pre-commit hook — formatting is enforced only in CI. CI runs typecheck, lint, format check, test and build on push to `main` and on PRs (`.github/workflows/ci.yml`).
 - Tests cover `useFocusTrap`, `lib/rateLimit` and the contact route; components have none.
 - Contact rate limiting is in-process, so on serverless it applies per instance. See `docs/backlog.md`.
-- `tsconfig.paths.json` — not extended by `tsconfig.json`; has no effect.
 
 ## Deploy
 

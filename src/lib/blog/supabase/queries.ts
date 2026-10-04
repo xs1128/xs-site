@@ -11,52 +11,6 @@ type SeriesRow = Database['public']['Tables']['series']['Row'];
 type JoinedSeries = { series: SeriesRow | null };
 type JoinedPost = { order_column: number; posts: PostRow | null };
 
-export async function getRecentPosts(limit = 5) {
-  const supabase = getPublicClient();
-  const { data, error } = await supabase
-    .from('posts')
-    .select('*')
-    .order('published_at', { ascending: false, nullsFirst: false })
-    .limit(limit);
-
-  if (error) {
-    console.error('Error fetching posts:', error);
-    return [];
-  }
-
-  return data;
-}
-
-export async function getFeaturedSeries(limit = 3) {
-  const supabase = getPublicClient();
-  const { data, error } = await supabase
-    .from('series')
-    .select('*, posts(*)')
-    .limit(limit);
-
-  if (error) {
-    console.error('Error fetching series:', error);
-    return [];
-  }
-
-  return data;
-}
-
-export async function getPictures() {
-  const supabase = getPublicClient();
-  const { data, error } = await supabase
-    .from('pictures')
-    .select('*')
-    .order('order_column', { ascending: true, nullsFirst: false });
-
-  if (error) {
-    console.error('Error fetching pictures:', error);
-    return [];
-  }
-
-  return data;
-}
-
 /**
  * Get published post by slug with series relationships
  */
@@ -152,30 +106,6 @@ export async function getRelatedPosts(
     date: p.published_at || p.created_at,
     summary: p.excerpt || '',
   }));
-}
-
-/**
- * Get posts in the same series (for navigation)
- */
-export async function getSeriesPosts(seriesId: number) {
-  const supabase = getPublicClient();
-  const { data, error } = await supabase
-    .from('series_posts')
-    .select(
-      `
-      order_column,
-      posts (*)
-    `,
-    )
-    .eq('series_id', seriesId)
-    .order('order_column', { ascending: true });
-
-  if (error) {
-    console.error('Error fetching series posts:', error);
-    return [];
-  }
-
-  return data;
 }
 
 /**

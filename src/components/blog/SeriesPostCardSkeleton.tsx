@@ -1,4 +1,4 @@
-import { FONTS, clamp } from '@/styles/blog/typography';
+import { clamp } from '@/styles/blog/typography';
 
 export default function SeriesPostCardSkeleton() {
   const cardStyle: React.CSSProperties = {

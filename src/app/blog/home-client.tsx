@@ -409,7 +409,6 @@ export default function HomePageClient({
           <div style={brandStyle}>BLOG</div>
           <div style={navRightStyle}>
             <AnimatedButton
-              variant="underline"
               reverse
               onClick={triggerCardSwap}
               style={backButtonTextStyle}
@@ -425,7 +424,6 @@ export default function HomePageClient({
               {!isSmallScreen && ' BACK'}
             </AnimatedButton>
             <AnimatedButton
-              variant="underline"
               reverse
               onClick={() => setIsNavOpen(true)}
               style={menuLinkStyle}
@@ -514,10 +512,7 @@ export default function HomePageClient({
                 }}
               >
                 {/* RECENT BLOGS Section */}
-                <RecentBlogsGrid
-                  isExpanded={isExpanded}
-                  isSmallScreen={isSmallScreen}
-                />
+                <RecentBlogsGrid isSmallScreen={isSmallScreen} />
 
                 {/* FEATURED SERIES & 3D ANIMATION Sections */}
                 <BlogExpandedContent

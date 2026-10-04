@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import type { SeriesPost } from '@/types/post';
 import SeriesPostCard from './SeriesPostCard';
 import SeriesPostCardSkeleton from './SeriesPostCardSkeleton';
-import { spacing } from '@/styles/blog/typography';
 
 interface SeriesPostListProps {
   posts: SeriesPost[];
@@ -12,9 +11,6 @@ interface SeriesPostListProps {
 
 export default function SeriesPostList({ posts }: SeriesPostListProps) {
   const [allImagesLoaded, setAllImagesLoaded] = useState(false);
-  const [postsWithImages, setPostsWithImages] = useState<Set<string>>(
-    new Set(),
-  );
 
   const containerStyle: React.CSSProperties = {
     maxWidth: '1200px',
@@ -51,7 +47,6 @@ export default function SeriesPostList({ posts }: SeriesPostListProps) {
       img.src = post.featured_image!;
 
       img.onload = () => {
-        setPostsWithImages((prev) => new Set(prev).add(post.slug));
         loadedCount++;
         if (loadedCount === totalToLoad) {
           setAllImagesLoaded(true);

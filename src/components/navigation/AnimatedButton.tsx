@@ -3,35 +3,23 @@ import React from 'react';
 export interface AnimatedButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
-  variant?: 'default' | 'menu' | 'dropdown';
   reverse?: boolean;
-  isMenuButton?: boolean;
-  isDropdownItem?: boolean;
   style?: React.CSSProperties;
   className?: string;
 }
 
 /**
  * Reusable button with optional underline animation
- * Used throughout the app for navigation and menu buttons
+ * Used by the landing section's ABOUT and CONTACT buttons.
  */
 export function AnimatedButton({
   children,
   onClick,
   style,
-  isMenuButton = false,
-  isDropdownItem = false,
   reverse = false,
   className = '',
 }: AnimatedButtonProps) {
-  const baseClasses = [
-    'animated-button',
-    isMenuButton && 'animated-button--menu',
-    isDropdownItem && 'animated-button--dropdown',
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const baseClasses = ['animated-button', className].filter(Boolean).join(' ');
 
   const underlineClasses = [
     'animated-button-underline',
@@ -43,9 +31,7 @@ export function AnimatedButton({
   return (
     <button className={baseClasses} style={style} onClick={onClick}>
       {children}
-      {!isMenuButton && !isDropdownItem && (
-        <span className={underlineClasses} />
-      )}
+      <span className={underlineClasses} />
     </button>
   );
 }

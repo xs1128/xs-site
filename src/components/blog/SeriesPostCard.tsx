@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import type { SeriesPost } from '@/types/post';
 import { FONTS, clamp, spacing } from '@/styles/blog/typography';
-import { TRANSITIONS } from '@/styles/blog/animations';
 import { useState, useEffect } from 'react';
 
 interface SeriesPostCardProps {
