@@ -5,7 +5,14 @@ import prettier from 'eslint-config-prettier';
 
 const config = [
   {
-    ignores: ['.next/**', 'node_modules/**', 'next-env.d.ts'],
+    ignores: [
+      '.next/**',
+      'node_modules/**',
+      'next-env.d.ts',
+      'test-results/**',
+      'playwright-report/**',
+      'storybook-static/**',
+    ],
   },
   ...coreWebVitals,
   ...typescript,

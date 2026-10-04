@@ -26,6 +26,10 @@ npm run start   # serve the production build
 
 Always run `npm install && npm run build` before pushing; fix any TypeScript/build errors first.
 
+Visual regression tests run with `npm run test:visual` after a production build.
+See [Visual testing](docs/visual-testing.md) for browser installation, Chromatic
+setup, snapshot coverage, and reviewing visual changes in CI.
+
 ## Environment Variables
 
 | Variable                        | Required           | Purpose                                                                                                                                           |

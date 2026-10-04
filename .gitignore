@@ -8,6 +8,13 @@
 
 # testing
 /coverage
+/test-results/
+/playwright-report/
+/storybook-static/
+/chromatic.log
+/chromatic-diagnostics.json
+/build-storybook.log
+/build-archive.log
 
 # next.js
 /.next/
