@@ -7,6 +7,20 @@
 - **Build verification**: Always test production build before deploying
 - **Storage**: Configure Supabase storage bucket for images if using file uploads
 
+### Vercel Preview Builds
+
+The `site` project needs `NEXT_PUBLIC_SUPABASE_URL` and
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` in **Preview** as well as **Production**. GitHub
+Actions reads its own repository secrets; a successful CI build does not mean
+Vercel has those variables. A variable scoped only to Production is unavailable
+to pull-request preview builds.
+
+In Vercel → Project Settings → Environment Variables, enable Preview for both
+public Supabase variables using the existing project URL and anonymous client
+key. Then redeploy the failed preview. Environment changes apply to new
+deployments; the public variables are also embedded in the browser bundle at
+build time. Use the anonymous client key that is protected by RLS.
+
 ## Public URLs and Security Headers
 
 `NEXT_PUBLIC_SITE_URL` is the site-root origin, shared by the portfolio and blog.
