@@ -14,6 +14,7 @@
 /chromatic.log
 /chromatic-diagnostics.json
 /build-storybook.log
+/build-archive.log
 
 # next.js
 /.next/
