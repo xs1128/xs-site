@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { AboutHeader } from './AboutHeader';
 import { AboutContent } from './AboutContent';
 import { useIntersectionAnimation } from '@/hooks/useIntersectionAnimation';

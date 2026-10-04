@@ -292,7 +292,7 @@ if (headings.length === 0) {
 }
 ```
 
-#### RecentBlogsGrid & FeaturedSeries
+#### RecentBlogsGrid
 
 ```typescript
 if (loading) {
@@ -301,7 +301,7 @@ if (loading) {
       <h2 style={headerStyle}>Recent Blogs</h2>
       <div style={carouselStyle}>
         {[...Array(4)].map((_, i) => (
-          <SkeletonCard key={i} variant="blog" />
+          <SkeletonCard key={i} />
         ))}
       </div>
     </div>
@@ -329,12 +329,8 @@ if (loading) {
 - **PostHero** - Featured image component
 - **TagList** - Post tags display
 - **OtherPosts** - Related posts sidebar
-- **LeftSidebar** - Left sidebar wrapper
 - **FunnyMarquee** - Infinite-scroll marquee
 - **FunnyMarqueeWrapper** - Client wrapper for marquee data
-- **RecentLogs** - Recent posts list
-- **FeaturedSeries** - Featured series display
-- **FeaturedSeriesWrapper** - Client wrapper for series data
 - **SeriesHeader** - Series detail page header
 - **SeriesPostList** - Series posts list with skeleton loading
 - **SeriesPostCard** - Individual series post card with hero image

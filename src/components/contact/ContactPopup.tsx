@@ -23,7 +23,6 @@ export function ContactPopup({
     message: '',
   });
   const [formState, setFormState] = useState<FormState>({
-    formData: { name: '', email: '', message: '' },
     isSubmitting: false,
     submitStatus: 'idle',
     errorMessage: '',
@@ -56,7 +55,6 @@ export function ContactPopup({
       }
 
       setFormState({
-        formData: { name: '', email: '', message: '' },
         isSubmitting: false,
         submitStatus: 'success',
         errorMessage: '',

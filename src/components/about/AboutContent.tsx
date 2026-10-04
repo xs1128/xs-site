@@ -1,4 +1,3 @@
-import React from 'react';
 import { ExpertiseCard } from './ExpertiseCard';
 import { AnimatedHeadline } from './AnimatedHeadline';
 import { MagneticCTA } from './MagneticCTA';

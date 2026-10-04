@@ -73,7 +73,7 @@ export default function TerminalCube({ stats, meshRef }: TerminalCubeProps) {
   }, [textures]);
 
   // Gentle auto-rotation
-  useFrame((state, delta) => {
+  useFrame(() => {
     if (meshRef.current) {
       meshRef.current.rotation.y += 0.003;
     }

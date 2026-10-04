@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
-import { useIsMobile } from '@/hooks/useBreakpoint';
 import { getAvatarUrl } from '@/lib/blog/supabase/settings';
 import Tooltip from '@/components/blog/ui/Tooltip';
 
@@ -55,7 +53,6 @@ const socialLinks: SocialLink[] = [
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const isMobile = useIsMobile();
   const [avatarUrl, setAvatarUrl] = useState<string>('');
 
   // Load avatar URL

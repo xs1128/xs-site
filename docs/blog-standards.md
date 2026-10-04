@@ -59,7 +59,7 @@ const style = {
 
 - `TIMING.smooth` - Smooth cubic-bezier
 - `TRANSITIONS.marqueeExpand` - Marquee hover expansion
-- `TRANSITIONS.slower(property)` - 0.8s transition helper
+- `TRANSITIONS.fast(property)` - 0.3s transition helper
 
 ## Testing Checklist
 

@@ -229,26 +229,9 @@
   transition: background-color var(--transition-fast);
 }
 
-/* Padded box — ring hugs it. Each variant keeps its own radius */
+/* Padded box — ring hugs it. */
 .animated-button:focus-visible {
   outline-offset: 0;
-}
-
-.animated-button--menu {
-  padding: 8px 16px;
-  border-radius: 24px;
-  background-color: var(--color-card-bg);
-  color: var(--color-text-on-light);
-  font-size: 14px;
-  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.animated-button--dropdown {
-  padding: 12px 20px;
-  border-radius: 0;
-  background-color: var(--color-card-bg);
-  color: var(--color-text-on-light);
-  font-size: 20px;
 }
 
 .animated-button-underline {
@@ -264,10 +247,6 @@
 .animated-button-underline--reverse {
   left: auto;
   right: 0;
-}
-
-.animated-button--dropdown .animated-button-underline {
-  bottom: 8px;
 }
 
 @media (hover: hover) {

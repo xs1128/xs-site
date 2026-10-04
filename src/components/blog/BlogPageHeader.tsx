@@ -47,15 +47,10 @@ export default function BlogPageHeader({ onMenuClick }: BlogPageHeaderProps) {
 
   return (
     <header style={headerStyle}>
-      <AnimatedButton variant="underline" href="/blog" style={logoStyle}>
+      <AnimatedButton href="/blog" style={logoStyle}>
         BLOG
       </AnimatedButton>
-      <AnimatedButton
-        variant="underline"
-        reverse
-        onClick={onMenuClick}
-        style={menuButtonStyle}
-      >
+      <AnimatedButton reverse onClick={onMenuClick} style={menuButtonStyle}>
         <span
           style={{
             fontSize: 'clamp(20px, 3vw, 28px)',

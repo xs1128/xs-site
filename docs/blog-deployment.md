@@ -113,6 +113,6 @@ same header also works.
 
 - ~~Large component files (admin pages at 300+ lines)~~ - Partially addressed (Footer 54% reduction)
 - ~~Inline styles could be further extracted to constants~~ - Addressed with blog.css, admin.css
-- ~~No custom hooks for complex logic~~ - Created useBreakpoint, useScrollDetection, useActiveHeading
+- ~~No custom hooks for complex logic~~ - Created useBreakpoint and useScrollDetection
 - No comprehensive error boundary handling
 - Admin pages still use inline styles (future: migrate to admin.css classes)

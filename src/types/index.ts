@@ -7,7 +7,6 @@ export interface ContactFormData {
 }
 
 export interface FormState {
-  formData: ContactFormData;
   isSubmitting: boolean;
   submitStatus: 'idle' | 'success' | 'error';
   errorMessage: string;

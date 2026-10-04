@@ -1,5 +1,3 @@
-import React from 'react';
-
 /**
  * Contact section header with CONTACT button
  * Positioned absolutely at the top-left of the contact section

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ContactHeader } from './ContactHeader';
 import { SpinningCircularText } from './SpinningCircularText';
 import { ContactPopup } from './ContactPopup';

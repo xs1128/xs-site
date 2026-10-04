@@ -50,12 +50,8 @@ src/
 │   │   ├── TagList.tsx             # Post tags display
 │   │   ├── PostNavigation.tsx      # Previous/next post navigation
 │   │   ├── OtherPosts.tsx          # Related posts sidebar
-│   │   ├── LeftSidebar.tsx         # Left sidebar wrapper
 │   │   ├── FunnyMarquee.tsx        # Infinite-scroll marquee
 │   │   ├── FunnyMarqueeWrapper.tsx # Client wrapper for marquee data
-│   │   ├── RecentLogs.tsx          # Recent posts list
-│   │   ├── FeaturedSeries.tsx      # Featured series display
-│   │   ├── FeaturedSeriesWrapper.tsx # Client wrapper for series data
 │   │   ├── RecentBlogsGrid.tsx     # Recent blogs carousel
 │   │   ├── SeriesGrid.tsx          # Series grid (3x4 on desktop)
 │   │   ├── BlogExpandedContent.tsx # Expanded content wrapper (Series + 3D)
@@ -65,7 +61,7 @@ src/
 │   │   ├── SkeletonElement.tsx     # Atomic building block for skeleton shapes
 │   │   ├── SkeletonText.tsx        # Text lines with varying widths
 │   │   ├── SkeletonHero.tsx        # Large featured image placeholders
-│   │   ├── SkeletonCard.tsx        # Blog/series card placeholders
+│   │   ├── SkeletonCard.tsx        # Blog card placeholders
 │   │   ├── SkeletonList.tsx        # TOC, related posts, tags placeholders
 │   │   └── index.ts                # Barrel export for skeleton components
 │   └── ui/
@@ -81,7 +77,7 @@ src/
 │   │   ├── storage.ts              # File upload utilities
 │   │   └── settings.ts            # Site settings management (hero, avatar, etc.)
 │   ├── utils/
-│   │   └── post.ts                 # Post utility functions (slug, date formatting)
+│   │   └── post.ts                 # Post utility functions (headings, date formatting)
 │   ├── mockPosts.ts                # Mock data (legacy)
 │   ├── mockSeries.ts               # Mock data (legacy)
 │   └── mockPictures.ts             # Mock data (legacy)
@@ -95,7 +91,6 @@ src/
 ├── hooks/
 │   ├── useBreakpoint.ts            # Custom breakpoint detection hook
 │   ├── useScrollDetection.ts       # Scroll progress & footer visibility hooks
-│   └── useActiveHeading.ts         # Active heading tracking for TOC
 ├── types/
 │   ├── database.ts                 # Supabase generated types
 │   └── post.ts                     # Post & Series interfaces
