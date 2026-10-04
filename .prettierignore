@@ -3,3 +3,7 @@ node_modules/
 package-lock.json
 next-env.d.ts
 *.tsbuildinfo
+test-results/
+playwright-report/
+storybook-static/
+chromatic-diagnostics.json
