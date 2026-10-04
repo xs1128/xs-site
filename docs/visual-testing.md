@@ -26,10 +26,28 @@ reports and archives are ignored by Git, lint, and formatting.
 
 ## GitHub Actions and review
 
-`.github/workflows/chromatic.yml` runs on pull requests from this repository,
-pushes to `main`, and manual dispatch. It builds the current commit, captures
-the pages, uploads to Chromatic, and retains test reports for 14 days. Fork PRs
-are skipped because they cannot access the required secrets.
+`.github/workflows/chromatic.yml` runs on pull requests and pushes to `main`
+when rendering-related files change:
+
+- Application source, including components, styles, hooks, fonts, shared types,
+  and blog data helpers.
+- Public assets and visual tests/fixtures.
+- Dependencies, npm settings, Next.js/TypeScript/Playwright/Chromatic config,
+  and the Chromatic workflow itself.
+
+Documentation-only changes, API routes, the server-only contact rate limiter,
+and colocated unit tests do not trigger Chromatic. Shared data helpers stay
+included because they can change what the frontend renders. GitHub checks the
+whole PR diff, so a documentation commit on a PR that also changes UI still runs.
+Manual **Run workflow** remains available regardless of changed files.
+
+It builds the current commit, captures the pages, uploads to Chromatic, and
+retains test reports for 14 days. Fork PRs are skipped because they cannot
+access the required secrets. Standard CI still runs independently.
+
+Keep the push and pull-request path lists in sync. Do not make this filtered
+workflow a required branch-protection check: GitHub leaves path-skipped checks
+pending. If it becomes required, use an always-running gate job instead.
 
 Connect a **Playwright** project to `xs1128/xs-site` in Chromatic and set these
 repository Actions secrets:
