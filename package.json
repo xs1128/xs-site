@@ -19,7 +19,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "lucide-react": "^1.31.0",
-    "next": "^16.0.0",
+    "next": "^16.3.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^10.1.0",
@@ -28,7 +28,7 @@
     "rehype-sanitize": "^6.0.0",
     "remark-gfm": "^4.0.1",
     "resend": "^6.9.3",
-    "sharp": "^0.35.0",
+    "sharp": "^0.35.5",
     "three": "^0.183.2"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react": "^6.0.5",
     "eslint": "^9.39.3",
-    "eslint-config-next": "^16.0.0",
+    "eslint-config-next": "^16.3.8",
     "eslint-config-prettier": "^10.1.8",
     "jsdom": "^29.1.1",
     "prettier": "^3.9.6",

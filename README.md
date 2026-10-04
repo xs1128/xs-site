@@ -28,12 +28,14 @@ Always run `npm install && npm run build` before pushing; fix any TypeScript/bui
 
 ## Environment Variables
 
-| Variable               | Required           | Purpose                                                                                       |
-| ---------------------- | ------------------ | --------------------------------------------------------------------------------------------- |
-| `RESEND_API_KEY`       | Yes (contact form) | Server-side, used by `/api/contact`. Without it, POSTs return `503`.                          |
-| `NEXT_PUBLIC_SITE_URL` | No                 | Base URL for metadata/canonical/OG/sitemap/robots/JSON-LD. Falls back to `https://xsooi.com`. |
+| Variable                        | Required           | Purpose                                                                                                                                           |
+| ------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `RESEND_API_KEY`                | Yes (contact form) | Server-side, used by `/api/contact`. Without it, POSTs return `503`.                                                                              |
+| `NEXT_PUBLIC_SITE_URL`          | No                 | Site-root origin for metadata/canonical/OG/sitemap/robots/JSON-LD. Falls back to `https://www.xsooi.com`. Production requires a public HTTPS URL. |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Yes (blog build)   | Public Supabase project URL used to fetch published content.                                                                                      |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Yes (blog build)   | Public anonymous client key; access must be restricted by RLS.                                                                                    |
 
-Both are listed in `.env.example`. The build succeeds without either, so CI needs no secrets.
+See `.env.example` for configuration. Building the blog requires the public Supabase URL and anonymous key. `RESEND_API_KEY` is needed only for sending contact messages.
 
 ## Contact Form
 
@@ -121,7 +123,9 @@ public/           favicons, apple-touch-icon, android-chrome 192/512, og-image.p
 
 ## Deploy
 
-`next.config.ts` proxies `/blog` and `/blog/:path*` to `https://blog.xsooi.com/blog...` — no local blog route exists. Set `RESEND_API_KEY` and (optionally) `NEXT_PUBLIC_SITE_URL` in the hosting platform's environment variables.
+The blog is served locally from `src/app/blog` at `/blog`; the retired `blog.xsooi.com` host is not used. Set the public Supabase variables and `RESEND_API_KEY` in the hosting platform. `NEXT_PUBLIC_SITE_URL` is optional and defaults to `https://www.xsooi.com` for both the portfolio and blog.
+
+All routes receive a Content Security Policy, framing protection, MIME sniffing protection, and a referrer policy through `next.config.ts`. See `docs/blog-deployment.md` for the policy's allowances and limitations.
 
 ## Analytics
 
