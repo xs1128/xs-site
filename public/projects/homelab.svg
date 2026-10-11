@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" fill="none">
+  <defs>
+    <pattern id="ink-hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(32)">
+      <rect width="9" height="9" fill="#e4d9c2"/>
+      <path d="M0 0V9" stroke="#24272a" stroke-width="2"/>
+    </pattern>
+    <pattern id="shadow-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(55)">
+      <path d="M0 0V8" stroke="#24272a" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <!-- A compact Mac mini illustration; not a port or model specification. -->
+
+  <!-- Supporting studies: alternate views and conceptual infrastructure sketches. -->
+  <g stroke="#24272a" stroke-width="5.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top-left: overhead chassis study. -->
+    <g transform="translate(72 46) rotate(-6 150 90)">
+      <rect x="0" y="0" width="265" height="182" rx="31" fill="#f2e9d8"/>
+      <rect x="10" y="10" width="245" height="162" rx="24" stroke-width="2.2"/>
+      <circle cx="132" cy="90" r="49" stroke-width="2.7"/>
+      <path d="M113 90h39m-19-19v38" stroke-width="2.7"/>
+      <path d="M-12 0h-15m15 182h-15M0 204v12m265-12v12M-20 7v168M7 209h251" stroke-width="2.2"/>
+      <path d="m-24 14 4-7 4 7m-8 154 4 7 4-7M14 205l-7 4 7 4m237-8 7 4-7 4" stroke-width="2.2"/>
+    </g>
+    <!-- Upper-middle: a connection study. -->
+    <path d="M422 73c-22 10-21 35 0 44 32 14 49-13 74-1 22 10 4 37 20 53" stroke-width="8.1"/>
+    <path d="m407 68 15-6 8 18-15 6Zm102 98 14-5 8 17-14 5Z" fill="#e4d9c2"/>
+    <path d="m413 64-4-10m9 8-4-10m112 116 4 10m-9-8 4 10"/>
+    <path d="M449 152c-23 23-10 62 30 70 47 9 78-28 104-19" stroke-width="2.7"/>
+    <!-- Upper-right: conceptual network topology. -->
+    <g transform="translate(716 35)">
+      <path d="M119 51v41m0 0H13v54m106-54h122v54m-122-54v62" stroke-width="4.05"/>
+      <rect x="78" y="0" width="82" height="50" rx="8" fill="#f2e9d8"/>
+      <path d="M93 31h52m-45-15h38"/>
+      <rect x="-19" y="145" width="63" height="49" rx="5" fill="#f2e9d8"/>
+      <rect x="89" y="154" width="63" height="49" rx="5" fill="#f2e9d8"/>
+      <rect x="210" y="145" width="63" height="49" rx="5" fill="#f2e9d8"/>
+      <path d="m-2 162 9 8-9 8m18 0h13m76-7h34m-34 10h34m88-18h32m-32 10h32"/>
+      <circle cx="119" cy="92" r="5" fill="#e5532c" stroke="none"/>
+      <path d="m304 82-8 21m-13-35 17 8m-40-24 9 10" stroke="#b73e1d"/>
+    </g>
+    <!-- Left: front profile, with layered construction lines. -->
+    <g transform="translate(46 326) rotate(4 190 45)">
+      <path d="M21 0h309q21 0 21 19v65q0 20-21 20H21Q0 104 0 84V19Q0 0 21 0Z" fill="#f2e9d8"/>
+      <path d="M11 9h329M11 94h329" stroke-width="2.2"/>
+      <path d="M20 108h312v6H20Z" fill="#24272a"/>
+      <circle cx="316" cy="58" r="3" fill="#e5532c" stroke="none"/>
+      <path d="M-17-15H371M-17 127H371M-9-23v159m372-159v159" stroke-width="2.2" opacity=".7"/>
+      <path d="M30 156h289m-282-4-7 4 7 4m275-8 7 4-7 4" stroke-width="2.2"/>
+    </g>
+    <!-- Lower-left: airflow / underside study. -->
+    <g transform="translate(83 542) rotate(-12 85 65)">
+      <rect width="170" height="124" rx="25" fill="#f2e9d8"/>
+      <ellipse cx="85" cy="62" rx="54" ry="45"/>
+      <ellipse cx="85" cy="62" rx="41" ry="34" stroke-width="2.2"/>
+      <path d="M55 42h60m-66 8h72m-77 8h82m-83 8h84m-80 8h76m-71 8h66" stroke-width="2.7"/>
+      <path d="M188 30c26 0 41 12 41 32m-6-6 6 6 5-7M-33 89c-18 0-31-10-31-29m-5 7 5-7 6 5" stroke="#b73e1d" stroke-width="4.05"/>
+    </g>
+    <!-- Far right: loose connector and cable-loop studies. -->
+    <path d="M1049 324c-54 44 85 31 62 78-24 49-84 26-67-10 18-38 78-9 58 43-12 32-47 47-30 75" stroke-width="6.75"/>
+    <path d="m1039 319 18-11 12 18-18 11Zm26 187 19-5 6 21-19 5Z" fill="#e4d9c2"/>
+    <path d="m1046 315-6-10m12 6-6-10m-13 111h-31m73 42h43" stroke-width="2.7"/>
+    <!-- Lower-right: stacked software layers, drawn as an exploded study. -->
+    <g transform="translate(949 576)">
+      <path d="m0 30 65-35 112 30-65 39Z" fill="#f2e9d8"/>
+      <path d="m0 57 65-35 112 30-65 39Z" fill="#f2e9d8"/>
+      <path d="m0 84 65-35 112 30-65 39Z" fill="#f2e9d8"/>
+      <path d="m26 83 81 23m-65-9 65 18m-49-10 49 18" stroke-width="2.2"/>
+      <path d="M65-18v-16m47 172v17" stroke-width="2.7" stroke-dasharray="3 5"/>
+    </g>
+  </g>
+  <ellipse cx="737" cy="502" rx="226" ry="44" fill="url(#shadow-hatch)" opacity=".5"/>
+  <g stroke="#24272a" stroke-linejoin="round">
+    <path d="M562 352 Q552 347 552 360 V419 Q552 435 571 443 L763 504 Q782 510 799 500 L922 423 Q936 415 936 400 V344 L792 434Z" fill="#e4d9c2" stroke-width="6.75"/>
+    <path d="M789 431 936 344 V400 Q936 415 922 423 L799 500 Q792 504 783 505V438Z" fill="url(#ink-hatch)" stroke-width="5.4"/>
+    <path d="M564 337 693 263 Q709 254 729 259 L922 319 Q950 328 929 344 L801 424 Q785 434 765 427 L567 366 Q540 357 564 337Z" fill="#f2e9d8" stroke-width="6.75"/>
+    <path d="M564 354 767 417 Q785 423 800 415 L930 336" stroke="#24272a" stroke-width="2.2"/>
+    <path d="M576 437 765 496 Q783 502 799 492L919 417" stroke="#24272a" stroke-width="3.24"/>
+    <path d="M594 447 758 498 Q780 508 800 497L900 436V444L802 507Q783 519 759 508L594 456Z" fill="#24272a" stroke="none"/>
+    <ellipse cx="755" cy="468" rx="2.5" ry="2" fill="#f9faf5" stroke="none"/>
+    <path d="m895 391 18-11v14l-18 11Z" fill="#24272a" stroke-width="4.05"/>
+    <path d="M906 391c36-17 52-6 46 23-7 36 52 39 64 8" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <!-- A restrained etched mark on the aluminium lid. -->
+  <g transform="translate(737 336) rotate(17) skewX(-24)" fill="#24272a">
+    <path d="M0-12c-8-8-20-4-20 8 0 12 9 24 15 24 3 0 5-3 9-3s6 3 9 3c5 0 10-7 13-14-10-5-12-18-2-23-6-8-16-6-24 5Z"/>
+    <path d="M2-15c-1-8 5-14 12-15 1 8-4 14-12 15Z"/>
+  </g>
+  <path d="M900 391c48 5 28 67-4 83-50 26-48 73-109 81-69 10-79-38-136-30-58 9-57 62-122 68-68 7-106-34-173-10-37 13-63 35-106 24" stroke="#24272a" stroke-width="12" stroke-linecap="round"/>
+  <path d="M900 391c48 5 28 67-4 83-50 26-48 73-109 81-69 10-79-38-136-30-58 9-57 62-122 68-68 7-106-34-173-10-37 13-63 35-106 24" stroke="#e5532c" stroke-width="6" stroke-linecap="round"/>
+  <path d="m237 601 17 3-2 12-17-3Z" fill="#e5532c" stroke="#24272a" stroke-width="5.4"/>
+</svg>

@@ -70,8 +70,7 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
     {
       kind: 'link',
       label: 'PROJECTS',
-      href: 'https://github.com/xs1128',
-      newTab: true,
+      href: '/projects',
     },
     { kind: 'link', label: 'BLOG', href: '/blog' },
   ];

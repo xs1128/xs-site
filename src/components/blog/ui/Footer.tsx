@@ -125,14 +125,8 @@ export default function Footer() {
                 <span>Main Site</span>
                 <ArrowUpRight size="0.7em" strokeWidth={2.5} />
               </a>
-              <a
-                href="https://github.com/xs1128"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="footer-link"
-              >
+              <a href="/projects" className="footer-link">
                 <span>Projects</span>
-                <ArrowUpRight size="0.7em" strokeWidth={2.5} />
               </a>
               <a
                 href="https://www.xsooi.com#contact"
