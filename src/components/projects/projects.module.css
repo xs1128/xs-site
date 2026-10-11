@@ -55,6 +55,10 @@
   view-timeline-axis: block;
 }
 
+.scene[data-kind='access'] {
+  min-height: 320svh;
+}
+
 .panel {
   position: sticky;
   top: 0;
@@ -71,6 +75,10 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 32px;
+}
+
+.projectHeader {
+  padding: 112px var(--project-gutter) 40px;
 }
 
 .titleGroup {
@@ -155,6 +163,112 @@
   min-height: 0;
   flex-shrink: 0;
   object-fit: contain;
+}
+
+.macDrawing,
+.macDrawing svg {
+  width: 100%;
+  height: 100%;
+}
+.macDesktop {
+  display: block;
+}
+.macMobile {
+  display: none;
+}
+
+@supports (animation-timeline: view()) {
+  .macDrawing [data-part] {
+    animation: mini-lid linear both;
+    animation-timeline: --project-scene;
+    animation-range: contain 0% contain 100%;
+  }
+  .macDrawing [data-part='internals'] {
+    animation-name: mini-internals;
+  }
+  .macDrawing [data-part='cooling'] {
+    animation-name: mini-cooling;
+  }
+  .macDrawing [data-part='power'] {
+    animation-name: mini-power;
+  }
+  .macDrawing [data-part='chassis'] {
+    animation-name: mini-chassis;
+  }
+}
+@keyframes mini-lid {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40%,
+  65% {
+    transform: translate(0, -230px);
+  }
+}
+@keyframes mini-internals {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40%,
+  65% {
+    transform: translate(0, -60px);
+  }
+}
+@keyframes mini-cooling {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40%,
+  65% {
+    transform: translate(0, 15px);
+  }
+}
+@keyframes mini-power {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40%,
+  65% {
+    transform: translate(0, -145px);
+  }
+}
+@keyframes mini-chassis {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: translate(0, 0);
+  }
+  40%,
+  65% {
+    transform: translate(0, 45px);
+  }
+}
+@media (max-width: 960px) and (orientation: portrait) {
+  .macDesktop {
+    display: none;
+  }
+  .macMobile {
+    display: block;
+  }
+}
+@media (prefers-reduced-motion: reduce), (max-height: 740px) {
+  .macDrawing [data-part] {
+    animation: none;
+    transform: none;
+  }
 }
 
 .visuallyHidden {
@@ -376,7 +490,12 @@
   .storyPanel .frame {
     animation: comic-frame linear both;
     animation-timeline: --project-scene;
-    animation-range: contain 0% contain 25%;
+    animation-range: entry 0% contain 25%;
+  }
+  .scene[data-kind='access'] .storyPanel {
+    animation: comic-departure linear both;
+    animation-timeline: --project-scene;
+    animation-range: contain 75% exit 100%;
   }
 }
 @keyframes apps-camera {
@@ -392,7 +511,7 @@
     transform: translate(0, 0) scale(1) rotate(0deg);
   }
   to {
-    transform: translate(-20px, -12px) scale(1.2) rotate(3deg);
+    transform: translate(-20px, -12px) scale(1.2);
   }
 }
 @keyframes comic-caption {
@@ -405,10 +524,27 @@
 }
 @keyframes comic-frame {
   from {
-    transform: scale(0.92) rotate(1deg);
+    transform: translateY(140px) scale(0.84);
   }
   to {
-    transform: scale(1) rotate(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes comic-departure {
+  from {
+    transform: translateY(0) scale(1);
+  }
+  to {
+    transform: translateY(-100px) scale(0.92);
+  }
+}
+
+@media (prefers-reduced-motion: reduce), (max-height: 740px) {
+  .scene[data-kind='access'] .storyPanel {
+    animation: none;
+    transform: none;
+    opacity: 1;
   }
 }
 
@@ -471,7 +607,8 @@
 
 /* Short screens need flowing panels so sticky frames cannot trap the copy. */
 @media (max-height: 740px) {
-  .scene {
+  .scene,
+  .scene[data-kind='access'] {
     min-height: auto;
   }
   .panel,
@@ -521,6 +658,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .scene[data-kind='access'] {
+    min-height: auto;
+  }
   .storyPanel {
     position: relative;
   }

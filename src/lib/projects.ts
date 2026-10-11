@@ -50,7 +50,7 @@ export const projects: readonly Project[] = [
           'Some apps are open on the web. My private ones use Tailscale—like a special key that lets my own devices reach them from anywhere.',
         artwork: '/projects/homelab-access.svg',
         mobileArtwork: '/projects/homelab-access-mobile.svg',
-        alt: 'A Mac mini sits inside a red circular portal, connected to a lock and a phone with a check mark.',
+        alt: 'A Mac mini opens into layers showing its cooling fan, logic board, and power supply, beside a lock and a phone with a check mark.',
       },
     ],
     artwork: {

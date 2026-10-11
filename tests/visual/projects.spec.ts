@@ -2,7 +2,9 @@ import { test, expect, takeSnapshot } from '@chromatic-com/playwright';
 
 test('Projects panel', async ({ page }, testInfo) => {
   await page.goto('/projects');
-  await expect(page.getByRole('heading', { name: 'Homelab' })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: /^Homelab\.?$/, level: 2 }),
+  ).toBeVisible();
   await expect(
     page.getByRole('link', { name: /Homelab on GitHub/ }),
   ).toHaveAttribute('href', 'https://github.com/xs1128/xs-homelab');
@@ -13,7 +15,11 @@ test('Projects panel', async ({ page }, testInfo) => {
       page
         .getByRole('img')
         .first()
-        .evaluate((image: HTMLImageElement) => image.naturalWidth),
+        .evaluate((image) =>
+          image instanceof HTMLImageElement
+            ? image.naturalWidth
+            : image.getBoundingClientRect().width,
+        ),
     )
     .toBeGreaterThan(0);
   expect(
@@ -40,7 +46,11 @@ test('Projects follows scroll position and responds to motion preferences', asyn
   await page.goto('/projects');
   const artwork = page.locator('figure > div').first();
   await expect(artwork).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
-  await page.evaluate(() => window.scrollTo(0, 150));
+  await page
+    .locator('section[data-kind="access"]')
+    .evaluate((element) =>
+      window.scrollTo(0, element.getBoundingClientRect().top + scrollY + 150),
+    );
   await expect
     .poll(() =>
       artwork.evaluate((element) => getComputedStyle(element).transform),
@@ -49,7 +59,7 @@ test('Projects follows scroll position and responds to motion preferences', asyn
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(artwork).toHaveCSS('transform', 'none');
-  const scenes = page.locator('section[data-kind]');
+  const scenes = page.locator('section[data-kind]:not([data-kind="status"])');
   for (const scene of await scenes.all()) {
     expect(
       await scene.evaluate((element) => element.getBoundingClientRect().height),
@@ -102,12 +112,10 @@ test('Homelab tells its story in readable comic panels', async ({
   page,
 }, testInfo) => {
   await page.goto('/projects');
-  const apps = page.getByRole('region', {
-    name: 'One little box. Lots of little helpers.',
-  });
-  await apps.scrollIntoViewIfNeeded();
-  await expect(apps.getByText(/One keeps my photos/)).toBeVisible();
-  await takeSnapshot(page, 'Projects — Everyday apps', testInfo);
+  await expect(
+    page.locator('section[data-kind="intro"], section[data-kind="apps"]'),
+  ).toHaveCount(0);
+  await expect(page.locator('section[data-kind="access"]')).toHaveCount(1);
 
   const access = page.getByRole('region', {
     name: 'At home. Even when I’m not.',
@@ -118,6 +126,103 @@ test('Homelab tells its story in readable comic panels', async ({
   await expect(
     page.getByRole('link', { name: 'Explore the homelab' }),
   ).toHaveAttribute('href', 'https://homelab.xsooi.com/');
+});
+
+test('The whole illustration frame enters and recedes without spinning the artwork', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/projects');
+  const scene = page.locator('section[data-kind="access"]');
+  const start = await scene.evaluate(
+    (element) => element.getBoundingClientRect().top + scrollY,
+  );
+  const frame = scene.locator('figure');
+  await page.evaluate((top) => window.scrollTo(0, top), start - 400);
+  await expect(frame).not.toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  await expect(frame).toHaveCSS('opacity', '1');
+  await page.evaluate((top) => window.scrollTo(0, top), start + 700);
+  await expect(frame).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  const artwork = await scene.locator('figure > div').evaluate((element) => {
+    const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
+    return { b: matrix.b, c: matrix.c };
+  });
+  expect(artwork).toEqual({ b: 0, c: 0 });
+  await page.evaluate((top) => window.scrollTo(0, top), start + 1300);
+  await expect
+    .poll(() =>
+      scene
+        .locator(':scope > div')
+        .evaluate((element) => Number(getComputedStyle(element).opacity)),
+    )
+    .toBe(1);
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(scene.locator(':scope > div')).toHaveCSS('opacity', '1');
+  await expect(frame).toHaveCSS('transform', 'none');
+});
+
+test('The Mac mini opens into separate physical layers and reassembles with scroll', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/projects');
+  const scene = page.locator('section[data-kind="access"]');
+  const geometry = await scene.evaluate((element) => ({
+    start: element.getBoundingClientRect().top + scrollY,
+    travel: element.clientHeight - element.firstElementChild!.clientHeight,
+  }));
+  const drawing = scene.locator('svg:visible');
+  const lid = drawing.locator('[data-part="lid"]');
+  const board = drawing.locator('[data-part="internals"]');
+  const chassis = drawing.locator('[data-part="chassis"]');
+  const cooling = drawing.locator('[data-part="cooling"]');
+  const power = drawing.locator('[data-part="power"]');
+  expect(geometry.travel).toBeGreaterThan(page.viewportSize()!.height * 2);
+  await page.evaluate((top) => window.scrollTo(0, top), geometry.start);
+  await expect(board).toHaveCSS('opacity', '1');
+  await expect(board).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  await page.evaluate(
+    (top) => window.scrollTo(0, top),
+    geometry.start + geometry.travel * 0.5,
+  );
+  await expect
+    .poll(() =>
+      lid.evaluate(
+        (element) =>
+          new DOMMatrixReadOnly(getComputedStyle(element).transform).f,
+      ),
+    )
+    .toBe(-230);
+  await expect(board).toHaveCSS('opacity', '1');
+  await expect
+    .poll(() =>
+      chassis.evaluate(
+        (element) =>
+          new DOMMatrixReadOnly(getComputedStyle(element).transform).f,
+      ),
+    )
+    .toBe(45);
+  await expect(cooling).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 15)');
+  await expect(power).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, -145)');
+  await page.screenshot({
+    path: `/tmp/mac-mini-open-${page.viewportSize()!.width}.png`,
+  });
+  await page.evaluate(
+    (top) => window.scrollTo(0, top),
+    geometry.start + geometry.travel,
+  );
+  await expect(board).toHaveCSS('opacity', '1');
+  await expect(lid).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  await expect(cooling).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  await page.evaluate(
+    (top) => window.scrollTo(0, top),
+    geometry.start + geometry.travel * 0.5,
+  );
+  await expect(board).toHaveCSS('opacity', '1');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(lid).toHaveCSS('transform', 'none');
+  await expect(board).toHaveCSS('opacity', '1');
 });
 
 test('Project captions remain inside their frames on tablets and short screens', async ({
@@ -150,7 +255,7 @@ test('Project captions remain inside their frames on tablets and short screens',
       ).toBe(true);
     }
     if (viewport.height < 740) {
-      await expect(page.locator('section[data-kind="apps"] > div')).toHaveCSS(
+      await expect(page.locator('section[data-kind="access"] > div')).toHaveCSS(
         'position',
         'relative',
       );

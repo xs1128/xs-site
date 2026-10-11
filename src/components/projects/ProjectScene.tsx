@@ -33,18 +33,25 @@ export function ProjectScene({
     if (!scene || !panel || !image) return;
 
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const parts = image.querySelectorAll<SVGElement>('[data-part]');
+    const resetParts = () =>
+      parts.forEach((part) => {
+        part.style.transform = '';
+      });
     let frame: number | null = null;
 
     const update = () => {
       frame = null;
       if (preference.matches) {
         image.style.transform = '';
+        resetParts();
         return;
       }
 
       const travel = Math.max(1, scene.offsetHeight - panel.offsetHeight);
       if (getComputedStyle(panel).position !== 'sticky') {
         image.style.transform = '';
+        resetParts();
         return;
       }
       const progress = Math.min(
@@ -55,11 +62,29 @@ export function ProjectScene({
       // Move from the whole scene to a close-up of the Mac mini.
       // Transform updates avoid React renders.
       const zoom = kind === 'intro' ? 1.4 : 0.25;
-      const tilt = kind === 'intro' ? -9 : kind === 'apps' ? -3 : 3;
+      const tilt = kind === 'intro' ? -9 : kind === 'apps' ? -3 : 0;
       const x = kind === 'intro' ? -80 : kind === 'apps' ? -50 : -20;
       const y = kind === 'intro' ? -32 : kind === 'apps' ? -18 : -12;
       const scale = kind === 'access' ? 0.2 : zoom;
       image.style.transform = `translate(${x * progress}px, ${y * progress}px) scale(${1 + scale * progress}) rotate(${tilt * progress}deg)`;
+      const open = Math.max(
+        0,
+        Math.min(1, (progress - 0.05) / 0.35, (0.95 - progress) / 0.3),
+      );
+      parts.forEach((part) => {
+        const name = part.dataset.part;
+        const distance =
+          name === 'lid'
+            ? -230
+            : name === 'chassis'
+              ? 45
+              : name === 'cooling'
+                ? 15
+                : name === 'power'
+                  ? -145
+                  : -60;
+        part.style.transform = `translateY(${distance * open}px)`;
+      });
     };
 
     const schedule = () => {
