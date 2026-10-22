@@ -1,0 +1,17 @@
+{
+  "tool": "image_gen (built-in)",
+  "covers": [
+    {
+      "path": "public/projects/portfolio-artwork.webp",
+      "prompt": "Use case: stylized-concept\nAsset type: vertical portfolio project gallery cover, 2:3 portrait composition.\nPrimary request: create a sophisticated, striking 3D editorial image representing a frontend developer's personal portfolio and mastery of interaction design.\nSubject: a sculptural stack of precisely spaced floating interface panels, thin rounded rectangular sheets of warm ivory ceramic and smoky translucent glass, arranged in an elegant slightly twisting architectural composition; one small saturated terracotta-orange spherical element interacting with the layers. The panels are abstract and blank, with crisp beveled edges and delicate inset geometric divisions, not screenshots.\nScene/backdrop: seamless deep charcoal studio, a softly lit warm cream plinth or floor, restrained subtle shadows.\nStyle/medium: premium photorealistic 3D product rendering, tactile materials, exceptionally crisp contours, restrained composition, confident contemporary art direction.\nLighting/mood: warm directional studio light, soft reflections, strong readable silhouette, calm and intentional.\nColor palette: charcoal #2A2F35, warm cream #f2e9d8, terracotta-orange #E5532C, subtle neutral glass and metal only.\nComposition/framing: portrait full bleed, sculpture centered slightly right; must stay recognizable when cropped into a narrow vertical bar, leave upper left and lower left visually calm for live HTML labels; subject occupies the central 60%.\nConstraints: no text, letters, numbers, logos, watermarks, people, neon, gradients printed as UI, or unnecessary objects. Deliver one finished image, no border, no collage."
+    },
+    {
+      "path": "public/projects/blog-sketch.webp",
+      "prompt": "Use case: stylized-concept\nAsset type: portrait cover illustration for a technology blog in a narrow vertical project gallery, 2:3 aspect ratio.\nPrimary request: a very simple, tasteful sketch of one open book, blank pages and a small terracotta-orange ribbon bookmark.\nStyle/medium: loose confident charcoal pencil and black ink line drawing on warm ivory paper, only a few expressive lines, extremely sparse hatching, subtly imperfect hand-drawn edges. Flat editorial sketch, not a 3D render, not photorealistic.\nComposition: one large recognizable open book centered slightly right, generous blank space above and below. No scene, no desk objects, no decorative extras. The book stays readable when cropped into a narrow vertical strip.\nPalette: warm ivory #f2e9d8 paper, charcoal #2A2F35 strokes, one small orange #E5532C bookmark.\nConstraints: keep it simple and quiet. No writing, text, letters, numbers, logos, watermarks or borders."
+    }
+  ],
+  "favicon": {
+    "path": "public/projects/confession-favicon.webp",
+    "source": "https://confession.sloppylabs.com/logo.svg"
+  }
+}

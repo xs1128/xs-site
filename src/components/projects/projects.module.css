@@ -143,7 +143,7 @@
   transform-origin: 58% 60%;
 }
 
-@media (prefers-reduced-motion: no-preference) and (min-height: 741px) {
+@media (prefers-reduced-motion: no-preference) {
   .artwork {
     will-change: transform;
   }
@@ -176,10 +176,14 @@
 .macMobile {
   display: none;
 }
+.macDrawing [data-part] {
+  transform-box: fill-box;
+  transform-origin: center;
+}
 
 @supports (animation-timeline: view()) {
   .macDrawing [data-part] {
-    animation: mini-lid linear both;
+    animation: mini-lid var(--ease-in-out-soft) both;
     animation-timeline: --project-scene;
     animation-range: contain 0% contain 100%;
   }
@@ -201,11 +205,11 @@
   5%,
   95%,
   100% {
-    transform: translate(0, 0);
+    transform: rotate(0deg) translateY(0);
   }
   40%,
   65% {
-    transform: translate(0, -230px);
+    transform: rotate(-4deg) translateY(-230px);
   }
 }
 @keyframes mini-internals {
@@ -213,11 +217,11 @@
   5%,
   95%,
   100% {
-    transform: translate(0, 0);
+    transform: rotate(0deg) translateY(0);
   }
   40%,
   65% {
-    transform: translate(0, -60px);
+    transform: rotate(-2deg) translateY(-60px);
   }
 }
 @keyframes mini-cooling {
@@ -225,11 +229,11 @@
   5%,
   95%,
   100% {
-    transform: translate(0, 0);
+    transform: rotate(0deg) translateY(0);
   }
   40%,
   65% {
-    transform: translate(0, 15px);
+    transform: rotate(2deg) translateY(15px);
   }
 }
 @keyframes mini-power {
@@ -237,11 +241,11 @@
   5%,
   95%,
   100% {
-    transform: translate(0, 0);
+    transform: rotate(0deg) translateY(0);
   }
   40%,
   65% {
-    transform: translate(0, -145px);
+    transform: rotate(3deg) translateY(-145px);
   }
 }
 @keyframes mini-chassis {
@@ -249,11 +253,11 @@
   5%,
   95%,
   100% {
-    transform: translate(0, 0);
+    transform: rotate(0deg) translateY(0);
   }
   40%,
   65% {
-    transform: translate(0, 45px);
+    transform: rotate(1.5deg) translateY(45px);
   }
 }
 @media (max-width: 960px) and (orientation: portrait) {
@@ -264,7 +268,7 @@
     display: block;
   }
 }
-@media (prefers-reduced-motion: reduce), (max-height: 740px) {
+@media (prefers-reduced-motion: reduce) {
   .macDrawing [data-part] {
     animation: none;
     transform: none;
@@ -540,7 +544,7 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce), (max-height: 740px) {
+@media (prefers-reduced-motion: reduce) {
   .scene[data-kind='access'] .storyPanel {
     animation: none;
     transform: none;
@@ -605,8 +609,7 @@
   }
 }
 
-/* Short screens need flowing panels so sticky frames cannot trap the copy. */
-@media (max-height: 740px) {
+@media (max-height: 600px) {
   .scene,
   .scene[data-kind='access'] {
     min-height: auto;
@@ -625,10 +628,12 @@
   .storyPanel .frame {
     display: grid;
     grid-template-rows: auto auto;
+    overflow: clip;
   }
   .storyPanel .artwork {
     height: clamp(320px, 70svh, 520px);
     padding: 16px;
+    view-timeline-name: --project-artwork;
   }
   .storyCaption {
     position: relative;
@@ -646,9 +651,13 @@
     animation: none;
     transform: none !important;
   }
+  .macDrawing [data-part] {
+    animation-timeline: --project-artwork;
+    animation-range: entry 0% exit 0%;
+  }
 }
 
-@media (max-height: 740px) and (max-width: 640px) and (orientation: portrait) {
+@media (max-height: 600px) and (max-width: 640px) and (orientation: portrait) {
   .panel .frame {
     aspect-ratio: 3 / 4;
   }

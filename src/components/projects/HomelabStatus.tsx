@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Lock, RefreshCw } from 'lucide-react';
+import { ChevronDown, Lock, RefreshCw } from 'lucide-react';
 import {
   isResponding,
   parseHomelabSnapshot,
@@ -33,6 +33,7 @@ function ServiceLogo({ logo, icon }: { logo?: string; icon: string }) {
 
 export function HomelabStatus() {
   const [category, setCategory] = useState('All apps');
+  const [expanded, setExpanded] = useState(false);
   const [snapshot, setSnapshot] = useState<HomelabSnapshot | null>(null);
   const [failed, setFailed] = useState(false);
   const [refreshing, setRefreshing] = useState(true);
@@ -90,6 +91,7 @@ export function HomelabStatus() {
   const responding = snapshot?.services.filter(isResponding).length ?? 0;
   const total = snapshot?.services.length ?? 0;
   const categories = [
+    'All apps',
     ...new Set(snapshot?.services.map((service) => service.category)),
   ];
 
@@ -143,74 +145,112 @@ export function HomelabStatus() {
             </p>
             <button
               type="button"
+              aria-label={refreshing ? 'Checking…' : 'Refresh status'}
               disabled={refreshing}
               onClick={() => setRefreshKey((key) => key + 1)}
             >
               <RefreshCw size={20} aria-hidden="true" />
-              {refreshing ? 'Checking…' : 'Refresh status'}
+              <span className={styles.refreshLabel}>
+                {refreshing ? 'Checking…' : 'Refresh status'}
+              </span>
             </button>
           </div>
           {snapshot && (
             <>
-              <nav className={styles.filters} aria-label="Filter homelab apps">
-                {['All apps', ...categories].map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    aria-pressed={category === item}
-                    onClick={() => setCategory(item)}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </nav>
-              <div className={styles.services} data-wide={visible.length > 21}>
-                {visible.map((service) => (
-                  <article key={service.name} className={styles.service}>
-                    <a
-                      className={styles.serviceLink}
-                      href={service.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Open ${service.name}${service.access === 'Tailscale' ? ' (requires Tailscale)' : ''} (opens in a new tab)`}
-                      title={service.description}
+              <button
+                className={styles.appsToggle}
+                type="button"
+                aria-expanded={expanded}
+                aria-controls="homelab-apps"
+                onClick={() => {
+                  setExpanded(!expanded);
+                  setCategory('All apps');
+                }}
+              >
+                {expanded ? 'Hide apps' : `Show all ${total} apps`}
+                <ChevronDown size={20} aria-hidden="true" />
+              </button>
+              <div
+                className={styles.apps}
+                id="homelab-apps"
+                data-expanded={expanded}
+              >
+                <nav
+                  className={styles.filters}
+                  aria-label="Filter homelab apps"
+                >
+                  {categories.map((item) => (
+                    <button
+                      key={item}
+                      type="button"
+                      aria-pressed={category === item}
+                      onClick={() => setCategory(item)}
                     >
-                      <ServiceLogo
-                        key={service.logo}
-                        logo={service.logo}
-                        icon={service.icon}
-                      />
-                      <div className={styles.serviceCopy}>
-                        <div className={styles.serviceName}>
-                          <h4>{service.name}</h4>
-                          {service.access === 'Tailscale' && (
-                            <Lock
-                              className={styles.privateLock}
-                              size={18}
-                              role="img"
-                              aria-label="Private service"
-                            />
-                          )}
+                      {item}
+                    </button>
+                  ))}
+                </nav>
+                <select
+                  className={styles.categorySelect}
+                  aria-label="Filter homelab apps"
+                  value={category}
+                  onChange={(event) => setCategory(event.target.value)}
+                >
+                  {categories.map((item) => (
+                    <option key={item}>{item}</option>
+                  ))}
+                </select>
+                <div
+                  className={styles.services}
+                  data-wide={visible.length > 21}
+                >
+                  {visible.map((service) => (
+                    <article key={service.name} className={styles.service}>
+                      <a
+                        className={styles.serviceLink}
+                        href={service.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open ${service.name}${service.access === 'Tailscale' ? ' (requires Tailscale)' : ''} (opens in a new tab)`}
+                        title={service.description}
+                      >
+                        <ServiceLogo
+                          key={service.logo}
+                          logo={service.logo}
+                          icon={service.icon}
+                        />
+                        <div className={styles.serviceCopy}>
+                          <div className={styles.serviceName}>
+                            <h4>{service.name}</h4>
+                            {service.access === 'Tailscale' && (
+                              <Lock
+                                className={styles.privateLock}
+                                size={18}
+                                role="img"
+                                aria-label="Private service"
+                              />
+                            )}
+                          </div>
+                          <span
+                            className={styles.badge}
+                            data-tone={
+                              historical
+                                ? 'unknown'
+                                : isResponding(service)
+                                  ? 'ok'
+                                  : 'warn'
+                            }
+                          >
+                            <span aria-hidden="true" />
+                            {historical
+                              ? `Last: ${service.status.toLowerCase()}`
+                              : service.status}
+                          </span>
                         </div>
-                        <span
-                          className={styles.badge}
-                          data-tone={
-                            historical
-                              ? 'unknown'
-                              : isResponding(service)
-                                ? 'ok'
-                                : 'warn'
-                          }
-                        >
-                          <span aria-hidden="true" />
-                          {historical
-                            ? `Last: ${service.status.toLowerCase()}`
-                            : service.status}
-                        </span>
-                      </div>
-                    </a>
-                  </article>
-                ))}
+                      </a>
+                    </article>
+                  ))}
+                </div>
               </div>
             </>
           )}

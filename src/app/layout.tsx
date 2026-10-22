@@ -11,6 +11,7 @@ import '../styles/about.css';
 import '../styles/contact.css';
 import '../styles/landing.css';
 import '../styles/tooltip.css';
+import '../styles/projects-gallery.css';
 
 const canonicalUrl =
   process.env.NODE_ENV === 'production' ? siteUrl : 'http://localhost:3000';

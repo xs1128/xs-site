@@ -3,7 +3,15 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import styles from './projects.module.css';
 
-interface ProjectSceneProps {
+const partMotion: Record<string, [number, number]> = {
+  lid: [-230, -4],
+  power: [-145, 3],
+  internals: [-60, -2],
+  cooling: [15, 2],
+  chassis: [45, 1.5],
+};
+
+export interface ProjectSceneProps {
   labelledBy: string;
   header: ReactNode;
   artwork: ReactNode;
@@ -48,15 +56,14 @@ export function ProjectScene({
         return;
       }
 
-      const travel = Math.max(1, scene.offsetHeight - panel.offsetHeight);
-      if (getComputedStyle(panel).position !== 'sticky') {
-        image.style.transform = '';
-        resetParts();
-        return;
-      }
+      const sticky = getComputedStyle(panel).position === 'sticky';
+      const travel = sticky
+        ? Math.max(1, scene.offsetHeight - panel.offsetHeight)
+        : Math.max(innerHeight, image.offsetHeight);
+      const top = (sticky ? scene : image).getBoundingClientRect().top;
       const progress = Math.min(
         1,
-        Math.max(0, -scene.getBoundingClientRect().top / travel),
+        Math.max(0, ((sticky ? 0 : innerHeight) - top) / travel),
       );
 
       // Move from the whole scene to a close-up of the Mac mini.
@@ -66,24 +73,18 @@ export function ProjectScene({
       const x = kind === 'intro' ? -80 : kind === 'apps' ? -50 : -20;
       const y = kind === 'intro' ? -32 : kind === 'apps' ? -18 : -12;
       const scale = kind === 'access' ? 0.2 : zoom;
-      image.style.transform = `translate(${x * progress}px, ${y * progress}px) scale(${1 + scale * progress}) rotate(${tilt * progress}deg)`;
+      image.style.transform = sticky
+        ? `translate(${x * progress}px, ${y * progress}px) scale(${1 + scale * progress}) rotate(${tilt * progress}deg)`
+        : '';
       const open = Math.max(
         0,
         Math.min(1, (progress - 0.05) / 0.35, (0.95 - progress) / 0.3),
       );
+      const eased = open * open * (3 - 2 * open);
       parts.forEach((part) => {
-        const name = part.dataset.part;
-        const distance =
-          name === 'lid'
-            ? -230
-            : name === 'chassis'
-              ? 45
-              : name === 'cooling'
-                ? 15
-                : name === 'power'
-                  ? -145
-                  : -60;
-        part.style.transform = `translateY(${distance * open}px)`;
+        const motion = partMotion[part.dataset.part ?? ''];
+        if (motion)
+          part.style.transform = `rotate(${motion[1] * eased}deg) translateY(${motion[0] * eased}px)`;
       });
     };
 

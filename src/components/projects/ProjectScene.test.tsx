@@ -35,12 +35,18 @@ function flushFrames() {
   act(() => pending.forEach((callback) => callback(0)));
 }
 
-function renderScene() {
+function renderScene(kind: 'intro' | 'access' = 'intro') {
   const result = render(
     <ProjectScene
       labelledBy="homelab"
+      kind={kind}
       header={<h2 id="homelab">Homelab</h2>}
-      artwork={<span data-testid="illustration">Illustration</span>}
+      artwork={
+        <svg data-testid="illustration">
+          <g data-part="lid" />
+          <g data-part="power" />
+        </svg>
+      }
     />,
   );
   const scene = screen.getByRole('region', { name: 'Homelab' });
@@ -68,6 +74,33 @@ function renderScene() {
 }
 
 describe('ProjectScene', () => {
+  it('curves the fallback layers in both directions and reassembles them', () => {
+    const { artwork, scrollTo } = renderScene('access');
+    const lid = artwork.querySelector<SVGElement>('[data-part="lid"]')!;
+    const power = artwork.querySelector<SVGElement>('[data-part="power"]')!;
+    const closed = lid.style.transform;
+    scrollTo(200);
+    expect(lid.style.transform).toContain('rotate(-');
+    expect(power.style.transform).toMatch(/rotate\([1-5]deg\)/);
+    const opened = lid.style.transform;
+    scrollTo(90);
+    const midway = lid.style.transform;
+    expect(midway).not.toBe(closed);
+    expect(midway).not.toBe(opened);
+    scrollTo(320);
+    const opening = midway.match(/-?[\d.]+/g)!.map(Number);
+    lid.style.transform.match(/-?[\d.]+/g)!.forEach((value, index) => {
+      expect(Number(value)).toBeCloseTo(opening[index], 8);
+    });
+    scrollTo(400);
+    expect(lid.style.transform).toBe(closed);
+    reducedMotion = true;
+    act(() => preferenceChanged());
+    flushFrames();
+    expect(lid.style.transform).toBe('');
+    expect(power.style.transform).toBe('');
+  });
+
   it('leaves native scroll timelines in control without scheduling duplicate work', () => {
     nativeTimelines = true;
     const { artwork } = renderScene();

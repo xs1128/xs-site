@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
 import { scrollToAbout, scrollToContact } from '@/lib/utils';
@@ -10,6 +12,7 @@ type NavItem =
 export interface FullScreenNavProps {
   isOpen: boolean;
   onClose: () => void;
+  homeSections?: boolean;
 }
 
 // viewBox cropped to ink bounds so it sits flush with the letter tops.
@@ -27,7 +30,11 @@ const ExternalArrow = () => (
  * Full-screen navigation overlay with slide animations
  * Features text fill effect on hover and staggered fade-in animations
  */
-export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
+export function FullScreenNav({
+  isOpen,
+  onClose,
+  homeSections = true,
+}: FullScreenNavProps) {
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
@@ -65,8 +72,12 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
   };
 
   const resolved: NavItem[] = [
-    { kind: 'action', label: 'ABOUT', onSelect: handleAboutClick },
-    { kind: 'action', label: 'CONTACT', onSelect: handleContactClick },
+    homeSections
+      ? { kind: 'action', label: 'ABOUT', onSelect: handleAboutClick }
+      : { kind: 'link', label: 'ABOUT', href: '/#about' },
+    homeSections
+      ? { kind: 'action', label: 'CONTACT', onSelect: handleContactClick }
+      : { kind: 'link', label: 'CONTACT', href: '/#contact' },
     {
       kind: 'link',
       label: 'PROJECTS',
@@ -84,6 +95,7 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
       role="dialog"
       aria-modal="true"
       aria-label="Site navigation"
+      data-lenis-prevent
       className={`fullscreen-nav ${isClosing ? 'fullscreen-nav--closing' : ''}`}
     >
       <div className="fullscreen-nav__items">
@@ -119,6 +131,7 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
               <button
                 key={item.label}
                 onClick={item.onSelect}
+                aria-label={item.label}
                 className={cls}
                 data-text={item.label}
                 style={delay}
@@ -133,6 +146,7 @@ export function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
             <a
               key={item.label}
               href={item.href}
+              aria-label={item.label}
               {...(external
                 ? { target: '_blank', rel: 'noopener noreferrer' }
                 : {})}

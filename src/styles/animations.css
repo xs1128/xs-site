@@ -148,6 +148,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .projects-sculpture__playback {
+    display: none !important;
+  }
+  .projects-sculpture__canvas {
+    cursor: default !important;
+  }
   *,
   *::before,
   *::after {
