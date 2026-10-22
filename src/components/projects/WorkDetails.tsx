@@ -38,6 +38,31 @@ export function WorkDetails({ work, onClose }: WorkDetailsProps) {
             <X size={20} aria-hidden="true" /> Close
           </button>
         )}
+        {work.instagram && (
+          <div className="projects-work__social">
+            <dl className="projects-work__stats">
+              <div>
+                <dt>Posts</dt>
+                <dd>{work.instagram.posts.toLocaleString('en-US')}</dd>
+              </div>
+              <div>
+                <dt>Followers</dt>
+                <dd>{work.instagram.followers.toLocaleString('en-US')}</dd>
+              </div>
+            </dl>
+            <a
+              href={`https://www.instagram.com/${work.instagram.handle}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="projects-text-link projects-work__instagram"
+              aria-label={`Follow @${work.instagram.handle} on Instagram (opens in a new tab)`}
+            >
+              Follow @{work.instagram.handle}
+              <ArrowUpRight size={24} aria-hidden="true" />
+            </a>
+            <p className="projects-work__as-of">As of {work.instagram.asOf}</p>
+          </div>
+        )}
         <p className="projects-work__summary">{work.description}</p>
         <div className="projects-work__built">
           <h4>What I built</h4>
@@ -55,11 +80,13 @@ export function WorkDetails({ work, onClose }: WorkDetailsProps) {
         <div className="projects-work__links">
           <a
             href={work.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            {...(work.liveUrl.startsWith('/')
+              ? {}
+              : { target: '_blank', rel: 'noopener noreferrer' })}
             className="projects-text-link"
           >
-            Visit {work.title} <ArrowUpRight size={18} aria-hidden="true" />
+            {work.liveLabel ?? `Visit ${work.title}`}{' '}
+            <ArrowUpRight size={22} aria-hidden="true" />
           </a>
           {work.repositoryUrl && (
             <a
@@ -68,7 +95,7 @@ export function WorkDetails({ work, onClose }: WorkDetailsProps) {
               rel="noopener noreferrer"
               className="projects-text-link"
             >
-              View source <ArrowUpRight size={18} aria-hidden="true" />
+              View source <ArrowUpRight size={22} aria-hidden="true" />
             </a>
           )}
         </div>

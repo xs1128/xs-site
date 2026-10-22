@@ -36,7 +36,8 @@ export const hubotSans = localFont({
    before the merge. Separate instances because adding 700 to the faces above
    would re-cut `.landing-section__headline` and `.expertise-card__title`, which
    is the change this repo tried once and reverted. Attached by
-   app/blog/layout.tsx, so these only download on /blog. */
+   app/blog/layout.tsx and the blog Footer, so they download on /blog and
+   wherever that footer renders. */
 export const hubotSansBlog = localFont({
   src: [
     {

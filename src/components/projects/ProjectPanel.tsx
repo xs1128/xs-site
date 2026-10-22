@@ -34,7 +34,7 @@ export function ProjectPanel({
             aria-label={`${project.title} on GitHub (opens in a new tab)`}
           >
             GitHub
-            <ArrowUpRight size={20} aria-hidden="true" />
+            <ArrowUpRight size={28} aria-hidden="true" />
           </a>
         </div>
       </header>
@@ -101,7 +101,7 @@ export function ProjectPanel({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Explore the homelab <ArrowUpRight size={24} aria-hidden="true" />
+            Explore the homelab <ArrowUpRight size={28} aria-hidden="true" />
           </a>
         </div>
       </section>

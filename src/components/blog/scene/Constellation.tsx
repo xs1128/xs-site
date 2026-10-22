@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import tooltipStyles from '@/components/blog/ui/tooltip.module.css';
 import {
   AdditiveBlending,
   BufferGeometry,
@@ -305,7 +306,7 @@ export default function Constellation({
           style={{ pointerEvents: 'none' }}
         >
           <div
-            className="blog-tooltip"
+            className={tooltipStyles.tooltip}
             data-ready="true"
             style={{ position: 'static' }}
           >

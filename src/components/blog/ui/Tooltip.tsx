@@ -11,6 +11,7 @@ import {
 } from 'react';
 import type { FocusEvent, MouseEvent, PointerEvent, ReactElement } from 'react';
 import { createPortal } from 'react-dom';
+import styles from './tooltip.module.css';
 
 type Placement = 'top' | 'bottom' | 'left' | 'right';
 
@@ -243,7 +244,7 @@ export default function Tooltip({
             ref={tipRef}
             id={id}
             role="tooltip"
-            className="blog-tooltip"
+            className={styles.tooltip}
             data-placement={position?.placement ?? placement}
             data-ready={position !== null}
             style={{ left: position?.x ?? 0, top: position?.y ?? 0 }}

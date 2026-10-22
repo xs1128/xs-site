@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Plus } from 'lucide-react';
+import { ArrowDown, Plus } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 import type { Work } from '@/lib/projects';
 
@@ -102,7 +102,7 @@ export function ProjectCover({ project, open, onToggle }: ProjectCoverProps) {
       document.removeEventListener('visibilitychange', reset);
       hover.removeEventListener('change', reset);
     };
-  }, [open, reducedMotion]);
+  }, [reducedMotion]);
 
   return (
     <h3 className="projects-cover__heading">
@@ -133,6 +133,10 @@ export function ProjectCover({ project, open, onToggle }: ProjectCoverProps) {
           <span className="projects-cover__title">
             {project.title}
             <span>.</span>
+          </span>
+          <span className="projects-cover__hint" aria-hidden="true">
+            Details
+            <ArrowDown size={16} strokeWidth={2} />
           </span>
           <span className="projects-cover__open" aria-hidden="true">
             <Plus size={24} strokeWidth={1.5} />

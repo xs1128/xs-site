@@ -7,6 +7,14 @@ export interface Work {
   highlights: readonly string[];
   repositoryUrl?: string;
   liveUrl: string;
+  liveLabel?: string;
+  // Hand-copied from the public profile; update `asOf` with the numbers.
+  instagram?: {
+    handle: string;
+    followers: number;
+    posts: number;
+    asOf: string;
+  };
   cover: { src: string; alt: string };
 }
 
@@ -94,6 +102,13 @@ export const works: readonly Work[] = [
       'A responsive form experience built around a calm, expressive visual identity.',
     ],
     liveUrl: 'https://confession.sloppylabs.com/',
+    liveLabel: 'Submit a confession',
+    instagram: {
+      handle: 'nthu_confession',
+      followers: 1157,
+      posts: 360,
+      asOf: 'October 2026',
+    },
     cover: {
       src: '/projects/confession-favicon.webp',
       alt: 'The NTHU Confession favicon: a panda and a dog sharing a hug beside a lake.',

@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { getAvatarUrl } from '@/lib/blog/supabase/settings';
 import Tooltip from '@/components/blog/ui/Tooltip';
+import { hubotSansBlog, robotoMonoBlog } from '@/fonts';
+import styles from './footer.module.css';
 
 interface SocialLink {
   name: string;
@@ -74,28 +76,21 @@ export default function Footer() {
     'https://fopmnlxsudpgsdpaqrzd.supabase.co/storage/v1/object/public/blog-images/default-avatar.jpeg';
 
   return (
-    <footer className="footer">
+    <footer
+      className={`${styles.footer} ${hubotSansBlog.variable} ${robotoMonoBlog.variable}`}
+    >
       {/* Full width horizontal divider at top edge */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '1px',
-          backgroundColor: 'var(--color-border)',
-        }}
-      ></div>
-      <div className="footer-container">
+      <div className={styles.rule}></div>
+      <div className={styles.container}>
         {/* Top Section */}
-        <div className="footer-top-section">
+        <div className={styles.topSection}>
           {/* Author Info */}
-          <div className="footer-section">
-            <div className="footer-author-content">
+          <div className={styles.section}>
+            <div className={styles.authorContent}>
               {/* Avatar and Name row */}
-              <div className="footer-avatar-row">
+              <div className={styles.avatarRow}>
                 {/* Profile picture */}
-                <div className="footer-avatar">
+                <div className={styles.avatar}>
                   <Image
                     src={displayAvatarUrl}
                     alt="Profile avatar"
@@ -104,23 +99,23 @@ export default function Footer() {
                     sizes="60px"
                   />
                 </div>
-                <div className="footer-name">xs</div>
+                <div className={styles.name}>xs</div>
               </div>
               {/* Bio/Tagline */}
-              <div className="footer-bio">Building things for the web</div>
+              <div className={styles.bio}>Building things for the web</div>
             </div>
-            <div className="footer-author-divider"></div>
+            <div className={styles.authorDivider}></div>
           </div>
 
           {/* Site Links */}
-          <div className="footer-section-links">
-            <div className="footer-heading">Links</div>
-            <div className="footer-links">
+          <div className={styles.sectionLinks}>
+            <div className={styles.heading}>Links</div>
+            <div className={styles.links}>
               <a
                 href="https://www.xsooi.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="footer-link"
+                className={styles.link}
               >
                 <span>Main Site</span>
                 <ArrowUpRight size="0.7em" strokeWidth={2.5} />
@@ -129,7 +124,7 @@ export default function Footer() {
                 href="https://github.com/xs1128"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="footer-link"
+                className={styles.link}
               >
                 <span>Projects</span>
                 <ArrowUpRight size="0.7em" strokeWidth={2.5} />
@@ -138,7 +133,7 @@ export default function Footer() {
                 href="https://www.xsooi.com#contact"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="footer-link"
+                className={styles.link}
               >
                 <span>Contact me</span>
                 <ArrowUpRight size="0.7em" strokeWidth={2.5} />
@@ -147,16 +142,16 @@ export default function Footer() {
           </div>
 
           {/* Social Links */}
-          <div className="footer-section">
-            <div className="footer-email">
+          <div className={styles.section}>
+            <div className={styles.email}>
               email:{' '}
               <Tooltip label="email">
-                <a href="mailto:hi@xsooi.com" className="footer-email-link">
+                <a href="mailto:hi@xsooi.com" className={styles.emailLink}>
                   hi@xsooi.com
                 </a>
               </Tooltip>
             </div>
-            <div className="footer-social-links">
+            <div className={styles.socialLinks}>
               {socialLinks.map((social) => (
                 <Tooltip key={social.name} label={social.name}>
                   <a
@@ -164,7 +159,7 @@ export default function Footer() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={social.name}
-                    className="footer-social-button"
+                    className={styles.socialButton}
                   >
                     {social.icon}
                   </a>
@@ -175,11 +170,11 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div className="footer-divider"></div>
+        <div className={styles.divider}></div>
 
         {/* Copyright */}
-        <div className="footer-copyright">
-          <div style={{ marginBottom: '4px' }}>
+        <div className={styles.copyright}>
+          <div>
             This website is built with Next.js, React, Supabase and Vercel.
           </div>
           <div>© {currentYear} Xinsheng Ooi.</div>

@@ -1,7 +1,5 @@
 import { ArrowDown } from 'lucide-react';
-import '@/styles/blog.css';
 import Footer from '@/components/blog/ui/Footer';
-import { hubotSansBlog, robotoMonoBlog } from '@/fonts';
 import { KineticSculpture } from './KineticSculpture';
 import { WorkGallery } from './WorkGallery';
 import { TypePlayground } from './TypePlayground';
@@ -43,12 +41,7 @@ export function ProjectsGallery() {
       </section>
 
       <TypePlayground />
-      <div
-        className={`blog-root ${hubotSansBlog.variable} ${robotoMonoBlog.variable}`}
-        style={{ minHeight: 0 }}
-      >
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 }
