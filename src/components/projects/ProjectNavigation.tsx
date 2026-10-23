@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { ArrowLeft, Menu } from 'lucide-react';
 import { FullScreenNav } from '@/components/navigation/FullScreenNav';
 
+// Charcoal surfaces the pinned menu button can sit over.
+const DARK = '.projects-hero, .projects-cover__link, .projects-sun__frame';
+
 export interface ProjectNavigationProps {
   appearance?: 'paper' | 'dark';
   backToGallery?: boolean;
@@ -18,35 +21,37 @@ export function ProjectNavigation({
   const menu = useRef<HTMLButtonElement>(null);
   const [onLight, setOnLight] = useState(appearance === 'paper');
 
-  // The menu button stays pinned, so it reads the background behind it.
+  // The menu button stays pinned, so it turns light over the dark surfaces.
+  // An observer on a root shrunk to the button's centre does no per-frame work.
   useEffect(() => {
     const button = menu.current;
-    const bar = button?.closest('nav');
-    if (!button || !bar) return;
-    let frame: number | null = null;
-    const check = () => {
-      frame = null;
+    if (!button) return;
+    const under = new Set<Element>();
+    let observer: IntersectionObserver | null = null;
+    const watch = () => {
+      observer?.disconnect();
+      under.clear();
       const box = button.getBoundingClientRect();
-      const under = document
-        .elementsFromPoint(box.x + box.width / 2, box.y + box.height / 2)
-        .find((el) => !bar.contains(el));
-      for (let el = under; el; el = el.parentElement ?? undefined) {
-        const [r, g, b, a = 1] = (
-          getComputedStyle(el).backgroundColor.match(/[\d.]+/g) ?? []
-        ).map(Number);
-        if (a > 0.5) return setOnLight(r * 0.299 + g * 0.587 + b * 0.114 > 140);
-      }
+      const [x, y] = [box.x + box.width / 2, box.y + box.height / 2];
+      const { clientWidth, clientHeight } = document.documentElement;
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(({ target, isIntersecting }) =>
+            isIntersecting ? under.add(target) : under.delete(target),
+          );
+          setOnLight(under.size === 0);
+        },
+        {
+          rootMargin: `${-y}px ${x + 1 - clientWidth}px ${y + 1 - clientHeight}px ${-x}px`,
+        },
+      );
+      document.querySelectorAll(DARK).forEach((el) => observer?.observe(el));
     };
-    const queue = () => {
-      if (frame === null) frame = requestAnimationFrame(check);
-    };
-    check();
-    addEventListener('scroll', queue, { passive: true });
-    addEventListener('resize', queue);
+    watch();
+    addEventListener('resize', watch);
     return () => {
-      if (frame !== null) cancelAnimationFrame(frame);
-      removeEventListener('scroll', queue);
-      removeEventListener('resize', queue);
+      observer?.disconnect();
+      removeEventListener('resize', watch);
     };
   }, []);
 
