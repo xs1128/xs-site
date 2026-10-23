@@ -123,7 +123,11 @@ export function SunField() {
 
   const rest = `translate(${CX} ${CY}) rotate(${REST})`;
   return (
-    <section className="projects-sun" aria-labelledby="sun-title">
+    <section
+      id="made-to-play"
+      className="projects-sun"
+      aria-labelledby="sun-title"
+    >
       <h2 id="sun-title">Made to play.</h2>
       <div className="projects-sun__frame">
         <svg

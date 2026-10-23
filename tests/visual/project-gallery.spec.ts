@@ -332,15 +332,18 @@ test('Gallery shares the full-page menu, traps focus, and locks scrolling', asyn
   const dialog = page.getByRole('dialog', { name: 'Site navigation' });
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveClass(/fullscreen-nav/);
+  await expect(dialog.getByRole('link')).toHaveText([
+    'GALLERY',
+    'THE SUN',
+    'SITE',
+    'BLOG',
+  ]);
   await expect(
-    dialog.getByRole('link', { name: 'ABOUT', exact: true }),
-  ).toHaveAttribute('href', '/#about');
+    dialog.getByRole('link', { name: 'THE SUN', exact: true }),
+  ).toHaveAttribute('href', '/projects#made-to-play');
   await expect(
-    dialog.getByRole('link', { name: 'CONTACT', exact: true }),
-  ).toHaveAttribute('href', '/#contact');
-  await expect(
-    dialog.getByRole('link', { name: 'PROJECTS', exact: true }),
-  ).toHaveAttribute('href', '/projects');
+    dialog.getByRole('link', { name: 'SITE', exact: true }),
+  ).toHaveAttribute('href', '/');
   await page.keyboard.press('Shift+Tab');
   await expect(
     dialog.getByRole('link', { name: 'BLOG', exact: true }),
@@ -361,14 +364,10 @@ test('Gallery shares the full-page menu, traps focus, and locks scrolling', asyn
   await page.mouse.wheel(0, 200);
   await expect.poll(() => page.evaluate(() => scrollY)).toBe(200);
 
-  for (const section of ['ABOUT', 'CONTACT']) {
-    await page.goto('/projects');
-    await trigger.click();
-    await dialog.getByRole('link', { name: section, exact: true }).click();
-    await expect(page).toHaveURL(`/#${section.toLowerCase()}`);
-    await expect(page.locator(`#${section.toLowerCase()}`)).toBeInViewport();
-    await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
-  }
+  await trigger.click();
+  await dialog.getByRole('link', { name: 'SITE', exact: true }).click();
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
 });
 
 test('Gallery stays readable and within the viewport on phones and tablets', async ({

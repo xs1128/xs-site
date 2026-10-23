@@ -77,6 +77,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - Covers are portrait by `aspect-ratio: 3 / 4`; the label sits in flow above the title area and the title is capped at `max-height: 100%`, so long titles wrap into a second column instead of reaching the label.
 - The gallery ends with `SunField`: a fixed mellow yellow sun on charcoal whose beam follows the pointer (or a tap) and lights hidden notes through an SVG mask. Each note has `wide` and `narrow` spots; phones crop the sides, so keep `narrow` within x 320-880. It replaced the drag-and-flip letter box.
 - Lenis (`ProjectScroll`) runs on the detail pages only, not the gallery.
+- The projects menu button is pinned (`position: fixed`) and `ProjectNavigation` picks its `data-tone` from the background behind it, skipping the nav bar itself. Its menu links to `#selected-work` and `#made-to-play`.
 - Outer sections pad with `--project-edge` (the gutter, growing past 1760px so content stays within 1600px). Panels nested inside them keep `--project-gutter`; giving them the edge would double the inset.
 - A `liveUrl` starting with `/` is internal and opens in the same tab.
 - Loading states are shimmer skeletons on the global `shimmer` keyframes: the Homelab status list, the lazily loaded story, cover images and the footer avatar (`data-loaded`). The sculpture's fallback is its first frame projected in JS with the shader's maths, so changing the shader's angles, tilt or scale means updating `FALLBACK_DOTS` too.

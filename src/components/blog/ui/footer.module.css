@@ -162,10 +162,6 @@
   transition: all 0.3s ease;
 }
 
-.link svg {
-  transition: transform 0.3s ease;
-}
-
 .email {
   font-family: var(--font-blog-mono), monospace;
   font-size: clamp(13px, 1.8vw, 16px);
@@ -212,8 +208,7 @@
     color: var(--color-accent);
   }
 
-  .link:hover span,
-  .link:hover svg {
+  .link:hover span {
     transform: translateX(4px);
   }
 

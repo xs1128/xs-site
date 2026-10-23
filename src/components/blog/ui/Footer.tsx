@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
 import { getAvatarUrl } from '@/lib/blog/supabase/settings';
 import Tooltip from '@/components/blog/ui/Tooltip';
 import { hubotSansBlog, robotoMonoBlog } from '@/fonts';
@@ -113,33 +113,15 @@ export default function Footer() {
           <div className={styles.sectionLinks}>
             <div className={styles.heading}>Links</div>
             <div className={styles.links}>
-              <a
-                href="https://www.xsooi.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
+              <Link href="/" className={styles.link}>
                 <span>Main Site</span>
-                <ArrowUpRight size="0.7em" strokeWidth={2.5} />
-              </a>
-              <a
-                href="https://github.com/xs1128"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
+              </Link>
+              <Link href="/projects" className={styles.link}>
                 <span>Projects</span>
-                <ArrowUpRight size="0.7em" strokeWidth={2.5} />
-              </a>
-              <a
-                href="https://www.xsooi.com#contact"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={styles.link}
-              >
+              </Link>
+              <Link href="/#contact" className={styles.link}>
                 <span>Contact me</span>
-                <ArrowUpRight size="0.7em" strokeWidth={2.5} />
-              </a>
+              </Link>
             </div>
           </div>
 

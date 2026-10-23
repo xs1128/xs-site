@@ -71,20 +71,19 @@ export function FullScreenNav({
     setTimeout(scrollToContact, 100);
   };
 
-  const resolved: NavItem[] = [
-    homeSections
-      ? { kind: 'action', label: 'ABOUT', onSelect: handleAboutClick }
-      : { kind: 'link', label: 'ABOUT', href: '/#about' },
-    homeSections
-      ? { kind: 'action', label: 'CONTACT', onSelect: handleContactClick }
-      : { kind: 'link', label: 'CONTACT', href: '/#contact' },
-    {
-      kind: 'link',
-      label: 'PROJECTS',
-      href: '/projects',
-    },
-    { kind: 'link', label: 'BLOG', href: '/blog' },
-  ];
+  const resolved: NavItem[] = homeSections
+    ? [
+        { kind: 'action', label: 'ABOUT', onSelect: handleAboutClick },
+        { kind: 'action', label: 'CONTACT', onSelect: handleContactClick },
+        { kind: 'link', label: 'PROJECTS', href: '/projects' },
+        { kind: 'link', label: 'BLOG', href: '/blog' },
+      ]
+    : [
+        { kind: 'link', label: 'GALLERY', href: '/projects#selected-work' },
+        { kind: 'link', label: 'THE SUN', href: '/projects#made-to-play' },
+        { kind: 'link', label: 'SITE', href: '/' },
+        { kind: 'link', label: 'BLOG', href: '/blog' },
+      ];
 
   if (!isOpen && !isClosing) return null;
 

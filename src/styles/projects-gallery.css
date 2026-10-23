@@ -56,8 +56,22 @@
   align-items: center;
   gap: 32px;
 }
+.projects-nav__actions {
+  /* Room for the menu button, which stays pinned to the corner. */
+  padding-right: 80px;
+}
 .projects-nav__menu {
+  position: fixed;
+  top: 24px;
+  right: var(--project-edge);
   width: 48px;
+  color: var(--color-text-on-dark);
+  transition:
+    color 200ms ease,
+    transform 160ms var(--ease-out-quart);
+}
+.projects-nav__menu[data-tone='light'] {
+  color: var(--color-text-on-light);
 }
 .projects-nav__home:active,
 .projects-nav__github:active,
@@ -234,7 +248,6 @@
 
 .projects-collection {
   padding: 96px var(--project-edge) 80px;
-  scroll-margin-top: 28px;
 }
 .projects-collection__heading {
   margin: 0 0 48px;
@@ -788,6 +801,10 @@
   }
   .projects-nav__actions {
     gap: 16px;
+    padding-right: 64px;
+  }
+  .projects-nav__menu {
+    top: 16px;
   }
   .projects-nav__github {
     width: 44px;
@@ -906,6 +923,7 @@
 @media (max-width: 300px) {
   .projects-nav__actions {
     gap: 0;
+    padding-right: 40px;
   }
   .projects-nav__github,
   .projects-nav__menu {

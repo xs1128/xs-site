@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowUpRight, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useIsSmallScreen } from '@/hooks/useIsSmallScreen';
 import { useFocusTrap } from '@/hooks/useFocusTrap';
 
@@ -11,8 +11,8 @@ interface FullScreenNavProps {
 }
 
 const NAV_LINKS = [
-  { label: 'SITE', href: 'https://www.xsooi.com', delay: '200ms' },
-  { label: 'PROJECTS', href: 'https://github.com/xs1128', delay: '400ms' },
+  { label: 'SITE', href: '/', delay: '200ms' },
+  { label: 'PROJECTS', href: '/projects', delay: '400ms' },
 ] as const;
 
 export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
@@ -152,8 +152,6 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
           <a
             key={label}
             href={href}
-            target="_blank"
-            rel="noopener noreferrer"
             onClick={handleClose}
             className={`nav-item ${isClosing ? 'nav-item-closing' : 'nav-item-opening'}`}
             data-text={label}
@@ -176,27 +174,7 @@ export default function FullScreenNav({ isOpen, onClose }: FullScreenNavProps) {
               textDecoration: 'none',
             }}
           >
-            <span
-              style={{
-                display: 'flex',
-                alignItems: 'baseline',
-                gap: isSmallScreen ? '2vw' : '1.5vw',
-              }}
-            >
-              {label}
-              <ArrowUpRight
-                viewBox="5.5 5.5 13 13"
-                style={{
-                  width: '0.8cap',
-                  height: '0.8cap',
-                  transform: 'translateY(-0.2cap)',
-                  flexShrink: 0,
-                }}
-                strokeWidth={3}
-                strokeLinecap="butt"
-                strokeLinejoin="miter"
-              />
-            </span>
+            {label}
           </a>
         ))}
       </div>

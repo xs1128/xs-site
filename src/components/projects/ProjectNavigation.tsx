@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Menu } from 'lucide-react';
 import { FullScreenNav } from '@/components/navigation/FullScreenNav';
@@ -15,6 +15,40 @@ export function ProjectNavigation({
   backToGallery = false,
 }: ProjectNavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const menu = useRef<HTMLButtonElement>(null);
+  const [onLight, setOnLight] = useState(appearance === 'paper');
+
+  // The menu button stays pinned, so it reads the background behind it.
+  useEffect(() => {
+    const button = menu.current;
+    const bar = button?.closest('nav');
+    if (!button || !bar) return;
+    let frame: number | null = null;
+    const check = () => {
+      frame = null;
+      const box = button.getBoundingClientRect();
+      const under = document
+        .elementsFromPoint(box.x + box.width / 2, box.y + box.height / 2)
+        .find((el) => !bar.contains(el));
+      for (let el = under; el; el = el.parentElement ?? undefined) {
+        const [r, g, b, a = 1] = (
+          getComputedStyle(el).backgroundColor.match(/[\d.]+/g) ?? []
+        ).map(Number);
+        if (a > 0.5) return setOnLight(r * 0.299 + g * 0.587 + b * 0.114 > 140);
+      }
+    };
+    const queue = () => {
+      if (frame === null) frame = requestAnimationFrame(check);
+    };
+    check();
+    addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue);
+    return () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      removeEventListener('scroll', queue);
+      removeEventListener('resize', queue);
+    };
+  }, []);
 
   return (
     <>
@@ -53,7 +87,9 @@ export function ProjectNavigation({
           </a>
           <button
             type="button"
+            ref={menu}
             className="projects-nav__menu"
+            data-tone={onLight ? 'light' : 'dark'}
             aria-label="Open navigation menu"
             aria-expanded={isOpen}
             aria-haspopup="dialog"
