@@ -47,8 +47,8 @@ export function ProjectScene({
     if (!scene || !panel || !image) return;
 
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const parts = image.querySelectorAll<SVGElement>('[data-part]');
-    const apps = image.querySelectorAll<SVGElement>('[data-app]');
+    const parts = image.querySelectorAll<HTMLElement>('[data-part]');
+    const apps = image.querySelectorAll<HTMLElement>('[data-app]');
     const resetParts = () =>
       [...parts, ...apps].forEach((part) => {
         part.style.transform = '';
@@ -91,7 +91,7 @@ export function ProjectScene({
       parts.forEach((part) => {
         const motion = partMotion[part.dataset.part ?? ''];
         if (motion)
-          part.style.transform = `rotate(${motion[1] * eased}deg) translateY(${motion[0] * eased}px)`;
+          part.style.transform = `rotate(${motion[1] * eased}deg) translateY(calc(${motion[0] * eased} * var(--unit)))`;
       });
       // Same timing as the mini-app keyframes.
       const out = Math.max(
@@ -103,7 +103,7 @@ export function ProjectScene({
         const back = 1 - flown;
         const x = parseFloat(app.style.getPropertyValue('--from-x')) * back;
         const y = parseFloat(app.style.getPropertyValue('--from-y')) * back;
-        app.style.transform = `translate(${x}px, ${y}px) scale(${0.4 + 0.6 * flown})`;
+        app.style.transform = `translate(calc(${x} * var(--unit)), calc(${y} * var(--unit))) scale(${0.4 + 0.6 * flown})`;
       });
     };
 

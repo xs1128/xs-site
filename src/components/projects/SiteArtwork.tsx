@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
+import { Device, Layer, Stage, type Box } from './Layer';
 import styles from './projects.module.css';
 
 const INK = '#24272a';
@@ -11,6 +12,8 @@ const RUST = '#b73e1d';
 const MUTED = '#a99c7f';
 const MONO = { fontFamily: 'var(--font-roboto-mono), monospace' };
 const DISPLAY = { fontFamily: 'var(--font-hubot-sans), sans-serif' };
+const DESKTOP: Box = [0, 0, 1200, 800];
+const MOBILE: Box = [0, 0, 600, 900];
 
 // Each layer is drawn flat on a 360 x 240 page, then laid into the same
 // isometric plane. `corner` mirrors the matrix for the slab edges.
@@ -26,44 +29,62 @@ const corner = (x: number, y: number, drop = 0) =>
 export function SiteArtwork({ alt }: { alt: string }) {
   return (
     <div className={styles.macDrawing}>
-      <svg
+      <Stage
+        view={DESKTOP}
         className={styles.macDesktop}
-        viewBox="0 0 1200 800"
-        fill="none"
-        role="img"
-        aria-label={alt}
+        label={alt}
+        back={
+          <>
+            <Sun cx={768} cy={378} r={300} />
+            <SiteShadow />
+          </>
+        }
+        front={
+          <>
+            <AdminCard transform="translate(72 112)" />
+            <Envelope transform="translate(990 615) scale(.8)" />
+            <path
+              d="M285 200c150-40 110 236 296 214"
+              stroke={INK}
+              strokeWidth="6"
+              strokeDasharray="12 12"
+            />
+          </>
+        }
       >
-        <Sun cx={768} cy={378} r={300} />
-        <SitePage id="site-desktop" tags />
-        <AdminCard transform="translate(72 112)" />
-        <Envelope transform="translate(990 615) scale(.8)" />
-        <path
-          d="M285 200c150-40 110 236 296 214"
-          stroke={INK}
-          strokeWidth="6"
-          strokeDasharray="12 12"
-        />
-      </svg>
-      <svg
+        <Device view={DESKTOP}>
+          <SitePage id="site-desktop" tags />
+        </Device>
+      </Stage>
+      <Stage
+        view={MOBILE}
         className={styles.macMobile}
-        viewBox="0 0 600 900"
-        fill="none"
-        role="img"
-        aria-label={alt}
+        label={alt}
+        back={
+          <>
+            <Sun cx={320} cy={305} r={240} />
+            <g transform="translate(-339 26) scale(.85)">
+              <SiteShadow />
+            </g>
+          </>
+        }
+        front={
+          <>
+            <AdminCard transform="translate(42 640) scale(.9)" />
+            <Envelope transform="translate(380 670) scale(.85)" />
+            <path
+              d="M236 740c25-38 63-31 140-10"
+              stroke={INK}
+              strokeWidth="6"
+              strokeDasharray="12 12"
+            />
+          </>
+        }
       >
-        <Sun cx={320} cy={305} r={240} />
-        <g transform="translate(-339 26) scale(.85)">
+        <Device view={MOBILE} offset={[-339, 26]} scale={0.85}>
           <SitePage id="site-mobile" />
-        </g>
-        <AdminCard transform="translate(42 640) scale(.9)" />
-        <Envelope transform="translate(380 670) scale(.85)" />
-        <path
-          d="M236 740c25-38 63-31 140-10"
-          stroke={INK}
-          strokeWidth="6"
-          strokeDasharray="12 12"
-        />
-      </svg>
+        </Device>
+      </Stage>
     </div>
   );
 }
@@ -104,6 +125,7 @@ function Sheet({
   face,
   edge,
   tag,
+  over,
   children,
 }: {
   part: string;
@@ -112,12 +134,68 @@ function Sheet({
   face: string;
   edge: string;
   tag?: string;
+  over?: (box: Box) => ReactNode;
   children: ReactNode;
 }) {
   const [bl, br, tr] = [corner(0, 240), corner(360, 240), corner(360, 0)];
+  const left = PLANE[4] + PLANE[2] * 240;
+  const right = PLANE[4] + PLANE[0] * 360;
+  const tagWidth = tag ? tag.length * 11 + 26 : 0;
+  const box: Box = [
+    left,
+    PLANE[5] + rest,
+    (tag ? 1031 + tagWidth : right) - left,
+    PLANE[1] * 360 + PLANE[3] * 240 + depth,
+  ];
   return (
-    <g data-part={part}>
-      <g transform={`translate(0 ${rest})`}>
+    <Layer
+      data-part={part}
+      box={box}
+      over={
+        <>
+          {over?.(box)}
+          {tag && (
+            <Layer
+              className={styles.siteTag}
+              box={[right, TAG_Y + rest - 17, 1031 + tagWidth - right, 34]}
+              within={box}
+            >
+              <g
+                stroke={INK}
+                strokeLinejoin="round"
+                transform={`translate(0 ${rest})`}
+              >
+                <path d={`M${tr}h26`} strokeWidth="3" />
+                <rect
+                  x="1031"
+                  y={TAG_Y - 17}
+                  width={tagWidth}
+                  height="34"
+                  fill={PAPER}
+                  strokeWidth="3"
+                />
+                <text
+                  x="1044"
+                  y={TAG_Y + 7}
+                  fill={INK}
+                  stroke="none"
+                  fontSize="21"
+                  style={DISPLAY}
+                >
+                  {tag}
+                </text>
+              </g>
+            </Layer>
+          )}
+        </>
+      }
+    >
+      <g
+        stroke={INK}
+        strokeWidth="5"
+        strokeLinejoin="round"
+        transform={`translate(0 ${rest})`}
+      >
         <path
           d={`M${bl} L${br} L${tr} L${corner(360, 0, depth)} L${corner(360, 240, depth)} L${corner(0, 240, depth)}Z`}
           fill={edge}
@@ -126,48 +204,28 @@ function Sheet({
           <rect width="360" height="240" rx="12" fill={face} />
           {children}
         </g>
-        {tag && (
-          <g className={styles.siteTag}>
-            <path d={`M${tr}h26`} strokeWidth="3" />
-            <rect
-              x="1031"
-              y={TAG_Y - 17}
-              width={tag.length * 11 + 26}
-              height="34"
-              fill={PAPER}
-              strokeWidth="3"
-            />
-            <text
-              x="1044"
-              y={TAG_Y + 7}
-              fill={INK}
-              stroke="none"
-              fontSize="21"
-              style={DISPLAY}
-            >
-              {tag}
-            </text>
-          </g>
-        )}
       </g>
-    </g>
+    </Layer>
+  );
+}
+
+function SiteShadow() {
+  return (
+    <ellipse
+      cx="770"
+      cy="532"
+      rx="250"
+      ry="36"
+      fill={INK}
+      fillOpacity=".12"
+      stroke="none"
+    />
   );
 }
 
 function SitePage({ id, tags = false }: { id: string; tags?: boolean }) {
-  const ring = `${id}-ring`;
   return (
-    <g stroke={INK} strokeWidth="5" strokeLinejoin="round">
-      <ellipse
-        cx="770"
-        cy="532"
-        rx="250"
-        ry="36"
-        fill={INK}
-        fillOpacity=".12"
-        stroke="none"
-      />
-
+    <>
       {/* Engine: what the whole site runs on. */}
       <Sheet
         part="engine"
@@ -295,26 +353,8 @@ function SitePage({ id, tags = false }: { id: string; tags?: boolean }) {
         face={SAND}
         edge={DUNE}
         tag={tags ? 'Contact' : undefined}
+        over={(box) => <Ring id={`${id}-ring`} rest={20} within={box} />}
       >
-        <defs>
-          <path
-            id={ring}
-            d="M180 106m-64 0a64 64 0 1 1 128 0a64 64 0 1 1-128 0"
-          />
-        </defs>
-        <g className={styles.siteRing}>
-          <text
-            fontSize="13"
-            fill={INK}
-            stroke="none"
-            letterSpacing="2"
-            style={MONO}
-          >
-            <textPath href={`#${ring}`} textLength="396" lengthAdjust="spacing">
-              XINSHENG OOI • XINSHENG OOI • XINSHENG OOI •
-            </textPath>
-          </text>
-        </g>
         <path d="M170 106h20M180 96v20" strokeWidth="4" />
         <text
           x="180"
@@ -464,7 +504,52 @@ function SitePage({ id, tags = false }: { id: string; tags?: boolean }) {
           </text>
         </g>
       </Sheet>
-    </g>
+    </>
+  );
+}
+
+// The ring turns within the page's plane. Its layer is laid out flat, then
+// skewed into the plane: `--plane` moves the ring's centre to where the
+// matrix puts it, so it can still spin about its own middle.
+const RING: Box = [101, 27, 158, 158];
+function Ring({ id, rest, within }: { id: string; rest: number; within: Box }) {
+  const [x, y, w, h] = RING;
+  const [cx, cy] = [x + w / 2, y + h / 2];
+  const shift = [
+    PLANE[0] * cx + PLANE[2] * cy - cx,
+    PLANE[1] * cx + PLANE[3] * cy - cy,
+  ];
+  return (
+    <Layer
+      className={styles.siteRing}
+      box={[PLANE[4] + x, PLANE[5] + rest + y, w, h]}
+      within={within}
+      style={
+        {
+          '--plane': `translate(${(shift[0] / w) * 100}%, ${(shift[1] / h) * 100}%) matrix(${PLANE.slice(0, 4).join(', ')}, 0, 0)`,
+        } as CSSProperties
+      }
+    >
+      <g transform={`translate(${PLANE[4]} ${PLANE[5] + rest})`}>
+        <defs>
+          <path
+            id={id}
+            d="M180 106m-64 0a64 64 0 1 1 128 0a64 64 0 1 1-128 0"
+          />
+        </defs>
+        <text
+          fontSize="13"
+          fill={INK}
+          stroke="none"
+          letterSpacing="2"
+          style={MONO}
+        >
+          <textPath href={`#${id}`} textLength="396" lengthAdjust="spacing">
+            XINSHENG OOI • XINSHENG OOI • XINSHENG OOI •
+          </textPath>
+        </text>
+      </g>
+    </Layer>
   );
 }
 

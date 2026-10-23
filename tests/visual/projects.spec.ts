@@ -1,12 +1,14 @@
 import { test, expect, takeSnapshot } from '@chromatic-com/playwright';
 import type { Locator } from '@playwright/test';
 
+// Offsets in drawing units: parts sit in a 1200-unit-wide frame.
 function partPose(part: Locator) {
   return part.evaluate((element) => {
     const matrix = new DOMMatrixReadOnly(getComputedStyle(element).transform);
+    const unit = (element.parentElement as HTMLElement).offsetWidth / 1200;
     return {
-      x: matrix.e,
-      y: matrix.f,
+      x: matrix.e / unit,
+      y: matrix.f / unit,
       angle: (Math.atan2(matrix.b, matrix.a) * 180) / Math.PI,
       scale: Math.hypot(matrix.a, matrix.b),
     };
@@ -207,7 +209,7 @@ test('The Mac mini opens into separate physical layers and reassembles with scro
       start: element.getBoundingClientRect().top + scrollY,
       travel: element.clientHeight - element.firstElementChild!.clientHeight,
     }));
-    const drawing = scene.locator('svg:visible');
+    const drawing = scene.locator('[role="img"]:visible');
     const lid = drawing.locator('[data-part="lid"]');
     const board = drawing.locator('[data-part="internals"]');
     const chassis = drawing.locator('[data-part="chassis"]');
@@ -215,6 +217,18 @@ test('The Mac mini opens into separate physical layers and reassembles with scro
     const power = drawing.locator('[data-part="power"]');
     const app = drawing.locator('[data-app="grafana"]');
     expect(geometry.travel).toBeGreaterThan(page.viewportSize()!.height * 2);
+    // Each part's layer box is its fill-box, so rotations pivot correctly.
+    for (const part of await drawing.locator('[data-part] > svg').all()) {
+      const [box, content] = await part.evaluate((svg: SVGSVGElement) => {
+        const view = svg.viewBox.baseVal;
+        const fill = svg.getBBox();
+        return [
+          [view.x, view.y, view.width, view.height],
+          [fill.x, fill.y, fill.width, fill.height],
+        ];
+      });
+      box.forEach((value, i) => expect(value).toBeCloseTo(content[i], 0));
+    }
     await page.evaluate((top) => window.scrollTo(0, top), geometry.start);
     await expect(board).toHaveCSS('opacity', '1');
     await expect(board).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
@@ -305,20 +319,15 @@ test('The machine finishes reassembling while visible on short screens', async (
         start: element.getBoundingClientRect().top + scrollY - innerHeight,
         travel: Math.max(innerHeight, element.clientHeight),
       }));
-      const parts = scene.locator('svg:visible [data-part]');
-      const lid = scene.locator('svg:visible [data-part="lid"]');
+      const parts = scene.locator('[role="img"]:visible [data-part]');
+      const lid = scene.locator('[role="img"]:visible [data-part="lid"]');
       for (const progress of [0.64, 0.98]) {
         await page.evaluate(
           (top) => window.scrollTo(0, top),
           geometry.start + geometry.travel * progress,
         );
         await expect
-          .poll(() =>
-            lid.evaluate(
-              (element) =>
-                new DOMMatrixReadOnly(getComputedStyle(element).transform).f,
-            ),
-          )
+          .poll(async () => (await partPose(lid)).y)
           .toBeCloseTo(
             progress === 0.64 ? -230 * Math.cos((4 * Math.PI) / 180) : 0,
             0,
@@ -389,7 +398,7 @@ test('The site lifts apart into its layers, labels them, and settles with scroll
     start: element.getBoundingClientRect().top + scrollY,
     travel: element.clientHeight - element.firstElementChild!.clientHeight,
   }));
-  const drawing = scene.locator('svg:visible');
+  const drawing = scene.locator('[role="img"]:visible');
   const landing = drawing.locator('[data-part="landing"]');
   const engine = drawing.locator('[data-part="engine"]');
   await page.evaluate((top) => window.scrollTo(0, top), geometry.start);

@@ -168,21 +168,42 @@
   object-fit: contain;
 }
 
-.macDrawing,
-.macDrawing svg {
+.macDrawing {
+  display: grid;
+  place-items: center;
   width: 100%;
   height: 100%;
+  container-type: size;
+  overflow: clip;
+}
+/* Fits the drawing like an SVG's default `meet`. */
+.stage {
+  position: relative;
+  width: min(100cqw, 100cqh * var(--ratio));
+  aspect-ratio: var(--ratio);
+}
+.stage > svg,
+.layer > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+/* One unit of the parts' 1200 x 800 drawing space. */
+.device {
+  position: absolute;
+  container-type: inline-size;
+  --unit: calc(100cqw / 1200);
+}
+.layer {
+  position: absolute;
 }
 .macDesktop {
   display: block;
 }
 .macMobile {
   display: none;
-}
-.macDrawing [data-part],
-.macDrawing [data-app] {
-  transform-box: fill-box;
-  transform-origin: center;
 }
 
 @supports (animation-timeline: view()) {
@@ -239,8 +260,7 @@
   opacity: 0;
 }
 .siteRing {
-  transform-box: fill-box;
-  transform-origin: center;
+  transform: var(--plane);
 }
 @keyframes site-tag {
   0%,
@@ -255,8 +275,11 @@
   }
 }
 @keyframes site-ring {
+  from {
+    transform: var(--plane) rotate(0deg);
+  }
   to {
-    transform: rotate(240deg);
+    transform: var(--plane) rotate(240deg);
   }
 }
 /* Same rhythm as the Mac mini: rest, lift apart, hold, settle. Keep the
@@ -270,7 +293,7 @@
   }
   40%,
   65% {
-    transform: rotate(-3deg) translateY(-250px);
+    transform: rotate(-3deg) translateY(calc(-250 * var(--unit)));
   }
 }
 @keyframes site-about {
@@ -282,7 +305,7 @@
   }
   40%,
   65% {
-    transform: rotate(2deg) translateY(-150px);
+    transform: rotate(2deg) translateY(calc(-150 * var(--unit)));
   }
 }
 @keyframes site-contact {
@@ -294,7 +317,7 @@
   }
   40%,
   65% {
-    transform: rotate(-2deg) translateY(-55px);
+    transform: rotate(-2deg) translateY(calc(-55 * var(--unit)));
   }
 }
 @keyframes site-blog {
@@ -306,7 +329,7 @@
   }
   40%,
   65% {
-    transform: rotate(1.5deg) translateY(50px);
+    transform: rotate(1.5deg) translateY(calc(50 * var(--unit)));
   }
 }
 @keyframes site-engine {
@@ -318,7 +341,7 @@
   }
   40%,
   65% {
-    transform: translateY(140px);
+    transform: translateY(calc(140 * var(--unit)));
   }
 }
 /* Up out of the case once the parts have lifted, back in before they
@@ -328,7 +351,11 @@
   20%,
   85%,
   100% {
-    transform: translate(var(--from-x), var(--from-y)) scale(0.4);
+    transform: translate(
+        calc(var(--from-x) * var(--unit)),
+        calc(var(--from-y) * var(--unit))
+      )
+      scale(0.4);
   }
   42%,
   65% {
@@ -344,7 +371,7 @@
   }
   40%,
   65% {
-    transform: rotate(-4deg) translateY(-230px);
+    transform: rotate(-4deg) translateY(calc(-230 * var(--unit)));
   }
 }
 @keyframes mini-internals {
@@ -356,7 +383,7 @@
   }
   40%,
   65% {
-    transform: rotate(-2deg) translateY(-60px);
+    transform: rotate(-2deg) translateY(calc(-60 * var(--unit)));
   }
 }
 @keyframes mini-cooling {
@@ -368,7 +395,7 @@
   }
   40%,
   65% {
-    transform: rotate(2deg) translateY(15px);
+    transform: rotate(2deg) translateY(calc(15 * var(--unit)));
   }
 }
 @keyframes mini-power {
@@ -380,7 +407,7 @@
   }
   40%,
   65% {
-    transform: rotate(3deg) translateY(-145px);
+    transform: rotate(3deg) translateY(calc(-145 * var(--unit)));
   }
 }
 @keyframes mini-chassis {
@@ -392,7 +419,7 @@
   }
   40%,
   65% {
-    transform: rotate(1.5deg) translateY(45px);
+    transform: rotate(1.5deg) translateY(calc(45 * var(--unit)));
   }
 }
 @media (max-width: 960px) and (orientation: portrait) {
