@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import styles from './projects.module.css';
 
 // Separate vector parts let the actual enclosure open with the scroll story.
@@ -117,7 +118,7 @@ export function MacMiniArtwork({ alt }: { alt: string }) {
           <path d="M1096.7 349.2l44.8 -3.9" />
         </g>
         <g transform="translate(34 -2)">
-          <MacMiniDevice />
+          <MacMiniDevice apps={DESKTOP_APPS} />
         </g>
         <g
           transform="translate(72 112)"
@@ -270,7 +271,7 @@ export function MacMiniArtwork({ alt }: { alt: string }) {
           <path d="M589.0 281.5l44.8 -3.9" />
         </g>
         <g transform="translate(-304 34) scale(.85)">
-          <MacMiniDevice />
+          <MacMiniDevice apps={MOBILE_APPS} />
         </g>
         <g
           transform="translate(42 609) scale(.9)"
@@ -317,7 +318,7 @@ export function MacMiniArtwork({ alt }: { alt: string }) {
 // M4-family anatomy referenced against iFixit's 2024 teardown and CT scans:
 // https://www.ifixit.com/News/104302/all-hail-the-return-of-upgradeable-storage-mac-mini-2024-teardown
 // This is an exploded cutaway; Apple opens the physical enclosure from below.
-function MacMiniDevice() {
+function MacMiniDevice({ apps }: { apps: Spot[] }) {
   const plane = 'matrix(.71 .22 -.686 .414 710 266)';
   return (
     <g stroke="#24272a" strokeWidth="5" strokeLinejoin="round">
@@ -330,6 +331,9 @@ function MacMiniDevice() {
         fillOpacity=".12"
         stroke="none"
       />
+      {APPS.map((name, i) => (
+        <AppLogo key={name} name={name} spot={apps[i]} />
+      ))}
       <g data-part="chassis">
         <path
           d="M562 352Q552 347 552 360V483Q552 501 571 509L763 570Q782 576 799 566L922 489Q936 481 936 466V344L792 434Z"
@@ -547,5 +551,56 @@ function MacMiniDevice() {
         </g>
       </g>
     </g>
+  );
+}
+
+type Spot = [number, number];
+
+const DESKTOP_APPS: Spot[] = [
+  [400, 190],
+  [450, 95],
+  [545, 35],
+  [925, 30],
+  [1015, 95],
+  [1045, 200],
+];
+const MOBILE_APPS: Spot[] = [
+  [445, 215],
+  [455, 115],
+  [510, 40],
+  [935, 30],
+  [975, 110],
+  [990, 210],
+];
+
+// Logos hide here, behind the case.
+const MOUTH: Spot = [720, 420];
+
+// Local copies of the homelab dashboard's logos.
+const APPS = [
+  'jellyfin',
+  'immich',
+  'forgejo',
+  'jenkins',
+  'grafana',
+  'prometheus',
+];
+
+function AppLogo({ name, spot: [x, y] }: { name: string; spot: Spot }) {
+  return (
+    <image
+      data-app={name}
+      href={`/projects/apps/${name}.svg`}
+      x={x}
+      y={y}
+      width="60"
+      height="60"
+      style={
+        {
+          '--from-x': `${MOUTH[0] - x - 30}px`,
+          '--from-y': `${MOUTH[1] - y - 30}px`,
+        } as CSSProperties
+      }
+    />
   );
 }

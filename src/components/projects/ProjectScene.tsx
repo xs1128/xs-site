@@ -9,6 +9,12 @@ const partMotion: Record<string, [number, number]> = {
   internals: [-60, -2],
   cooling: [15, 2],
   chassis: [45, 1.5],
+  // SiteArtwork's layers; keep in step with the site-* keyframes.
+  landing: [-250, -3],
+  about: [-150, 2],
+  contact: [-55, -2],
+  blog: [50, 1.5],
+  engine: [140, 0],
 };
 
 export interface ProjectSceneProps {
@@ -16,7 +22,7 @@ export interface ProjectSceneProps {
   header: ReactNode;
   artwork: ReactNode;
   caption?: ReactNode;
-  kind?: 'intro' | 'apps' | 'access';
+  kind?: 'intro' | 'apps' | 'access' | 'layers';
 }
 
 export function ProjectScene({
@@ -42,8 +48,9 @@ export function ProjectScene({
 
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
     const parts = image.querySelectorAll<SVGElement>('[data-part]');
+    const apps = image.querySelectorAll<SVGElement>('[data-app]');
     const resetParts = () =>
-      parts.forEach((part) => {
+      [...parts, ...apps].forEach((part) => {
         part.style.transform = '';
       });
     let frame: number | null = null;
@@ -72,7 +79,7 @@ export function ProjectScene({
       const tilt = kind === 'intro' ? -9 : kind === 'apps' ? -3 : 0;
       const x = kind === 'intro' ? -80 : kind === 'apps' ? -50 : -20;
       const y = kind === 'intro' ? -32 : kind === 'apps' ? -18 : -12;
-      const scale = kind === 'access' ? 0.2 : zoom;
+      const scale = kind === 'access' || kind === 'layers' ? 0.2 : zoom;
       image.style.transform = sticky
         ? `translate(${x * progress}px, ${y * progress}px) scale(${1 + scale * progress}) rotate(${tilt * progress}deg)`
         : '';
@@ -85,6 +92,18 @@ export function ProjectScene({
         const motion = partMotion[part.dataset.part ?? ''];
         if (motion)
           part.style.transform = `rotate(${motion[1] * eased}deg) translateY(${motion[0] * eased}px)`;
+      });
+      // Same timing as the mini-app keyframes.
+      const out = Math.max(
+        0,
+        Math.min(1, (progress - 0.2) / 0.22, (0.85 - progress) / 0.2),
+      );
+      const flown = out * out * (3 - 2 * out);
+      apps.forEach((app) => {
+        const back = 1 - flown;
+        const x = parseFloat(app.style.getPropertyValue('--from-x')) * back;
+        const y = parseFloat(app.style.getPropertyValue('--from-y')) * back;
+        app.style.transform = `translate(${x}px, ${y}px) scale(${0.4 + 0.6 * flown})`;
       });
     };
 

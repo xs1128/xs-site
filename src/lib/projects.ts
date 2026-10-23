@@ -21,15 +21,22 @@ export interface Work {
 export interface Project extends Work {
   repositoryUrl: string;
   chapters: readonly {
-    slug: 'apps' | 'access';
+    slug: 'apps' | 'access' | 'layers';
     title: string;
     emphasis: string;
     description: string;
-    artwork: string;
-    mobileArtwork: string;
+    artwork?: string;
+    mobileArtwork?: string;
     alt: string;
   }[];
-  artwork: {
+  ending: {
+    title: string;
+    emphasis: string;
+    body: string;
+    linkLabel: string;
+    linkUrl: string;
+  };
+  artwork?: {
     src: string;
     alt: string;
     width: number;
@@ -78,6 +85,13 @@ export const projects: readonly Project[] = [
         alt: 'A Mac mini opens into layers showing its cooling fan, logic board, and power supply, beside a lock and a phone with a check mark.',
       },
     ],
+    ending: {
+      title: 'My own little',
+      emphasis: 'corner of the internet.',
+      body: 'That’s a homelab: a place to run things myself, try new ideas, and learn how it all works. This one happens to fit on my desk.',
+      linkLabel: 'Explore the homelab',
+      linkUrl: 'https://homelab.xsooi.com/',
+    },
     artwork: {
       src: '/projects/homelab.svg',
       alt: 'A sketch sheet of a silver Mac mini, with overhead and front studies, cable drawings, and conceptual network and software diagrams.',
@@ -85,10 +99,50 @@ export const projects: readonly Project[] = [
       height: 720,
     },
   },
+  {
+    slug: 'portfolio',
+    title: 'Portfolio & Blog',
+    category: 'Frontend, full-stack & publishing',
+    description:
+      'One site with two jobs: a quiet introduction to me, and a notebook where I write about what I build. Posts live in Supabase and go live from a small admin app.',
+    stack: ['Next.js', 'React', 'TypeScript', 'Supabase', 'Three.js'],
+    highlights: [
+      'A scroll-snapped introduction, an about section, and a contact form.',
+      'A Markdown blog with series, code blocks, and a terminal cube that counts posts and visits.',
+      'A separate admin app that publishes posts and refreshes the site on demand.',
+      'Keyboard navigation, responsive layouts, and reduced-motion support.',
+    ],
+    repositoryUrl: 'https://github.com/xs1128/site',
+    liveUrl: '/',
+    liveLabel: 'Visit the site',
+    cover: {
+      src: '/projects/portfolio-artwork.webp',
+      alt: 'Floating ivory and glass interface panels with an orange sphere in a charcoal studio.',
+    },
+    chapters: [
+      {
+        slug: 'layers',
+        title: 'One site.',
+        emphasis: 'Two front doors.',
+        description:
+          'Under the page sit the layers: my introduction, the about pillars, a contact ring, and the blog. Underneath it all, Next.js and Supabase keep the posts flowing.',
+        alt: 'An isometric web page lifts apart into layers: the name on the front page, three numbered pillars, a ring of contact text, a blog page with a cube, and an engine slab. A dashed line runs from an admin card to the blog layer.',
+      },
+    ],
+    ending: {
+      title: 'Built to show the work,',
+      emphasis: 'and to write it down.',
+      body: 'This is where I introduce myself and keep notes on what I build. Write a post in the admin app, and the blog updates itself.',
+      linkLabel: 'Read the blog',
+      linkUrl: '/blog',
+    },
+  },
 ];
 
+const [homelab, site] = projects;
+
 export const works: readonly Work[] = [
-  ...projects,
+  homelab,
   {
     slug: 'nthu-confession',
     title: 'NTHU Confession',
@@ -114,42 +168,5 @@ export const works: readonly Work[] = [
       alt: 'The NTHU Confession favicon: a panda and a dog sharing a hug beside a lake.',
     },
   },
-  {
-    slug: 'portfolio',
-    title: 'Portfolio',
-    category: 'Frontend & interaction design',
-    description:
-      'My little corner of the web: a quiet introduction, a focused look at my experience, and a more playful home for the things I make.',
-    stack: ['Next.js', 'React', 'TypeScript', 'CSS'],
-    highlights: [
-      'A minimal portfolio with scroll-linked typography and section transitions.',
-      'An interactive projects gallery with a custom particle sculpture.',
-      'Keyboard navigation, responsive layouts, and reduced-motion support.',
-    ],
-    repositoryUrl: 'https://github.com/xs1128/site',
-    liveUrl: '/',
-    cover: {
-      src: '/projects/portfolio-artwork.webp',
-      alt: 'Floating ivory and glass interface panels with an orange sphere in a charcoal studio.',
-    },
-  },
-  {
-    slug: 'blog',
-    title: 'Blog',
-    category: 'Full-stack & publishing',
-    description:
-      'A place to write about what I am building and learning, with a custom publishing system behind the scenes.',
-    stack: ['Next.js', 'Supabase', 'PostgreSQL', 'Markdown'],
-    highlights: [
-      'Posts, series, and Markdown articles in a custom reading interface.',
-      'Supabase-backed content, media storage, and an admin publishing workflow.',
-      'An interactive terminal cube that gives the landing page its own character.',
-    ],
-    repositoryUrl: 'https://github.com/xs1128/site',
-    liveUrl: '/blog',
-    cover: {
-      src: '/projects/blog-sketch.webp',
-      alt: 'A simple ink sketch of an open book with an orange bookmark.',
-    },
-  },
+  site,
 ];

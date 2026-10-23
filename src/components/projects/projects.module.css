@@ -58,7 +58,7 @@
   view-timeline-axis: block;
 }
 
-.scene[data-kind='access'] {
+.scene:is([data-kind='access'], [data-kind='layers']) {
   min-height: 320svh;
 }
 
@@ -179,7 +179,8 @@
 .macMobile {
   display: none;
 }
-.macDrawing [data-part] {
+.macDrawing [data-part],
+.macDrawing [data-app] {
   transform-box: fill-box;
   transform-origin: center;
 }
@@ -201,6 +202,137 @@
   }
   .macDrawing [data-part='chassis'] {
     animation-name: mini-chassis;
+  }
+  .macDrawing [data-part='landing'] {
+    animation-name: site-landing;
+  }
+  .macDrawing [data-part='about'] {
+    animation-name: site-about;
+  }
+  .macDrawing [data-part='contact'] {
+    animation-name: site-contact;
+  }
+  .macDrawing [data-part='blog'] {
+    animation-name: site-blog;
+  }
+  .macDrawing [data-part='engine'] {
+    animation-name: site-engine;
+  }
+  .macDrawing [data-app] {
+    animation: mini-app var(--ease-in-out-soft) both;
+    animation-timeline: --project-scene;
+    animation-range: contain 0% contain 100%;
+  }
+  .siteTag {
+    animation: site-tag linear both;
+    animation-timeline: --project-scene;
+    animation-range: contain 0% contain 100%;
+  }
+  .siteRing {
+    animation: site-ring linear both;
+    animation-timeline: --project-scene;
+    animation-range: contain 0% contain 100%;
+  }
+}
+/* Labels only make sense while the layers are apart. */
+.siteTag {
+  opacity: 0;
+}
+.siteRing {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes site-tag {
+  0%,
+  30%,
+  80%,
+  100% {
+    opacity: 0;
+  }
+  42%,
+  65% {
+    opacity: 1;
+  }
+}
+@keyframes site-ring {
+  to {
+    transform: rotate(240deg);
+  }
+}
+/* Same rhythm as the Mac mini: rest, lift apart, hold, settle. Keep the
+   offsets in step with partMotion in ProjectScene. */
+@keyframes site-landing {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  40%,
+  65% {
+    transform: rotate(-3deg) translateY(-250px);
+  }
+}
+@keyframes site-about {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  40%,
+  65% {
+    transform: rotate(2deg) translateY(-150px);
+  }
+}
+@keyframes site-contact {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  40%,
+  65% {
+    transform: rotate(-2deg) translateY(-55px);
+  }
+}
+@keyframes site-blog {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: rotate(0deg) translateY(0);
+  }
+  40%,
+  65% {
+    transform: rotate(1.5deg) translateY(50px);
+  }
+}
+@keyframes site-engine {
+  0%,
+  5%,
+  95%,
+  100% {
+    transform: translateY(0);
+  }
+  40%,
+  65% {
+    transform: translateY(140px);
+  }
+}
+/* Up out of the case once the parts have lifted, back in before they
+   settle. Keep in step with the data-app branch in ProjectScene. */
+@keyframes mini-app {
+  0%,
+  20%,
+  85%,
+  100% {
+    transform: translate(var(--from-x), var(--from-y)) scale(0.4);
+  }
+  42%,
+  65% {
+    transform: translate(0, 0) scale(1);
   }
 }
 @keyframes mini-lid {
@@ -275,6 +407,11 @@
   .macDrawing [data-part] {
     animation: none;
     transform: none;
+  }
+  /* The case stays shut, so the logos stay inside it. */
+  .macDrawing [data-app] {
+    animation: none;
+    visibility: hidden;
   }
 }
 
@@ -403,7 +540,7 @@
 }
 
 .scene[data-kind='apps'] .frame,
-.scene[data-kind='access'] .frame {
+.scene:is([data-kind='access'], [data-kind='layers']) .frame {
   border-width: 3px;
   box-shadow: 5px 5px 0 var(--project-ink);
 }
@@ -411,7 +548,7 @@
 .scene[data-kind='apps'] .artwork {
   transform-origin: 32% 42%;
 }
-.scene[data-kind='access'] .artwork {
+.scene:is([data-kind='access'], [data-kind='layers']) .artwork {
   transform-origin: 65% 46%;
 }
 
@@ -495,7 +632,7 @@
   .scene[data-kind='apps'] .artwork {
     animation-name: apps-camera;
   }
-  .scene[data-kind='access'] .artwork {
+  .scene:is([data-kind='access'], [data-kind='layers']) .artwork {
     animation-name: access-camera;
   }
   .storyCaption {
@@ -508,7 +645,7 @@
     animation-timeline: --project-scene;
     animation-range: entry 0% contain 25%;
   }
-  .scene[data-kind='access'] .storyPanel {
+  .scene:is([data-kind='access'], [data-kind='layers']) .storyPanel {
     animation: comic-departure linear both;
     animation-timeline: --project-scene;
     animation-range: contain 75% exit 100%;
@@ -557,7 +694,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scene[data-kind='access'] .storyPanel {
+  .scene:is([data-kind='access'], [data-kind='layers']) .storyPanel {
     animation: none;
     transform: none;
     opacity: 1;
@@ -623,7 +760,7 @@
 
 @media (max-height: 600px) {
   .scene,
-  .scene[data-kind='access'] {
+  .scene:is([data-kind='access'], [data-kind='layers']) {
     min-height: auto;
   }
   .panel,
@@ -663,7 +800,8 @@
     animation: none;
     transform: none !important;
   }
-  .macDrawing [data-part] {
+  .macDrawing [data-part],
+  .macDrawing [data-app] {
     animation-timeline: --project-artwork;
     animation-range: entry 0% exit 0%;
   }
@@ -679,7 +817,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scene[data-kind='access'] {
+  .scene:is([data-kind='access'], [data-kind='layers']) {
     min-height: auto;
   }
   .storyPanel {

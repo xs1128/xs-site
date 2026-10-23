@@ -57,7 +57,7 @@ test('Gallery expands labelled works in place and preserves the Homelab story', 
   await page.getByRole('button', { name: 'Close Homelab' }).click();
   await expect(page.locator('section[data-kind="access"]')).toHaveCount(0);
   await expect(project).toBeFocused();
-  for (const title of ['NTHU Confession', 'Portfolio', 'Blog']) {
+  for (const title of ['NTHU Confession', 'Portfolio & Blog']) {
     const trigger = page.getByRole('button', {
       name: `Explore ${title}`,
       exact: true,
@@ -160,7 +160,7 @@ test('Gallery keeps titles sharp, animates closing, and accepts interrupted tran
       });
   });
   const cover = page.getByRole('button', {
-    name: 'Explore Portfolio',
+    name: 'Explore Portfolio & Blog',
     exact: true,
   });
   await cover.scrollIntoViewIfNeeded();
@@ -182,7 +182,7 @@ test('Gallery keeps titles sharp, animates closing, and accepts interrupted tran
     .poll(() => reveal.evaluate((element) => element.getAnimations().length))
     .toBe(0);
   await page
-    .getByRole('button', { name: 'Close Portfolio', exact: true })
+    .getByRole('button', { name: 'Close Portfolio & Blog', exact: true })
     .click();
   await expect
     .poll(() =>
@@ -194,16 +194,19 @@ test('Gallery keeps titles sharp, animates closing, and accepts interrupted tran
   await expect(cover).toBeFocused();
 
   await cover.click();
-  const blog = page.getByRole('button', { name: 'Explore Blog', exact: true });
-  await blog.click();
-  await expect(blog).toHaveAttribute('aria-expanded', 'true');
+  const other = page.getByRole('button', {
+    name: 'Explore NTHU Confession',
+    exact: true,
+  });
+  await other.click();
+  await expect(other).toHaveAttribute('aria-expanded', 'true');
   await expect(cover).toHaveAttribute('aria-expanded', 'false');
   await expect(
-    page.getByRole('region', { name: 'Blog details', exact: true }),
+    page.getByRole('region', { name: 'NTHU Confession details', exact: true }),
   ).toBeVisible();
   await page.keyboard.press('Escape');
-  await expect(blog).toHaveAttribute('aria-expanded', 'false');
-  await expect(blog).toBeFocused();
+  await expect(other).toHaveAttribute('aria-expanded', 'false');
+  await expect(other).toBeFocused();
 });
 
 test('Covers follow the cursor, settle at rest, and disable tilt for touch and reduced motion', async ({
@@ -297,8 +300,7 @@ test('Individual project URLs share the gallery details and fit narrow screens',
   for (const [slug, title] of [
     ['homelab', 'Homelab'],
     ['nthu-confession', 'NTHU Confession'],
-    ['portfolio', 'Portfolio'],
-    ['blog', 'Blog'],
+    ['portfolio', 'Portfolio & Blog'],
   ]) {
     await page.goto(`/projects/${slug}`);
     await expect(
@@ -406,7 +408,7 @@ test('Gallery stays readable and within the viewport on phones and tablets', asy
           return { width, height, top };
         }),
       );
-    expect(panels).toHaveLength(4);
+    expect(panels).toHaveLength(3);
     for (const panel of panels) {
       expect(panel.height).toBeGreaterThan(panel.width);
       expect(panel.top).toBe(panels[0].top);
@@ -617,4 +619,20 @@ test('Sculpture cycles automatically and its two controls support a keyboard and
   const restored = await sculptureImage(page);
   await page.waitForTimeout(150);
   expect(await sculptureImage(page)).toBe(restored);
+});
+
+test('Very narrow screens never scroll sideways', async ({ page }) => {
+  for (const width of [150, 229]) {
+    await page.setViewportSize({ width, height: 700 });
+    await page.goto('/projects');
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            document.documentElement.scrollWidth -
+            document.documentElement.clientWidth,
+        ),
+      )
+      .toBe(0);
+  }
 });

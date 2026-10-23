@@ -247,6 +247,21 @@
   margin-bottom: 4px;
 }
 
+/* Very narrow screens: shrink rather than push the page sideways. */
+@media (max-width: 300px) {
+  .footer {
+    padding-inline: 12px;
+  }
+  .section,
+  .sectionLinks {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .email {
+    overflow-wrap: anywhere;
+  }
+}
+
 /* Module-local copy: CSS modules rename `shimmer`, so the global one in
    globals.css is out of reach. */
 @keyframes shimmer {

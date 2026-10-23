@@ -9,7 +9,7 @@ const ProjectPanel = dynamic(
   {
     loading: () => (
       <div className="projects-work__loading" role="status">
-        <span className="projects-visually-hidden">Opening the homelab…</span>
+        <span className="projects-visually-hidden">Opening the story…</span>
         <span className="projects-skeleton projects-skeleton--title" />
         <span className="projects-skeleton projects-skeleton--line" />
         <span className="projects-skeleton projects-skeleton--line" />

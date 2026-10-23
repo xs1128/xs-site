@@ -8,6 +8,7 @@ function partPose(part: Locator) {
       x: matrix.e,
       y: matrix.f,
       angle: (Math.atan2(matrix.b, matrix.a) * 180) / Math.PI,
+      scale: Math.hypot(matrix.a, matrix.b),
     };
   });
 }
@@ -212,6 +213,7 @@ test('The Mac mini opens into separate physical layers and reassembles with scro
     const chassis = drawing.locator('[data-part="chassis"]');
     const cooling = drawing.locator('[data-part="cooling"]');
     const power = drawing.locator('[data-part="power"]');
+    const app = drawing.locator('[data-app="grafana"]');
     expect(geometry.travel).toBeGreaterThan(page.viewportSize()!.height * 2);
     await page.evaluate((top) => window.scrollTo(0, top), geometry.start);
     await expect(board).toHaveCSS('opacity', '1');
@@ -229,6 +231,7 @@ test('The Mac mini opens into separate physical layers and reassembles with scro
       .poll(async () => (await partPose(cooling)).y)
       .toBeGreaterThan(10);
     await expect.poll(async () => (await partPose(power)).y).toBeLessThan(-140);
+    await expect(app).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
     for (const part of [lid, board, chassis, cooling, power]) {
       const angle = Math.abs((await partPose(part)).angle);
       expect(angle).toBeGreaterThan(1);
@@ -261,6 +264,7 @@ test('The Mac mini opens into separate physical layers and reassembles with scro
     await expect(board).toHaveCSS('opacity', '1');
     await expect(lid).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
     await expect(cooling).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+    await expect.poll(async () => (await partPose(app)).scale).toBeCloseTo(0.4);
     await page.evaluate(
       (top) => window.scrollTo(0, top),
       geometry.start + geometry.travel * 0.5,
@@ -269,6 +273,7 @@ test('The Mac mini opens into separate physical layers and reassembles with scro
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await expect(lid).toHaveCSS('transform', 'none');
     await expect(board).toHaveCSS('opacity', '1');
+    await expect(app).toHaveCSS('visibility', 'hidden');
     await page.emulateMedia({ reducedMotion: 'no-preference' });
   }
 });
@@ -367,4 +372,44 @@ test('Project captions remain inside their frames on tablets and short screens',
       );
     }
   }
+});
+
+test('The site lifts apart into its layers, labels them, and settles with scroll', async ({
+  page,
+}) => {
+  if (page.viewportSize()!.width > 640)
+    await page.setViewportSize({ width: 1280, height: 720 });
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/projects/blog');
+  await expect(page).toHaveURL(/\/projects\/portfolio$/);
+  const scene = page.locator('section[data-kind="layers"]');
+  await expect(scene).toBeVisible();
+  await expect(scene.locator(':scope > div')).toHaveCSS('position', 'sticky');
+  const geometry = await scene.evaluate((element) => ({
+    start: element.getBoundingClientRect().top + scrollY,
+    travel: element.clientHeight - element.firstElementChild!.clientHeight,
+  }));
+  const drawing = scene.locator('svg:visible');
+  const landing = drawing.locator('[data-part="landing"]');
+  const engine = drawing.locator('[data-part="engine"]');
+  await page.evaluate((top) => window.scrollTo(0, top), geometry.start);
+  await expect(landing).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  await page.evaluate(
+    (top) => window.scrollTo(0, top),
+    geometry.start + geometry.travel * 0.5,
+  );
+  await expect.poll(async () => (await partPose(landing)).y).toBeLessThan(-240);
+  await expect
+    .poll(async () => (await partPose(engine)).y)
+    .toBeGreaterThan(130);
+  // Labels exist only on the desktop drawing.
+  if (page.viewportSize()!.width > 960)
+    await expect(drawing.getByText('Engine', { exact: true })).toBeVisible();
+  await page.evaluate(
+    (top) => window.scrollTo(0, top),
+    geometry.start + geometry.travel,
+  );
+  await expect(landing).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect(landing).toHaveCSS('transform', 'none');
 });

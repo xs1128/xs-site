@@ -1,8 +1,8 @@
 import { ArrowDown } from 'lucide-react';
 import Footer from '@/components/blog/ui/Footer';
 import { KineticSculpture } from './KineticSculpture';
+import { SunField } from './SunField';
 import { WorkGallery } from './WorkGallery';
-import { TypePlayground } from './TypePlayground';
 
 export function ProjectsGallery() {
   return (
@@ -40,7 +40,7 @@ export function ProjectsGallery() {
         <WorkGallery />
       </section>
 
-      <TypePlayground />
+      <SunField />
       <Footer />
     </div>
   );

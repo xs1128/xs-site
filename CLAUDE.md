@@ -70,7 +70,12 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 
 ## Projects
 
-- `/projects` is the gallery (`ProjectsGallery`); `/projects/[slug]` is one page per `works` entry in `src/lib/projects.ts`. `projects` is the subset with a scroll story (`ProjectPanel`), only Homelab today.
+- `/projects` is the gallery (`ProjectsGallery`); `/projects/[slug]` is one page per `works` entry in `src/lib/projects.ts`. `projects` is the subset with a scroll story (`ProjectPanel`): Homelab (`MacMiniArtwork`) and Portfolio & Blog (`SiteArtwork`). Each story's closing text lives in its `ending` field.
+- Portfolio and Blog are one entry (slug `portfolio`); `next.config.ts` 308s `/projects/blog` to it. Don't split them again without removing that redirect.
+- Story drawings share one recipe: flat parts drawn on a page, laid into an isometric `matrix(...)` plane, grouped as `[data-part]`, moved by per-part keyframes on the `--project-scene` view timeline. `partMotion` in `ProjectScene` mirrors those keyframes for browsers without scroll timelines, so change both together.
+- The Mac mini's app logos (`[data-app]`) are local copies in `public/projects/apps/` (Jellyfin from dashboard-icons, the rest from the homelab dashboard). They sit behind the chassis and only move, never fade, so the case hides them when shut. `mini-app` keyframes and the `data-app` branch in `ProjectScene` share timing.
+- Covers are portrait by `aspect-ratio: 3 / 4`; the label sits in flow above the title area and the title is capped at `max-height: 100%`, so long titles wrap into a second column instead of reaching the label.
+- The gallery ends with `SunField`: a fixed mellow yellow sun on charcoal whose beam follows the pointer (or a tap) and lights hidden notes through an SVG mask. Each note has `wide` and `narrow` spots; phones crop the sides, so keep `narrow` within x 320-880. It replaced the drag-and-flip letter box.
 - Lenis (`ProjectScroll`) runs on the detail pages only, not the gallery.
 - Outer sections pad with `--project-edge` (the gutter, growing past 1760px so content stays within 1600px). Panels nested inside them keep `--project-gutter`; giving them the edge would double the inset.
 - A `liveUrl` starting with `/` is internal and opens in the same tab.

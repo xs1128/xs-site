@@ -56,6 +56,16 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Portfolio and Blog merged into one project page.
+  async redirects() {
+    return [
+      {
+        source: '/projects/blog',
+        destination: '/projects/portfolio',
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

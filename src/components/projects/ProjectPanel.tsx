@@ -4,6 +4,7 @@ import type { Project } from '@/lib/projects';
 import { ProjectScene } from './ProjectScene';
 import { HomelabStatus } from './HomelabStatus';
 import { MacMiniArtwork } from './MacMiniArtwork';
+import { SiteArtwork } from './SiteArtwork';
 import styles from './projects.module.css';
 
 export function ProjectPanel({
@@ -47,22 +48,26 @@ export function ProjectPanel({
           artwork={
             project.slug === 'homelab' ? (
               <MacMiniArtwork alt={chapter.alt} />
+            ) : project.slug === 'portfolio' ? (
+              <SiteArtwork alt={chapter.alt} />
             ) : (
-              <picture className={styles.picture}>
-                <source
-                  media="(max-width: 960px) and (orientation: portrait)"
-                  srcSet={chapter.mobileArtwork}
-                />
-                <Image
-                  src={chapter.artwork}
-                  alt={chapter.alt}
-                  width={1200}
-                  height={800}
-                  className={styles.image}
-                  sizes="90vw"
-                  preload={preload}
-                />
-              </picture>
+              chapter.artwork && (
+                <picture className={styles.picture}>
+                  <source
+                    media="(max-width: 960px) and (orientation: portrait)"
+                    srcSet={chapter.mobileArtwork}
+                  />
+                  <Image
+                    src={chapter.artwork}
+                    alt={chapter.alt}
+                    width={1200}
+                    height={800}
+                    className={styles.image}
+                    sizes="90vw"
+                    preload={preload}
+                  />
+                </picture>
+              )
             )
           }
           caption={
@@ -86,22 +91,21 @@ export function ProjectPanel({
         aria-labelledby={`${headingId}-ending`}
       >
         <h3 id={`${headingId}-ending`}>
-          My own little
+          {project.ending.title}
           <br />
-          <span>corner of the internet.</span>
+          <span>{project.ending.emphasis}</span>
         </h3>
         <div className={styles.endingDetails}>
-          <p>
-            That’s a homelab: a place to run things myself, try new ideas, and
-            learn how it all works. This one happens to fit on my desk.
-          </p>
+          <p>{project.ending.body}</p>
           <a
             className={styles.visitLink}
-            href={project.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={project.ending.linkUrl}
+            {...(project.ending.linkUrl.startsWith('/')
+              ? {}
+              : { target: '_blank', rel: 'noopener noreferrer' })}
           >
-            Explore the homelab <ArrowUpRight size={28} aria-hidden="true" />
+            {project.ending.linkLabel}{' '}
+            <ArrowUpRight size={28} aria-hidden="true" />
           </a>
         </div>
       </section>
