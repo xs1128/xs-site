@@ -47,6 +47,10 @@ export function ProjectScene({
     if (!scene || !panel || !image) return;
 
     const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // Phones draw a different layout; the camera stays put there.
+    const portrait = window.matchMedia(
+      '(max-width: 960px) and (orientation: portrait)',
+    );
     const parts = image.querySelectorAll<HTMLElement>('[data-part]');
     const apps = image.querySelectorAll<HTMLElement>('[data-app]');
     const resetParts = () =>
@@ -80,9 +84,10 @@ export function ProjectScene({
       const x = kind === 'intro' ? -80 : kind === 'apps' ? -50 : -20;
       const y = kind === 'intro' ? -32 : kind === 'apps' ? -18 : -12;
       const scale = kind === 'access' || kind === 'layers' ? 0.2 : zoom;
-      image.style.transform = sticky
-        ? `translate(${x * progress}px, ${y * progress}px) scale(${1 + scale * progress}) rotate(${tilt * progress}deg)`
-        : '';
+      image.style.transform =
+        sticky && !portrait.matches
+          ? `translate(${x * progress}px, ${y * progress}px) scale(${1 + scale * progress}) rotate(${tilt * progress}deg)`
+          : '';
       const open = Math.max(
         0,
         Math.min(1, (progress - 0.05) / 0.35, (0.95 - progress) / 0.3),

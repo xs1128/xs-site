@@ -56,22 +56,24 @@ test('Projects panel', async ({ page }, testInfo) => {
 
 test('Projects follows scroll position and responds to motion preferences', async ({
   page,
-}) => {
+}, testInfo) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/projects/homelab');
   const artwork = page.locator('figure > div').first();
   await expect(artwork).toBeVisible();
-  await expect(artwork).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 0, 0)');
+  // Phones keep the camera still: it would pan the drawing out of frame.
+  const still = testInfo.project.name === 'mobile';
+  const rest = still ? 'none' : 'matrix(1, 0, 0, 1, 0, 0)';
+  await expect(artwork).toHaveCSS('transform', rest);
   await page
     .locator('section[data-kind="access"]')
     .evaluate((element) =>
       window.scrollTo(0, element.getBoundingClientRect().top + scrollY + 150),
     );
-  await expect
-    .poll(() =>
-      artwork.evaluate((element) => getComputedStyle(element).transform),
-    )
-    .not.toBe('matrix(1, 0, 0, 1, 0, 0)');
+  const camera = expect.poll(() =>
+    artwork.evaluate((element) => getComputedStyle(element).transform),
+  );
+  await (still ? camera.toBe(rest) : camera.not.toBe(rest));
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(artwork).toHaveCSS('transform', 'none');

@@ -731,6 +731,11 @@
     min-height: 0;
     padding: 12px;
   }
+  /* The camera is aimed at the desktop drawing; on this one it pans the
+     Mac mini out of the frame. */
+  .scene .storyPanel .artwork {
+    animation: none;
+  }
   .storyCaption {
     position: relative;
     left: auto;
