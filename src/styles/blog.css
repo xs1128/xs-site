@@ -704,3 +704,37 @@ body:has(.blog-root) {
     color: var(--color-accent);
   }
 }
+
+/* Blog landing hero at zoom extremes; home-client.tsx falls back to its clamps.
+   Short desktop (150-200% zoom): leave a nav-high gap above and below the card. */
+@media (min-width: 481px) and (max-height: 760px) {
+  .blog-home {
+    --blog-hero-h: max(240px, calc(100vh - 2 * var(--nav-h, 80px)));
+    --blog-nav-font: clamp(16px, 3.2vh, 20px);
+    --blog-nav-icon: clamp(18px, 3.6vh, 24px);
+    --blog-headline: clamp(1.75rem, 8vh, 3rem);
+    --blog-tap-bottom: clamp(20px, 6vh, 48px);
+    --blog-tap-dot: clamp(36px, 7vh, 48px);
+    --blog-tap-icon: clamp(16px, 3.4vh, 20px);
+    --blog-tap-h: auto;
+    --blog-tap-font: 12px;
+  }
+}
+
+/* Large screen (e.g. 67% zoom): scale the card and type up past the 1100px cap. */
+@media (min-width: 1800px) and (min-height: 1100px) {
+  .blog-home {
+    --blog-hero-w: min(80vw, 1600px);
+    --blog-hero-h: min(80vh, 1100px);
+    --blog-nav-x: clamp(60px, 4vw, 96px);
+    --blog-nav-font: clamp(24px, 1.5vw, 32px);
+    --blog-nav-icon: clamp(28px, 1.8vw, 36px);
+    --blog-headline: clamp(3.5rem, 4.5vw, 5.5rem);
+    --blog-tap-bottom: clamp(60px, 7vh, 96px);
+    --blog-tap-w: 280px;
+    --blog-tap-h: auto;
+    --blog-tap-dot: clamp(60px, 4vw, 84px);
+    --blog-tap-icon: clamp(24px, 1.6vw, 32px);
+    --blog-tap-font: clamp(14px, 0.9vw, 18px);
+  }
+}

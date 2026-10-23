@@ -139,8 +139,12 @@ export default function HomePageClient({
 
   const cardContainerStyle: React.CSSProperties = {
     position: 'relative',
-    width: isExpanded ? '100%' : 'clamp(300px, 90vw, 1100px)',
-    height: isExpanded ? '100vh' : 'clamp(400px, 80vh, 750px)',
+    width: isExpanded
+      ? '100%'
+      : 'var(--blog-hero-w, clamp(300px, 90vw, 1100px))',
+    height: isExpanded
+      ? '100vh'
+      : 'var(--blog-hero-h, clamp(400px, 80vh, 750px))',
     overflow: 'hidden',
     overflowX: 'hidden',
     borderRadius: isExpanded ? '0' : '12px',
@@ -174,7 +178,7 @@ export default function HomePageClient({
     alignItems: 'center',
     padding: isExpanded
       ? 'clamp(10px, 1.5vh, 20px) clamp(30px, 5vw, 60px)'
-      : 'clamp(20px, 3vh, 40px) clamp(30px, 5vw, 60px)',
+      : 'clamp(20px, 3vh, 40px) var(--blog-nav-x, clamp(30px, 5vw, 60px))',
     zIndex: 9999,
     backgroundColor: isExpanded ? 'var(--color-background)' : 'transparent', // Use vintage yellow from color scheme
     transition: transition(
@@ -205,7 +209,7 @@ export default function HomePageClient({
 
   const backButtonTextStyle: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
-    fontSize: 'clamp(18px, 2.5vw, 24px)',
+    fontSize: 'var(--blog-nav-font, clamp(18px, 2.5vw, 24px))',
     fontWeight: 700,
     color: '#2A2F35',
     textDecoration: 'none',
@@ -228,7 +232,7 @@ export default function HomePageClient({
 
   const brandStyle: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
-    fontSize: 'clamp(18px, 2.5vw, 24px)',
+    fontSize: 'var(--blog-nav-font, clamp(18px, 2.5vw, 24px))',
     fontWeight: 700,
     color: '#2A2F35',
     letterSpacing: '0.05em',
@@ -253,7 +257,7 @@ export default function HomePageClient({
 
   const menuLinkStyle: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
-    fontSize: 'clamp(18px, 2.5vw, 24px)',
+    fontSize: 'var(--blog-nav-font, clamp(18px, 2.5vw, 24px))',
     fontWeight: 700,
     color: '#2A2F35',
     textDecoration: 'none',
@@ -296,8 +300,8 @@ export default function HomePageClient({
     backgroundColor: '#FFFFFF',
     borderRadius: '12px',
     padding: '0',
-    width: 'clamp(300px, 80vw, 1100px)',
-    height: 'clamp(400px, 80vh, 750px)',
+    width: 'var(--blog-hero-w, clamp(300px, 80vw, 1100px))',
+    height: 'var(--blog-hero-h, clamp(400px, 80vh, 750px))',
     maxWidth: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -342,11 +346,11 @@ export default function HomePageClient({
 
   const tapAreaStyle: React.CSSProperties = {
     position: 'absolute',
-    bottom: '60px',
+    bottom: 'var(--blog-tap-bottom, 60px)',
     left: '50%',
     transform: 'translateX(-50%)',
-    width: 'clamp(120px, 20vw, 200px)',
-    height: 'clamp(60px, 10vh, 100px)',
+    width: 'var(--blog-tap-w, clamp(120px, 20vw, 200px))',
+    height: 'var(--blog-tap-h, clamp(60px, 10vh, 100px))',
     cursor: 'pointer',
     zIndex: 10,
     display: 'flex',
@@ -359,7 +363,7 @@ export default function HomePageClient({
 
   const tapAreaTextStyle: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
-    fontSize: 'clamp(10px, 1.5vw, 14px)',
+    fontSize: 'var(--blog-tap-font, clamp(10px, 1.5vw, 14px))',
     fontWeight: 600,
     color: '#E5532C',
     textTransform: 'uppercase',
@@ -368,14 +372,15 @@ export default function HomePageClient({
   };
 
   const tapAreaDotStyle: React.CSSProperties = {
-    width: 'clamp(40px, 6vw, 60px)',
-    height: 'clamp(40px, 6vw, 60px)',
+    width: 'var(--blog-tap-dot, clamp(40px, 6vw, 60px))',
+    height: 'var(--blog-tap-dot, clamp(40px, 6vw, 60px))',
+    flexShrink: 0,
     borderRadius: '50%',
     border: '2px solid #E5532C',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: 'clamp(18px, 3vw, 24px)',
+    fontSize: 'var(--blog-tap-icon, clamp(18px, 3vw, 24px))',
     color: '#E5532C',
     fontWeight: 700,
   };
@@ -389,7 +394,7 @@ export default function HomePageClient({
 
   const headlineStyle: React.CSSProperties = {
     fontFamily: 'var(--font-body)',
-    fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+    fontSize: 'var(--blog-headline, clamp(2rem, 5vw, 3.5rem))',
     fontWeight: 700,
     color: '#E5532C',
     margin: '0',
@@ -403,7 +408,7 @@ export default function HomePageClient({
   return (
     <>
       {/* Container */}
-      <div style={containerStyle}>
+      <div className="blog-home" style={containerStyle}>
         {/* Navigation */}
         <nav ref={navRef} style={navStyle}>
           <div style={brandStyle}>BLOG</div>
@@ -430,7 +435,7 @@ export default function HomePageClient({
             >
               <span
                 style={{
-                  fontSize: 'clamp(22px, 3vw, 28px)',
+                  fontSize: 'var(--blog-nav-icon, clamp(22px, 3vw, 28px))',
                   transform: 'translateY(-3px)',
                   display: 'inline-block',
                 }}
@@ -455,7 +460,7 @@ export default function HomePageClient({
                   alt=""
                   fill
                   priority
-                  sizes="(max-width: 1375px) 80vw, 1100px"
+                  sizes="(max-width: 1375px) 80vw, (min-width: 1800px) 1600px, 1100px"
                   style={imageStyle}
                   placeholder={heroBlurDataURL ? 'blur' : 'empty'}
                   blurDataURL={heroBlurDataURL ?? undefined}
