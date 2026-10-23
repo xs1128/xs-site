@@ -63,7 +63,9 @@ export function WorkDetails({ work, onClose }: WorkDetailsProps) {
               className="projects-text-link projects-work__instagram"
               aria-label={`Follow @${work.instagram.handle} on Instagram (opens in a new tab)`}
             >
-              Follow @{work.instagram.handle}
+              <span className="hover-underline">
+                Follow @{work.instagram.handle}
+              </span>
               <ArrowUpRight size={24} aria-hidden="true" />
             </a>
             <p className="projects-work__as-of">As of {work.instagram.asOf}</p>
@@ -91,7 +93,9 @@ export function WorkDetails({ work, onClose }: WorkDetailsProps) {
               : { target: '_blank', rel: 'noopener noreferrer' })}
             className="projects-text-link"
           >
-            {work.liveLabel ?? `Visit ${work.title}`}{' '}
+            <span className="hover-underline">
+              {work.liveLabel ?? `Visit ${work.title}`}
+            </span>
             <ArrowUpRight size={22} aria-hidden="true" />
           </a>
           {work.repositoryUrl && (
@@ -101,7 +105,8 @@ export function WorkDetails({ work, onClose }: WorkDetailsProps) {
               rel="noopener noreferrer"
               className="projects-text-link"
             >
-              View source <ArrowUpRight size={22} aria-hidden="true" />
+              <span className="hover-underline">View source</span>
+              <ArrowUpRight size={22} aria-hidden="true" />
             </a>
           )}
         </div>

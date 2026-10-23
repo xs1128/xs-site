@@ -279,6 +279,7 @@
   position: relative;
   flex: 1;
   min-width: 0;
+  container-type: inline-size;
 }
 .projects-cover__heading {
   font-weight: 400;
@@ -452,6 +453,15 @@
 }
 .projects-cover[data-open='true'] .projects-cover__open svg {
   transform: rotate(45deg);
+}
+/* Narrow covers: drop the word so the close button stays inside. */
+@container (max-width: 210px) {
+  .projects-cover__copy {
+    gap: 8px;
+  }
+  .projects-cover__hint span {
+    display: none;
+  }
 }
 .projects-work {
   margin-top: 0;
@@ -654,7 +664,6 @@
   color: inherit;
   font-size: 22px;
   text-decoration: none;
-  text-underline-offset: 6px;
 }
 .projects-text-link svg {
   flex-shrink: 0;
@@ -704,10 +713,7 @@
 .projects-cover__link:focus-visible .projects-cover__open svg {
   transition: none;
 }
-.projects-explore:focus-visible,
-.projects-nav__home:focus-visible,
-.projects-nav__github:focus-visible,
-.projects-text-link:focus-visible {
+.projects-explore:focus-visible {
   text-decoration: underline;
   text-underline-offset: 6px;
 }
@@ -721,12 +727,6 @@
   }
   .projects-cover__link:hover .projects-cover__image {
     transform: scale(1.075);
-  }
-  .projects-nav__home:hover,
-  .projects-nav__github:hover,
-  .projects-text-link:hover {
-    text-decoration: underline;
-    text-underline-offset: 6px;
   }
   .projects-text-link:hover svg {
     transform: translate(3px, -3px);

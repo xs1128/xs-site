@@ -141,7 +141,7 @@ export function ProjectCover({ project, open, onToggle }: ProjectCoverProps) {
             <span>.</span>
           </span>
           <span className="projects-cover__hint" aria-hidden="true">
-            Details
+            <span>Details</span>
             <ArrowDown size={16} strokeWidth={2} />
           </span>
           <span className="projects-cover__open" aria-hidden="true">

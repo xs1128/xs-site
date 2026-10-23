@@ -238,7 +238,11 @@ export function HomelabStatus() {
                         />
                         <div className={styles.serviceCopy}>
                           <div className={styles.serviceName}>
-                            <h4>{service.name}</h4>
+                            <h4>
+                              <span className="hover-underline">
+                                {service.name}
+                              </span>
+                            </h4>
                             {service.access === 'Tailscale' && (
                               <Lock
                                 className={styles.privateLock}

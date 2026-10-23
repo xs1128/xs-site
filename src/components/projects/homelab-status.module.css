@@ -176,16 +176,6 @@
   font-size: 18px;
   font-weight: 700;
 }
-.serviceLink:focus-visible h4 {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-@media (hover: hover) {
-  .serviceLink:hover h4 {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-}
 .badge {
   display: inline-flex;
   align-items: center;

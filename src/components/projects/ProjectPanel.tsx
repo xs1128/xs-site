@@ -34,7 +34,7 @@ export function ProjectPanel({
             rel="noopener noreferrer"
             aria-label={`${project.title} on GitHub (opens in a new tab)`}
           >
-            GitHub
+            <span className="hover-underline">GitHub</span>
             <ArrowUpRight size={28} aria-hidden="true" />
           </a>
         </div>
@@ -104,7 +104,7 @@ export function ProjectPanel({
               ? {}
               : { target: '_blank', rel: 'noopener noreferrer' })}
           >
-            {project.ending.linkLabel}{' '}
+            <span className="hover-underline">{project.ending.linkLabel}</span>
             <ArrowUpRight size={28} aria-hidden="true" />
           </a>
         </div>

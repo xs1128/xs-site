@@ -253,9 +253,22 @@
   right: 0;
 }
 
+/* The same underline for text links: put on the link's text. */
+.hover-underline {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px
+    no-repeat;
+  transition: background-size var(--transition-medium);
+}
+a:focus-visible .hover-underline {
+  background-size: 100% 2px;
+}
+
 @media (hover: hover) {
   .animated-button:hover .animated-button-underline {
     width: 100%;
+  }
+  a:hover .hover-underline {
+    background-size: 100% 2px;
   }
 }
 
