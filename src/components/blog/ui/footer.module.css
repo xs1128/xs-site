@@ -112,6 +112,17 @@
   background-color: var(--color-about-bg);
 }
 
+.avatar[data-loaded='false'] {
+  background: linear-gradient(
+      90deg,
+      var(--color-card-bg) 25%,
+      var(--color-border) 50%,
+      var(--color-card-bg) 75%
+    )
+    0 0 / 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
 .name {
   font-size: clamp(16px, 2.5vw, 20px);
   font-weight: 700;
@@ -234,4 +245,15 @@
 
 .copyright > div:first-child {
   margin-bottom: 4px;
+}
+
+/* Module-local copy: CSS modules rename `shimmer`, so the global one in
+   globals.css is out of reach. */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }

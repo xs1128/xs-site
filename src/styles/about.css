@@ -172,7 +172,9 @@
   flex: 1;
   min-height: 0;
   align-items: start;
-  align-content: center;
+  /* safe: when the cards outgrow the space they spill down, never up into
+     the headline. */
+  align-content: safe center;
   padding: 0;
 }
 
@@ -248,6 +250,60 @@
 
   .about-content__cta-subtext {
     font-size: 14px;
+  }
+}
+
+/* Short desktop screens, e.g. a laptop at 150% zoom: spacing follows height. */
+@media (min-width: 641px) and (max-height: 760px) {
+  .about-content {
+    gap: 3vh;
+    padding-top: 12vh;
+    padding-bottom: 15vh;
+  }
+
+  .about-content__headline {
+    font-size: clamp(24px, 5.5vh, 42px);
+  }
+
+  .about-content__cta {
+    gap: 6px;
+  }
+
+  .expertise-card {
+    gap: 3vh;
+  }
+
+  .expertise-card__index {
+    font-size: clamp(40px, 10vh, 96px);
+  }
+}
+
+/* Large screens, e.g. 67% zoom: grow into the space instead of floating. */
+@media (min-width: 1800px) and (min-height: 1100px) {
+  .about-content__headline {
+    max-width: 900px;
+    font-size: 56px;
+  }
+
+  .about-content__cards {
+    max-width: 1440px;
+  }
+
+  .expertise-card {
+    gap: 64px;
+    padding: 4px 48px;
+  }
+
+  .expertise-card__index {
+    font-size: 128px;
+  }
+
+  .expertise-card__title {
+    font-size: 30px;
+  }
+
+  .expertise-card__description {
+    font-size: 20px;
   }
 }
 

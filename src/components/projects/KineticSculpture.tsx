@@ -44,6 +44,27 @@ function geometry(shape: Shape, columns: number, rows: number) {
   );
 }
 
+// Loading skeleton: the trefoil's first frame as dots, projected with the
+// shader's maths (rotation, tilt, perspective) so the WebGL hand-off lines up.
+// The viewBox is 1 / 0.225 by 1 / 0.3 units, matching the renderer's
+// min(width * 0.225, height * 0.3) scale under `meet`.
+const FALLBACK_DOTS = (() => {
+  const points = geometry('Trefoil', 90, 5);
+  const [cx, sx] = [Math.cos(-0.38), Math.sin(-0.38)];
+  const [cy, sy] = [Math.cos(-0.45), Math.sin(-0.45)];
+  const [ct, st] = [Math.cos(-0.28), Math.sin(-0.28)];
+  let path = '';
+  for (let index = 0; index < points.length; index += 3) {
+    let [x, y, z] = [points[index], points[index + 1], points[index + 2]];
+    [x, z] = [cy * x + sy * z, -sy * x + cy * z];
+    [y, z] = [cx * y - sx * z, sx * y + cx * z];
+    [x, y] = [ct * x - st * y, st * x + ct * y];
+    const perspective = 5 / (5 + z);
+    path += `M${(x * perspective + 0.09).toFixed(3)} ${(y * perspective).toFixed(3)}h0`;
+  }
+  return path;
+})();
+
 export function KineticSculpture() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const controls = useRef({
@@ -64,6 +85,8 @@ export function KineticSculpture() {
     );
     let renderer = createParticleRenderer(canvas, geometries);
     let contextAvailable = Boolean(renderer);
+    // No WebGL: the skeleton becomes the permanent fallback, so stop its pulse.
+    if (!renderer) canvas.dataset.unavailable = 'true';
     const weights = new Float32Array([1, 0, 0]);
     let width = 0;
     let height = 0;
@@ -276,20 +299,10 @@ export function KineticSculpture() {
       <div className="projects-sculpture__stage">
         <svg
           className="projects-sculpture__fallback"
-          viewBox="0 0 600 600"
-          fill="none"
+          viewBox="-2.222 -1.667 4.444 3.333"
           aria-hidden="true"
         >
-          {Array.from({ length: 16 }, (_, index) => (
-            <ellipse
-              key={index}
-              cx="300"
-              cy="300"
-              rx={120 + index * 6}
-              ry={95 + index * 6}
-              transform="rotate(-30 300 300)"
-            />
-          ))}
+          <path d={FALLBACK_DOTS} />
         </svg>
         <canvas
           ref={canvasRef}

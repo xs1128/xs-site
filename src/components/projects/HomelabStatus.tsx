@@ -120,10 +120,14 @@ export function HomelabStatus() {
               <p>The apps on my Mac mini, answering from home.</p>
             </div>
             <div className={styles.tally}>
-              <strong>
-                {snapshot ? responding : '—'}
-                <span> / {snapshot ? total : '—'}</span>
-              </strong>
+              {snapshot || failed ? (
+                <strong>
+                  {snapshot ? responding : '—'}
+                  <span> / {snapshot ? total : '—'}</span>
+                </strong>
+              ) : (
+                <span className={styles.skeletonTally} aria-hidden="true" />
+              )}
               <p>
                 {historical
                   ? 'responding at the last check'
@@ -155,6 +159,19 @@ export function HomelabStatus() {
               </span>
             </button>
           </div>
+          {!snapshot && !failed && (
+            <div className={styles.skeleton} aria-hidden="true">
+              {Array.from({ length: 9 }, (_, index) => (
+                <div key={index} className={styles.skeletonRow}>
+                  <span className={styles.skeletonIcon} />
+                  <span className={styles.skeletonLines}>
+                    <span />
+                    <span />
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
           {snapshot && (
             <>
               <button

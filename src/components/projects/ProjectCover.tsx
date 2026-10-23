@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { ArrowDown, Plus } from 'lucide-react';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
@@ -14,6 +14,7 @@ export interface ProjectCoverProps {
 
 export function ProjectCover({ project, open, onToggle }: ProjectCoverProps) {
   const ref = useRef<HTMLButtonElement>(null);
+  const [loaded, setLoaded] = useState(false);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -117,13 +118,18 @@ export function ProjectCover({ project, open, onToggle }: ProjectCoverProps) {
         aria-controls={open ? `details-${project.slug}` : undefined}
         onClick={(event) => onToggle(event.detail > 0)}
       >
-        <span className="projects-cover__visual" data-work={project.slug}>
+        <span
+          className="projects-cover__visual"
+          data-work={project.slug}
+          data-loaded={loaded}
+        >
           <Image
             src={project.cover.src}
             alt={project.cover.alt}
             fill
             sizes="(max-width: 640px) 85vw, 40vw"
             className="projects-cover__image"
+            onLoad={() => setLoaded(true)}
           />
         </span>
         <span id={`focus-${project.slug}`} className="projects-cover__topline">

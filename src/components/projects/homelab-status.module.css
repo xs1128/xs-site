@@ -338,3 +338,87 @@
     font-size: 16px;
   }
 }
+
+/* Split-screen or a zoomed-in phone. */
+@media (max-width: 300px) {
+  .tally {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    row-gap: 4px;
+    min-width: 0;
+  }
+}
+
+/* Loading placeholders, shaped like the service grid. */
+.skeletonTally,
+.skeletonIcon,
+.skeletonLines > span {
+  display: block;
+  border-radius: 3px;
+  background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--project-ink) 7%, transparent) 25%,
+      color-mix(in srgb, var(--project-ink) 14%, transparent) 50%,
+      color-mix(in srgb, var(--project-ink) 7%, transparent) 75%
+    )
+    0 0 / 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+.skeletonTally {
+  width: 150px;
+  height: 64px;
+}
+.skeleton {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 24px;
+}
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-block: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+.skeletonIcon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.skeletonLines {
+  display: grid;
+  flex: 1;
+  gap: 8px;
+}
+.skeletonLines > span {
+  width: 70%;
+  height: 16px;
+}
+.skeletonLines > span + span {
+  width: 45%;
+  height: 12px;
+}
+@media (max-width: 640px) {
+  .skeletonTally {
+    width: 110px;
+    height: 48px;
+  }
+  .skeleton {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .skeletonRow:nth-child(n + 4) {
+    display: none;
+  }
+}
+
+/* Module-local copy: CSS modules rename `shimmer`, so the global one in
+   globals.css is out of reach. */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

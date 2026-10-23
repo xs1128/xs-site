@@ -56,6 +56,7 @@ const socialLinks: SocialLink[] = [
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [avatarUrl, setAvatarUrl] = useState<string>('');
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
 
   // Load avatar URL
   useEffect(() => {
@@ -90,13 +91,14 @@ export default function Footer() {
               {/* Avatar and Name row */}
               <div className={styles.avatarRow}>
                 {/* Profile picture */}
-                <div className={styles.avatar}>
+                <div className={styles.avatar} data-loaded={avatarLoaded}>
                   <Image
                     src={displayAvatarUrl}
                     alt="Profile avatar"
                     fill
                     style={{ objectFit: 'cover' }}
                     sizes="60px"
+                    onLoad={() => setAvatarLoaded(true)}
                   />
                 </div>
                 <div className={styles.name}>xs</div>

@@ -8,7 +8,13 @@ const ProjectPanel = dynamic(
   () => import('./ProjectPanel').then((module) => module.ProjectPanel),
   {
     loading: () => (
-      <p className="projects-work__loading">Opening the homelab…</p>
+      <div className="projects-work__loading" role="status">
+        <span className="projects-visually-hidden">Opening the homelab…</span>
+        <span className="projects-skeleton projects-skeleton--title" />
+        <span className="projects-skeleton projects-skeleton--line" />
+        <span className="projects-skeleton projects-skeleton--line" />
+        <span className="projects-skeleton projects-skeleton--frame" />
+      </div>
     ),
   },
 );

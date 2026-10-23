@@ -7,6 +7,9 @@
 .page {
   --project-ink: #24272a;
   --project-gutter: clamp(20px, 4.5vw, 80px);
+  /* Outer sections only: keeps content within 1600px on wide or zoomed-out
+     screens. Nested panels keep the plain gutter. */
+  --project-edge: max(var(--project-gutter), calc((100vw - 1600px) / 2));
   color: var(--project-ink);
   background: var(--color-landing-bg);
   padding-left: env(safe-area-inset-left);
@@ -686,5 +689,15 @@
   .storyCaption {
     animation: none;
     transform: none;
+  }
+}
+
+/* Split-screen or a zoomed-in phone. */
+@media (max-width: 300px) {
+  .page {
+    --project-gutter: 12px;
+  }
+  .title {
+    font-size: 17vw;
   }
 }

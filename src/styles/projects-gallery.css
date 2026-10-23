@@ -5,7 +5,7 @@
   scroll-behavior: smooth;
 }
 .projects-detail {
-  padding: 128px var(--project-gutter) 64px;
+  padding: 128px var(--project-edge) 64px;
   font-family: var(--font-display);
 }
 .projects-detail__title {
@@ -23,8 +23,8 @@
   position: absolute;
   z-index: 5;
   top: 24px;
-  left: var(--project-gutter);
-  right: var(--project-gutter);
+  left: var(--project-edge);
+  right: var(--project-edge);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -71,7 +71,7 @@
   height: 100svh;
   min-height: 600px;
   overflow: hidden;
-  padding: clamp(100px, 15svh, 160px) var(--project-gutter) 0;
+  padding: clamp(100px, 15svh, 160px) var(--project-edge) 0;
   background: var(--color-about-bg);
   color: var(--color-text-on-dark);
   view-timeline-name: --projects-hero;
@@ -114,7 +114,7 @@
   position: absolute;
   z-index: 2;
   bottom: 72px;
-  left: var(--project-gutter);
+  left: var(--project-edge);
 }
 .projects-hero__copy p {
   font-size: clamp(28px, 2.7vw, 44px);
@@ -149,7 +149,7 @@
 }
 .projects-sculpture {
   position: absolute;
-  inset: 0;
+  inset: 0 calc(var(--project-edge) - var(--project-gutter));
   z-index: 1;
   pointer-events: none;
 }
@@ -176,8 +176,17 @@
   cursor: grabbing;
 }
 .projects-sculpture__fallback {
+  fill: none;
   stroke: var(--color-accent);
-  stroke-width: 1.5;
+  stroke-width: 0.022;
+  stroke-linecap: round;
+  animation: projects-sculpture-pulse 1.4s var(--ease-in-out-soft) infinite
+    alternate;
+}
+.projects-sculpture__stage:has(canvas[data-unavailable='true'])
+  .projects-sculpture__fallback {
+  opacity: 0.6;
+  animation: none;
 }
 .projects-sculpture__stage:has(canvas[data-ready='true'])
   .projects-sculpture__fallback {
@@ -224,7 +233,7 @@
 }
 
 .projects-collection {
-  padding: 96px var(--project-gutter) 80px;
+  padding: 96px var(--project-edge) 80px;
   scroll-margin-top: 28px;
 }
 .projects-collection__heading {
@@ -244,6 +253,7 @@
 }
 .projects-collection__list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
   gap: 14px;
 }
@@ -265,7 +275,7 @@
   display: flex;
   align-items: flex-end;
   width: 100%;
-  height: clamp(480px, 62svh, 720px);
+  height: clamp(360px, 62svh, 720px);
   border: 0;
   overflow: hidden;
   color: var(--color-text-on-dark);
@@ -287,6 +297,16 @@
   z-index: -2;
   inset: 0;
   overflow: hidden;
+}
+.projects-cover__visual[data-loaded='false'] {
+  background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-text-on-dark) 4%, transparent) 25%,
+      color-mix(in srgb, var(--color-text-on-dark) 10%, transparent) 50%,
+      color-mix(in srgb, var(--color-text-on-dark) 4%, transparent) 75%
+    )
+    0 0 / 200% 100%;
+  animation: shimmer 1.6s linear infinite;
 }
 .projects-cover__visual[data-work='homelab'] .projects-cover__image {
   object-position: 65% 65%;
@@ -459,6 +479,7 @@
 }
 .projects-work__stats {
   display: flex;
+  flex-wrap: wrap;
   gap: clamp(32px, 5vw, 72px);
 }
 .projects-work__stats > div {
@@ -470,7 +491,7 @@
   font-size: 16px;
 }
 .projects-work__stats dd {
-  font-size: clamp(56px, 7vw, 104px);
+  font-size: clamp(44px, 7vw, 104px);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.05em;
@@ -516,10 +537,47 @@
   font-size: 16px;
 }
 .projects-work__loading {
-  padding: 24px var(--project-gutter);
+  display: grid;
+  gap: 16px;
+  padding: 48px var(--project-gutter);
   border-block: 1px solid var(--color-border);
-  font-size: 18px;
-  line-height: 1.6;
+}
+/* Loading placeholder; reuses the global shimmer keyframes. */
+.projects-skeleton {
+  display: block;
+  border-radius: 3px;
+  background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-text-on-light) 7%, transparent) 25%,
+      color-mix(in srgb, var(--color-text-on-light) 14%, transparent) 50%,
+      color-mix(in srgb, var(--color-text-on-light) 7%, transparent) 75%
+    )
+    0 0 / 200% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+.projects-skeleton--title {
+  width: min(60%, 420px);
+  height: clamp(56px, 8vw, 110px);
+  margin-bottom: 8px;
+}
+.projects-skeleton--line {
+  width: min(80%, 520px);
+  height: 18px;
+}
+.projects-skeleton--line + .projects-skeleton--line {
+  width: min(55%, 360px);
+}
+.projects-skeleton--frame {
+  height: clamp(320px, 60svh, 640px);
+  margin-top: 16px;
+}
+.projects-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .projects-work__back {
   display: flex;
@@ -528,6 +586,7 @@
 .projects-details-reveal {
   position: relative;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: 0fr;
   opacity: 0;
   transition:
@@ -567,6 +626,7 @@
 }
 .projects-text-link {
   display: inline-flex;
+  overflow-wrap: anywhere;
   align-items: center;
   gap: 12px;
   min-height: 48px;
@@ -581,7 +641,7 @@
 }
 
 .projects-playground {
-  padding: 32px var(--project-gutter) 80px;
+  padding: 32px var(--project-edge) 80px;
   background: var(--color-landing-bg);
   color: var(--color-about-bg);
 }
@@ -880,6 +940,14 @@
     }
   }
 }
+@keyframes projects-sculpture-pulse {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 0.55;
+  }
+}
 @keyframes projects-hint-nudge {
   50% {
     translate: 0 4px;
@@ -926,9 +994,11 @@
     margin-top: 20px;
     font-size: 25vw;
   }
+  /* The Explore row shares a line with the sculpture controls: 43px centres
+     its 48px row on the 54px control box at bottom 40px. */
   .projects-hero__copy {
     top: auto;
-    bottom: 150px;
+    bottom: 43px;
   }
   .projects-hero__copy p {
     font-size: 28px;
@@ -942,8 +1012,8 @@
   }
   .projects-sculpture__stage {
     width: 100%;
-    top: 200px;
-    bottom: 370px;
+    top: 240px;
+    bottom: 200px;
   }
   .projects-sculpture__caption {
     bottom: 40px;
@@ -1060,5 +1130,37 @@
     left: 20px;
     bottom: 20px;
     font-size: 18px;
+  }
+}
+
+/* Split-screen or a zoomed-in phone. The label stays for screen readers. */
+@media (max-width: 300px) {
+  .projects-nav__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .projects-cover {
+    flex-basis: 80%;
+  }
+  .projects-work__intro {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+  }
+  .projects-work__close {
+    justify-self: start;
+  }
+}
+
+/* Too narrow to share the line with the controls: sit just above them. */
+@media (max-width: 345px) {
+  .projects-hero__copy {
+    bottom: 110px;
+  }
+  .projects-sculpture__stage {
+    bottom: 270px;
   }
 }

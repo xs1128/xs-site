@@ -9,6 +9,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - Breakpoint is 640px everywhere (`--breakpoint-small`, media queries, `useIsSmallScreen`).
 - Keep hover styles inside `@media (hover: hover)` — otherwise touch devices get stuck states.
 - Reduced motion is handled by one catch-all block at the end of `animations.css`. Don't add per-file `prefers-reduced-motion` blocks, except in `*.module.css`: a global sheet can't name hashed module classes. It can't reach JS-driven motion, so anything animating from JS checks `matchMedia('(prefers-reduced-motion: reduce)')` itself — `useScrollParallax` and `NameDisplay`'s pointer tilt via `useReducedMotion`, plus `useCursorGlow` and `lib/utils.ts` inline. Prefer the hook: it re-reads the preference, where an inline check in an effect body latches it at mount.
+- CSS modules rename keyframe names, so `animation: shimmer` in a `*.module.css` never finds the global `@keyframes shimmer` and silently does nothing. Declare a local copy in the module.
 - Never hand-type `cubic-bezier(...)`. Use `--ease-out-expo` / `--ease-in-out-soft` / `--ease-out-quint` / `--ease-out-quart` / `--ease-out-back`.
 - `:focus-visible` is styled globally. No `outline: none` without a replacement indicator.
 - **`--color-accent` fails WCAG AA as small text** (3.11:1 sand, 3.60:1 charcoal) — large/bold text and UI chrome only. Body text and links use `--color-accent-on-light` / `--color-accent-on-dark`.
@@ -36,6 +37,7 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 - The hook's rAF id is `number | null` and is cleared as the first statement of the frame callback. A truthiness guard treats id `0` as "no frame pending", and an early return before the clear leaves the throttle latched, which silently kills the parallax for the life of the component. `useScrollParallax.test.tsx` covers both.
 - **About entrance plays once**: `useIntersectionAnimation` latches on a `hasAnimated` ref (threshold 0.15, rootMargin -50px). `AboutSection` owns the target ref and passes `isVisible` to `AboutContent`. No replay on return from contact.
 - About section: `height: 100dvh` desktop; `height: auto` + `min-height: 100dvh` at ≤640px.
+- About has a short-desktop block (`max-height: 760px`, e.g. 150% zoom) and a large-screen block (`min-width: 1800px` and `min-height: 1100px`, e.g. 67% zoom). Sizes in between are untouched. The cards use `align-content: safe center` so they never spill up onto the headline.
 - About expertise is **numbered pillars** on the charcoal: ghost `01`–`03` in `--font-body`, hairline column rules, no cream card chrome. At ≤640px they become index-left / copy-right rows. Don't bring back `CardScene` or the cream tiles.
 - All 3 sections use `scroll-snap-align: start` + `scroll-snap-stop: always`; `.scroll-container` has `scroll-snap-type: y mandatory`.
 - Theme thresholds in `page.tsx`: `< 0.9*vh` landing/light, `0.9–1.9*vh` about/dark, above contact/light. `isDarkTheme` only drives `HamburgerButton`.
@@ -70,7 +72,11 @@ Hard rules and gotchas for agents editing this repo. Stack/setup/features: READM
 
 - `/projects` is the gallery (`ProjectsGallery`); `/projects/[slug]` is one page per `works` entry in `src/lib/projects.ts`. `projects` is the subset with a scroll story (`ProjectPanel`), only Homelab today.
 - Lenis (`ProjectScroll`) runs on the detail pages only, not the gallery.
+- Outer sections pad with `--project-edge` (the gutter, growing past 1760px so content stays within 1600px). Panels nested inside them keep `--project-gutter`; giving them the edge would double the inset.
 - A `liveUrl` starting with `/` is internal and opens in the same tab.
+- Loading states are shimmer skeletons on the global `shimmer` keyframes: the Homelab status list, the lazily loaded story, cover images and the footer avatar (`data-loaded`). The sculpture's fallback is its first frame projected in JS with the shader's maths, so changing the shader's angles, tilt or scale means updating `FALLBACK_DOTS` too.
+- Phone hero: the Explore row shares a line with the sculpture controls (`bottom: 43px` centres it on their box). Below 345px there is no room, so the copy sits above them. Below 300px (split-screen, zoomed phones) gutters drop to 12px and the nav hides its label visually.
+- `.projects-collection__list` and `.projects-details-reveal` are grids with `minmax(0, 1fr)` columns. An implicit `auto` column grows to the widest content and pushes the page sideways on narrow screens.
 - `instagram` stats on a `Work` are hand-copied from the public profile (no API: the Graph API account is suspended). Update `asOf` with the numbers.
 - `WorkGallery`'s close holds the reveal's bottom edge, pinned no lower than the viewport and never above the gallery, then scrolls up only. Without the pin, the top Close button dragged the page to the hero.
 

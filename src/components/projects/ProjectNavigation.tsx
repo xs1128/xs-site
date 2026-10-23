@@ -28,7 +28,9 @@ export function ProjectNavigation({
           className="projects-nav__home"
         >
           <ArrowLeft size={20} aria-hidden="true" />
-          {backToGallery ? 'All projects' : 'Portfolio'}
+          <span className="projects-nav__label">
+            {backToGallery ? 'All projects' : 'Portfolio'}
+          </span>
         </Link>
         <div className="projects-nav__actions">
           <a
