@@ -698,7 +698,47 @@
   opacity: 0.08;
   pointer-events: none;
 }
-.projects-sun__frame svg {
+.projects-sun__frame {
+  container-type: size;
+  /* Drawing units of the sliced 1200 x 600 view. */
+  --sun-unit: max(100cqw / 1200, 100cqh / 600);
+}
+.projects-sun__frame > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* A soft wedge, not a blur: a blur repaints on every turn. */
+.projects-sun__beam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(1360 * var(--sun-unit));
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  background: radial-gradient(
+    circle calc(620 * var(--sun-unit)),
+    rgb(243 207 107 / 0.5),
+    rgb(243 207 107 / 0.06)
+  );
+  mask-image: conic-gradient(
+    transparent 48deg,
+    #000 70deg 110deg,
+    transparent 132deg
+  );
+  will-change: transform;
+}
+.projects-sun__notes {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(1200 * var(--sun-unit));
+  aspect-ratio: 2;
+  translate: -50% -50%;
+  will-change: transform;
+}
+.projects-sun__notes svg {
   display: block;
   width: 100%;
   height: 100%;

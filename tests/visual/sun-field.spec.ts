@@ -1,8 +1,8 @@
 import { test, expect, type Locator } from '@playwright/test';
 
 const beamAngle = (beam: Locator) =>
-  beam.evaluate((path) =>
-    Number(path.getAttribute('transform')!.match(/rotate\(([\d.-]+)/)![1]),
+  beam.evaluate((el) =>
+    Number((el as HTMLElement).style.transform.match(/rotate\(([\d.-]+)/)![1]),
   );
 
 test('The beam follows the pointer around the fixed sun', async ({
@@ -13,7 +13,7 @@ test('The beam follows the pointer around the fixed sun', async ({
   await page.goto('/projects');
   const frame = page.locator('.projects-sun__frame');
   await frame.scrollIntoViewIfNeeded();
-  const beam = frame.locator('svg > path[data-beam]');
+  const beam = frame.locator('[data-beam]');
   // At rest it points straight up at the first note.
   expect(await beamAngle(beam)).toBe(-90);
   const box = (await frame.boundingBox())!;

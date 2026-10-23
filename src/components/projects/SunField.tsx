@@ -72,8 +72,10 @@ const notes: {
 ];
 
 // A fixed sun whose beam follows the pointer and lights hidden notes.
+// The beam turns on the compositor; its notes counter-turn to stay put.
 export function SunField() {
-  const svg = useRef<SVGSVGElement>(null);
+  const frame = useRef<HTMLDivElement>(null);
+  const beam = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   // Read live, so flipping the preference never restarts a sweep midway.
   const still = useRef(reducedMotion);
@@ -82,46 +84,46 @@ export function SunField() {
   }, [reducedMotion]);
 
   useEffect(() => {
-    const drawing = svg.current;
-    if (!drawing) return;
-    const beams = drawing.querySelectorAll<SVGElement>('[data-beam]');
+    const area = frame.current;
+    const light = beam.current;
+    const notes = light?.firstElementChild as HTMLElement | null;
+    if (!area || !light || !notes) return;
     let angle = REST;
     let target = REST;
-    let frame: number | null = null;
+    let raf: number | null = null;
 
     const step = () => {
-      frame = null;
+      raf = null;
       // Turn the short way round.
       const gap = ((((target - angle) % 360) + 540) % 360) - 180;
       angle = still.current ? target : angle + gap * 0.12;
-      beams.forEach((beam) =>
-        beam.setAttribute(
-          'transform',
-          `translate(${CX} ${CY}) rotate(${angle})`,
-        ),
-      );
+      light.style.transform = `rotate(${angle}deg)`;
+      notes.style.transform = `rotate(${-angle}deg)`;
       if (Math.abs(gap) > 0.1 && !still.current)
-        frame = requestAnimationFrame(step);
+        raf = requestAnimationFrame(step);
     };
 
     const aim = (event: PointerEvent) => {
-      const point = new DOMPoint(event.clientX, event.clientY).matrixTransform(
-        drawing.getScreenCTM()!.inverse(),
-      );
-      target = (Math.atan2(point.y - CY, point.x - CX) * 180) / Math.PI;
-      if (frame === null) frame = requestAnimationFrame(step);
+      const box = area.getBoundingClientRect();
+      target =
+        (Math.atan2(
+          event.clientY - box.top - box.height / 2,
+          event.clientX - box.left - box.width / 2,
+        ) *
+          180) /
+        Math.PI;
+      if (raf === null) raf = requestAnimationFrame(step);
     };
 
-    drawing.addEventListener('pointermove', aim);
-    drawing.addEventListener('pointerdown', aim);
+    area.addEventListener('pointermove', aim);
+    area.addEventListener('pointerdown', aim);
     return () => {
-      if (frame !== null) cancelAnimationFrame(frame);
-      drawing.removeEventListener('pointermove', aim);
-      drawing.removeEventListener('pointerdown', aim);
+      if (raf !== null) cancelAnimationFrame(raf);
+      area.removeEventListener('pointermove', aim);
+      area.removeEventListener('pointerdown', aim);
     };
   }, []);
 
-  const rest = `translate(${CX} ${CY}) rotate(${REST})`;
   return (
     <section
       id="made-to-play"
@@ -129,74 +131,61 @@ export function SunField() {
       aria-labelledby="sun-title"
     >
       <h2 id="sun-title">Made to play.</h2>
-      <div className="projects-sun__frame">
+      <div ref={frame} className="projects-sun__frame">
         <svg
-          ref={svg}
           viewBox="0 0 1200 600"
           preserveAspectRatio="xMidYMid slice"
           aria-hidden="true"
         >
-          <defs>
-            <radialGradient
-              id="sun-light"
-              gradientUnits="userSpaceOnUse"
-              cx={CX}
-              cy={CY}
-              r="620"
-            >
-              <stop offset="0" stopColor={YELLOW} stopOpacity=".5" />
-              <stop offset="1" stopColor={YELLOW} stopOpacity=".06" />
-            </radialGradient>
-            <filter id="sun-soft">
-              <feGaussianBlur stdDeviation="14" />
-            </filter>
-            <mask id="sun-beam" maskUnits="userSpaceOnUse">
-              <path
-                data-beam=""
-                d={wedge(30)}
-                fill="#fff"
-                filter="url(#sun-soft)"
-                transform={rest}
-              />
-            </mask>
-          </defs>
           <g fill={YELLOW} opacity=".05" transform={`translate(${CX} ${CY})`}>
             {rays.map((turn) => (
               <path key={turn} d={wedge(4.5)} transform={`rotate(${turn})`} />
             ))}
           </g>
-          <path
-            data-beam=""
-            d={wedge(30)}
-            fill="url(#sun-light)"
-            filter="url(#sun-soft)"
-            transform={rest}
-          />
-          <g
-            mask="url(#sun-beam)"
-            fill={PAPER}
-            textAnchor="middle"
-            style={{ fontFamily: 'var(--font-hubot-sans), sans-serif' }}
+        </svg>
+        <div
+          ref={beam}
+          className="projects-sun__beam"
+          data-beam=""
+          style={{ transform: `rotate(${REST}deg)` }}
+        >
+          <div
+            className="projects-sun__notes"
+            style={{ transform: `rotate(${-REST}deg)` }}
           >
-            {(['wide', 'narrow'] as const).map((layout) => (
-              <g key={layout} className={`projects-sun__${layout}`}>
-                {notes.map((note) => {
-                  const [x, y] = note[layout];
-                  return (
-                    <text
-                      key={note.text}
-                      x={x}
-                      y={y}
-                      fontSize={note.size}
-                      transform={`rotate(${note.tilt} ${x} ${y})`}
-                    >
-                      {note.text}
-                    </text>
-                  );
-                })}
-              </g>
-            ))}
-          </g>
+            <svg
+              viewBox="0 0 1200 600"
+              fill={PAPER}
+              textAnchor="middle"
+              aria-hidden="true"
+              style={{ fontFamily: 'var(--font-hubot-sans), sans-serif' }}
+            >
+              {(['wide', 'narrow'] as const).map((layout) => (
+                <g key={layout} className={`projects-sun__${layout}`}>
+                  {notes.map((note) => {
+                    const [x, y] = note[layout];
+                    return (
+                      <text
+                        key={note.text}
+                        x={x}
+                        y={y}
+                        fontSize={note.size}
+                        transform={`rotate(${note.tilt} ${x} ${y})`}
+                      >
+                        {note.text}
+                      </text>
+                    );
+                  })}
+                </g>
+              ))}
+            </svg>
+          </div>
+        </div>
+        <svg
+          viewBox="0 0 1200 600"
+          preserveAspectRatio="xMidYMid slice"
+          aria-hidden="true"
+        >
           <circle cx={CX} cy={CY} r="96" fill={YELLOW} />
           <circle
             cx={CX}

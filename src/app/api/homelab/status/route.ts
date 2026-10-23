@@ -12,7 +12,8 @@ export async function GET() {
         .then((response) => (response.ok ? response.text() : ''))
         .catch(() => ''),
     ]);
-    if (!response.ok) throw new Error('Status feed unavailable');
+    if (!response.ok)
+      throw new Error(`Status feed returned ${response.status}`);
     const snapshot = parseHomelabSnapshot(await response.json());
     const logos = dashboardLogos(html);
     snapshot.services = snapshot.services.map((service) => ({
@@ -22,7 +23,8 @@ export async function GET() {
     return Response.json(snapshot, {
       headers: { 'Cache-Control': 'no-store' },
     });
-  } catch {
+  } catch (error) {
+    console.error('Homelab status failed:', error);
     return Response.json(
       { error: 'The homelab status could not be refreshed.' },
       { status: 502, headers: { 'Cache-Control': 'no-store' } },

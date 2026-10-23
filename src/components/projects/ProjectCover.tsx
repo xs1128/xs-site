@@ -127,7 +127,9 @@ export function ProjectCover({ project, open, onToggle }: ProjectCoverProps) {
             src={project.cover.src}
             alt={project.cover.alt}
             fill
-            sizes="(max-width: 640px) 85vw, 40vw"
+            sizes="(max-width: 640px) 62vw, 40vw"
+            // Phones slide the covers sideways: load all, not just the first.
+            loading="eager"
             className="projects-cover__image"
             onLoad={() => setLoaded(true)}
           />
