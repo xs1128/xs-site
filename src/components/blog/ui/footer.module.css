@@ -1,6 +1,7 @@
 /* Self-contained so the footer renders the same inside and outside
-   .blog-root. Two-class selectors beat blog.css's `.blog-root a` (0,1,1). */
-.footer {
+   .blog-root. Rules that set margin or padding need to beat blog.css's
+   `.blog-root *` reset (0,1,0); links need to beat `.blog-root a` (0,1,1). */
+footer.footer {
   width: 100%;
   background-color: var(--color-landing-bg);
   color: var(--color-text-on-light);
@@ -28,7 +29,7 @@
   gap: 0;
 }
 
-.topSection {
+.footer .topSection {
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -37,7 +38,7 @@
   padding: 0;
 }
 
-.authorDivider {
+.footer .authorDivider {
   display: none;
   width: 100%;
   height: 1px;
@@ -55,7 +56,7 @@
   align-items: flex-start;
 }
 
-.sectionLinks {
+.footer .sectionLinks {
   flex: 0 0 auto;
   width: 14%;
   min-width: 120px;
@@ -66,7 +67,7 @@
 }
 
 @media (max-width: 767px) {
-  .topSection {
+  .footer .topSection {
     flex-direction: column;
     align-items: center;
   }
@@ -75,7 +76,7 @@
     margin-bottom: 0;
   }
 
-  .authorDivider {
+  .footer .authorDivider {
     display: block;
   }
 
@@ -84,7 +85,7 @@
     align-items: center;
   }
 
-  .sectionLinks {
+  .footer .sectionLinks {
     width: auto;
     align-items: flex-start;
     margin-top: calc(-1 * clamp(24px, 4vw, 48px));
@@ -133,7 +134,7 @@
   line-height: 1.5;
 }
 
-.heading {
+.footer .heading {
   font-size: clamp(14px, 2vw, 16px);
   font-weight: 600;
   text-transform: uppercase;
@@ -162,7 +163,7 @@
   transition: all 0.3s ease;
 }
 
-.email {
+.footer .email {
   font-family: var(--font-blog-mono), monospace;
   font-size: clamp(13px, 1.8vw, 16px);
   margin-bottom: var(--spacing-sm);
@@ -219,7 +220,7 @@
   }
 }
 
-.divider {
+.footer .divider {
   width: 100%;
   height: 1px;
   background-color: var(--color-border);
@@ -227,7 +228,7 @@
   margin-bottom: var(--spacing-md);
 }
 
-.copyright {
+.footer .copyright {
   font-size: var(--text-xs);
   text-align: center;
   display: flex;
@@ -244,15 +245,15 @@
 
 /* Very narrow screens: shrink rather than push the page sideways. */
 @media (max-width: 300px) {
-  .footer {
+  footer.footer {
     padding-inline: 12px;
   }
   .section,
-  .sectionLinks {
+  .footer .sectionLinks {
     min-width: 0;
     max-width: 100%;
   }
-  .email {
+  .footer .email {
     overflow-wrap: anywhere;
   }
 }
